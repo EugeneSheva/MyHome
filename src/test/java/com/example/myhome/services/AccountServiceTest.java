@@ -76,7 +76,7 @@ public class AccountServiceTest {
         given(accountRepository.findById(1L)).willReturn(Optional.of(expected));
 
         ApartmentAccount acc = accountService.findAccountById(1L);
-        verify(accountRepository.findById(anyLong()));
+        verify(accountRepository.findById(1L));
 
         assertThat(acc).isEqualTo(expected);
     }

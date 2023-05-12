@@ -10,8 +10,7 @@ public class TestConfig {
 
     @Bean
     public MessageSource messageSource() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        return messageSource;
+        return new ResourceBundleMessageSource();
     }
 
 }

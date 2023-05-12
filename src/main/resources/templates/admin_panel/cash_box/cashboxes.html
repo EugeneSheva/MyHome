@@ -202,7 +202,7 @@
                                 </select></th>
 
                                 <th style="border-bottom:none">
-                                    <select autocomplete="off" id="ownerId" class="my_filters" name="owner">
+                                    <select autocomplete="off" id="owner" class="my_filters" name="owner">
                                         <option th:if="${filterForm.owner == null}" value="" selected="selected" th:text="#{choise}">Выберите пользователя</option>
                                         <option th:if="${filterForm.owner != null}" th:value="${filterForm.ownerEntity.id}" th:text="${filterForm.ownerEntity.getFullName()}"></option>
                                     </select>
@@ -369,7 +369,7 @@
 
         $("#isCompleted, #incomeExpenseItem, #incomeExpenseType").select2({placeholder: placeholderText, minimumResultsForSearch: Infinity});
 
-        $('#ownerId').select2({
+        $('#owner').select2({
             ajax: {
                 url: '/admin/cashbox/getUsers',
                 // dataType: 'json',

@@ -40,6 +40,7 @@ public class AdminController {
         adminPage = adminService.findAllByFiltersAndPage(form, pageable);
 
         model.addAttribute("admins", adminPage);
+        model.addAttribute("roles",adminService.getAllRoles());
         model.addAttribute("filter_form", form);
 
         return "admin_panel/system_settings/settings_users";

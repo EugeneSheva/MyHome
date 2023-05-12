@@ -9,6 +9,8 @@ import com.example.myhome.home.service.impl.ServiceServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 public class ServiceController {
 
     private final ServiceServiceImpl serviceService;
+    private final MessageSource messageSource;
 
     // Открыть страничку настройки услуг и ед.изм.
     @GetMapping
@@ -68,7 +71,9 @@ public class ServiceController {
             return "redirect:/admin/services";
         } catch (Exception e) {
             e.printStackTrace();
-            String fail_msg = "Нельзя удалить услугу \""+serviceService.getServiceNameById(id)+"\", она уже используется в расчетах!";
+            String part1 = messageSource.getMessage("settings.system.services.delete.error.1", null, LocaleContextHolder.getLocale());
+            String part2 = messageSource.getMessage("settings.system.services.delete.error.2", null, LocaleContextHolder.getLocale());
+            String fail_msg = part1 + "\"" + serviceService.getServiceNameById(id) +"\"," + part2;
             redirectAttributes.addFlashAttribute("fail", fail_msg);
             return "redirect:/admin/services";
         }
@@ -82,7 +87,9 @@ public class ServiceController {
             return "redirect:/admin/services";
         } catch (Exception e) {
             e.printStackTrace();
-            String fail_msg = "Нельзя удалить единицу \""+serviceService.getUnitNameById(id)+"\", она уже используется в расчетах!";
+            String part1 = messageSource.getMessage("settings.system.units.delete.error.1", null, LocaleContextHolder.getLocale());
+            String part2 = messageSource.getMessage("settings.system.services.delete.error.2", null, LocaleContextHolder.getLocale());
+            String fail_msg = part1 + "\"" + serviceService.getServiceNameById(id) +"\"," + part2;
             redirectAttributes.addFlashAttribute("fail", fail_msg);
             return "redirect:/admin/services";
         }

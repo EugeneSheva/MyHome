@@ -33,7 +33,7 @@ public class TariffServiceImpl implements TariffService {
     public Tariff findTariffById(Long tariff_id) {return tariffRepository.findById(tariff_id).orElseThrow();}
 
     public Tariff saveTariff(Tariff tariff) {
-        if(tariff.getTariffComponents().size() == 0) {
+        if(tariff.getComponents().size() == 0) {
             throw new EmptyObjectException("Can't save tariff without components");
         }
         return tariffRepository.save(tariff);

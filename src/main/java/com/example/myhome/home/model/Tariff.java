@@ -21,7 +21,7 @@ public class Tariff {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Необходимо указать название тарифа")
+    @NotBlank(message = "#{settings.system.tariffs.name.empty}")
     private String name;
     @NotBlank(message = "Необходимо указать описание тарифа")
     private String description;
@@ -34,11 +34,11 @@ public class Tariff {
     joinColumns = @JoinColumn(name="tariff_id"))
     @MapKeyJoinColumn(name="service_id")
     @Column(name="price")
-    private Map<Service, Double> tariffComponents;
+    private Map<Service, Double> components;
 
 //    @OneToMany
 //    @JoinColumn(name = "tariff")
-//    private List<TariffComponents> tariffComponentsList;
+//    private List<TariffComponents> componentsList;
 
 
     public Tariff() {

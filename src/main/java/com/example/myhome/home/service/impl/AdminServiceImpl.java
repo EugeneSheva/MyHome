@@ -20,6 +20,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -164,6 +166,15 @@ public class AdminServiceImpl implements AdminService {
             Admin savedAdmin = adminRepository.save(admin);
             log.info("Save successful!");
             log.info(savedAdmin.toString());
+
+            // Обновление роли юзера в контексте
+            Admin loggedInAdmin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if(loggedInAdmin.getUsername().equalsIgnoreCase(savedAdmin.getUsername())) {
+                log.info("Updated logged in user, changing permissions in security context...");
+                SecurityContextHolder.getContext().setAuthentication(null);
+                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(savedAdmin, savedAdmin.getPassword(), savedAdmin.getAuthorities()));
+            }
+
             return savedAdmin;
         } catch (Exception e) {
             log.severe("Something went wrong during saving!");

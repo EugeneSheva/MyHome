@@ -4,6 +4,7 @@ import com.example.myhome.home.model.Service;
 import com.example.myhome.home.model.Tariff;
 import com.example.myhome.home.service.impl.ServiceServiceImpl;
 import com.example.myhome.home.service.TariffService;
+import com.example.myhome.home.validator.TariffValidator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -26,6 +28,7 @@ public class TariffController {
 
     private final ServiceServiceImpl serviceService;
     private final TariffService tariffService;
+    private final TariffValidator validator;
 
     // Открыть страничку с таблицей всех тарифов
     @GetMapping
@@ -69,7 +72,7 @@ public class TariffController {
     public String showUpdateTariffPage(@PathVariable long id, Model model) {
         Tariff tariff = tariffService.findTariffById(id);
         model.addAttribute("tariff", tariff);
-        model.addAttribute("components", tariff.getTariffComponents().entrySet());
+        model.addAttribute("components", tariff.getComponents().entrySet());
         model.addAttribute("services", serviceService.findAllServices());
         model.addAttribute("units", serviceService.findAllUnits());
         return "admin_panel/system_settings/tariff_card";
@@ -77,24 +80,34 @@ public class TariffController {
 
     // Сохранить созданный тариф
     @PostMapping("/create")
-    public String createTariff(@Valid @ModelAttribute Tariff tariff,
+    public String createTariff(@ModelAttribute Tariff tariff,
                                BindingResult bindingResult,
                                @RequestParam(required = false) String[] service_names,
-                               @RequestParam(required = false) String[] prices) {
+                               @RequestParam(required = false) String[] prices,
+                               RedirectAttributes redirectAttributes,
+                               Model model) {
 
+        tariff.setDate(LocalDateTime.now());
+        tariff.setComponents(tariffService.buildComponentsMap(service_names, prices));
+
+        validator.validate(tariff, bindingResult);
         if(bindingResult.hasErrors()) {
             log.info("errors found");
             log.info(bindingResult.getObjectName());
             log.info(bindingResult.getAllErrors().toString());
+            model.addAttribute("services", serviceService.findAllServices());
+            model.addAttribute("units", serviceService.findAllUnits());
             return "admin_panel/system_settings/tariff_card";
         }
 
-        tariff.setDate(LocalDateTime.now());
-        tariff.setTariffComponents(tariffService.buildComponentsMap(service_names, prices));
-
         log.info(tariff.toString());
 
-        tariffService.saveTariff(tariff);
+        try {
+            tariffService.saveTariff(tariff);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("fail", e.getMessage());
+            return "redirect:/admin/tariffs/create";
+        }
 
         return "redirect:/admin/tariffs";
     }
@@ -102,25 +115,36 @@ public class TariffController {
     // Сохранить обновленный тариф
     @PostMapping("/update/{id}")
     public String updateTariff(@PathVariable long id,
-                               @Valid @ModelAttribute Tariff tariff,
+                               @ModelAttribute Tariff tariff,
                                BindingResult bindingResult,
                                @RequestParam(defaultValue = "0", required = false) String[] service_names,
-                               @RequestParam(defaultValue = "0", required = false) String[] prices) {
+                               @RequestParam(defaultValue = "0", required = false) String[] prices,
+                               RedirectAttributes redirectAttributes,
+                               Model model) {
+
+        tariff.setId(id);
+        tariff.setDate(LocalDateTime.now());
+        tariff.setComponents(tariffService.buildComponentsMap(service_names, prices));
+
+        validator.validate(tariff, bindingResult);
 
         if(bindingResult.hasErrors()) {
             log.info("errors found");
             log.info(bindingResult.getObjectName());
             log.info(bindingResult.getAllErrors().toString());
+            model.addAttribute("services", serviceService.findAllServices());
+            model.addAttribute("units", serviceService.findAllUnits());
             return "admin_panel/system_settings/tariff_card";
         }
 
-        tariff.setId(id);
-        tariff.setDate(LocalDateTime.now());
-        tariff.setTariffComponents(tariffService.buildComponentsMap(service_names, prices));
-
         log.info(tariff.toString());
 
-        tariffService.saveTariff(tariff);
+        try {
+            tariffService.saveTariff(tariff);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("fail", e.getMessage());
+            return "redirect:/admin/tariffs/update/" +id;
+        }
 
         return "redirect:/admin/tariffs";
     }
@@ -134,8 +158,8 @@ public class TariffController {
 
     // Получать все компоненты тарифа (услуги + цены)
     @GetMapping("/get-components")
-    public @ResponseBody Map<String, Double> getTariffComponents(@RequestParam long tariff_id) throws JsonProcessingException {
-        Map<Service, Double> components = tariffService.findTariffById(tariff_id).getTariffComponents();
+    public @ResponseBody Map<String, Double> getComponents(@RequestParam long tariff_id) throws JsonProcessingException {
+        Map<Service, Double> components = tariffService.findTariffById(tariff_id).getComponents();
         Map<String, Double> comp_2 = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         for(Map.Entry<Service, Double> entry : components.entrySet()) {

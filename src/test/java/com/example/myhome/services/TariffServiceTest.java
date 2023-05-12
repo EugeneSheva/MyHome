@@ -46,14 +46,14 @@ public class TariffServiceTest {
         Service service = new Service();
 
         Tariff tariff = new Tariff();
-        tariff.setTariffComponents(new HashMap<>());
-        tariff.getTariffComponents().put(service, 0.0);
+        tariff.setComponents(new HashMap<>());
+        tariff.getComponents().put(service, 0.0);
         tariff.setName("TEST");
 
         Tariff expected = new Tariff();
         expected.setId(1L);
-        expected.setTariffComponents(new HashMap<>());
-        expected.getTariffComponents().put(service, 0.0);
+        expected.setComponents(new HashMap<>());
+        expected.getComponents().put(service, 0.0);
         expected.setName("TEST");
 
         given(tariffRepository.save(tariff)).willReturn(expected);
@@ -67,7 +67,7 @@ public class TariffServiceTest {
     @Test
     void cantSaveTariffWithoutComponents() {
         Tariff tariff = new Tariff();
-        tariff.setTariffComponents(new HashMap<>());
+        tariff.setComponents(new HashMap<>());
         tariff.setName("TEST");
 
         given(tariffRepository.save(tariff)).willReturn(tariff);
@@ -111,14 +111,14 @@ public class TariffServiceTest {
         Service service = new Service();
 
         Tariff tariff = new Tariff();
-        tariff.setTariffComponents(new HashMap<>());
-        tariff.getTariffComponents().put(service, 0.0);
+        tariff.setComponents(new HashMap<>());
+        tariff.getComponents().put(service, 0.0);
         tariff.setName("TEST");
 
         Tariff expected = new Tariff();
         expected.setId(1L);
-        expected.setTariffComponents(new HashMap<>());
-        expected.getTariffComponents().put(service, 0.0);
+        expected.setComponents(new HashMap<>());
+        expected.getComponents().put(service, 0.0);
         expected.setName("TEST");
 
         given(tariffRepository.save(tariff)).willReturn(expected);

@@ -61,7 +61,7 @@
                                       </tr>
                                   </thead>
                                   <tbody>
-                                  <tr th:each="tariffComponent : ${tariff.tariffComponents}">
+                                  <tr th:each="tariffComponent : ${tariff.components}">
                                       <td th:text="${tariffComponent.key.name}"></td>
                                       <td th:text="${tariffComponent.key.unit.name}"></td>
                                       <td th:text="${tariffComponent.value}"></td>

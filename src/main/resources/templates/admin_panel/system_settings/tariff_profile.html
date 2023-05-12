@@ -87,7 +87,7 @@
                       </tr>
                       </thead>
                       <tbody>
-                        <tr th:each="component, iter : ${tariff.tariffComponents.entrySet()}">
+                        <tr th:each="component, iter : ${tariff.components.entrySet()}">
                           <td th:text="${iter.index+1}"></td>
                           <td th:text="${component.getKey().name}"></td>
                           <td th:text="${component.getKey().unit.name}"></td>

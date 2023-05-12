@@ -37,7 +37,7 @@ function gatherFilters() {
     let master_type = $("#master_type").val();
     let name = $("#name").val();
     let number = $("#number").val();
-    let owner_id = $("#ownerId").val();
+    let owner_id = $("#owner").val();
     let phone = $("#phone").val();
     let section_name = $("#section").val();
     let service_id = $("#service").val();
@@ -113,7 +113,7 @@ function setFilters(filters) {
         $("#description").val(null);
         $("#master_type").val('').trigger('change');
         $("#master").val('').trigger('change');
-        $("#ownerId").val('').trigger('change');
+        $("#owner").val('').trigger('change');
         $("#phone").val(null);
         $("#status").val('').trigger('change');
         $("#completed").val('').trigger('change');
@@ -147,7 +147,7 @@ function setFilters(filters) {
         $("#description").val(filters.description);
         $("#master_type").val(filters.master_type);
         $("#master").val(filters.master);
-        $("#ownerId").val(filters.owner);
+        $("#owner").val(filters.owner);
         $("#phone").val(filters.phone);
         $("#status").val(filters.status);
         $("#completed").val(filters.completed);
@@ -578,7 +578,7 @@ function drawRequestsTable() {
                                   '<td>' + request.masterTypeName + '</td>' +
                                   '<td style="max-width: 200px; text-overflow: ellipsis; white-space: nowrap; overflow:hidden">' + request.description + '</td>' +
                                   '<td><a href="/admin/apartments/' + request.apartmentID +'">кв. ' + request.apartmentNumber + ', ' + request.apartmentBuildingName + '</a></td>' +
-                                  '<td><a href="/admin/owners/' + request.ownerID + '">' + request.ownerFullName + '</a></td>' +
+                                  '<td><a href="/admin/owners/' + request.owner + '">' + request.ownerFullName + '</a></td>' +
                                   '<td>' + request.ownerPhoneNumber + '</td>' +
                                   '<td><a href="/admin/admins/' + request.masterID + '">' + ((request.masterFullName != null) ? request.masterFullName : '') + '</a></td>' +
                                   '<td><small class="label ' + ((request.statusName === 'Новое') ? 'label-primary' : (request.statusName === 'В работе') ? 'label-warning' : 'label-success') + '">' + request.statusName + '</small></td>' +

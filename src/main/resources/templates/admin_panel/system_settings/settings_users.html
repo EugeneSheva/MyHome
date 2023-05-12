@@ -83,9 +83,9 @@
                         <td style="padding: 10px">
                           <select style="width: 100%; padding-block: 10px" th:field="*{role}" data-name="role" class="my_filters my_select">
                             <option value=""></option>
-                            <option th:each="userRole : ${T(com.example.myhome.util.UserRole).values()}"
-                                    th:value="${userRole}"
-                                    th:text="${userRole.getName()}"></option>
+                            <option th:each="userRole : ${roles}"
+                                    th:value="${userRole.id}"
+                                    th:text="${userRole.name}"></option>
                           </select>
                         </td>
                         <td style="padding: 10px">

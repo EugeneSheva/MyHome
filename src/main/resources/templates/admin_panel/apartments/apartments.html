@@ -129,7 +129,7 @@
 <!--                                            ></option>-->
 <!--                                        </select>-->
 
-                                        <select id="ownerId" name="owner" class="form-select my_filters">
+                                        <select id="owner" name="owner" class="form-select my_filters">
                                             <option th:if="${filterForm.owner == null}" value="" selected="selected">Выберите пользователя</option>
                                             <option th:if="${filterForm.owner != null}" th:value="${filterForm.ownerEntity.id}" th:text="${filterForm.ownerEntity.getFullName()}"></option>
 
@@ -281,7 +281,7 @@
 
         $("#buildingName, #debtSting").select2({placeholder:choise, minimumResultsForSearch:Infinity});
 
-        $('#ownerId').select2({
+        $('#owner').select2({
             ajax: {
                 url: '/admin/apartments/getUsers',
                 // dataType: 'json',

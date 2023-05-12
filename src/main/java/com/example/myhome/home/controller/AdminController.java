@@ -1,9 +1,13 @@
 package com.example.myhome.home.controller;
 
 import com.example.myhome.home.dto.AdminDTO;
+
 import com.example.myhome.home.model.filter.FilterForm;
 import com.example.myhome.home.service.AdminService;
+import com.example.myhome.home.service.impl.AdminServiceImpl;
 import com.example.myhome.home.validator.AdminValidator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
@@ -19,12 +23,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 @Controller
 @RequestMapping("/admin/admins")
 @RequiredArgsConstructor
 @Log
 public class AdminController {
-
+    private final AdminServiceImpl adminServiceImpl;
     private final AdminService adminService;
     private final AdminValidator validator;
     private final AuthenticationManager authenticationManager;
@@ -38,7 +43,7 @@ public class AdminController {
         Pageable pageable = PageRequest.of((form.getPage() == null) ? 0 : form.getPage()-1 ,15);
 
         adminPage = adminService.findAllByFiltersAndPage(form, pageable);
-
+        model.addAttribute("totalPagesCount", adminPage.getTotalPages());
         model.addAttribute("admins", adminPage);
         model.addAttribute("roles",adminService.getAllRoles());
         model.addAttribute("filter_form", form);
@@ -139,6 +144,14 @@ public class AdminController {
         System.out.println(map.get("results").toString());
         System.out.println(map.get("pagination").toString());
         return map;
+    }
+    @GetMapping("/get-admins")
+    public @ResponseBody Page<AdminDTO> getAdmins(@RequestParam Integer page,
+                                                  @RequestParam Integer size,
+                                                  @RequestParam String filters) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        FilterForm form = mapper.readValue(filters, FilterForm.class);
+        return adminServiceImpl.findAllBySpecification(form, page, size);
     }
 
     // Получить мастеров/управляющих конкретного типа (ID пользовательской роли)

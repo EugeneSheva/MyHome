@@ -2,12 +2,12 @@ package com.example.myhome.home.specification;
 
 import com.example.myhome.home.model.Admin;
 import com.example.myhome.home.model.Admin_;
-import com.example.myhome.home.model.UserRole;
-import com.example.myhome.home.model.UserRole_;
+import com.example.myhome.util.UserRole;
 import com.example.myhome.util.UserStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 
 public class AdminSpecifications {
 
@@ -16,13 +16,19 @@ public class AdminSpecifications {
         return (root, query, cb) -> cb.like(root.get(Admin_.FULL_NAME), "%"+s+"%");
     }
 
-    public static Specification<Admin> hasRole(UserRole role) {
+    public static Specification<Admin> hasRole(String role) {
         if(role == null) return (root, query, criteriaBuilder) -> null;
         return (root, query, cb) -> {
-            Join<Admin, UserRole> roleJoin = root.join(Admin_.ROLE);
-            return cb.equal(roleJoin.get(UserRole_.ID), role.getId());
+            Join<Admin, UserRole> adminRoleJoin = root.join("role", JoinType.INNER);
+            return    cb.like(adminRoleJoin.get("name"), role);
         };
     }
+
+
+//    public static Specification<Admin> hasRole(UserRole role) {
+//        if(role == null) return (root, query, criteriaBuilder) -> null;
+//        return (root, query, cb) -> cb.equal(root.get(Admin_.ROLE), role);
+//    }
 
     public static Specification<Admin> hasPhoneLike(String s) {
         if(s == null) return (root, query, criteriaBuilder) -> null;

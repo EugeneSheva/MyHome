@@ -83,8 +83,6 @@ function gatherFilters() {
         incomeExpenseType : (incomeExpenseType) ? incomeExpenseType : null
     };
 
-    console.log('gathered filters: ');
-    console.log('filterForm  gatherFilters() '+  filterForm);
 
     return filterForm;
 }
@@ -174,7 +172,6 @@ function getTableData(url, pageNumber, pageSize, pageFiltersString) {
                          totalPagesCount = data.totalPages;
                      }
     }).then(console.log('table data is: ' + tableData));
-    console.log('total pages count is ' + totalPagesCount)
     return tableData;
 }
 
@@ -183,7 +180,6 @@ function drawApartmentsTable() {
 
     let pageFiltersString = JSON.stringify(gatherFilters());
     let data = getTableData('/admin/apartments/get-apartments-page', currentPageNumber, currentPageSize, pageFiltersString);
-    console.log("data" + data);
     let $apartmentsTable = $("#apartmentsTable tbody");
     $apartmentsTable.html('');
     for(const apartment of data.content) {
@@ -225,7 +221,6 @@ function drawInvoicesTable(){
 
     let pageFiltersString = JSON.stringify(gatherFilters());
     let data = getTableData('/admin/invoices/get-invoices', currentPageNumber, currentPageSize, pageFiltersString);
-    console.log(data);
     let $invoicesTableBody = $("#invoicesTable tbody");
     $invoicesTableBody.html('');
 
@@ -283,7 +278,6 @@ function drawMessagesTableCabinet(){
     console.log('msg draw table start');
     let pageFiltersString = JSON.stringify(gatherFilters());
     let data = getTableData('/cabinet/get-messages', currentPageNumber, currentPageSize, pageFiltersString);
-    console.log('msg start'+data);
     let $invoicesTableBody = $("#messageTable tbody");
     $invoicesTableBody.html('');
 
@@ -382,7 +376,6 @@ function drawInvoicesInCabinetTable(){
     for(const invoice of data.content) {
         let date = new Date(invoice.date);
         date.setDate(date.getDate() + 1);
-        console.log('mydata '+ data);
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
         newTableRow.class = 'invoice_row';
@@ -416,7 +409,6 @@ function drawInvoicesInCabinetTable(){
 function drawAccountsTable(){
     let pageFiltersString = JSON.stringify(gatherFilters());
     let data = getTableData('/admin/accounts/get-accounts', currentPageNumber, currentPageSize, pageFiltersString);
-    console.log(data);
     let $accountsTableBody = $("#accountsTable tbody");
     $accountsTableBody.html('');
 
@@ -469,7 +461,6 @@ function drawAccountsTable(){
 function drawMetersTable(){
     let pageFiltersString = JSON.stringify(gatherFilters());
     let data = getTableData('/admin/meters/get-meters', currentPageNumber, currentPageSize, pageFiltersString);
-    console.log(data);
     let $metersTable = $("#metersTable tbody");
     $metersTable.html('');
     for(const meter of data.content) {
@@ -508,8 +499,6 @@ function drawMeterDataTable(){
     let params = new URL(document.location).searchParams;
     let apartment_id = params.get("flat_id");
     let service_id = params.get("service_id");
-    console.log('apart id ' + apartment_id);
-    console.log('service id ' + service_id);
     let singleMeterFilters = {
         apartment:apartment_id,
         service:service_id,
@@ -517,11 +506,10 @@ function drawMeterDataTable(){
         status:$("#status").val(),
         date:$("#datetime").val()
     };
-    console.log('filters: ');
-    console.log(singleMeterFilters);
+
     let pageFiltersString = JSON.stringify(singleMeterFilters);
     let data = getTableData('/admin/meters/get-meter-data', currentPageNumber, currentPageSize, pageFiltersString);
-    console.log(data);
+
     let $metersTable = $("#metersTable tbody");
     $metersTable.html('');
     for(const meter of data.content) {
@@ -566,7 +554,7 @@ function drawMeterDataTable(){
 function drawRequestsTable() {
     let pageFiltersString = JSON.stringify(gatherFilters());
     let data = getTableData('/admin/requests/get-requests', currentPageNumber, currentPageSize, pageFiltersString);
-    console.log(data);
+
     let $requestsTable = $("#requestsTable tbody");
     $requestsTable.html('');
     for(const request of data.content) {
@@ -605,11 +593,10 @@ function drawRequestsTable() {
     drawPagination();
 }
 function drawRequestsTableCabinet() {
-    console.log('2')
+
     let pageFiltersString = '';
-    console.log('3')
     let data = getTableData('/cabinet/get-requests', currentPageNumber, currentPageSize, pageFiltersString);
-    console.log(data);
+
     let $requestsTable = $("#requestsTable tbody");
     $requestsTable.html('');
     for(const request of data.content) {
@@ -647,7 +634,6 @@ function drawRequestsTableCabinet() {
 function drawOwnersTable(){
     let pageFiltersString = JSON.stringify(gatherFilters());
     let data = getTableData('/admin/owners/get-owners', currentPageNumber, currentPageSize, pageFiltersString);
-    console.log(data);
     let $ownersTable = $("#ownersTable tbody");
     $ownersTable.html('');
     for(const owner of data.content) {
@@ -693,11 +679,50 @@ function drawOwnersTable(){
     }
     drawPagination();
 }
+
+function drawAdminsTable(){
+    let pageFiltersString = JSON.stringify(gatherFilters());
+    let data = getTableData('/admin/admins/get-admins', currentPageNumber, currentPageSize, pageFiltersString);
+    let $adminsTable = $("#adminsTable tbody");
+    $adminsTable.html('');
+    for(const admin of data.content) {
+        let newTableRow = document.createElement('tr');
+        newTableRow.style.cursor = 'pointer';
+        newTableRow.class = 'user-row';
+        newTableRow.innerHTML =   '<td>' + admin.id + '</td>' +
+            '<td>' + admin.fullName + '</td>' +
+            '<td>' + admin.role + '</td>' +
+            '<td>' + admin.phone_number + '</td>' +
+            '<td>' + admin.email + '</td>' +
+            '<td>' + admin.active + '</td>' +
+            '<div class="btn-group" role="group" aria-label="Basic outlined button group">' +
+            '<a class="btn btn-default btn-sm invite_button" title="Отправить приглашение"><i class="fa fa-repeat"></i></a>' +
+            '<a href="/admin/admins/update/'+ admin.id + '" class="btn btn-default btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></i></a>' +
+            '<a href="/admin/admins/delete/'+ admin.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i></a>' +
+            '</div>' +
+            '</td>';
+
+        let row_children = newTableRow.children;
+        for(let j = 0; j < row_children.length - 1; j++) {
+            row_children[j].addEventListener('click', function(){
+                window.location.href = '/admin/admins/' + admin.id;
+            });
+        }
+
+        $adminsTable.append(newTableRow);
+    }
+    if(data.content.length === 0) {
+        let newTableRow = document.createElement('tr');
+        newTableRow.innerHTML = '<td colspan=10>Ничего не найдено...</td>';
+        $adminsTable.append(newTableRow);
+    }
+    drawPagination();
+}
+
 function drawBuildingsTable() {
 
     let pageFiltersString = JSON.stringify(gatherFilters());
     let data = getTableData('/admin/buildings/get-buildings-page', currentPageNumber, currentPageSize, pageFiltersString);
-    console.log(data);
     let $buildingsTable = $("#buildingsTable tbody");
     $buildingsTable.html('');
     for(const building of data.content) {
@@ -734,7 +759,6 @@ function drawTransactionsTable() {
 
     let pageFiltersString = JSON.stringify(gatherFilters());
     let data = getTableData('/admin/cashbox/get-cashbox-page', currentPageNumber, currentPageSize, pageFiltersString);
-    console.log(data);
     let $cashboxTable = $("#cashboxTable tbody");
     $cashboxTable.html('');
     for(const cashbox of data.content) {
@@ -780,7 +804,6 @@ function drawTransactionsTable() {
 function drawTable() {
 
     let tableType = globalTableName;
-    console.log('draw table');
     if(tableType === 'invoices') drawInvoicesTable();
     else if(tableType === 'invoicesInCabinet') drawInvoicesInCabinetTable();
     else if(tableType === 'apartments') drawApartmentsTable();
@@ -794,13 +817,13 @@ function drawTable() {
     else if(tableType === 'transactions') drawTransactionsTable();
     else if(tableType === 'messagesCabinet') drawMessagesTableCabinet();
     else if(tableType === 'messagesAdmin') drawMessagesTableAdmin();
+    else if(tableType === 'admins') drawAdminsTable();
 }
 //Функции, рисующие таблицы в зависимости от выбранной страницы
 
 //Функции, перерисовывающие таблицы после изменений фильтров/номера страниц/размера страниц
 function changeFilterData() {
     pageFiltersString = gatherFilters();
-    console.log('pageFiltersString' + pageFiltersString);
     setFilters(pageFiltersString);
     saveState();
     drawTable();
@@ -823,8 +846,6 @@ function decreasePageByOne() {
 function changePageSize(newPageSize) {
     currentPageSize = newPageSize;
     currentPageNumber = 1;
-    console.log('current page size is ' + currentPageSize);
-    console.log('current page number is ' + currentPageNumber);
     $(".page-size-display").text(newPageSize);
     drawPagination();
 
@@ -855,8 +876,6 @@ function drawPagination() {
 
     let pageOffset = 2; // 1 ... 3 4 -5- 6 7 ... 10 -  current page 5 , offset 2
 
-    console.log("Drawing pagination buttons...");
-    console.log('current page size: ' + currentPageSize + ', current page number: ' + currentPageNumber);
 
     let $pagination = $(".pagination_container");
     $pagination.html('');
@@ -975,8 +994,6 @@ $(document).ready(function(){
     $(".my_filters").change(() => changeFilterData());
     $(".datetime_filter").change(function(){
         let datetime = this.value;
-        console.log(datetime);
-        console.log(datetime.split(' to '));
         if(datetime.split(' to ').length > 1) changeFilterData();
     });
 

@@ -37,7 +37,7 @@ public class AdminSpecificationTest {
 
         UserRole role = new UserRole();
 
-        spec = AdminSpecifications.hasRole(role);
+        spec = AdminSpecifications.hasRole(role.getName());
 
         assertThat(spec.toPredicate(root, cq, cb)).isNotNull();
     }

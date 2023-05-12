@@ -2,8 +2,7 @@ package com.example.myhome.home.specification;
 
 import com.example.myhome.home.model.Admin;
 import com.example.myhome.home.model.Admin_;
-import com.example.myhome.util.UserRole;
-import com.example.myhome.util.UserStatus;
+import com.example.myhome.home.model.UserRole;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Join;

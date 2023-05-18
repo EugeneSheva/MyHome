@@ -1,10 +1,8 @@
 package com.example.myhome.specifications;
 
-import com.example.myhome.home.model.*;
-import com.example.myhome.home.repository.MeterDataRepository;
-import com.example.myhome.home.repository.RepairRequestRepository;
-import com.example.myhome.home.specification.MeterSpecifications;
-import com.example.myhome.home.specification.RequestSpecifications;
+import com.example.myhome.model.*;
+import com.example.myhome.repository.RepairRequestRepository;
+import com.example.myhome.specification.RequestSpecifications;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;

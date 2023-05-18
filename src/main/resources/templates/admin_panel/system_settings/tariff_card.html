@@ -226,7 +226,7 @@
         let service_select = this;
         let service_id = this.value;
 
-        $.get("/admin/services/get-unit/",{id:service_id}, function(data){
+        $.get("/myhome/admin/services/get-unit/",{id:service_id}, function(data){
             console.log(data);
 
             let unit_select = document.getElementById('unit-'+select_index);

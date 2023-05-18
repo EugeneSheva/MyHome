@@ -1,11 +1,8 @@
 package com.example.myhome.specifications;
 
-import com.example.myhome.home.model.Building;
-import com.example.myhome.home.model.Message;
-import com.example.myhome.home.repository.BuildingRepository;
-import com.example.myhome.home.repository.MessageRepository;
-import com.example.myhome.home.specification.BuildingSpecifications;
-import com.example.myhome.home.specification.MessageSpecifications;
+import com.example.myhome.model.Message;
+import com.example.myhome.repository.MessageRepository;
+import com.example.myhome.specification.MessageSpecifications;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

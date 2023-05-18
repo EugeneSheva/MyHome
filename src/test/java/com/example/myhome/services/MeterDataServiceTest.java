@@ -1,21 +1,16 @@
 package com.example.myhome.services;
 
-import com.example.myhome.home.dto.MeterDataDTO;
-import com.example.myhome.home.mapper.MeterDTOMapper;
-import com.example.myhome.home.model.*;
-import com.example.myhome.home.repository.MeterDataRepository;
-import com.example.myhome.home.service.MeterDataService;
-import com.example.myhome.home.specification.MeterSpecifications;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.myhome.dto.MeterDataDTO;
+import com.example.myhome.mapper.MeterDTOMapper;
+import com.example.myhome.model.*;
+import com.example.myhome.repository.MeterDataRepository;
+import com.example.myhome.service.MeterDataService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;

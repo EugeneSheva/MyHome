@@ -110,7 +110,7 @@
             </div>
           </div>
           <div style="text-align: center; color: green; font-size: 20px; width: 100%">
-            <span th:text="${success}"></span>
+            <span th:if="${success}" th:text="#{saved}"></span>
           </div>
 
         </form>

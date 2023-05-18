@@ -1,11 +1,8 @@
 package com.example.myhome.specifications;
 
-import com.example.myhome.home.model.Message;
-import com.example.myhome.home.model.Owner;
-import com.example.myhome.home.repository.MessageRepository;
-import com.example.myhome.home.repository.OwnerRepository;
-import com.example.myhome.home.specification.MessageSpecifications;
-import com.example.myhome.home.specification.OwnerSpecifications;
+import com.example.myhome.model.Owner;
+import com.example.myhome.repository.OwnerRepository;
+import com.example.myhome.specification.OwnerSpecifications;
 import com.example.myhome.util.UserStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

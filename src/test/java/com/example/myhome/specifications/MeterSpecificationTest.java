@@ -1,10 +1,8 @@
 package com.example.myhome.specifications;
 
-import com.example.myhome.home.model.*;
-import com.example.myhome.home.repository.CashBoxRepository;
-import com.example.myhome.home.repository.MeterDataRepository;
-import com.example.myhome.home.specification.InvoiceSpecifications;
-import com.example.myhome.home.specification.MeterSpecifications;
+import com.example.myhome.model.*;
+import com.example.myhome.repository.MeterDataRepository;
+import com.example.myhome.specification.MeterSpecifications;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

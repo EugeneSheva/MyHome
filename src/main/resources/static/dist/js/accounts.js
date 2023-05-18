@@ -4,7 +4,7 @@ let rows = document.getElementsByClassName("account_row");
         let account_id = row_children[row_children.length-1].value;
         for(let j = 1; j < row_children.length - 2; j++) {
             row_children[j].addEventListener('click', function(){
-                window.location.href = '/admin/accounts/'+account_id;
+                window.location.href = '/myhome/admin/accounts/'+account_id;
             });
         }
     }

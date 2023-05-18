@@ -1,10 +1,11 @@
 package com.example.myhome.specifications;
 
-import com.example.myhome.home.model.*;
-import com.example.myhome.home.repository.AccountRepository;
-import com.example.myhome.home.repository.AdminRepository;
-import com.example.myhome.home.specification.AccountSpecifications;
-import com.example.myhome.home.specification.AdminSpecifications;
+import com.example.myhome.model.Apartment;
+import com.example.myhome.model.ApartmentAccount;
+import com.example.myhome.model.Building;
+import com.example.myhome.model.Owner;
+import com.example.myhome.repository.AccountRepository;
+import com.example.myhome.specification.AccountSpecifications;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

@@ -1,11 +1,9 @@
 package com.example.myhome.specifications;
 
-import com.example.myhome.home.model.Building;
-import com.example.myhome.home.model.CashBox;
-import com.example.myhome.home.model.IncomeExpenseType;
-import com.example.myhome.home.repository.CashBoxRepository;
-import com.example.myhome.home.specification.BuildingSpecifications;
-import com.example.myhome.home.specification.CashBoxSpecifications;
+import com.example.myhome.model.CashBox;
+import com.example.myhome.model.IncomeExpenseType;
+import com.example.myhome.repository.CashBoxRepository;
+import com.example.myhome.specification.CashBoxSpecifications;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

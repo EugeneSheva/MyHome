@@ -398,7 +398,7 @@
 
         let tariff_id = $("#tariff").val();
 
-        $.get('/admin/tariffs/get-components', {tariff_id:tariff_id}, function(data){
+        $.get('/myhome/admin/tariffs/get-components', {tariff_id:tariff_id}, function(data){
             console.log(data);
             console.log(typeof data);
 

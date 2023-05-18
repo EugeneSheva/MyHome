@@ -180,7 +180,7 @@
       let row_children = user_rows[i].children;
       for(let j = 0; j < row_children.length-1; j++) {
         row_children[j].addEventListener('click', () => {
-          window.location.href = '/admin/admins/' + document.getElementById("input-" + i).value;
+          window.location.href = '/myhome/admin/admins/' + document.getElementById("input-" + i).value;
         });
       }
     }

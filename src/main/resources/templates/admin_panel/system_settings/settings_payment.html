@@ -72,7 +72,7 @@
                       <button type="submit" class="btn btn-success" th:text="#{settings.system.payment-details.save}">Сохранить</button>
                     </div>
                     <div style="text-align: center; color: green; font-size: 20px; width: 100%">
-                      <span th:text="${success_message}"></span>
+                      <span th:if="${success_message}" th:text="#{saved}"></span>
                     </div>
                   </div>
                 </form>

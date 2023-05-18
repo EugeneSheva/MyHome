@@ -1,12 +1,12 @@
 package com.example.myhome.services;
 
-import com.example.myhome.home.model.pages.*;
-import com.example.myhome.home.repository.DocumentRepository;
-import com.example.myhome.home.repository.PageRepository;
-import com.example.myhome.home.service.WebsiteService;
-import com.example.myhome.util.FileUploadUtil;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.myhome.model.pages.AboutPage;
+import com.example.myhome.model.pages.ContactsPage;
+import com.example.myhome.model.pages.MainPage;
+import com.example.myhome.model.pages.ServicesPage;
+import com.example.myhome.repository.DocumentRepository;
+import com.example.myhome.repository.PageRepository;
+import com.example.myhome.service.WebsiteService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,18 +14,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;

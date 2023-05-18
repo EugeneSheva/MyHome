@@ -1,14 +1,14 @@
 function deleteChosen(){
         if(confirm('Удалить выбранные квитанции?')) {
             for(const row of document.querySelectorAll(".invoice_row")) {
+                console.log(row);
                 console.log(row.querySelector("input[type=checkbox]"));
                 if(row.querySelector("input[type=checkbox]").checked == true) {
                     let invoice_id = row.children[0].value;
                     console.log(invoice_id);
-                    $.get('/admin/invoices/delete-invoice', {id:invoice_id}, function(data){console.log(data); row.remove();}).fail(function(){alert('Ошибка в удалении квитанций')});
+                    $.get('/myhome/admin/invoices/delete-invoice', {id:invoice_id}, function(data){drawTable();}).fail(function(){alert('Ошибка в удалении квитанций')});
                 }
             }
-            window.location.href='/admin/invoices';
         }
     }
 
@@ -139,7 +139,7 @@ function insertNumber(page_number) {
                     let filterForm = JSON.stringify(gatherFilters());
                     console.log(filterForm);
 
-                    $.get("/admin/invoices/get-invoices", {page:page_number, page_size:invoices_on_page, f_string:filterForm}, function(data){
+                    $.get("/myhome/admin/invoices/get-invoices", {page:page_number, page_size:invoices_on_page, f_string:filterForm}, function(data){
                         $("#invoices_table tbody").html('');
                         for(const row of data) {
                             let date = new Date(row.date);
@@ -167,9 +167,9 @@ function insertNumber(page_number) {
                                     '<td><span>' + row.total_price.toString() + '</span></td>' +
                                     '<td>'+
                                         '<div class="btn-group pull-right">' +
-                                            '<a class="btn btn-default btn-sm" href="/admin/invoices/update/' + row.id.toString() + '"><i class="fa fa-pencil"></i></a>' +
+                                            '<a class="btn btn-default btn-sm" href="/myhome/admin/invoices/update/' + row.id.toString() + '"><i class="fa fa-pencil"></i></a>' +
                                             '<a class="btn btn-default btn-sm"' +
-                                               'data-url="/admin/invoices/delete/' + row.id.toString() + '"' +
+                                               'data-url="/myhome/admin/invoices/delete/' + row.id.toString() + '"' +
                                                'onclick="if(confirm(\'Удалить квитанцию?\')) window.location.href=this.dataset.url"><i class="fa fa-trash"></i></a>' +
                                         '</div>' +
                                     '</td>';
@@ -178,7 +178,7 @@ function insertNumber(page_number) {
                             let invoice_id = row.id;
                             for(let j = 2; j < row_children.length - 1; j++) {
                                 row_children[j].addEventListener('click', function(){
-                                    window.location.href = '/admin/invoices/'+invoice_id;
+                                    window.location.href = '/myhome/admin/invoices/'+invoice_id;
                                 });
                             }
 
@@ -187,7 +187,7 @@ function insertNumber(page_number) {
                         }
                     });
 
-                    $.get("/admin/invoices/get-filtered-invoice-count", {f_string:filterForm}, function(invoice_list_length) {
+                    $.get("/myhome/admin/invoices/get-filtered-invoice-count", {f_string:filterForm}, function(invoice_list_length) {
                         fillPageButtonsContainer(page_buttons_container, invoice_list_length);
                         fillPageButtonsContainer(page_buttons_container_top, invoice_list_length);
                     })

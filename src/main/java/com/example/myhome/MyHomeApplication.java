@@ -1,7 +1,9 @@
 package com.example.myhome;
 
-import com.example.myhome.home.model.Admin;
-import com.example.myhome.home.repository.*;
+import com.example.myhome.model.Admin;
+
+import com.example.myhome.repository.AdminRepository;
+import com.example.myhome.repository.UserRoleRepository;
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.List;
 
-@SpringBootApplication(scanBasePackages = {"com.example.myhome.home", "com.example.myhome.util"})
-@EnableJpaRepositories(basePackages = {"com.example.myhome.home.repository", "com.example.myhome.home.service.registration"})
+@SpringBootApplication(scanBasePackages = {"com.example.myhome", "com.example.myhome.util"})
+@EnableJpaRepositories(basePackages = {"com.example.myhome.repository", "com.example.myhome.service.registration"})
 @EnableEncryptableProperties
 @Log4j2
 public class MyHomeApplication {

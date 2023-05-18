@@ -4,7 +4,7 @@ function loadApartments(input) {
 
     $("#apartmentID").prop("disabled", (owner_id != '0') ? false : true);
 
-    $.get('/admin/owners/get-apartments/' + owner_id, function(data){
+    $.get('/myhome/admin/owners/get-apartments/' + owner_id, function(data){
       console.log(data);
 
       $("#apartmentID").html('');

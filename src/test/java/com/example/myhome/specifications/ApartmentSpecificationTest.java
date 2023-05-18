@@ -1,14 +1,8 @@
 package com.example.myhome.specifications;
 
-import com.example.myhome.home.model.Apartment;
-import com.example.myhome.home.model.ApartmentAccount;
-import com.example.myhome.home.model.Building;
-import com.example.myhome.home.model.Owner;
-import com.example.myhome.home.repository.AccountRepository;
-import com.example.myhome.home.repository.ApartmentRepository;
-import com.example.myhome.home.specification.AccountSpecifications;
-import com.example.myhome.home.specification.ApartmentSpecifications;
-import org.junit.jupiter.api.BeforeAll;
+import com.example.myhome.model.Apartment;
+import com.example.myhome.repository.ApartmentRepository;
+import com.example.myhome.specification.ApartmentSpecifications;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

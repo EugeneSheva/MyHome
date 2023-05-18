@@ -1,29 +1,24 @@
 package com.example.myhome.services;
 
-import com.example.myhome.config.TestConfig;
-import com.example.myhome.home.dto.ApartmentAccountDTO;
-import com.example.myhome.home.mapper.AccountDTOMapper;
-import com.example.myhome.home.model.*;
-import com.example.myhome.home.repository.AccountRepository;
-import com.example.myhome.home.repository.ApartmentRepository;
-import com.example.myhome.home.service.AccountService;
-import com.example.myhome.home.service.impl.AccountServiceImpl;
-import com.example.myhome.home.validator.AccountValidator;
+import com.example.myhome.dto.ApartmentAccountDTO;
+import com.example.myhome.mapper.AccountDTOMapper;
+import com.example.myhome.model.*;
+import com.example.myhome.repository.AccountRepository;
+import com.example.myhome.repository.ApartmentRepository;
+import com.example.myhome.service.AccountService;
+import com.example.myhome.validator.AccountValidator;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.FieldError;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -32,7 +27,6 @@ import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Import(TestConfig.class)
 public class AccountServiceTest {
 
     @MockBean private AccountRepository accountRepository;
@@ -76,7 +70,7 @@ public class AccountServiceTest {
         given(accountRepository.findById(1L)).willReturn(Optional.of(expected));
 
         ApartmentAccount acc = accountService.findAccountById(1L);
-        verify(accountRepository.findById(1L));
+        verify(accountRepository).findById(1L);
 
         assertThat(acc).isEqualTo(expected);
     }

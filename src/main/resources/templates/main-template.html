@@ -315,7 +315,7 @@
         $("#selectedLanguage").text(element.text());
         document.getElementsByClassName("language-list")[0].style.display='none';
 
-        const url = "/change-language";
+        const url = "/myhome/change-language";
 
         $.post(url, {language:element.attr('id')}, function(data){
           console.log(data);

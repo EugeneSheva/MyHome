@@ -1,9 +1,11 @@
 package com.example.myhome.specifications;
 
-import com.example.myhome.home.model.*;
-import com.example.myhome.home.repository.CashBoxRepository;
-import com.example.myhome.home.specification.CashBoxSpecifications;
-import com.example.myhome.home.specification.InvoiceSpecifications;
+import com.example.myhome.model.Apartment;
+import com.example.myhome.model.Invoice;
+import com.example.myhome.model.InvoiceStatus;
+import com.example.myhome.model.Owner;
+import com.example.myhome.repository.CashBoxRepository;
+import com.example.myhome.specification.InvoiceSpecifications;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

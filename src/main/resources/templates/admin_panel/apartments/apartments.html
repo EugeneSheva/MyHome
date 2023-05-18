@@ -283,7 +283,7 @@
 
         $('#owner').select2({
             ajax: {
-                url: '/admin/apartments/getUsers',
+                url: '/myhome/admin/apartments/getUsers',
                 // dataType: 'json',
                 delay: 250,
                 data: function(params) {
@@ -328,7 +328,7 @@
             } else {
                 // Запрос на сервер для получения списка элементов для секций
                 $.ajax({
-                    url: '/admin/apartments/getSections',
+                    url: '/myhome/admin/apartments/getSections',
                     data: {buildingName: buildingName},
                     success: function (data) {
                         console.log('success ' + data)
@@ -349,7 +349,7 @@
                 });
                 // Запрос на сервер для получения списка элементов для этажей
                 $.ajax({
-                    url: '/admin/apartments/getFloors',
+                    url: '/myhome/admin/apartments/getFloors',
                     data: {buildingName: buildingName},
                     success: function (data) {
                         console.log('success ' + data)

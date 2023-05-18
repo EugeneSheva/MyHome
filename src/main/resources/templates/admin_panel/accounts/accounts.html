@@ -255,7 +255,7 @@
         $("#active, #debt, #section").select2({placeholder: placeholderText, minimumResultsForSearch:Infinity});
         $("#owner").select2({
             ajax: {
-                url: '/admin/owners/get-all-owners',
+                url: '/myhome/admin/owners/get-all-owners',
                 data: function(params){
                     console.log(params.page);
                     return {
@@ -271,7 +271,7 @@
 
         $("#building").select2({
             ajax: {
-                url: '/admin/buildings/get-buildings',
+                url: '/myhome/admin/buildings/get-buildings',
                 data: function(params){
                     console.log(params.page);
                     return {

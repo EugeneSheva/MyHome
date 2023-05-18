@@ -210,7 +210,7 @@
 
     $("#house_select").select2({
             ajax: {
-                url: '/admin/buildings/get-buildings',
+                url: '/myhome/admin/buildings/get-buildings',
                 data: function(params){
                     console.log(params.page);
                     return {
@@ -291,7 +291,7 @@
 
           apartment_select.appendChild(option);
 
-          $.get('/admin/buildings/get-sections/'+this.value, function(data){
+          $.get('/myhome/admin/buildings/get-sections/'+this.value, function(data){
 
             console.log(data);
 
@@ -323,7 +323,7 @@
 
         apartment_select.appendChild(option);
 
-        $.get('/admin/buildings/get-section-apartments/'+house_select.value, {section_name:this.value}, function(data){
+        $.get('/myhome/admin/buildings/get-section-apartments/'+house_select.value, {section_name:this.value}, function(data){
 
           console.log(data);
 
@@ -365,7 +365,7 @@
 
       $.ajax({
         type:"POST",
-        url:'/admin/meters/save-meter',
+        url:'/myhome/admin/meters/save-meter',
         data: meter,
         beforeSend: function (xhr) {
             xhr.setRequestHeader(header, token);
@@ -379,7 +379,7 @@
             errors.push(msg.toString());
           }
           if(data == null || data.length === 0) {
-            window.location.href='/admin/meters/create-add?flat_id='+apartment_id+'&service_id='+service_id;
+            window.location.href='/myhome/admin/meters/create-add?flat_id='+apartment_id+'&service_id='+service_id;
           }
           else alert('Сохранение невозможно, найдены ошибки:\n' + errors.join('\n'));
         }

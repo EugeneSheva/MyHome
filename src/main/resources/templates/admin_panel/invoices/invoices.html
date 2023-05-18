@@ -215,11 +215,10 @@
 <script th:src="@{/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-<script th:src="@{/dist/js/filter.js}"></script>
-<script th:src="@{/dist/js/invoices.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script th:src="@{/dist/js/pagination.js}"></script>
+<script th:src="@{/dist/js/invoices.js}"></script>
 
 <script th:src="@{/dist/js/websocket.js}"></script>
 
@@ -279,7 +278,7 @@
         $("#status, #completed").select2({placeholder:placeholderText,minimumResultsForSearch:Infinity});
         $("#owner").select2({
             ajax: {
-                url: '/admin/owners/get-all-owners',
+                url: '/myhome/admin/owners/get-all-owners',
                 data: function(params){
                     console.log(params.page);
                     return {

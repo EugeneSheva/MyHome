@@ -123,6 +123,11 @@
             <version>5.2.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
 
         <!-- Jackson -->
@@ -222,6 +227,7 @@
     </dependencies>
 
     <build>
+        <finalName>myhome</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

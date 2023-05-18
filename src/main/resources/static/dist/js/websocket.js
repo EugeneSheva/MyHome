@@ -33,19 +33,19 @@ function refresh() {
 }
 
 function recountCashboxBalance() {
-    $.get("/admin/cashbox/get-cashbox-balance", function(data) {
+    $.get("/myhome/admin/cashbox/get-cashbox-balance", function(data) {
         $("#cashboxBalance").text(data + ' грн');
     });
 }
 
 function recountAccountBalance() {
-    $.get("/admin/cashbox/get-account-balance", function(data) {
+    $.get("/myhome/admin/cashbox/get-account-balance", function(data) {
         $("#accountBalance").text(data + ' грн');
     });
 }
 
 function recountAccountDebts() {
-    $.get("/admin/cashbox/get-account-debts", function(data) {
+    $.get("/myhome/admin/cashbox/get-account-debts", function(data) {
         $("#accountDebts").text(data + ' грн');
     });
 }
@@ -87,7 +87,7 @@ function drawNewMessageRow(msg) {
     let row_children = newTableRow.children;
     for (let j = 1; j < row_children.length - 1; j++) {
         row_children[j].addEventListener('click', function () {
-            window.location.href = '/admin/messages/' + msg.id;
+            window.location.href = '/myhome/admin/messages/' + msg.id;
         });
     }
     console.log('msg drawed');

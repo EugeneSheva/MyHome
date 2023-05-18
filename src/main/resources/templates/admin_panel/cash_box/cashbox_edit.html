@@ -216,7 +216,7 @@
 
         $owner_select.select2({
             ajax: {
-                url: '/admin/owners/get-all-owners',
+                url: '/myhome/admin/owners/get-all-owners',
                 data: function(params){
                     console.log(params.page);
                     return {
@@ -236,7 +236,7 @@
         if(account_id != null && !isNaN(account_id) && account_id != '') {
             $.ajax({
                 type: 'GET',
-                url: '/admin/owners/get-account-owner/' + account_id
+                url: '/myhome/admin/owners/get-account-owner/' + account_id
                 })
               .then(function (data) {
                     // create the option and append to Select2
@@ -259,7 +259,7 @@
     $(document).ready(function(){
         $("#owner_select").change(function(){
             let owner_id = $(this).val();
-            $.get("/admin/owners/get-apartment-accounts", {owner_id:owner_id}, function(data){
+            $.get("/myhome/admin/owners/get-apartment-accounts", {owner_id:owner_id}, function(data){
                 console.log(data);
 
                 let $account_select = $("#account_select");

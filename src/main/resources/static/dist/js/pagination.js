@@ -162,6 +162,8 @@ function setFilters(filters) {
 
 //AJAX-вызов и получение данных по url
 function getTableData(url, pageNumber, pageSize, pageFiltersString) {
+    let tp = /*[[${totalPagesCount}]]*/ 1
+    console.log('THYMELEAF ' + tp);
     $.ajax(url, {
         async: false,
         data: {page:pageNumber, size:pageSize, filters:pageFiltersString},
@@ -171,7 +173,7 @@ function getTableData(url, pageNumber, pageSize, pageFiltersString) {
                          tableData = data;
                          totalPagesCount = data.totalPages;
                      }
-    }).then(console.log('table data is: ' + tableData));
+    }).then(function(){console.log('table data is: ');console.log(tableData)});
     return tableData;
 }
 
@@ -179,19 +181,21 @@ function getTableData(url, pageNumber, pageSize, pageFiltersString) {
 function drawApartmentsTable() {
 
     let pageFiltersString = JSON.stringify(gatherFilters());
-    let data = getTableData('/admin/apartments/get-apartments-page', currentPageNumber, currentPageSize, pageFiltersString);
+    let data = getTableData('/myhome/admin/apartments/get-apartments-page', currentPageNumber, currentPageSize, pageFiltersString);
     let $apartmentsTable = $("#apartmentsTable tbody");
     $apartmentsTable.html('');
     for(const apartment of data.content) {
         console.log("apartment" + apartment);
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
-        newTableRow.class = 'apartment_row';
+        newTableRow.classList.add = 'apartment_row';
+        let buildingName = (apartment.building) ? apartment.building.name : '';
+        let ownerName = (apartment.owner) ? apartment.owner.fullName : '';
         newTableRow.innerHTML = '<td>' + apartment.number + '</td>' +
-                            '<td>' + apartment.building.name + '</td>' +
+                            '<td>' + buildingName + '</td>' +
                             '<td>' + apartment.section + '</td>' +
                             '<td>' + apartment.floor + '</td>' +
-                            '<td>' + apartment.owner.fullName + '</td>' +
+                            '<td>' + ownerName + '</td>' +
                             '<td>' + apartment.balance + '</td>' +
                             '<td>' +
                                 '<div class="btn-group" role="group" aria-label="Basic outlined button group">' +
@@ -202,7 +206,7 @@ function drawApartmentsTable() {
         let row_children = newTableRow.children;
         for(let j = 1; j < row_children.length - 1; j++) {
             row_children[j].addEventListener('click', function(){
-                window.location.href = '/admin/apartments/'+apartment.id;
+                window.location.href = '/myhome/admin/apartments/'+apartment.id;
             });
         }
 
@@ -220,7 +224,7 @@ function drawApartmentsTable() {
 function drawInvoicesTable(){
 
     let pageFiltersString = JSON.stringify(gatherFilters());
-    let data = getTableData('/admin/invoices/get-invoices', currentPageNumber, currentPageSize, pageFiltersString);
+    let data = getTableData('/myhome/admin/invoices/get-invoices', currentPageNumber, currentPageSize, pageFiltersString);
     let $invoicesTableBody = $("#invoicesTable tbody");
     $invoicesTableBody.html('');
 
@@ -233,7 +237,7 @@ function drawInvoicesTable(){
         let month_string = monthNames[date.getMonth()] + ' ' + date.getFullYear();
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
-        newTableRow.class = 'invoice_row';
+        newTableRow.classList.add('invoice_row');
         newTableRow.innerHTML = '<input type="hidden" value=' + invoice.id.toString() + '>' +
                                 '<td><input type="checkbox" name="" id=""></td>' +
                                 '<td>' + invoice.id.toString().padStart(10, '0') + '</td>' +
@@ -250,16 +254,16 @@ function drawInvoicesTable(){
                                 '<td><span>' + invoice.total_price + '</span></td>' +
                                 '<td>'+
                                     '<div class="btn-group pull-right">' +
-                                        '<a class="btn btn-default btn-sm" href="/admin/invoices/update/' + invoice.id + '"><i class="fa fa-pencil"></i></a>' +
+                                        '<a class="btn btn-default btn-sm" href="/myhome/admin/invoices/update/' + invoice.id + '"><i class="fa fa-pencil"></i></a>' +
                                         '<a class="btn btn-default btn-sm"' +
-                                           'data-url="/admin/invoices/delete/' + invoice.id + '"' +
+                                           'data-url="/myhome/admin/invoices/delete/' + invoice.id + '"' +
                                            'onclick="if(confirm(\'Удалить квитанцию?\')) window.location.href=this.dataset.url"><i class="fa fa-trash"></i></a>' +
                                     '</div>' +
                                 '</td>';
         let row_children = newTableRow.children;
-        for(let j = 1; j < row_children.length - 1; j++) {
+        for(let j = 2; j < row_children.length - 1; j++) {
             row_children[j].addEventListener('click', function(){
-                window.location.href = '/admin/invoices/'+invoice.id;
+                window.location.href = '/myhome/admin/invoices/'+invoice.id;
             });
         }
 
@@ -295,7 +299,7 @@ function drawMessagesTableCabinet(){
 
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
-        newTableRow.class = 'invoice_row';
+        newTableRow.classList.add = 'invoice_row';
         var text = msg.text;
         let strippedStr = text.replace(/(<([^>]+)>)/gi, "");
         var newText = strippedStr.substring(0, 70);
@@ -324,7 +328,7 @@ function drawMessagesTableCabinet(){
 }
 function drawMessagesTableAdmin() {
     let pageFiltersString = JSON.stringify(gatherFilters());
-    let data = getTableData('/admin/messages/get-messages', currentPageNumber, currentPageSize, pageFiltersString);
+    let data = getTableData('/myhome/admin/messages/get-messages', currentPageNumber, currentPageSize, pageFiltersString);
     let $invoicesTableBody = $("#messageTable tbody");
     $invoicesTableBody.html('');
 
@@ -341,7 +345,7 @@ function drawMessagesTableAdmin() {
 
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
-        newTableRow.class = 'invoice_row';
+        newTableRow.classList.add = 'invoice_row';
         var text = msg.text;
         let strippedStr = text.replace(/(<([^>]+)>)/gi, "");
         var newText = strippedStr.substring(0, 70);
@@ -354,7 +358,7 @@ function drawMessagesTableAdmin() {
         let row_children = newTableRow.children;
         for (let j = 1; j < row_children.length - 1; j++) {
             row_children[j].addEventListener('click', function () {
-                window.location.href = '/admin/messages/' + msg.id;
+                window.location.href = '/myhome/admin/messages/' + msg.id;
             });
         }
         $invoicesTableBody.append(newTableRow);
@@ -378,7 +382,7 @@ function drawInvoicesInCabinetTable(){
         date.setDate(date.getDate() + 1);
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
-        newTableRow.class = 'invoice_row';
+        newTableRow.classList.add = 'invoice_row';
         newTableRow.innerHTML =
             '<td>' + invoice.id.toString().padStart(10, '0') + '</td>' +
             '<td>' + date.toISOString().split('T')[0] + '</td>' +
@@ -408,7 +412,7 @@ function drawInvoicesInCabinetTable(){
 }
 function drawAccountsTable(){
     let pageFiltersString = JSON.stringify(gatherFilters());
-    let data = getTableData('/admin/accounts/get-accounts', currentPageNumber, currentPageSize, pageFiltersString);
+    let data = getTableData('/myhome/admin/accounts/get-accounts', currentPageNumber, currentPageSize, pageFiltersString);
     let $accountsTableBody = $("#accountsTable tbody");
     $accountsTableBody.html('');
 
@@ -420,7 +424,7 @@ function drawAccountsTable(){
 
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
-        newTableRow.class = 'account_row';
+        newTableRow.classList.add = 'account_row';
         newTableRow.innerHTML = '<td>' + account.id + '</td>' +
 
                                 '<td>' +
@@ -435,8 +439,8 @@ function drawAccountsTable(){
                                 '<td style="color:' + ((account.balance > 0) ? 'green' : 'red') + '" >' + account.balance + '</td>' +
                                 '<td>' +
                                     '<div class="btn-group pull-right">' +
-                                        '<a class="btn btn-default btn-sm" href="/admin/accounts/update/' + account.id + '"><i class="fa fa-pencil"></i></a>' +
-                                        '<a class="btn btn-default btn-sm" data-url="/admin/accounts/delete/'+ account.id + '"' +
+                                        '<a class="btn btn-default btn-sm" href="/myhome/admin/accounts/update/' + account.id + '"><i class="fa fa-pencil"></i></a>' +
+                                        '<a class="btn btn-default btn-sm" data-url="/myhome/admin/accounts/delete/'+ account.id + '"' +
                                            'onclick="if(confirm(\'Удалить лицевой счёт?\')) window.location.href=this.dataset.url"><i class="fa fa-trash"></i></a>' +
                                     '</div>' +
                                 '</td>' +
@@ -444,7 +448,7 @@ function drawAccountsTable(){
         let row_children = newTableRow.children;
         for(let j = 0; j < row_children.length - 2; j++) {
             row_children[j].addEventListener('click', function(){
-                window.location.href = '/admin/accounts/'+account.id;
+                window.location.href = '/myhome/admin/accounts/'+account.id;
             });
         }
 
@@ -460,14 +464,14 @@ function drawAccountsTable(){
 }
 function drawMetersTable(){
     let pageFiltersString = JSON.stringify(gatherFilters());
-    let data = getTableData('/admin/meters/get-meters', currentPageNumber, currentPageSize, pageFiltersString);
+    let data = getTableData('/myhome/admin/meters/get-meters', currentPageNumber, currentPageSize, pageFiltersString);
     let $metersTable = $("#metersTable tbody");
     $metersTable.html('');
     for(const meter of data.content) {
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
-        newTableRow.class = 'meter_row';
-        newTableRow.innerHTML =   '<td><a href="/admin/buildings/' + meter.buildingID + '">' + meter.buildingName + '</a></td>' +
+        newTableRow.classList.add = 'meter_row';
+        newTableRow.innerHTML =   '<td><a href="/myhome/admin/buildings/' + meter.buildingID + '">' + meter.buildingName + '</a></td>' +
                                   '<td>' + meter.section + '</td>' +
                                   '<td>' + meter.apartmentNumber + '</td>' +
                                   '<td>' + meter.serviceName + '</td>' +
@@ -475,14 +479,14 @@ function drawMetersTable(){
                                   '<td style="background-color: #DFD5; font-weight:bold; text-decoration:underline">' + meter.serviceUnitName + '</td>' +
                                   '<td>' +
                                       '<div class="btn-group pull-right">' +
-                                          '<a class="btn btn-default btn-sm" href="/admin/meters/create-add?flat_id=' + meter.apartmentID + '&service_id=' + meter.serviceID + '" title="Снять новое показание счетчика" target="_blank" data-toggle="tooltip"><i class="fa fa-dashboard"></i></a>' +
-                                          '<a class="btn btn-default btn-sm" href="/admin/meters/data?flat_id=' + meter.apartmentID + '&service_id=' + meter.serviceID + '" title="Открыть историю показаний для счетчика" data-toggle="tooltip"><i class="fa fa-eye"></i></a>' +
+                                          '<a class="btn btn-default btn-sm" href="/myhome/admin/meters/create-add?flat_id=' + meter.apartmentID + '&service_id=' + meter.serviceID + '" title="Снять новое показание счетчика" target="_blank" data-toggle="tooltip"><i class="fa fa-dashboard"></i></a>' +
+                                          '<a class="btn btn-default btn-sm" href="/myhome/admin/meters/data?flat_id=' + meter.apartmentID + '&service_id=' + meter.serviceID + '" title="Открыть историю показаний для счетчика" data-toggle="tooltip"><i class="fa fa-eye"></i></a>' +
                                       '</div>' +
                                   '</td>';
         let row_children = newTableRow.children;
         for(let j = 0; j < row_children.length - 1; j++) {
             row_children[j].addEventListener('click', function(){
-                window.location.href = '/admin/meters/data?flat_id='+meter.apartmentID+'&service_id='+meter.serviceID;
+                window.location.href = '/myhome/admin/meters/data?flat_id='+meter.apartmentID+'&service_id='+meter.serviceID;
             });
         }
 
@@ -508,14 +512,14 @@ function drawMeterDataTable(){
     };
 
     let pageFiltersString = JSON.stringify(singleMeterFilters);
-    let data = getTableData('/admin/meters/get-meter-data', currentPageNumber, currentPageSize, pageFiltersString);
+    let data = getTableData('/myhome/admin/meters/get-meter-data', currentPageNumber, currentPageSize, pageFiltersString);
 
     let $metersTable = $("#metersTable tbody");
     $metersTable.html('');
     for(const meter of data.content) {
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
-        newTableRow.class = 'meter_row';
+        newTableRow.classList.add = 'meter_row';
         let meter_date = new Date(meter.date);
         let meter_month = '' + (meter_date.getMonth()+1) + '-' + meter_date.getFullYear();
         newTableRow.innerHTML =   '<td>' + meter.id + '</td>' +
@@ -530,14 +534,14 @@ function drawMeterDataTable(){
                                   '<td style="background-color: #DFD5; font-weight:bold; text-decoration:underline">' + meter.serviceUnitName + '</td>' +
                                   '<td>' +
                                       '<div class="btn-group pull-right">' +
-                                          '<a class="btn btn-default btn-sm" href="/admin/meters/create-add?flat_id=' + meter.apartmentID + '&service_id=' + meter.serviceID + '" title="Снять новое показание счетчика" target="_blank" data-toggle="tooltip"><i class="fa fa-dashboard"></i></a>' +
-                                          '<a class="btn btn-default btn-sm" href="/admin/meters/data?flat_id=' + meter.apartmentID + '&service_id=' + meter.serviceID + '" title="Открыть историю показаний для счетчика" data-toggle="tooltip"><i class="fa fa-eye"></i></a>' +
+                                          '<a class="btn btn-default btn-sm" href="/myhome/admin/meters/create-add?flat_id=' + meter.apartmentID + '&service_id=' + meter.serviceID + '" title="Снять новое показание счетчика" target="_blank" data-toggle="tooltip"><i class="fa fa-dashboard"></i></a>' +
+                                          '<a class="btn btn-default btn-sm" href="/myhome/admin/meters/data?flat_id=' + meter.apartmentID + '&service_id=' + meter.serviceID + '" title="Открыть историю показаний для счетчика" data-toggle="tooltip"><i class="fa fa-eye"></i></a>' +
                                       '</div>' +
                                   '</td>';
         let row_children = newTableRow.children;
         for(let j = 0; j < row_children.length - 1; j++) {
             row_children[j].addEventListener('click', function(){
-                window.location.href = '/admin/meters/info/' + meter.id;
+                window.location.href = '/myhome/admin/meters/info/' + meter.id;
             });
         }
 
@@ -545,7 +549,7 @@ function drawMeterDataTable(){
     }
     if(data.content.length === 0) {
         let newTableRow = document.createElement('tr');
-        newTableRow.innerHTML = '<td colspan=7>Ничего не найдено...</td>';
+        newTableRow.innerHTML = '<td colspan=11>' + notFoundText + '</td>';
         $metersTable.append(newTableRow);
     }
 
@@ -553,33 +557,33 @@ function drawMeterDataTable(){
 }
 function drawRequestsTable() {
     let pageFiltersString = JSON.stringify(gatherFilters());
-    let data = getTableData('/admin/requests/get-requests', currentPageNumber, currentPageSize, pageFiltersString);
+    let data = getTableData('/myhome/admin/requests/get-requests', currentPageNumber, currentPageSize, pageFiltersString);
 
     let $requestsTable = $("#requestsTable tbody");
     $requestsTable.html('');
     for(const request of data.content) {
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
-        newTableRow.class = 'request_row';
+        newTableRow.classList.add = 'request_row';
         newTableRow.innerHTML =   '<td>' + request.id + '</td>' +
                                   '<td>' + request.best_time + '</td>' +
                                   '<td>' + request.masterTypeName + '</td>' +
                                   '<td style="max-width: 200px; text-overflow: ellipsis; white-space: nowrap; overflow:hidden">' + request.description + '</td>' +
-                                  '<td><a href="/admin/apartments/' + request.apartmentID +'">кв. ' + request.apartmentNumber + ', ' + request.apartmentBuildingName + '</a></td>' +
-                                  '<td><a href="/admin/owners/' + request.owner + '">' + request.ownerFullName + '</a></td>' +
+                                  '<td><a href="/myhome/admin/apartments/' + request.apartmentID +'">кв. ' + request.apartmentNumber + ', ' + request.apartmentBuildingName + '</a></td>' +
+                                  '<td><a href="/myhome/admin/owners/' + request.owner + '">' + request.ownerFullName + '</a></td>' +
                                   '<td>' + request.ownerPhoneNumber + '</td>' +
-                                  '<td><a href="/admin/admins/' + request.masterID + '">' + ((request.masterFullName != null) ? request.masterFullName : '') + '</a></td>' +
+                                  '<td><a href="/myhome/admin/admins/' + request.masterID + '">' + ((request.masterFullName != null) ? request.masterFullName : '') + '</a></td>' +
                                   '<td><small class="label ' + ((request.statusName === 'Новое') ? 'label-primary' : (request.statusName === 'В работе') ? 'label-warning' : 'label-success') + '">' + request.statusName + '</small></td>' +
                                   '<td>' +
                                       '<div class="btn-group pull-right">' +
-                                          '<a class="btn btn-default btn-sm" href="/admin/requests/update/' + request.id + '"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                                          '<a class="btn btn-default btn-sm" href="/admin/requests/delete/' + request.id + '"><i class="fa fa-trash" aria-hidden="true"></i></a>' +
+                                          '<a class="btn btn-default btn-sm" href="/myhome/admin/requests/update/' + request.id + '"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                          '<a class="btn btn-default btn-sm" href="/myhome/admin/requests/delete/' + request.id + '"><i class="fa fa-trash" aria-hidden="true"></i></a>' +
                                       '</div>' +
                                   '</td>';
         let row_children = newTableRow.children;
         for(let j = 0; j < row_children.length - 1; j++) {
             row_children[j].addEventListener('click', function(){
-                window.location.href = '/admin/requests/info/' + request.id;
+                window.location.href = '/myhome/admin/requests/info/' + request.id;
             });
         }
 
@@ -609,7 +613,7 @@ function drawRequestsTableCabinet() {
         let formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
-        newTableRow.class = 'request_row';
+        newTableRow.classList.add('request_row');
 
         newTableRow.innerHTML =   '<td>' + request.id + '</td>' +
             '<td>' + request.master_type + '</td>' +
@@ -633,19 +637,19 @@ function drawRequestsTableCabinet() {
 }
 function drawOwnersTable(){
     let pageFiltersString = JSON.stringify(gatherFilters());
-    let data = getTableData('/admin/owners/get-owners', currentPageNumber, currentPageSize, pageFiltersString);
+    let data = getTableData('/myhome/admin/owners/get-owners', currentPageNumber, currentPageSize, pageFiltersString);
     let $ownersTable = $("#ownersTable tbody");
     $ownersTable.html('');
     for(const owner of data.content) {
 
-        const buildingLinks = owner.buildings.map(function(buildingObject) {return ('<p style="margin:0"><a href="/admin/buildings/' + buildingObject.id + '">' + buildingObject.name + '</a></p>')});
+        const buildingLinks = owner.buildings.map(function(buildingObject) {return ('<p style="margin:0"><a href="/myhome/admin/buildings/' + buildingObject.id + '">' + buildingObject.name + '</a></p>')});
         const finalBuildingString = buildingLinks.join('');
-        const apartmentLinks = owner.apartments.map(function(apartmentObject) {return ('<p style="margin:0; font-size:13px"><a href="/admin/apartments/' + apartmentObject.id + '">' + apartmentObject.fullName + '</a></p>')});
+        const apartmentLinks = owner.apartments.map(function(apartmentObject) {return ('<p style="margin:0; font-size:13px"><a href="/myhome/admin/apartments/' + apartmentObject.id + '">' + apartmentObject.fullName + '</a></p>')});
         const finalApartmentString = apartmentLinks.join('');
 
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
-        newTableRow.class = 'owner_row';
+        newTableRow.classList.add('owner_row');
         newTableRow.innerHTML =   '<td>' + owner.id + '</td>' +
                                   '<td>' + owner.fullName + '</td>' +
                                   '<td>' + owner.phone_number + '</td>' +
@@ -666,7 +670,7 @@ function drawOwnersTable(){
         let row_children = newTableRow.children;
         for(let j = 0; j < row_children.length - 1; j++) {
             row_children[j].addEventListener('click', function(){
-                window.location.href = '/admin/owners/' + owner.id;
+                window.location.href = '/myhome/admin/owners/' + owner.id;
             });
         }
 
@@ -682,13 +686,13 @@ function drawOwnersTable(){
 
 function drawAdminsTable(){
     let pageFiltersString = JSON.stringify(gatherFilters());
-    let data = getTableData('/admin/admins/get-admins', currentPageNumber, currentPageSize, pageFiltersString);
+    let data = getTableData('/myhome/admin/admins/get-admins', currentPageNumber, currentPageSize, pageFiltersString);
     let $adminsTable = $("#adminsTable tbody");
     $adminsTable.html('');
     for(const admin of data.content) {
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
-        newTableRow.class = 'user-row';
+        newTableRow.classList.add('user-row');
         newTableRow.innerHTML =   '<td>' + admin.id + '</td>' +
             '<td>' + admin.fullName + '</td>' +
             '<td>' + admin.role + '</td>' +
@@ -697,15 +701,15 @@ function drawAdminsTable(){
             '<td>' + admin.active + '</td>' +
             '<div class="btn-group" role="group" aria-label="Basic outlined button group">' +
             '<a class="btn btn-default btn-sm invite_button" title="Отправить приглашение"><i class="fa fa-repeat"></i></a>' +
-            '<a href="/admin/admins/update/'+ admin.id + '" class="btn btn-default btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></i></a>' +
-            '<a href="/admin/admins/delete/'+ admin.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i></a>' +
+            '<a href="/myhome/admin/admins/update/'+ admin.id + '" class="btn btn-default btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></i></a>' +
+            '<a href="/myhome/admin/admins/delete/'+ admin.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i></a>' +
             '</div>' +
             '</td>';
 
         let row_children = newTableRow.children;
         for(let j = 0; j < row_children.length - 1; j++) {
             row_children[j].addEventListener('click', function(){
-                window.location.href = '/admin/admins/' + admin.id;
+                window.location.href = '/myhome/admin/admins/' + admin.id;
             });
         }
 
@@ -722,13 +726,13 @@ function drawAdminsTable(){
 function drawBuildingsTable() {
 
     let pageFiltersString = JSON.stringify(gatherFilters());
-    let data = getTableData('/admin/buildings/get-buildings-page', currentPageNumber, currentPageSize, pageFiltersString);
+    let data = getTableData('/myhome/admin/buildings/get-buildings-page', currentPageNumber, currentPageSize, pageFiltersString);
     let $buildingsTable = $("#buildingsTable tbody");
     $buildingsTable.html('');
     for(const building of data.content) {
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
-        newTableRow.class = 'building_row';
+        newTableRow.classList.add('building_row');
         newTableRow.innerHTML =   '<td>' + building.id + '</td>' +
                                   '<td>' + building.name + '</td>' +
                                   '<td>' + building.address + '</td>' +
@@ -741,7 +745,7 @@ function drawBuildingsTable() {
         let row_children = newTableRow.children;
         for(let j = 0; j < row_children.length - 1; j++) {
             row_children[j].addEventListener('click', function(){
-                window.location.href = '/admin/buildings/' + building.id;
+                window.location.href = '/myhome/admin/buildings/' + building.id;
             });
         }
 
@@ -758,14 +762,14 @@ function drawBuildingsTable() {
 function drawTransactionsTable() {
 
     let pageFiltersString = JSON.stringify(gatherFilters());
-    let data = getTableData('/admin/cashbox/get-cashbox-page', currentPageNumber, currentPageSize, pageFiltersString);
+    let data = getTableData('/myhome/admin/cashbox/get-cashbox-page', currentPageNumber, currentPageSize, pageFiltersString);
     let $cashboxTable = $("#cashboxTable tbody");
     $cashboxTable.html('');
     for(const cashbox of data.content) {
         let date = new Date(cashbox.date);
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
-        newTableRow.class = 'cashbox_row';
+        newTableRow.classList.add('cashbox_row');
         let incomeExpenseItem = (cashbox.incomeExpenseItems) ? cashbox.incomeExpenseItems : notFoundText;
         let ownerFullName = (cashbox.ownerFullName) ? cashbox.ownerFullName : notFoundText;
         let apartmentAccount = (cashbox.apartmentAccount) ? cashbox.apartmentAccount : notFoundText;
@@ -779,14 +783,14 @@ function drawTransactionsTable() {
                                   '<td style="color: ' + (cashbox.amount > 0 ? 'green' : 'red') + '">' + cashbox.amount + '</td>' +
                                   '<td>' +
                                       '<div class="btn-group" role="group" aria-label="Basic outlined button group">' +
-                                          '<a href="/admin/cashbox/edit/' + cashbox.id + '" class="btn btn-default btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                                          '<a href="/admin/cashbox/delete/' + cashbox.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash" aria-hidden="true"></i></a>' +
+                                          '<a href="/myhome/admin/cashbox/edit/' + cashbox.id + '" class="btn btn-default btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                          '<a href="/myhome/admin/cashbox/delete/' + cashbox.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash" aria-hidden="true"></i></a>' +
                                       '</div>' +
                                   '</td>';
         let row_children = newTableRow.children;
         for(let j = 0; j < row_children.length - 1; j++) {
             row_children[j].addEventListener('click', function(){
-                window.location.href = '/admin/cashbox/' + cashbox.id;
+                window.location.href = '/myhome/admin/cashbox/' + cashbox.id;
             });
         }
 
@@ -993,7 +997,9 @@ $(document).ready(function(){
 
     $(".my_filters").change(() => changeFilterData());
     $(".datetime_filter").change(function(){
+        console.log('date changed');
         let datetime = this.value;
+        console.log(datetime);
         if(datetime.split(' to ').length > 1) changeFilterData();
     });
 

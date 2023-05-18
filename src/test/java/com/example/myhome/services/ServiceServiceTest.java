@@ -1,10 +1,10 @@
 package com.example.myhome.services;
 
-import com.example.myhome.home.model.Service;
-import com.example.myhome.home.model.Unit;
-import com.example.myhome.home.repository.ServiceRepository;
-import com.example.myhome.home.repository.UnitRepository;
-import com.example.myhome.home.service.impl.ServiceServiceImpl;
+import com.example.myhome.model.Service;
+import com.example.myhome.model.Unit;
+import com.example.myhome.repository.ServiceRepository;
+import com.example.myhome.repository.UnitRepository;
+import com.example.myhome.service.impl.ServiceServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

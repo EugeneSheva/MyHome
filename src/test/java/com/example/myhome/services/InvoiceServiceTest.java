@@ -1,8 +1,8 @@
 package com.example.myhome.services;
 
-import com.example.myhome.home.model.Invoice;
-import com.example.myhome.home.repository.InvoiceRepository;
-import com.example.myhome.home.service.InvoiceService;
+import com.example.myhome.model.Invoice;
+import com.example.myhome.repository.InvoiceRepository;
+import com.example.myhome.service.InvoiceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

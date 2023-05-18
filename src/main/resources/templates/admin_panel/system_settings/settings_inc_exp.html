@@ -69,8 +69,8 @@
                       <a href="/">
                         <td th:text="${transaction.name}">*)(@*^$%#&amp;#(#)#(</td>
                         <td>
-                          <span th:if="${transaction.incomeExpenseType.name().equalsIgnoreCase('income')}" class="text text-green">Приход</span>
-                          <span th:if="${transaction.incomeExpenseType.name().equalsIgnoreCase('expense')}" class="text text-red">Расход</span>
+                          <span th:if="${transaction.incomeExpenseType.name().equalsIgnoreCase('income')}" class="text text-green" th:text="#{income}">Приход</span>
+                          <span th:if="${transaction.incomeExpenseType.name().equalsIgnoreCase('expense')}" class="text text-red" th:text="#{expense_single}">Расход</span>
                         </td>
                         <td>
                           <div class="btn-group pull-right">
@@ -111,7 +111,8 @@
     for(let i = 0; i < transaction_rows.length; i++) {
       console.log(transaction_rows[i]);
       transaction_rows[i].addEventListener('click', () => {
-        window.location.href = '/admin/income-expense/update/' + document.getElementById("input-" + i).value;
+        console.log(window.location.pathname.substring(0, window.location.pathname.indexOf("/",2)));
+<!--        window.location.href = '/admin/income-expense/update/' + document.getElementById("input-" + i).value;-->
       });
     }
   });

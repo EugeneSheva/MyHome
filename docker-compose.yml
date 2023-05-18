@@ -1,0 +1,37 @@
+version: '3.3'
+services:
+
+  db:
+    image: mysql
+    volumes:
+      - /opt/test:/var/lib/mysql
+      - ./mysql-dump:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: OUlIg40qOZ
+      MYSQL_DATABASE: avada_kino
+      MYSQL_USER: avada_kino
+      MYSQL_PASSWORD: OUlIg40qOZ
+    ports:
+      - "3308:3306"
+
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - '8888:80'
+    environment:
+      PMA_HOST: db
+
+  vilkipalki:
+    depends_on:
+      - db
+    image: temporalparadox/vilkipalki
+#    volumes:
+#      - ./target/vilkipalki.war:/usr/local/tomcat/webapps/vilkipalki.war
+    ports:
+      - '8082:8080'
+    environment:
+      MYSQL_DATABASE: avada_kino
+      MYSQL_USER: avada_kino
+      MYSQL_PASSWORD: OUlIg40qOZ

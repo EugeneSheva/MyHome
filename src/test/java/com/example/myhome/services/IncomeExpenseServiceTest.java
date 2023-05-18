@@ -1,10 +1,9 @@
 package com.example.myhome.services;
 
-import com.example.myhome.home.exception.NotFoundException;
-import com.example.myhome.home.model.IncomeExpenseItems;
-import com.example.myhome.home.repository.IncomeExpenseRepository;
-import com.example.myhome.home.service.IncomeExpenseItemService;
-import com.example.myhome.home.service.impl.IncomeExpenseItemServiceImpl;
+import com.example.myhome.exception.NotFoundException;
+import com.example.myhome.model.IncomeExpenseItems;
+import com.example.myhome.repository.IncomeExpenseRepository;
+import com.example.myhome.service.IncomeExpenseItemService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

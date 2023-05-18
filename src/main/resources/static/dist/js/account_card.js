@@ -8,7 +8,7 @@ $(document).ready(function(){
 
     house_selector.select2({
         ajax: {
-            url: '/admin/buildings/get-buildings',
+            url: '/myhome/admin/buildings/get-buildings',
             data: function(params){
                 console.log(params.page);
                 return {
@@ -46,7 +46,7 @@ $(document).ready(function(){
 
           section_selector.prop('disabled', false);
 
-          $.get('/admin/buildings/get-sections/'+this.value, function(data){
+          $.get('/myhome/admin/buildings/get-sections/'+this.value, function(data){
 
             option = document.createElement("option");
             option.value = 0;
@@ -75,7 +75,7 @@ $(document).ready(function(){
             apartment_selector.prop('disabled', false);
             $.ajax({
                 type:'GET',
-                url:'/admin/buildings/get-section-apartments',
+                url:'/myhome/admin/buildings/get-section-apartments',
                 data:{id:buildingID, section_name:section_selector.val()},
                 success: function(data){
 
@@ -101,7 +101,7 @@ $(document).ready(function(){
         apartmentID = 0;
 
         if(apartment_selector.val() != 0) {
-            $.get("/admin/apartments/get-owner", {flat_id:apartment_selector.val()}, function(data){
+            $.get("/myhome/admin/apartments/get-owner", {flat_id:apartment_selector.val()}, function(data){
               owner = data;
               console.log(data);
               console.log(owner);
@@ -110,7 +110,7 @@ $(document).ready(function(){
               $("#owner_phone").html('<b>'+ownerPhoneText+': </b>');
 
               let name = document.createElement("a");
-              name.href = (data != null) ? '/admin/owners/'+data.id : '#';
+              name.href = (data != null) ? '/myhome/admin/owners/'+data.id : '#';
               name.text = (data != null) ? data.fullName : notFoundText;
 
               let phone = document.createElement("a");
@@ -131,14 +131,14 @@ $(document).ready(function(){
 // получение дома
     $.ajax({
       type:'GET',
-      url: '/admin/buildings/get-building/',
+      url: '/myhome/admin/buildings/get-building/',
       data: {building_id: buildingID},
       success: function(data) {
           let option = new Option(data.name, data.id, true, true);
           house_selector.append(option).trigger('change');
 
             // к найденному дому сразу грузит его секции
-           $.get('/admin/buildings/get-sections/'+house_selector.val(), function(data){
+           $.get('/myhome/admin/buildings/get-sections/'+house_selector.val(), function(data){
 
                for(let i = 0; i < data.length; i++) {
                  option = document.createElement("option");

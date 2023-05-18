@@ -50,7 +50,7 @@ $(document).ready(function(){
 
           apartment_select.appendChild(option);
 
-          $.get('/admin/buildings/get-sections/'+this.value, function(data){
+          $.get('/myhome/admin/buildings/get-sections/'+this.value, function(data){
 
             console.log(data);
 
@@ -82,7 +82,7 @@ $(document).ready(function(){
 
         apartment_select.appendChild(option);
 
-        $.get('/admin/buildings/get-section-apartments/'+house_select.value, {section_name:this.value}, function(data){
+        $.get('/myhome/admin/buildings/get-section-apartments/'+house_select.value, {section_name:this.value}, function(data){
 
           console.log(data);
 
@@ -100,7 +100,7 @@ $(document).ready(function(){
 
       let flat_id = $(this).val();
 
-      $.get('/admin/apartments/get-owner', {flat_id:flat_id}, function(data){
+      $.get('/myhome/admin/apartments/get-owner', {flat_id:flat_id}, function(data){
 
         alert('получил владельцa');
         console.log(data);
@@ -109,7 +109,7 @@ $(document).ready(function(){
         $("#owner_phone").empty();
 
         let name = document.createElement("a");
-        name.href = '/admin/owners/'+data.id;
+        name.href = '/myhome/admin/owners/'+data.id;
         name.text = data.first_name + ' ' + data.last_name;
 
         let phone = document.createElement("a");
@@ -123,7 +123,7 @@ $(document).ready(function(){
 
       });
 
-      $.get('/admin/accounts/get-flat-account',{flat_id:flat_id}, function(data){
+      $.get('/myhome/admin/accounts/get-flat-account',{flat_id:flat_id}, function(data){
           alert('получил лицевой счёт');
           console.log(data);
 

@@ -224,7 +224,7 @@
         $('#building, #section, #floor, #tariff').select2({placeholder:choise,minimumResultsForSearch:Infinity});
         $("#owner").select2({
             ajax: {
-                url: '/admin/owners/get-all-owners',
+                url: '/myhome/admin/owners/get-all-owners',
                 data: function(params){
                     console.log(params.page);
                     return {

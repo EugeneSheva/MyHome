@@ -1,22 +1,17 @@
 package com.example.myhome.services;
 
-import com.example.myhome.home.dto.AdminDTO;
-import com.example.myhome.home.mapper.AdminDTOMapper;
-import com.example.myhome.home.model.Admin;
-import com.example.myhome.home.model.UserRole;
-import com.example.myhome.home.repository.AdminRepository;
-import com.example.myhome.home.service.AdminService;
-import com.example.myhome.home.specification.AdminSpecifications;
-import com.example.myhome.home.validator.AdminValidator;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.myhome.dto.AdminDTO;
+import com.example.myhome.mapper.AdminDTOMapper;
+import com.example.myhome.model.Admin;
+import com.example.myhome.model.UserRole;
+import com.example.myhome.repository.AdminRepository;
+import com.example.myhome.service.AdminService;
+import com.example.myhome.validator.AdminValidator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -26,8 +21,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 

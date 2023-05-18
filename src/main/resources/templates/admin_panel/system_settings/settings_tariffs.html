@@ -56,9 +56,9 @@
                 <table class="table table-bordered table-hover table-striped linkedRow">
                   <thead>
                   <tr>
-                    <th><a th:href="'/admin/tariffs?sort=' + ${sort}" data-sort="name" th:text="#{settings.system.tariffs.mainPage.table.name}">Название тарифа</a></th>
-                    <th th:text="#{settings.system.tariffs.mainPage.table.description}">Описание тарифа</th>
-                    <th th:text="#{settings.system.tariffs.mainPage.table.date}">Дата редактирования</th>
+                    <th><a th:href="@{'/admin/tariffs?sort=' + ${sort}}" data-sort="name" th:text="#{settings.system.tariffs.mainPage.table.name}" id="name">Название тарифа</a></th>
+                    <th th:text="#{settings.system.tariffs.mainPage.table.description}" id="description">Описание тарифа</th>
+                    <th th:text="#{settings.system.tariffs.mainPage.table.date}" id="date">Дата редактирования</th>
                     <th style="width: 114px; min-width: 114px">&nbsp;</th>
                   </tr>
                   </thead>
@@ -70,9 +70,9 @@
                       <td th:text="${#temporals.format(tariff.date, 'yyyy-MM-dd - HH:mm')}"></td>
                       <td>
                         <div class="btn-group pull-right">
-                          <a class="btn btn-default btn-sm" th:href="@{/admin/tariffs/create?tariff_id={id}(id=${tariff.id})}" title="Копировать" data-toggle="tooltip">
+                          <button class="btn btn-default btn-sm copy-tariff" title="Копировать" data-toggle="tooltip">
                             <i class="fa fa-clone"></i>
-                          </a>
+                          </button>
                           <a class="btn btn-default btn-sm" th:href="@{/admin/tariffs/update/{id}(id=${tariff.id})}" title="Редактировать" data-toggle="tooltip">
                             <i class="fa fa-pencil"></i>
                           </a>
@@ -109,8 +109,36 @@
     console.log(tariff_rows);
     for(let i = 0; i < tariff_rows.length; i++) {
       console.log(tariff_rows[i]);
-      tariff_rows[i].addEventListener('click', () => {
-        window.location.href = '/admin/tariffs/' + document.getElementById("input-" + i).value;
+      let row_children = tariff_rows[i].children;
+      for(let j = 0; j < row_children.length-1; j++) {
+          row_children[j].addEventListener('click', () => {
+          window.location.href = '/myhome/admin/tariffs/' + document.getElementById("input-" + i).value;
+        });
+      }
+    }
+
+    let copy_tariff_buttons = document.getElementsByClassName("copy-tariff");
+    console.log(copy_tariff_buttons);
+    for(let i = 0; i < copy_tariff_buttons.length; i++) {
+      let button = copy_tariff_buttons[i];
+      let nameTitle = document.getElementById("name").innerText;
+      let descTitle = document.getElementById("description").innerText;
+      let dateTitle = document.getElementById("date").innerText;
+      let name = button.parentElement.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.innerText;
+      let description = button.parentElement.parentElement.previousElementSibling.previousElementSibling.innerText;
+      let date = button.parentElement.parentElement.previousElementSibling.innerText;
+
+      let text = nameTitle + ': ' + name + ', ' + descTitle + ': ' + description + ', ' + dateTitle + ': ' + date
+      button.addEventListener('click', function(){
+        console.log('event listener triggered');
+        try {
+            navigator.clipboard.writeText(text);
+            console.log('Content copied to clipboard');
+            alert('Скопировано!')
+          } catch(err) {
+            console.error('failed to copy text: ' + text);
+            alert('Ошибка копирования');
+        }
       });
     }
   });

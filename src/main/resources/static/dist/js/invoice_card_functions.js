@@ -36,7 +36,7 @@ function countTotalPrice(){
         let unit = $(select).closest('tr').find('.unit');
         console.log(unit);
 
-        $.get('/admin/services/get-unit', {id:service_id}, function(data){
+        $.get('/myhome/admin/services/get-unit', {id:service_id}, function(data){
             $(unit).val(data.name);
         });
     }

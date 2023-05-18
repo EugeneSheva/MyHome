@@ -59,8 +59,8 @@
                       <select style="width: 100%; padding-block: 1px; padding-inline: 10px;"
                               class="form_control"
                               th:field="*{incomeExpenseType}" id="trans_type">
-                        <option value="INCOME">Приход</option>
-                        <option value="EXPENSE">Расход</option>
+                        <option value="INCOME" th:text="#{income}">Приход</option>
+                        <option value="EXPENSE" th:text="#{expense_single}">Расход</option>
                       </select>
                     </div>
                   </div>

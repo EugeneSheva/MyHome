@@ -1,9 +1,9 @@
 package com.example.myhome.specifications;
 
-import com.example.myhome.home.model.Admin;
-import com.example.myhome.home.model.UserRole;
-import com.example.myhome.home.repository.AdminRepository;
-import com.example.myhome.home.specification.AdminSpecifications;
+import com.example.myhome.model.Admin;
+import com.example.myhome.model.UserRole;
+import com.example.myhome.repository.AdminRepository;
+import com.example.myhome.specification.AdminSpecifications;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

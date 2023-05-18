@@ -219,7 +219,7 @@
 
         $("#owner").select2({
             ajax: {
-                url: '/admin/owners/get-all-owners',
+                url: '/myhome/admin/owners/get-all-owners',
                 data: function(params){
                     console.log(params.page);
                     return {
@@ -235,7 +235,7 @@
 
         $("#master").select2({
             ajax: {
-                url: '/admin/admins/get-all-masters',
+                url: '/myhome/admin/admins/get-all-masters',
                 data: function(params){
                     console.log(params.page);
                     return {

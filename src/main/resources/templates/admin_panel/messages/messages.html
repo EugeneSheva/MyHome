@@ -198,7 +198,7 @@
     function deleteSelected() {
         var result = confirm("Подтвердите удаление");
            if (result) {
-               var url = "/admin/messages/deleteSelected";
+               var url = "/myhome/admin/messages/deleteSelected";
                const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
                var ids = [];
                checkedBoxes.forEach((box) => {

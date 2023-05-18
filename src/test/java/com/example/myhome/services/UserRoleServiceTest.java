@@ -1,12 +1,10 @@
 package com.example.myhome.services;
 
-import com.example.myhome.home.model.Admin;
-import com.example.myhome.home.model.PageRoleDisplay;
-import com.example.myhome.home.model.UserRole;
-import com.example.myhome.home.repository.UserRoleRepository;
-import com.example.myhome.home.service.UserRoleService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.myhome.model.Admin;
+import com.example.myhome.model.PageRoleDisplay;
+import com.example.myhome.model.UserRole;
+import com.example.myhome.repository.UserRoleRepository;
+import com.example.myhome.service.UserRoleService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;

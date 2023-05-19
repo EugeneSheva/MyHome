@@ -43,7 +43,7 @@ public class AdminValidator implements Validator {
             e.rejectValue("phone_number", "phone_number.empty", messageSource.getMessage("users.phone_number.empty", null, locale));
         } else {
             Matcher phone_matcher = PHONE_PATTERN.matcher(dto.getPhone_number());
-            if(!phone_matcher.matches()) e.rejectValue("phone_number", "phone_number.incorrect", messageSource.getMessage("users.phone_number.incorrect", null, locale));
+            if(!phone_matcher.find()) e.rejectValue("phone_number", "phone_number.incorrect", messageSource.getMessage("users.phone_number.incorrect", null, locale));
         }
         if(dto.getEmail() == null || dto.getEmail().isEmpty()) {
             e.rejectValue("email", "email.empty", messageSource.getMessage("users.email.empty", null, locale));
@@ -53,7 +53,7 @@ public class AdminValidator implements Validator {
         } else if(adminRepository.existsByEmail(dto.getEmail())) {
             e.rejectValue("email", "email.taken", messageSource.getMessage("users.email.taken", null, locale));
         }
-        if(!dto.getPassword().isEmpty() && !dto.getPassword().equals(dto.getConfirm_password())) {
+        if(dto.getPassword() == null || !dto.getPassword().isEmpty() && !dto.getPassword().equals(dto.getConfirm_password())) {
             e.rejectValue("password", "password.no-match", messageSource.getMessage("users.password.no-match", null, locale));
             e.rejectValue("confirm_password", "password.no-match", messageSource.getMessage("users.password.no-match", null, locale));
         }

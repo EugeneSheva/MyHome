@@ -112,7 +112,7 @@
                       <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('masterTypeID')}" th:errors="*{masterTypeID}"></h4>
                       <h4 style="font-weight:bold" th:text="#{requests.editPage.card.status}">Статус</h4>
                       <select class="selects mb-3" th:field="*{status}">
-                        <option th:each="status : ${T(com.example.myhome.home.model.RepairStatus).values()}"
+                        <option th:each="status : ${T(com.example.myhome.model.RepairStatus).values()}"
                                 th:value="${status}"
                                 th:text="${status.getName()}"></option>
                       </select>

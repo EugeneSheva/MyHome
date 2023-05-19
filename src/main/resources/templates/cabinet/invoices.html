@@ -74,7 +74,7 @@
                                           <td>
                                               <select class="my_filters" id="status" name>
                                                   <option value="" th:text="#{choise}">Выберите...</option>
-                                                  <option th:each="status : ${T(com.example.myhome.home.model.InvoiceStatus).values()}"
+                                                  <option th:each="status : ${T(com.example.myhome.model.InvoiceStatus).values()}"
                                                           th:value="${status}"
                                                           th:text="${status.name}"></option>
                                               </select>

@@ -115,6 +115,7 @@ public class RequestController {
         if(bindingResult.hasErrors()) {
             model.addAttribute("masters", adminService.findAllMasters());
             model.addAttribute("master_types", adminService.getMasterRoles());
+            model.addAttribute("validation", "failed");
             return "admin_panel/requests/request_card";
         }
 
@@ -141,6 +142,7 @@ public class RequestController {
         if(bindingResult.hasErrors()) {
             model.addAttribute("masters", adminService.findAllMasters());
             model.addAttribute("master_types", adminService.getMasterRoles());
+            model.addAttribute("validation", "failed");
             return "admin_panel/requests/request_card";
         }
 

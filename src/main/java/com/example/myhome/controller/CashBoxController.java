@@ -49,7 +49,6 @@ public class CashBoxController {
     private final IncomeExpenseItemServiceImpl incomeExpenseItemService;
     private final IncomeExpenseRepository incomeExpenseRepository;
     private final AccountRepository accountRepository;
-    private final AccountService accountServiceImpl;
     private final CashBoxRepository cashBoxRepository;
     private final CashBoxtValidator cashBoxtValidator;
 
@@ -63,8 +62,8 @@ public class CashBoxController {
         Page<CashBox> cashBoxList = cashBoxService.findAll(pageable);
         model.addAttribute("cashBoxList", cashBoxList);
         model.addAttribute("cashBoxSum", cashBoxRepository.sumAmount().orElse(0.0));
-        model.addAttribute("accountBalance", accountServiceImpl.getSumOfAccountBalances());
-        model.addAttribute("sumDebt", accountServiceImpl.getSumOfAccountDebts());
+        model.addAttribute("accountBalance", accountService.getSumOfAccountBalances());
+        model.addAttribute("sumDebt", accountService.getSumOfAccountDebts());
         model.addAttribute("filterForm", new FilterForm());
         int pageNumber = 0;
         int pageSize = 2;
@@ -93,8 +92,8 @@ public class CashBoxController {
 
         model.addAttribute("cashBoxList", cashBoxPage);
         model.addAttribute("cashBoxSum", cashBoxRepository.sumAmount().orElse(0.0));
-        model.addAttribute("accountBalance", accountServiceImpl.getSumOfAccountBalances());
-        model.addAttribute("sumDebt", accountServiceImpl.getSumOfAccountDebts());
+        model.addAttribute("accountBalance", accountService.getSumOfAccountBalances());
+        model.addAttribute("sumDebt", accountService.getSumOfAccountDebts());
         model.addAttribute("filterForm", new FilterForm());
         int pageNumber = 0;
         int pageSize = 2;
@@ -348,12 +347,12 @@ public class CashBoxController {
 
     @GetMapping("/get-account-balance")
     public @ResponseBody String getAccountBalance() {
-        return String.format(Locale.ROOT, "%.2f", accountServiceImpl.getSumOfAccountBalances());
+        return String.format(Locale.ROOT, "%.2f", accountService.getSumOfAccountBalances());
     }
 
     @GetMapping("/get-account-debts")
     public @ResponseBody String getAccountDebts() {
-        return String.format(Locale.ROOT,   "%.2f", accountServiceImpl.getSumOfAccountDebts());
+        return String.format(Locale.ROOT,   "%.2f", accountService.getSumOfAccountDebts());
     }
 
 

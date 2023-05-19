@@ -140,7 +140,7 @@
                               <td style="padding:10px">
                                   <select th:field="*{status}" data-name="status" class="my_filters" style="width: 100%; padding-block: 10px">
                                       <option value=""></option>
-                                      <option th:each="status : ${T(com.example.myhome.home.model.InvoiceStatus).values()}"
+                                      <option th:each="status : ${T(com.example.myhome.model.InvoiceStatus).values()}"
                                               th:value="${status}"
                                               th:text="${status.getName()}"></option>
                                   </select>

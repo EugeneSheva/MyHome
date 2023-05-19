@@ -137,7 +137,7 @@
                       <h4 style="font-weight: bold" th:text="#{invoices.editPage.card.status}">Статус</h4>
                       <select th:field="*{status}" class="selects mb-3" th:style="${#fields.hasErrors('status')} ? 'border: 0.5px solid red'">
                         <option disabled value="" th:text="#{select.placeholder}">Выберите...</option>
-                        <option th:each="stat : ${T(com.example.myhome.home.model.InvoiceStatus).values()}"
+                        <option th:each="stat : ${T(com.example.myhome.model.InvoiceStatus).values()}"
                                 th:value="${stat}"
                                 th:text="${stat.getName()}"></option>
                       </select>

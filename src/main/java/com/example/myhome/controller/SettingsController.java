@@ -71,11 +71,12 @@ public class SettingsController {
 
     // Сохранение новой статьи приходов/расходов
     @PostMapping("/admin/income-expense/create")
-    public String createTransaction(@Valid @ModelAttribute IncomeExpenseItems item, BindingResult bindingResult) {
+    public String createTransaction(@Valid @ModelAttribute IncomeExpenseItems item, BindingResult bindingResult, Model model) {
         if(bindingResult.hasErrors()) {
             log.info("errors found");
             log.info(bindingResult.getObjectName());
             log.info(bindingResult.getAllErrors().toString());
+            model.addAttribute("validation", "failed");
             return "admin_panel/system_settings/transaction_card";
         }
         settingsService.saveTransactionItem(item);
@@ -112,11 +113,12 @@ public class SettingsController {
     // Сохранить платёжные реквизиты
     @PostMapping("/admin/payment-details")
     public String updatePaymentDetails(@Valid @ModelAttribute PaymentDetails details, BindingResult bindingResult,
-                                       RedirectAttributes redirectAttributes) {
+                                       RedirectAttributes redirectAttributes, Model model) {
         if(bindingResult.hasErrors()) {
             log.info("errors found");
             log.info(bindingResult.getObjectName());
             log.info(bindingResult.getAllErrors().toString());
+            model.addAttribute("validation", "failed");
             return "admin_panel/system_settings/settings_payment";
         }
 

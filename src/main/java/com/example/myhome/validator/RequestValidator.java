@@ -27,6 +27,9 @@ public class RequestValidator implements Validator {
     public void validate(Object target, Errors e) {
         RepairRequestDTO request = (RepairRequestDTO) target;
 
+        System.out.println("REQUEST FOR VALIDATION: ");
+        System.out.println(request.toString());
+
         Locale locale = LocaleContextHolder.getLocale();
 
         if(request.getOwnerID() == null) {

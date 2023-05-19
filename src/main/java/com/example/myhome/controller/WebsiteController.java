@@ -84,13 +84,15 @@ public class WebsiteController {
                                @RequestPart(required = false) MultipartFile page_block_3_img,
                                @RequestPart(required = false) MultipartFile page_block_4_img,
                                @RequestPart(required = false) MultipartFile page_block_5_img,
-                               @RequestPart(required = false) MultipartFile page_block_6_img) throws IOException {
+                               @RequestPart(required = false) MultipartFile page_block_6_img,
+                               Model model) throws IOException {
 
         validator.validate(mainPage, bindingResult);
 
         if(bindingResult.hasErrors()) {
             log.info("Errors found");
             log.info(bindingResult.getAllErrors().toString());
+            model.addAttribute("validation", "failed");
             return "admin_panel/website_settings/website_home";
         }
 
@@ -112,11 +114,13 @@ public class WebsiteController {
                                 @RequestPart(required = false) MultipartFile[] page_photos,
                                 @RequestPart(required = false) MultipartFile[] page_add_photos,
                                 @RequestParam(required = false) String[] document_names,
-                                @RequestParam(required = false) MultipartFile[] document_files) throws IOException {
+                                @RequestParam(required = false) MultipartFile[] document_files,
+                                Model model) throws IOException {
 
         if(bindingResult.hasErrors()) {
             log.info("Errors found");
             log.info(bindingResult.getAllErrors().toString());
+            model.addAttribute("validation", "failed");
             return "admin_panel/website_settings/website_about";
         }
 
@@ -133,11 +137,13 @@ public class WebsiteController {
                                    BindingResult bindingResult,
                                    @RequestParam String[] titles,
                                    @RequestParam String[] descriptions,
-                                   @RequestParam MultipartFile[] service_images) {
+                                   @RequestParam MultipartFile[] service_images,
+                                   Model model) {
 
         if(bindingResult.hasErrors()) {
             log.info("Errors found");
             log.info(bindingResult.getAllErrors().toString());
+            model.addAttribute("validation", "failed");
             return "admin_panel/website_settings/website_services";
         }
 
@@ -157,6 +163,7 @@ public class WebsiteController {
             log.info(bindingResult.getObjectName());
             log.info(bindingResult.getAllErrors().toString());
             model.addAttribute("page", page);
+            model.addAttribute("validation", "failed");
             return "admin_panel/website_settings/website_contacts";
         }
 

@@ -22,7 +22,7 @@ public class StatisticsController {
     private final BuildingService buildingService;
     private final BuildingRepository buildingRepository;
     private final ApartmentService apartmentService;
-    private final AccountServiceImpl accountServiceImpl;
+    private final AccountService accountService;
     private final CashBoxRepository cashBoxRepository;
     private final CashBoxService cashBoxService;
     private final AccountRepository accountRepository;
@@ -37,7 +37,7 @@ public class StatisticsController {
         model.addAttribute("ownersQuant", ownerService.getQuantity());
         model.addAttribute("buidingsQuant", buildingService.getQuantity());
         model.addAttribute("apartmentsQuant", apartmentService.getQuantity());
-        model.addAttribute("accountsQuant", accountServiceImpl.getQuantity());
+        model.addAttribute("accountsQuant", accountService.getQuantity());
 
         model.addAttribute("cashBoxSum", cashBoxRepository.sumAmount().orElse(0.0));
         model.addAttribute("accountBalance", accountRepository.getSumOfAccountBalances());

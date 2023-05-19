@@ -126,7 +126,7 @@
                       <div class="col-xs-12 col-md-6">
                         <h4><b th:text="#{meters.editPage.card.status}">Статус</b></h4>
                         <select class="selects" id="status" th:field="*{status}">
-                          <option th:each="status : ${T(com.example.myhome.home.model.MeterPaymentStatus).values()}"
+                          <option th:each="status : ${T(com.example.myhome.model.MeterPaymentStatus).values()}"
                                   th:value="${status}" th:text="${status.getName()}"></option>
                         </select>
                         <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></h4>

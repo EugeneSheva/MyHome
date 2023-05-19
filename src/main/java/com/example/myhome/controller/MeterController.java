@@ -152,6 +152,7 @@ public class MeterController {
             model.addAttribute("building", buildingService.findBuildingDTObyId(meterDataDTO.getBuildingID()));
             model.addAttribute("services", serviceService.findAllServices());
             model.addAttribute("buildings", buildingService.findAllDTO());
+            model.addAttribute("validation", "failed");
             return "admin_panel/meters/meter_card";
         }
         MeterData savedMeter = meterDataService.saveMeterData(meterDataDTO);
@@ -168,6 +169,7 @@ public class MeterController {
             model.addAttribute("building", buildingService.findBuildingDTObyId(meterDataDTO.getBuildingID()));
             model.addAttribute("services", serviceService.findAllServices());
             model.addAttribute("buildings", buildingService.findAllDTO());
+            model.addAttribute("validation", "failed");
             return "admin_panel/meters/meter_card";
         }
         MeterData savedMeter = meterDataService.saveMeterData(meterDataDTO);
@@ -181,6 +183,7 @@ public class MeterController {
         log.info(bindingResult.getAllErrors().toString());
         if(bindingResult.hasErrors()) {
             model.addAttribute("id",meterDataService.getMaxId()+1);
+            model.addAttribute("validation", "failed");
             return "admin_panel/meters/meter_card";
         }
         MeterData savedMeter = meterDataService.saveMeterData(meterDataDTO);

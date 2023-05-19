@@ -20,6 +20,7 @@ public interface AccountService {
     Page<ApartmentAccountDTO> findAllAccountsByFiltersAndPage(FilterForm filters, Pageable pageable);
 
     Long getMaxAccountId();
+    Long getQuantity();
     Double getSumOfAccountBalances();
     Double getSumOfAccountDebts();
 

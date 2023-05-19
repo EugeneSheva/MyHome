@@ -138,7 +138,7 @@
                                         <td style="padding: 10px">
                                             <select autocomplete="off" th:field="*{status}" data-name="status" class="my_filters" style="width: 100%; padding-block: 10px">
                                                 <option value=""></option>
-                                                <option th:each="stat : ${T(com.example.myhome.home.model.RepairStatus).values()}"
+                                                <option th:each="stat : ${T(com.example.myhome.model.RepairStatus).values()}"
                                                         th:value="${stat}"
                                                         th:text="${stat.getName()}"></option>
                                             </select>

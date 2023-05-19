@@ -5,6 +5,8 @@ import com.example.myhome.dto.RepairRequestDTO;
 import com.example.myhome.model.RepairRequest;
 import com.example.myhome.model.UserRole;
 import com.example.myhome.repository.UserRoleRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -14,11 +16,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class RepairRequestDTOMapper {
 
-    private final UserRoleRepository repository;
-    private final MessageSource messageSource;
+    private UserRoleRepository repository;
+    private MessageSource messageSource;
 
     public RepairRequest fromDTOToRequest(RepairRequestDTO dto) {
         if(dto == null) return null;
@@ -40,18 +43,19 @@ public class RepairRequestDTOMapper {
 
         Long apartmentID = (request.getApartment() != null) ? request.getApartment().getId() : null;
         Long apartmentNumber = (request.getApartment() != null) ? request.getApartment().getNumber() : null;
-        String apartmentBuildingName = (request.getApartment() != null) ? request.getApartment().getBuilding().getName() : null;
-        Long ownerID = (request.getApartment().getOwner() != null) ? request.getApartment().getOwner().getId() : null;
-        String ownerFullName = (request.getApartment().getOwner() != null) ? request.getApartment().getOwner().getFullName() : null;
-        String ownerPhoneNumber = (request.getApartment().getOwner() != null) ? request.getApartment().getOwner().getPhone_number() : null;
+        String apartmentBuildingName = (request.getApartment() != null && request.getApartment().getBuilding() != null) ? request.getApartment().getBuilding().getName() : null;
+        Long ownerID = (request.getOwner() != null) ? request.getOwner().getId() : null;
+        String ownerFullName = (request.getOwner() != null) ? request.getOwner().getFullName() : null;
+        String ownerPhoneNumber = (request.getOwner() != null) ? request.getOwner().getPhone_number() : null;
         Long masterID = (request.getMaster() != null) ? request.getMaster().getId() : null;
         String masterFullName = (request.getMaster() != null) ? request.getMaster().getFullName() : null;
         Long masterTypeID = (request.getMaster_type() != null) ? request.getMaster_type().getId() : null;
         String masterTypeName = (request.getMaster_type() != null) ? request.getMaster_type().getName() : messageSource.getMessage("any_specialist", null, LocaleContextHolder.getLocale());
+        String bestTimeRequest = (request.getBest_time_request() != null) ? request.getBest_time_request().format(DateTimeFormatter.ofPattern("yyyy-MM-dd - HH:mm")) : null;
 
         return RepairRequestDTO.builder()
                 .id(request.getId())
-                .best_time(request.getBest_time_request().format(DateTimeFormatter.ofPattern("yyyy-MM-dd - HH:mm")))
+                .best_time(bestTimeRequest)
                 .masterTypeID(masterTypeID)
                 .masterTypeName(masterTypeName)
                 .description(request.getDescription())

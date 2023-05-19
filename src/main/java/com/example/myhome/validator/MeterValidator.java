@@ -28,7 +28,7 @@ public class MeterValidator implements Validator {
 
         Locale locale = LocaleContextHolder.getLocale();
 
-        if(meter.getDate().isAfter(LocalDate.now())) {
+        if(meter.getDate() == null || meter.getDate().isAfter(LocalDate.now())) {
             e.rejectValue("date", "date.incorrect", messageSource.getMessage("meters.date.incorrect", null, locale));
         }
 

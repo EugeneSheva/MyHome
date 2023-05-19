@@ -47,9 +47,13 @@ public class ServiceController {
                                  @RequestParam String[] new_service_unit_names,
                                  @RequestParam(required = false) String[] new_service_show_in_meters,
                                  @RequestParam(required = false) String[] new_unit_names,
-                                 RedirectAttributes redirectAttributes) {
+                                 RedirectAttributes redirectAttributes,
+                                 Model model) {
 
-        if(bindingResult.hasErrors()) return "admin_panel/system_settings/settings_services";
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("validation", "failed");
+            return "admin_panel/system_settings/settings_services";
+        }
 
         List<Service> serviceList = serviceForm.getServiceList();
         List<Unit> unitList = serviceForm.getUnitList().stream().filter((unit) -> unit.getId() != null).collect(Collectors.toList());

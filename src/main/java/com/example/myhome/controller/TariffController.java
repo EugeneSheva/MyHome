@@ -93,6 +93,7 @@ public class TariffController {
             log.info("errors found");
             log.info(bindingResult.getObjectName());
             log.info(bindingResult.getAllErrors().toString());
+            model.addAttribute("validation", "failed");
             model.addAttribute("services", serviceService.findAllServices());
             model.addAttribute("units", serviceService.findAllUnits());
             return "admin_panel/system_settings/tariff_card";
@@ -130,6 +131,7 @@ public class TariffController {
             log.info("errors found");
             log.info(bindingResult.getObjectName());
             log.info(bindingResult.getAllErrors().toString());
+            model.addAttribute("validation", "failed");
             model.addAttribute("services", serviceService.findAllServices());
             model.addAttribute("units", serviceService.findAllUnits());
             return "admin_panel/system_settings/tariff_card";

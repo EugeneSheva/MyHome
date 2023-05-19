@@ -160,7 +160,7 @@ public class InvoiceController {
             model.addAttribute("id", invoiceService.getMaxInvoiceId()+1L);
             model.addAttribute("meters",  meterDataService.findAllMeters());
             model.addAttribute("current_date", LocalDate.now());
-
+            model.addAttribute("validation", "failed");
             return "admin_panel/invoices/invoice_card";
         }
 
@@ -192,7 +192,7 @@ public class InvoiceController {
             model.addAttribute("id", invoiceService.getMaxInvoiceId()+1L);
             model.addAttribute("meters",  meterDataService.findAllMeters());
             model.addAttribute("current_date", LocalDate.now());
-
+            model.addAttribute("validation", "failed");
             return "admin_panel/invoices/invoice_card";
         }
 
@@ -280,7 +280,7 @@ public class InvoiceController {
         return "redirect:/admin/invoices/template";
     }
 
-    @GetMapping(value="/get-invoices")
+    @GetMapping("/get-invoices")
     public @ResponseBody Page<InvoiceDTO> getInvoices(@RequestParam Integer page,
                                                    @RequestParam Integer size,
                                                    @RequestParam String filters) throws JsonProcessingException {

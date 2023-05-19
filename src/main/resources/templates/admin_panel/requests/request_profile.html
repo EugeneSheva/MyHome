@@ -74,8 +74,8 @@
                       <tr>
                         <td style="font-weight:bold" th:text="#{requests.infoPage.card.status}">Статус</td>
                         <td><small class="label"
-                                   th:classappend="${request.status == T(com.example.myhome.home.model.RepairStatus).ACCEPTED ?
-                                   'label-primary' : request.status == T(com.example.myhome.home.model.RepairStatus).IN_WORK ?
+                                   th:classappend="${request.status == T(com.example.myhome.model.RepairStatus).ACCEPTED ?
+                                   'label-primary' : request.status == T(com.example.myhome.model.RepairStatus).IN_WORK ?
                                    'label-warning' : 'label-success'}" th:text="${request.status.getName()}"></small></td>
                       </tr>
                       <tr>

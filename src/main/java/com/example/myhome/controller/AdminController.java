@@ -78,9 +78,11 @@ public class AdminController {
         validator.validate(dto, bindingResult);
         if(bindingResult.hasErrors()) {
             model.addAttribute("roles", adminService.getAllRoles());
+            model.addAttribute("validation", "failed");
             return "admin_panel/system_settings/admin_card";
         }
         else {
+            model.addAttribute("validation", "passed");
             adminService.saveAdmin(dto);
             return "redirect:/admin/admins";
         }
@@ -93,9 +95,11 @@ public class AdminController {
         validator.validate(dto, bindingResult);
         if(bindingResult.hasErrors()) {
             model.addAttribute("roles", adminService.getAllRoles());
+            model.addAttribute("validation", "failed");
             return "admin_panel/system_settings/admin_card";
         }
         else {
+            model.addAttribute("validation", "passed");
             adminService.saveAdmin(dto);
             return "redirect:/admin/admins";
         }

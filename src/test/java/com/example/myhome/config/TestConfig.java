@@ -23,11 +23,6 @@ public class TestConfig {
     @MockBean private ApartmentService apartmentService;
 
     @Bean
-    public MessageSource messageSource() {
-        return new ResourceBundleMessageSource();
-    }
-
-    @Bean
     public UserDetails testUser() {
         Admin admin = new Admin();
         admin.setId(9L);
@@ -60,10 +55,10 @@ public class TestConfig {
         return userDetailsManager;
     }
 
-    @Bean
-    public AccountService accountService() {
-        return new AccountServiceImpl();
-    }
+//    @Bean
+//    public AccountService accountService() {
+//        return new AccountServiceImpl();
+//    }
 
 
 }

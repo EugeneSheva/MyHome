@@ -91,8 +91,8 @@
                         <td style="font-weight:bold" th:text="#{invoices.infoPage.card.content.status}">Статус</td>
                         <td>
                           <small th:class="'label ' +
-                            ${invoice.status == T(com.example.myhome.home.model.InvoiceStatus).PAID ? 'label-success' :
-                            (invoice.status == T(com.example.myhome.home.model.InvoiceStatus).UNPAID) ? 'label-danger' : 'label-warning'}"
+                            ${invoice.status == T(com.example.myhome.model.InvoiceStatus).PAID ? 'label-success' :
+                            (invoice.status == T(com.example.myhome.model.InvoiceStatus).UNPAID) ? 'label-danger' : 'label-warning'}"
                                  th:text="${invoice.status.getName()}"></small>
                         </td>
                       </tr>

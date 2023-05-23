@@ -268,7 +268,7 @@ public class AdminServiceImpl implements AdminService {
         Boolean active = filters.getActive();
 
         Specification<Admin> specification = Specification.where(AdminSpecifications.hasNameLike(name)
-                                                            .and(AdminSpecifications.hasRole(role.getName()))
+                                                            .and(AdminSpecifications.hasRole((role != null) ? role.getName() : ""))
                                                             .and(AdminSpecifications.hasPhoneLike(phone))
                                                             .and(AdminSpecifications.hasEmailLike(email))
                                                             .and(AdminSpecifications.isActive(active)));
@@ -294,11 +294,12 @@ public class AdminServiceImpl implements AdminService {
         return admin;
     }
 
+    @Override
     public Page<AdminDTO> findAllBySpecification(FilterForm filters, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page-1, size);
         List<AdminDTO> listDTO = new ArrayList<>();
-        Page<Admin>ownerList = adminRepository.findByFilters(filters.getName(), filters.getRole(), filters.getPhone(), filters.getEmail(), filters.getStatus(), pageable);
-        for (Admin admin : ownerList) {
+        Page<Admin> ownerList = adminRepository.findByFilters(filters.getName(), filters.getRole(), filters.getPhone(), filters.getEmail(), filters.getStatus(), pageable);
+        for (Admin admin : ownerList.getContent()) {
                     listDTO.add(new AdminDTO(admin.getId(), admin.getFirst_name(), admin.getLast_name(),
                     admin.getPhone_number(), admin.getEmail(), admin.isActive(), admin.getRole().getName(),
                     admin.getRole().getId()));

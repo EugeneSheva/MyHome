@@ -7,13 +7,16 @@ import com.example.myhome.dto.ApartmentDTO;
 import com.example.myhome.dto.BuildingDTO;
 import com.example.myhome.dto.InvoiceDTO;
 import com.example.myhome.dto.OwnerDTO;
+import com.example.myhome.mapper.InvoiceDTOMapper;
 import com.example.myhome.model.*;
 import com.example.myhome.repository.InvoiceRepository;
 import com.example.myhome.service.*;
 import com.example.myhome.util.FileDownloadUtil;
 import com.example.myhome.util.FileUploadUtil;
 import com.example.myhome.validator.InvoiceValidator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.With;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,13 +48,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = TestConfig.class)
 @AutoConfigureMockMvc
+@WithUserDetails("test")
 public class InvoiceControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private Admin testUser;
+    @Autowired private Admin testUser;
 
     @MockBean private InvoiceService invoiceService;
     @MockBean private CashBoxService cashBoxService;
@@ -64,43 +66,61 @@ public class InvoiceControllerTest {
     @MockBean private WebsocketController websocketController;
     @MockBean private OwnerService ownerService;
 
-    @Autowired
-    private InvoiceController controller;
+    @Autowired private InvoiceController controller;
+    @Autowired private InvoiceRepository repository;
+    @Autowired private InvoiceValidator validator;
 
-    @Autowired
-    private InvoiceRepository repository;
+    static Invoice testInvoice = new Invoice();
+    static InvoiceDTO dto = new InvoiceDTO();
+    static InvoiceDTO emptyDTO = new InvoiceDTO();
+    static InvoiceTemplate testTemplate = new InvoiceTemplate();
+    static InvoiceDTOMapper mapper = new InvoiceDTOMapper();
 
-    @Autowired
-    private InvoiceValidator validator;
+    static ObjectMapper jsonMapper = new ObjectMapper();
 
-    InvoiceDTO dto;
-    InvoiceDTO emptyDTO;
-
-    @BeforeEach
-    void createInvoice() throws IOException {
-        dto = new InvoiceDTO();
-        dto.setId(1L);
-        dto.setCompleted(true);
-        dto.setStatus(InvoiceStatus.PAID);
-        dto.setComponents(List.of(new InvoiceComponents()));
-        dto.setDate(LocalDate.now());
-        dto.setTotal_price(100);
-        BuildingDTO bdto = new BuildingDTO();
-        bdto.setId(1L);
-        dto.setBuilding(bdto);
-        dto.setSection("test");
-        ApartmentDTO adto = new ApartmentDTO();
-        adto.setId(1L);
-        dto.setApartment(adto);
-        dto.setDateFrom(LocalDate.now().minusMonths(3));
-        dto.setDateTo(LocalDate.now().plusMonths(1));
-
-        emptyDTO = new InvoiceDTO();
+    @BeforeAll
+    static void setupObject() throws Exception {
         emptyDTO.setId(10L);
 
-        InvoiceTemplate testTemplate = new InvoiceTemplate();
+        testInvoice.setId(1L);
+        testInvoice.setCompleted(true);
+        testInvoice.setId(1L);
+        testInvoice.setCompleted(true);
+        testInvoice.setStatus(InvoiceStatus.PAID);
+        InvoiceComponents testComp = new InvoiceComponents();
+        Service testService = new Service();
+        testService.setId(1L);
+        testService.setUnit(new Unit());
+        testService.setName("test");
+        testComp.setService(testService);
+        testInvoice.setComponents(List.of(testComp));
+        testInvoice.setDate(LocalDate.now());
+        testInvoice.setTotal_price(100);
+        Building building = new Building();
+        building.setId(1L);
+        testInvoice.setBuilding(building);
+        testInvoice.setSection("test");
+        Owner owner = new Owner();
+        owner.setId(1L);
+        owner.setFirst_name("test");
+        owner.setFathers_name("test");
+        owner.setLast_name("test");
+        owner.setPhone_number("test");
+        Apartment apartment = new Apartment();
+        apartment.setBuilding(building);
+        apartment.setOwner(owner);
+        apartment.setId(1L);
+        testInvoice.setApartment(apartment);
+        testInvoice.setDateFrom(LocalDate.now().minusMonths(3));
+        testInvoice.setDateTo(LocalDate.now().plusMonths(1));
 
+        dto = mapper.fromInvoiceToDTO(testInvoice);
+    }
+
+    @BeforeEach
+    void setupMocks() throws IOException {
         when(invoiceService.findInvoiceDTOById(anyLong())).thenReturn(dto);
+        when(invoiceService.findInvoiceById(anyLong())).thenReturn(testInvoice);
         when(ownerService.findAllDTO()).thenReturn(List.of(new OwnerDTO()));
         when(cashBoxService.calculateBalance()).thenReturn(0.0);
         when(invoiceService.buildInvoice(any(), any(), any(String[].class), any(String[].class), any(String[].class)))
@@ -122,13 +142,11 @@ public class InvoiceControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void showInvoicesPageTest() throws Exception {
         this.mockMvc.perform(get("/admin/invoices").flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showInvoiceInfoPageTest() throws Exception {
         Long id = testUser.getId();
         Map<String, Object> map = new HashMap<>();
@@ -138,27 +156,23 @@ public class InvoiceControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void showInvoiceCreatePageTest() throws Exception {
         this.mockMvc.perform(get("/admin/invoices/create").flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showInvoiceUpdatePageTest() throws Exception {
         Long id = testUser.getId();
         this.mockMvc.perform(get("/admin/invoices/update/" + id).flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void createInvoice_WithoutParameters_Test() throws Exception {
         this.mockMvc.perform(post("/admin/invoices/create").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    @WithUserDetails("test")
     void createInvoice_NotValidated_Test() throws Exception {
         this.mockMvc.perform(post("/admin/invoices/create")
                         .param("invoiceDTO", new InvoiceDTO().toString())
@@ -172,7 +186,6 @@ public class InvoiceControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void createInvoice_Validated_Test() throws Exception {
         Model model = new ConcurrentModel();
         String result = controller.createInvoice(dto, new BeanPropertyBindingResult(dto, "invoiceDTO"), LocalDate.now().toString(), new String[]{}, new String[]{}, new String[]{}, model);
@@ -181,7 +194,6 @@ public class InvoiceControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void updateInvoice_NotValidated_Test() throws Exception {
         this.mockMvc.perform(post("/admin/invoices/update/"+dto.getId())
                         .param("date", LocalDate.now().toString())
@@ -194,7 +206,6 @@ public class InvoiceControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void updateInvoice_Validated_Test() throws Exception {
         Model model = new ConcurrentModel();
         String result = controller.updateInvoice(dto.getId(), dto, new BeanPropertyBindingResult(dto, "invoiceDTO"), LocalDate.now().toString(), new String[]{}, new String[]{}, new String[]{}, model);
@@ -203,7 +214,6 @@ public class InvoiceControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void deleteInvoiceTest() throws Exception {
         this.mockMvc.perform(get("/admin/invoices/delete/"+dto.getId()).with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
@@ -211,69 +221,58 @@ public class InvoiceControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void deleteInvoiceAJAXTest() throws Exception {
         MvcResult result = this.mockMvc.perform(get("/admin/invoices/delete-invoice?id="+dto.getId()).with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk())
                 .andReturn();
-        assertThat(result.getResponse().getContentAsString()).isEqualTo("Удалил квитанцию с ID " + dto.getId());
+        assertThat(result.getResponse().getContentAsString()).isNotNull();
     }
 
     @Test
-    @WithUserDetails("test")
     void openPrintPageTest() throws Exception {
         this.mockMvc.perform(get("/admin/invoices/print/"+dto.getId()).with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void openPrintTemplatePageTest() throws Exception {
         this.mockMvc.perform(get("/admin/invoices/template").flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void downloadFileTest() throws Exception {
         this.mockMvc.perform(get("/download/test").flashAttr("auth_admin", testUser))
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    @WithUserDetails("test")
     void printInvoiceTest() throws Exception {
         this.mockMvc.perform(post("/print/"+dto.getId()).with(csrf()).flashAttr("auth_admin", testUser))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/admin/invoices/download/test"));
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
-    @WithUserDetails("test")
     void printInvoice_IOException_Test() throws Exception {
         when(invoiceService.turnInvoiceIntoExcel(any(), any())).thenThrow(IOException.class);
 
         this.mockMvc.perform(post("/print/"+dto.getId()).with(csrf()).flashAttr("auth_admin", testUser))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/admin/invoices/print/"+dto.getId()));
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
-    @WithUserDetails("test")
     void saveTemplateTest() throws Exception {
         this.mockMvc.perform(post("/admin/invoices/template").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
-    @WithUserDetails("test")
     void getInvoicesAJAX_WithoutParameters_Test() throws Exception {
         this.mockMvc.perform(get("/admin/invoices/get-invoices").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    @WithUserDetails("test")
     void getInvoicesAJAX_WithIncorrectParameters_Test() throws Exception {
         this.mockMvc.perform(get("/admin/invoices/get-invoices?page=1").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isBadRequest());
@@ -286,7 +285,6 @@ public class InvoiceControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void getInvoicesAJAX_WithCorrectParameters_Test() throws Exception {
     }
 

@@ -151,4 +151,19 @@ public class ServiceServiceTest {
                 new_service_names, new_service_unit_names,
                 new_service_show_in_meters)).isNotEqualTo(notExpected);
     }
+
+    @Test
+    void canSaveServiceTest() {
+        service.saveService(new Service());
+    }
+
+    @Test
+    void canDeleteServiceByIdTest() {
+        service.deleteServiceById(1L);
+    }
+
+    @Test
+    void canDeleteUnitByIdTest() {
+        service.deleteUnitById(1L);
+    }
 }

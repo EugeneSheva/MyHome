@@ -7,17 +7,20 @@ import com.example.myhome.repository.AccountRepository;
 import com.example.myhome.repository.ApartmentRepository;
 import com.example.myhome.repository.BuildingRepository;
 import com.example.myhome.repository.OwnerRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class InvoiceDTOMapper {
 
-    private final BuildingRepository buildingRepository;
-    private final AccountRepository accountRepository;
-    private final OwnerRepository ownerRepository;
-    private final ApartmentRepository apartmentRepository;
+    private BuildingRepository buildingRepository;
+    private AccountRepository accountRepository;
+    private OwnerRepository ownerRepository;
+    private ApartmentRepository apartmentRepository;
 
     public Invoice fromDTOToInvoice(InvoiceDTO dto) {
         if(dto == null) return null;

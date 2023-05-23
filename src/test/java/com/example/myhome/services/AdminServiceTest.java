@@ -1,34 +1,53 @@
 package com.example.myhome.services;
 
 import com.example.myhome.dto.AdminDTO;
+import com.example.myhome.exception.NotFoundException;
 import com.example.myhome.mapper.AdminDTOMapper;
 import com.example.myhome.model.Admin;
 import com.example.myhome.model.UserRole;
+import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.repository.AdminRepository;
+import com.example.myhome.repository.UserRoleRepository;
 import com.example.myhome.service.AdminService;
+import com.example.myhome.specification.AdminSpecifications;
 import com.example.myhome.validator.AdminValidator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class AdminServiceTest {
 
     @MockBean
     AdminRepository repository;
+
+    @MockBean
+    UserRoleRepository userRoleRepository;
 
     @Autowired
     AdminService service;
@@ -39,17 +58,29 @@ class AdminServiceTest {
     @Autowired
     AdminDTOMapper mapper;
 
-    @MockBean
-    EntityManager em;
+    Admin testAdmin;
 
-    @Mock
-    CriteriaQuery<Admin> cq;
-
-    @Mock
-    CriteriaBuilder cb;
-
-    @Mock
-    Root<Admin> root;
+    @BeforeEach
+    void createAdmin() {
+        testAdmin = new Admin();
+        testAdmin.setId(1L);
+        testAdmin.setPassword("test");
+        testAdmin.setActive(true);
+        testAdmin.setEmail("test");
+        testAdmin.setPhone_number("test");
+        testAdmin.setFirst_name("test");
+        testAdmin.setLast_name("test");
+        UserRole role = new UserRole();
+        role.setId(1L);
+        role.setName("test");
+        role.setPermissions(new HashSet<>());
+        testAdmin.setRole(role);
+        testAdmin.setDateOfRegistry(LocalDate.now());
+        testAdmin.setBuildings(new ArrayList<>());
+        testAdmin.setCashBoxList(new ArrayList<>());
+        testAdmin.setMessageList(new ArrayList<>());
+        testAdmin.setCashBoxListManager(new ArrayList<>());
+    }
 
     @Test
     void canGetAllAdminsTest() {
@@ -58,6 +89,90 @@ class AdminServiceTest {
         List<Admin> test = service.findAll();
         verify(repository).findAll();
         assertThat(test).isEqualTo(list);
+    }
+
+    @Test
+    void canFindAllAdminsTest() {
+        List<Admin> list = List.of(new Admin(), new Admin(), new Admin());
+        Page<Admin> expected = new PageImpl<>(list, PageRequest.of(1,1), 1);
+        given(repository.findAll(any(Pageable.class))).willReturn(expected);
+        Page<Admin> test = service.findAll(PageRequest.of(1,1));
+        verify(repository).findAll(PageRequest.of(1,1));
+        assertThat(test).isEqualTo(expected);
+    }
+
+    @Test
+    void canGetAllAdminsDTOTest() {
+        Admin admin = testAdmin;
+        List<Admin> list = List.of(admin,admin,admin);
+        given(repository.findAll()).willReturn(list);
+        List<AdminDTO> test = service.findAllDTO();
+        verify(repository).findAll();
+        assertThat(test.size()).isEqualTo(3);
+    }
+
+    @Test
+    void canFindAllAdminsDTOTest() {
+        Admin admin = testAdmin;
+        AdminDTO dto = mapper.fromAdminToDTO(admin);
+        List<Admin> list = List.of(admin,admin,admin);
+        Page<Admin> expected = new PageImpl<>(list, PageRequest.of(1,1), 1);
+
+        List<AdminDTO> dtoList = List.of(dto,dto,dto);
+        Page<AdminDTO> expectedDTO = new PageImpl<>(dtoList,PageRequest.of(1,1), 1);
+        given(repository.findAll(any(Pageable.class))).willReturn(expected);
+        Page<AdminDTO> test = service.findAllDTO(PageRequest.of(1,1));
+        verify(repository).findAll(PageRequest.of(1,1));
+        assertThat(test).isEqualTo(expectedDTO);
+    }
+
+    @Test
+    void canFindAllAdminsByFiltersAndPageTest() throws IllegalAccessException {
+        Admin admin = testAdmin;
+        AdminDTO dto = mapper.fromAdminToDTO(admin);
+        List<Admin> list = List.of(admin,admin,admin);
+        Page<Admin> expected = new PageImpl<>(list, PageRequest.of(1,1), 1);
+
+        List<AdminDTO> dtoList = List.of(dto,dto,dto);
+        Page<AdminDTO> expectedDTO = new PageImpl<>(dtoList,PageRequest.of(1,1), 1);
+
+        given(repository.findAll(any(Specification.class),any(Pageable.class))).willReturn(expected);
+        given(repository.findAll(nullable(Specification.class), any(Pageable.class))).willReturn(expected);
+        Page<AdminDTO> test = service.findAllByFiltersAndPage(new FilterForm(), PageRequest.of(1,1));
+        assertThat(test).isEqualTo(expectedDTO);
+    }
+
+    @Test
+    void canSaveAdminTest() {
+        Admin admin = testAdmin;
+        when(repository.save(any(Admin.class))).thenReturn(admin);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(admin, admin.getPassword(), admin.getAuthorities()));
+        assertThat(service.saveAdmin(admin)).isEqualTo(admin);
+    }
+
+    @Test
+    void canReturnNullOnSaveErrorTest() {
+        assertThat(service.saveAdmin(new Admin())).isNull();
+    }
+
+    @Test
+    void canSaveAdminFromDTOTest() {
+        Admin admin = testAdmin;
+        AdminDTO dto = mapper.fromAdminToDTO(admin);
+        dto.setPassword("Test");
+        when(userRoleRepository.getReferenceById(anyLong())).thenReturn(new UserRole());
+        assertThat(service.saveAdmin(dto)).isEqualTo(admin);
+    }
+
+    @Test
+    void canDeleteAdminTest() {
+        service.deleteAdminById(1L);
+    }
+
+    @Test
+    void canGiveErrorOnDeleteAdminTest() {
+        doThrow(new NotFoundException()).when(repository).deleteById(anyLong());
+        service.deleteAdminById(1L);
     }
 
     @Test
@@ -149,8 +264,7 @@ class AdminServiceTest {
 
     @Test
     void dtoDoesntShowPassword() {
-        Admin admin = new Admin();
-        admin.setPassword("TEST");
+        Admin admin = testAdmin;
 
         AdminDTO dto = mapper.fromAdminToDTO(admin);
 
@@ -167,6 +281,7 @@ class AdminServiceTest {
         dto.setRole("TestRole");
         dto.setUserRoleID(1L);
         dto.setPhone_number("11111");
+        dto.setPassword("test");
 
         Admin admin = mapper.fromDTOToAdmin(dto);
 
@@ -178,42 +293,194 @@ class AdminServiceTest {
     }
 
     @Test
-    void createSpecTest() {
+    void createEmptySpecTest() throws IllegalAccessException {
+        FilterForm testForm = new FilterForm();
+        assertThat(service.buildSpecFromFilters(testForm)).isNull();
     }
 
     @Test
-    void findMastersByType() {
+    void createSpecTest() throws IllegalAccessException {
+        FilterForm testForm = new FilterForm();
+        testForm.setId(1L);
+        testForm.setName("test");
+        testForm.setPhone("test");
+        testForm.setEmail("test");
+        testForm.setActive(true);
+        UserRole role = new UserRole();
+        role.setId(1L);
+        role.setName("TestRole");
+
+        when(userRoleRepository.findByName(anyString())).thenReturn(Optional.of(role));
+
+        Specification<Admin> expected = Specification.where(AdminSpecifications.hasNameLike(testForm.getName())
+                                                        .and(AdminSpecifications.hasRole(role.getName()))
+                                                        .and(AdminSpecifications.hasPhoneLike(testForm.getPhone()))
+                                                        .and(AdminSpecifications.hasEmailLike(testForm.getEmail()))
+                                                        .and(AdminSpecifications.isActive(testForm.getActive())));
+
+        assertThat(service.buildSpecFromFilters(testForm)).isInstanceOf(Specification.class);
     }
 
     @Test
-    void testFindAdminById() {
+    void canFindMastersByTypeTest() {
+        UserRole testRole = new UserRole();
+        testRole.setId(1L);
+        testRole.setName("test");
+        Admin testAdmin = new Admin();
+        testAdmin.setId(1L);
+        testAdmin.setFull_name("test test");
+        testAdmin.setEmail("test@gmail.com");
+        testAdmin.setRole(testRole);
+        testAdmin.setPhone_number("test");
+        AdminDTO expectedDTO = new AdminDTO();
+        expectedDTO.setId(testAdmin.getId());
+        expectedDTO.setFirst_name("test");
+        expectedDTO.setLast_name("test");
+        expectedDTO.setEmail("test@gmail.com");
+        expectedDTO.setRole(testRole.getName());
+        expectedDTO.setUserRoleID(testRole.getId());
+        expectedDTO.setPassword(testAdmin.getPhone_number());
+
+        when(userRoleRepository.getReferenceById(anyLong())).thenReturn(testRole);
+        when(repository.findAll(any(Specification.class))).thenReturn(List.of(testAdmin));
+
+        List<AdminDTO> list = service.findMastersByType(1L);
+
+        verify(repository).findAll();
+
+        assertThat(list).isEqualTo(List.of(expectedDTO));
     }
 
     @Test
-    void findAllMasters() {
+    void canFindAllMastersTest() {
+        UserRole testRole = new UserRole();
+        testRole.setId(1L);
+        testRole.setName("test");
+        Admin testAdmin = new Admin();
+        testAdmin.setId(1L);
+        testAdmin.setFull_name("test test");
+        testAdmin.setEmail("test@gmail.com");
+        testAdmin.setRole(testRole);
+        testAdmin.setPhone_number("test");
+        AdminDTO expectedDTO = new AdminDTO();
+        expectedDTO.setId(testAdmin.getId());
+        expectedDTO.setFirst_name("test");
+        expectedDTO.setLast_name("test");
+        expectedDTO.setEmail("test@gmail.com");
+        expectedDTO.setRole(testRole.getName());
+        expectedDTO.setUserRoleID(testRole.getId());
+        expectedDTO.setPassword(testAdmin.getPhone_number());
+
+        Page<Admin> expectedPage = new PageImpl<>(List.of(testAdmin), PageRequest.of(1,1),1);
+
+        when(userRoleRepository.getReferenceById(anyLong())).thenReturn(testRole);
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(expectedPage);
+        when(repository.findAll(any(Specification.class))).thenReturn(List.of(testAdmin));
+
+        List<AdminDTO> list = service.findAllMasters();
+        List<AdminDTO> list2 = service.findAllMasters("test", 5);
+
+
+        verify(repository).findAll();
+
+        assertThat(list).isEqualTo(List.of(expectedDTO));
+        assertThat(list2).isEqualTo(List.of(expectedDTO));
     }
 
     @Test
-    void findAllManagers() {
+    void canFindAllManagersTest() {
+        UserRole testRole = new UserRole();
+        testRole.setId(1L);
+        testRole.setName("test");
+        Admin testAdmin = new Admin();
+        testAdmin.setId(1L);
+        testAdmin.setFull_name("test test");
+        testAdmin.setEmail("test@gmail.com");
+        testAdmin.setRole(testRole);
+        testAdmin.setPhone_number("test");
+        AdminDTO expectedDTO = new AdminDTO();
+        expectedDTO.setId(testAdmin.getId());
+        expectedDTO.setFirst_name("test");
+        expectedDTO.setLast_name("test");
+        expectedDTO.setEmail("test@gmail.com");
+        expectedDTO.setRole(testRole.getName());
+        expectedDTO.setUserRoleID(testRole.getId());
+        expectedDTO.setPassword(testAdmin.getPhone_number());
+
+        Page<Admin> expectedPage = new PageImpl<>(List.of(testAdmin), PageRequest.of(1,1),1);
+
+        when(userRoleRepository.getReferenceById(anyLong())).thenReturn(testRole);
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(expectedPage);
+        when(repository.findAll(any(Specification.class))).thenReturn(List.of(testAdmin));
+
+        List<AdminDTO> list = service.findAllManagers();
+        List<AdminDTO> list2 = service.findAllManagers("test", 5);
+
+        verify(repository).findAll();
+
+        assertThat(list).isEqualTo(List.of(expectedDTO));
+        assertThat(list2).isEqualTo(List.of(expectedDTO));
+
     }
 
     @Test
-    void countAllMasters() {
+    void canLoadUserByUsernameTest() {
+        Admin admin = new Admin();
+        admin.setId(1L);
+        admin.setEmail("test");
+        when(repository.findByEmail(anyString())).thenReturn(Optional.of(admin));
+        assertThat(service.loadUserByUsername(admin.getEmail())).isEqualTo(admin);
     }
 
     @Test
-    void countAllManagers() {
+    void canFindAllAdminsBySpecificationTest() {
+        Admin admin = testAdmin;
+        AdminDTO dto = mapper.fromAdminToDTO(admin);
+        List<Admin> list = List.of(admin,admin,admin);
+        Page<Admin> expected = new PageImpl<>(list, PageRequest.of(1,1), 1);
+
+        List<AdminDTO> dtoList = List.of(dto,dto,dto);
+        Page<AdminDTO> expectedDTO = new PageImpl<>(dtoList,PageRequest.of(1,1), 1);
+
+        FilterForm form = new FilterForm();
+        form.setName("test");
+        form.setRole("test");
+        form.setPhone("test");
+        form.setEmail("test");
+        form.setStatus("test");
+
+        given(repository.findByFilters(anyString(),anyString(), anyString(), anyString(), anyString(), any(Pageable.class))).willReturn(expected);
+        Page<AdminDTO> test = service.findAllBySpecification(form, 1,1);
+        assertThat(test).isEqualTo(expectedDTO);
+    }
+
+    @Test
+    void canCountAllMastersTest() {
+        when(repository.count(any(Specification.class))).thenReturn(100L);
+        assertThat(service.countAllMasters()).isEqualTo(100L);
+    }
+
+    @Test
+    void canCountAllManagersTest() {
+        when(repository.count(any(Specification.class))).thenReturn(100L);
+        assertThat(service.countAllManagers()).isEqualTo(100L);
     }
 
     @Test
     void getAllRoles() {
+        when(userRoleRepository.findAll()).thenReturn(List.of(new UserRole()));
+        assertThat(service.getAllRoles().size()).isEqualTo(1);
     }
 
     @Test
-    void buildSpecFromFilters() {
+    void canGetMasterRolesTest(){
+        when(userRoleRepository.findAllMasterRoles()).thenReturn(List.of(new UserRole()));
+        assertThat(service.getMasterRoles().size()).isEqualTo(1);
     }
 
     @Test
-    void testFindMastersByType() {
+    void canGetManagerRolesTest(){
+        when(userRoleRepository.findAllManagerRoles()).thenReturn(List.of(new UserRole()));
+        assertThat(service.getManagerRoles().size()).isEqualTo(1);
     }
 }

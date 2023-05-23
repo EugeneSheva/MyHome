@@ -90,8 +90,6 @@ public interface InvoiceService {
 
     Double getAverageTotalPriceForApartmentLastYear(Long apartment);
 
-    void insertService(Invoice invoice, Sheet sheet, Row row);
-
     void sendExcelInvoiceToEmail();
 
 }

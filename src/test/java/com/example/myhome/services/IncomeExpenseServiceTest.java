@@ -12,14 +12,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.validation.ConstraintViolation;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class IncomeExpenseServiceTest {
@@ -44,6 +47,12 @@ public class IncomeExpenseServiceTest {
     }
 
     @Test
+    void canFindAllTest() {
+        when(incomeExpenseRepository.findAll()).thenReturn(List.of(new IncomeExpenseItems()));
+        assertThat(service.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
     void canFindItemById() {
         given(incomeExpenseRepository.findById(1L)).willReturn(Optional.of(item));
         service.findById(1L);
@@ -53,7 +62,8 @@ public class IncomeExpenseServiceTest {
 
     @Test
     void throwsExceptionIfItemNotFound() {
-        assertThrows(NotFoundException.class, () -> service.findById(1L));
+        doThrow(NotFoundException.class).when(incomeExpenseRepository).findById(anyLong());
+        assertThrows(NotFoundException.class, () -> service.findById(10000L));
     }
 
     @Test
@@ -66,6 +76,23 @@ public class IncomeExpenseServiceTest {
         verify(incomeExpenseRepository).save(item);
         assertThat(savedItem).isEqualTo(expectedItem);
         assertThat(savedItem.getId()).isEqualTo(expectedItem.getId());
+    }
+
+    @Test
+    void canThrowErrorOnSaveItemTest() {
+        doThrow(NotFoundException.class).when(incomeExpenseRepository).save(any(IncomeExpenseItems.class));
+        assertThrows(NotFoundException.class, () -> service.save(new IncomeExpenseItems()));
+    }
+
+    @Test
+    void canDeleteItemTest() {
+        service.deleteById(1L);
+    }
+
+    @Test
+    void throwsErrorOnDeleteItemTest() {
+        willThrow(NotFoundException.class).given(incomeExpenseRepository).deleteById(anyLong());
+        assertThrows(NotFoundException.class, () -> service.deleteById(1L));
     }
 
     @Test

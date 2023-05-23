@@ -23,6 +23,7 @@ public class TariffValidator implements Validator {
     @Override
     public void validate(Object target, Errors e) {
         Tariff tariff = (Tariff) target;
+        System.out.println(tariff);
         Locale locale = LocaleContextHolder.getLocale();
         if(tariff.getName() == null || tariff.getName().isEmpty())
             e.rejectValue("name", "name.empty", messageSource.getMessage("settings.system.tariffs.name.empty", null, locale));

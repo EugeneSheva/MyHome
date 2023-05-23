@@ -44,7 +44,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = TestConfig.class)
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc
+@WithUserDetails("test")
 public class AccountControllerTest {
 
     @Autowired
@@ -91,6 +92,8 @@ public class AccountControllerTest {
         when(accountService.getAccountNumberFromFlat(anyLong())).thenReturn(testAccount);
         when(accountService.findAllAccountsByFiltersAndPage(any(FilterForm.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(testDTO), PageRequest.of(1,1),1));
+        when(accountService.findAccountDTOById(anyLong())).thenReturn(testDTO);
+        when(accountService.findAccountById(anyLong())).thenReturn(testAccount);
     }
 
     @Test
@@ -103,33 +106,28 @@ public class AccountControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void showAccountsPageTest() throws Exception {
         this.mockMvc.perform(get("/admin/accounts").flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showAccountInfoPageTest() throws Exception {
         Long id = repository.getMaxId().orElse(0L);
         this.mockMvc.perform(get("/admin/accounts/" + id).flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showAccountCreatePageTest() throws Exception {
         this.mockMvc.perform(get("/admin/accounts/create").flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showAccountUpdatePageTest() throws Exception {
         Long id = repository.getMaxId().orElse(0L);
         this.mockMvc.perform(get("/admin/accounts/update/" + id).flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void createAccountTest() throws Exception {
         MvcResult result = this.mockMvc.perform(post("/admin/accounts/create").with(csrf().asHeader()).flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
@@ -138,7 +136,6 @@ public class AccountControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void updateAccountTest() throws Exception {
         MvcResult result = this.mockMvc.perform(post("/admin/accounts/update/" + testAccount.getId()).with(csrf().asHeader()).flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
@@ -147,16 +144,14 @@ public class AccountControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void deleteAccountTest() throws Exception {
-        MvcResult result = this.mockMvc.perform(post("/admin/accounts/delete/" + testAccount.getId()).with(csrf().asHeader()).flashAttr("auth_admin", testUser))
+        MvcResult result = this.mockMvc.perform(get("/admin/accounts/delete/" + testAccount.getId()).with(csrf().asHeader()).flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/accounts"))
                 .andReturn();
     }
 
     @Test
-    @WithUserDetails("test")
     void getAccountNumberFromFlatIdTest() throws Exception {
         long flat_id = new Random().nextLong();
         MvcResult result = this.mockMvc.perform(get("/admin/accounts/get-flat-account?flat_id=" + flat_id).flashAttr("auth_admin", testUser))
@@ -166,7 +161,6 @@ public class AccountControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void getAccountsAJAX_WithoutParameters_Test() throws Exception {
         this.mockMvc.perform(get("/admin/accounts/get-accounts").flashAttr("auth_admin", testUser))
                 .andExpect(status().isBadRequest());
@@ -179,7 +173,6 @@ public class AccountControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void getAccountsAJAX_WithIncorrectFilters_Test() throws Exception {
         this.mockMvc.perform(get("/admin/accounts/get-accounts?page=1&size=1&filters=ADads").flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
@@ -187,7 +180,6 @@ public class AccountControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void getAccountsAJAX_WithCorrectParameters_Test() throws Exception {
         MvcResult result = this.mockMvc.perform(get("/admin/accounts/get-accounts?page=1&size=1&filters=null").flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk())

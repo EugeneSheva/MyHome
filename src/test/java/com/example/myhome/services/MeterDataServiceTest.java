@@ -3,12 +3,27 @@ package com.example.myhome.services;
 import com.example.myhome.dto.MeterDataDTO;
 import com.example.myhome.mapper.MeterDTOMapper;
 import com.example.myhome.model.*;
+import com.example.myhome.model.filter.FilterForm;
+import com.example.myhome.repository.ApartmentRepository;
+import com.example.myhome.repository.BuildingRepository;
 import com.example.myhome.repository.MeterDataRepository;
+import com.example.myhome.repository.ServiceRepository;
+import com.example.myhome.service.ApartmentService;
+import com.example.myhome.service.BuildingService;
 import com.example.myhome.service.MeterDataService;
+import com.example.myhome.service.ServiceService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,13 +36,43 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class MeterDataServiceTest {
 
     @MockBean MeterDataRepository repository;
+    @MockBean
+    ApartmentRepository apartmentRepository;
+    @MockBean
+    BuildingRepository buildingRepository;
+    @MockBean
+    ServiceRepository serviceRepository;
+    @MockBean
+    ApartmentService apartmentService;
+    @MockBean
+    BuildingService buildingService;
+    @MockBean
+    ServiceService serviceService;
     @Autowired MeterDataService service;
     @Autowired MeterDTOMapper mapper;
+
+    MeterData meterData = new MeterData();
+
+    @BeforeEach
+    void setupMeter() {
+        meterData.setId(1L);
+        Service service1 = new Service();
+        service1.setUnit(new Unit());
+        meterData.setService(service1);
+        Apartment apartment = new Apartment();
+        apartment.setOwner(new Owner());
+        meterData.setApartment(apartment);
+        meterData.setBuilding(new Building());
+        meterData.setStatus(MeterPaymentStatus.PAID);
+        meterData.setSection("test");
+        meterData.setCurrentReadings(100.0);
+    }
 
     @Test
     void findAllMetersTest() {
@@ -164,11 +209,133 @@ class MeterDataServiceTest {
     }
 
     @Test
-    void saveMeterData() {
+    void canFindSingleMeterDataPageTest() {
+        FilterForm form = new FilterForm();
+        form.setId(1L);
+        form.setStatus("NEW");
+        form.setDate("2022-11-11 to 2022-11-12");
+
+        MeterData meterData = new MeterData();
+        meterData.setId(1L);
+        Service service1 = new Service();
+        service1.setUnit(new Unit());
+        meterData.setService(service1);
+        Apartment apartment = new Apartment();
+        apartment.setOwner(new Owner());
+        meterData.setApartment(apartment);
+        meterData.setBuilding(new Building());
+        meterData.setStatus(MeterPaymentStatus.PAID);
+        meterData.setSection("test");
+        meterData.setCurrentReadings(100.0);
+        List<MeterData> list = List.of(meterData, meterData, meterData);
+        Page<MeterData> page = new PageImpl<>(list, PageRequest.of(1,1),1);
+
+        when(apartmentRepository.getReferenceById(anyLong())).thenReturn(new Apartment());
+        when(serviceRepository.getReferenceById(anyLong())).thenReturn(new Service());
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
+
+        assertThat(service.findSingleMeterData(form, PageRequest.of(1,1)).getContent().size()).isEqualTo(3);
     }
 
     @Test
-    void buildSpecFromFiltersTest() {
+    void canFindAllByFiltersAndPageTest() {
+        FilterForm form = new FilterForm();
+        form.setId(1L);
+        form.setStatus("NEW");
+        form.setDate("2022-11-11 to 2022-11-12");
 
+
+        List<MeterData> list = List.of(meterData, meterData, meterData);
+        Page<MeterData> page = new PageImpl<>(list, PageRequest.of(1,1),1);
+
+        when(apartmentRepository.getReferenceById(anyLong())).thenReturn(new Apartment());
+        when(serviceRepository.getReferenceById(anyLong())).thenReturn(new Service());
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
+
+        assertThat(service.findAllByFiltersAndPage(form, PageRequest.of(1,1)).getContent().size()).isEqualTo(3);
     }
+
+    @Test
+    void buildSpecTest() {
+        FilterForm form = new FilterForm();
+        form.setId(1L);
+        form.setStatus("NEW");
+        form.setDate("2022-11-11 to 2022-11-12");
+        form.setBuilding(1L);
+        form.setApartment(1L);
+        form.setSection("test");
+        form.setService(1L);
+
+        when(buildingService.findById(anyLong())).thenReturn(new Building());
+        when(apartmentService.findById(anyLong())).thenReturn(new Apartment());
+        when(serviceService.findServiceById(anyLong())).thenReturn(new Service());
+
+        assertThat(service.buildSpecFromFilters(form)).isInstanceOf(Specification.class);
+    }
+
+    @Test
+    void canFindAllBySpecTest() {
+        FilterForm form = new FilterForm();
+        form.setId(1L);
+        form.setStatus("NEW");
+        form.setDate("2022-11-11 to 2022-11-12");
+        form.setBuilding(1L);
+        form.setApartment(1L);
+        form.setSection("test");
+        form.setService(1L);
+
+        when(buildingService.findById(anyLong())).thenReturn(new Building());
+        when(apartmentService.findById(anyLong())).thenReturn(new Apartment());
+        when(serviceService.findServiceById(anyLong())).thenReturn(new Service());
+
+        List<MeterData> list = List.of(meterData, meterData, meterData);
+        Page<MeterData> page = new PageImpl<>(list, PageRequest.of(1,1),1);
+
+        when(repository.findAll(any(Specification.class),any(Pageable.class))).thenReturn(page);
+
+        assertThat(service.findAllBySpecification(form, 1,1).getContent().size()).isEqualTo(3);
+    }
+
+    @Test
+    void canFindMeterDataDTOTest() {
+        when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(meterData));
+        assertThat(service.findMeterDataDTOById(1L)).isInstanceOf(MeterDataDTO.class);
+    }
+
+    @Test
+    void canSaveMeterDataTest() {
+        assertThat(service.saveMeterData(new MeterData())).isInstanceOf(MeterData.class);
+    }
+
+    @Test
+    void canSaveMeterDataFromDTOTest() {
+        MeterDataDTO dto = mapper.fromMeterToDTO(meterData);
+        dto.setStatus(meterData.getStatus().name());
+        when(apartmentRepository.getReferenceById(anyLong())).thenReturn(new Apartment());
+        when(buildingRepository.getReferenceById(anyLong())).thenReturn(new Building());
+        when(serviceRepository.getReferenceById(anyLong())).thenReturn(new Service());
+        assertThat(service.saveMeterData(dto)).isInstanceOf(MeterData.class);
+    }
+
+    @Test
+    void canSaveMeterDataFromAJAXTest() {
+        when(buildingService.findById(anyLong())).thenReturn(new Building());
+        when(apartmentService.findById(anyLong())).thenReturn(new Apartment());
+        when(serviceService.findServiceById(anyLong())).thenReturn(new Service());
+
+        assertThat(service.saveMeterDataAJAX(1L, "10", "test", "10", "100", "NEW", "10", "2022-11-11"))
+                .isInstanceOf(MeterData.class);
+    }
+
+    @Test
+    void canSaveMeterDataFromAJAXTest_2() {
+        assertThat(service.saveMeterDataAJAX(1L, "10", "test", "10", "100", "Новое", "10", "2022-11-11"))
+                .isInstanceOf(MeterData.class);
+    }
+
+    @Test
+    void canDeleteMeterByIdTest() {
+        service.deleteMeterById(1L);
+    }
+
 }

@@ -3,6 +3,7 @@ package com.example.myhome.services;
 import com.example.myhome.exception.EmptyObjectException;
 import com.example.myhome.model.Service;
 import com.example.myhome.model.Tariff;
+import com.example.myhome.repository.ServiceRepository;
 import com.example.myhome.repository.TariffRepository;
 import com.example.myhome.service.impl.TariffServiceImpl;
 import org.junit.jupiter.api.MethodOrderer;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationManager;
 
 import java.util.HashMap;
@@ -22,14 +24,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TariffServiceTest {
 
     @MockBean private TariffRepository tariffRepository;
+    @MockBean private ServiceRepository serviceRepository;
     @MockBean private AuthenticationManager authenticationManager;
 
     @Autowired private TariffServiceImpl tariffService;
@@ -92,6 +98,55 @@ public class TariffServiceTest {
         assertThat(tariffService.findAllTariffs())
                 .isNotNull()
                 .hasSize(2);
+    }
+
+    @Test
+    void canLoadTariffsSortedTest() {
+        List<Tariff> tariffList = List.of(new Tariff(), new Tariff());
+
+        given(tariffRepository.findAll(any(Sort.class))).willReturn(tariffList);
+
+        tariffService.findAllTariffsSorted(true);
+        verify(tariffRepository).findAll();
+        assertThat(tariffService.findAllTariffs())
+                .isNotNull()
+                .hasSize(2);
+
+        tariffService.findAllTariffsSorted(false);
+        verify(tariffRepository).findAll();
+        assertThat(tariffService.findAllTariffs())
+                .isNotNull()
+                .hasSize(2);
+    }
+
+    @Test
+    void canDeleteTariffTest() {
+        tariffService.deleteTariffById(1L);
+    }
+
+    @Test
+    void canBuildComponentsListTest() {
+        assertThat(tariffService.buildComponentsList(new String[]{"test1","test1"}, new String[]{"1","1"}))
+                .hasSize(2);
+    }
+
+    @Test
+    void canBuildComponentsMapTest() {
+        Service service = new Service();
+        when(serviceRepository.findByName(anyString())).thenReturn(Optional.of(service));
+        assertThat(tariffService.buildComponentsMap(new String[]{"test1","test1"}, new String[]{"1","1"}).entrySet()).hasSize(2);
+    }
+
+    @Test
+    void canBuildComponentsMapTest_2() {
+        assertThat(tariffService.buildComponentsMap(null, null)).isInstanceOf(HashMap.class);
+    }
+
+    @Test
+    void canBuildComponentsMapTest_3() {
+        Service service = new Service();
+        when(serviceRepository.findByName(anyString())).thenReturn(Optional.of(service));
+        assertThat(tariffService.buildComponentsMap(new String[]{"test1","test1"}, new String[]{"test","test"}).entrySet()).hasSize(0);
     }
 
     @Test

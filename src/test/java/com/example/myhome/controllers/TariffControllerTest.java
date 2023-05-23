@@ -5,14 +5,13 @@ import com.example.myhome.controller.TariffController;
 import com.example.myhome.model.Admin;
 import com.example.myhome.model.Service;
 import com.example.myhome.model.Tariff;
+import com.example.myhome.model.Unit;
 import com.example.myhome.repository.TariffRepository;
 import com.example.myhome.service.TariffService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.With;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -36,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = TestConfig.class)
 @AutoConfigureMockMvc
 @WithUserDetails("test")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TariffControllerTest {
 
     @Autowired
@@ -53,7 +54,7 @@ public class TariffControllerTest {
     @Autowired
     private TariffRepository repository;
 
-    static Tariff testTariff;
+    static Tariff testTariff = new Tariff();
     static Map<Service, Double> testMap1;
     static Map<String, Double> testMap2;
 
@@ -65,7 +66,11 @@ public class TariffControllerTest {
         testTariff.setDate(LocalDateTime.now().minusDays(1));
         testTariff.setName("test");
         testTariff.setDescription("test");
-        testMap1 = Map.of(new Service(), 100.0);
+        Service testService = new Service();
+        testService.setId(1L);
+        testService.setUnit(new Unit());
+        testService.setName("test");
+        testMap1 = Map.of(testService, 100.0);
         testTariff.setComponents(testMap1);
 
         jsonMapper = new ObjectMapper();
@@ -79,9 +84,11 @@ public class TariffControllerTest {
     @BeforeEach
     void setupMocks(){
         when(service.findTariffById(anyLong())).thenReturn(testTariff);
+        when(service.buildComponentsMap(any(String[].class), any(String[].class))).thenReturn(testMap1);
     }
 
     @Test
+    @Order(1)
     void contextLoads() {
         assertThat(controller).isNotNull();
         assertThat(repository).isNotNull();
@@ -92,6 +99,7 @@ public class TariffControllerTest {
 
     @Test
     @Transactional
+    @Order(2)
     void showTariffsPageTest() throws Exception {
         this.mockMvc.perform(get("/admin/tariffs").flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }

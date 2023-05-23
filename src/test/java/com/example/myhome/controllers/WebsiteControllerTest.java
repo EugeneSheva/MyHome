@@ -17,8 +17,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.webservices.server.WebServiceServerTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.mock.web.MockPart;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
@@ -101,7 +104,10 @@ public class WebsiteControllerTest {
 
     @BeforeEach
     void setupMocks(){
+        when(service.getMainPage()).thenReturn(testMainPage);
         when(service.getAboutPage()).thenReturn(testAboutPage);
+        when(service.getServicesPage()).thenReturn(testServicesPage);
+        when(service.getContactsPage()).thenReturn(testContactsPage);
     }
 
     @Test
@@ -128,7 +134,7 @@ public class WebsiteControllerTest {
     void updateAboutPageTest() throws Exception {
         this.mockMvc.perform(post("/admin/website/about")
                         .with(csrf())
-                        .flashAttr("page", testAboutPage)
+                        .flashAttr("aboutPage", testAboutPage)
                         .flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/website/about"));
@@ -141,9 +147,15 @@ public class WebsiteControllerTest {
 
     @Test
     void updateServicesPageTest() throws Exception {
-        this.mockMvc.perform(post("/admin/website/services")
+        MockMultipartFile firstFile = new MockMultipartFile("service_images", "filename.txt", "text/plain", "some xml".getBytes());
+        MockMultipartFile secondFile = new MockMultipartFile("service_images", "other-file-name.data", "text/plain", "some other type".getBytes());
+        this.mockMvc.perform(MockMvcRequestBuilders.multipart("/admin/website/services")
+                        .file(firstFile)
+                        .file(secondFile)
+                        .param("titles", new String[]{"test"})
+                        .param("descriptions", new String[]{"test"})
                         .with(csrf())
-                        .flashAttr("page", testServicesPage)
+                        .flashAttr("servicesPage", testServicesPage)
                         .flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/website/services"));
@@ -158,7 +170,7 @@ public class WebsiteControllerTest {
     void updateContactsPageTest() throws Exception {
         this.mockMvc.perform(post("/admin/website/contacts")
                 .with(csrf())
-                .flashAttr("page", testContactsPage)
+                .flashAttr("contactsPage", testContactsPage)
                 .flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/website/contacts"));
@@ -173,7 +185,7 @@ public class WebsiteControllerTest {
 
     @Test
     void deleteAboutAddImageTest() throws Exception {
-        this.mockMvc.perform(get("/admin/website/delete-about-add-image/1").with(csrf()).flashAttr("auth_admin", testUser))
+        this.mockMvc.perform(get("/admin/website/delete-about-add-image/0").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/website/about"));
     }

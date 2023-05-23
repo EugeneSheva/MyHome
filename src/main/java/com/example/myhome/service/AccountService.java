@@ -44,9 +44,6 @@ public interface AccountService {
         return accountList.stream().map(MappingUtils::fromAccountToDTO).collect(Collectors.toList());
     }
     ApartmentAccount getAccountWithBiggestId();
-    ApartmentAccount getAccountNumberFromFlat(long flat_id);
-    ApartmentAccount save(ApartmentAccount account);
-    void deleteAccountById(long account_id);
     boolean apartmentHasAccount(long apartment_id);
 
 

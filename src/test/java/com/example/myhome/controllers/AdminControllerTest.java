@@ -5,6 +5,7 @@ import com.example.myhome.controller.AdminController;
 import com.example.myhome.dto.AdminDTO;
 import com.example.myhome.mapper.AdminDTOMapper;
 import com.example.myhome.model.Admin;
+import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.repository.AdminRepository;
 import com.example.myhome.service.AdminService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,12 +16,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
+
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -33,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = TestConfig.class)
 @AutoConfigureMockMvc
+@WithUserDetails("test")
 public class AdminControllerTest {
 
     @Autowired
@@ -57,7 +64,7 @@ public class AdminControllerTest {
     AdminDTOMapper mapper = new AdminDTOMapper();
 
     @BeforeEach
-    void createUser(){
+    void createUser() throws IllegalAccessException {
         testDTO = mapper.fromAdminToDTO(testUser);
         testDTO.setPassword("");
         testDTO.setFirst_name("test");
@@ -67,6 +74,9 @@ public class AdminControllerTest {
 
         when(repository.existsByEmail(any(String.class))).thenReturn(true);
         when(adminService.saveAdmin(any(Admin.class))).thenReturn(testUser);
+        when(adminService.findAdminDTOById(anyLong())).thenReturn(testDTO);
+        when(adminService.findAdminById(anyLong())).thenReturn(testUser);
+        when(adminService.findAllByFiltersAndPage(any(FilterForm.class), any(Pageable.class))).thenReturn(new PageImpl<>(List.of(testDTO), PageRequest.of(1,1), 1));
     }
 
     @Test
@@ -79,33 +89,28 @@ public class AdminControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void showAdminsPageTest() throws Exception {
         this.mockMvc.perform(get("/admin/admins").flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showAdminInfoPageTest() throws Exception {
         Long id = testUser.getId();
         this.mockMvc.perform(get("/admin/admins/" + id).flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showAdminCreatePageTest() throws Exception {
         this.mockMvc.perform(get("/admin/admins/create").flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showAdminUpdatePageTest() throws Exception {
         Long id = testUser.getId();
         this.mockMvc.perform(get("/admin/admins/update/" + id).flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void createAdmin_NotValidated_Test() throws Exception {
         this.mockMvc.perform(post("/admin/admins/create").param("dto", testDTO.toString()).with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk())
@@ -113,7 +118,6 @@ public class AdminControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void createAdmin_Validated_Test() throws Exception {
         Model model = new ConcurrentModel();
         String result = controller.createAdmin(testDTO, new BeanPropertyBindingResult(testDTO, "testDTO"), model);
@@ -122,7 +126,6 @@ public class AdminControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void updateAdmin_NotValidated_Test() throws Exception {
         this.mockMvc.perform(post("/admin/admins/update/" + testDTO.getId()).param("dto", testDTO.toString()).with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk())
@@ -130,7 +133,6 @@ public class AdminControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void updateAdmin_Validated_Test() throws Exception {
         Model model = new ConcurrentModel();
         String result = controller.updateAdmin(testDTO.getId(),testDTO, new BeanPropertyBindingResult(testDTO, "testDTO"), model);
@@ -139,7 +141,6 @@ public class AdminControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void deleteAdminTest() throws Exception {
         this.mockMvc.perform(get("/admin/admins/delete/" + testDTO.getId()).with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
@@ -147,7 +148,6 @@ public class AdminControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void inviteAdminTest() throws Exception {
         MvcResult result =this.mockMvc.perform(get("/admin/admins/invite/" + testDTO.getId()).with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk())

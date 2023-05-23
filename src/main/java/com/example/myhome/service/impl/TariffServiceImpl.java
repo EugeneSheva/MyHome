@@ -54,6 +54,7 @@ public class TariffServiceImpl implements TariffService {
 
         return list;
     }
+
     public Map<com.example.myhome.model.Service, Double> buildComponentsMap(String[] service_names, String[] prices) {
         if(service_names == null || prices == null) {
             log.info("Sent empty arrays, exiting with empty map");

@@ -77,7 +77,7 @@ public class MeterDataServiceImpl implements MeterDataService {
 
         Page<MeterData> initialPage = meterDataRepository.findAll(spec, pageable);
         log.info("Found " + initialPage.getContent().size() + " elements(page " + pageable.getPageNumber() + "/ " + initialPage.getTotalPages() + ")");
-        List<MeterDataDTO> listDTO = initialPage.getContent().stream().map(MappingUtils::fromMeterToDTO).collect(Collectors.toList());
+        List<MeterDataDTO> listDTO = initialPage.getContent().stream().map(mapper::fromMeterToDTO).collect(Collectors.toList());
         return new PageImpl<>(listDTO, pageable, initialPage.getTotalElements());
     }
     @Override
@@ -130,53 +130,10 @@ public class MeterDataServiceImpl implements MeterDataService {
         Page<MeterData> initialPage = meterDataRepository.findAll(spec, pageable);
 
         List<MeterDataDTO> listDTO = initialPage.getContent().stream()
-                .map(meter -> {
-                    Long buildingID = (meter.getBuilding() != null) ? meter.getBuilding().getId() : null;
-                    String buildingName = (meter.getBuilding() != null) ? meter.getBuilding().getName() : "";
-                    Long apartmentID = (meter.getApartment() != null) ? meter.getApartment().getId() : null;
-                    Long apartmentNumber = (meter.getApartment() != null) ? meter.getApartment().getNumber() : null;
-                    String serviceName = (meter.getService() != null) ? meter.getService().getName() : "";
-                    String serviceUnitName = (meter.getService() != null && meter.getService().getUnit() != null) ? meter.getService().getUnit().getName() : "";
-                    Long serviceID = (meter.getService() != null) ? meter.getService().getId() : null;
-                    return MeterDataDTO.builder()
-                            .id(meter.getId())
-                            .section(meter.getSection())
-                            .buildingID(buildingID)
-                            .buildingName(buildingName)
-                            .apartmentID(apartmentID)
-                            .apartmentNumber(apartmentNumber)
-                            .serviceID(serviceID)
-                            .serviceName(serviceName)
-                            .serviceUnitName(serviceUnitName)
-                            .readings(meter.getCurrentReadings())
-                            .build();
-                })
+                .map(mapper::fromMeterToDTO)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(listDTO, pageable, initialPage.getTotalElements());
-    }
-
-    public Page<MeterData> findAllBySpecificationAndPage(Long building_id, String section_name, Long apartment, Long service_id, Integer page) {
-
-        if(building_id == null && section_name == null && apartment == null && service_id == null)
-            return meterDataRepository.findAll(MeterSpecifications.groupTest(),PageRequest.of(page-1, 5));
-
-        Building building = (building_id != null) ? buildingService.findById(building_id) : null;
-        com.example.myhome.model.Service service = (service_id != null) ? serviceService.findServiceById(service_id) : null;
-
-        log.info("Building: " + building);
-        log.info("Apartment: " + apartment);
-        log.info("Service: " + service);
-        log.info("Section: " + section_name);
-
-        Specification<MeterData> specification = Specification.where(MeterSpecifications.hasBuilding(building)
-                                                                .and(MeterSpecifications.hasSection(section_name))
-                                                                .and(MeterSpecifications.hasApartmentNumber(apartment))
-                                                                .and(MeterSpecifications.hasService(service))
-                                                                .and(MeterSpecifications.groupTest()));
-        Pageable pageable = PageRequest.of(page-1, 5);
-
-        return meterDataRepository.findAll(specification, pageable);
     }
 
     @Override

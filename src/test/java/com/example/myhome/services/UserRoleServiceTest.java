@@ -110,4 +110,9 @@ class UserRoleServiceTest {
         assertThat(SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("testPermission1.read"))).isTrue();
         assertThat(SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("testPermission1.write"))).isTrue();
     }
+
+    @Test
+    void deleteRoleTest() {
+        service.deleteRole(1L);
+    }
 }

@@ -38,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = TestConfig.class)
 @AutoConfigureMockMvc
+@WithUserDetails("test")
 public class MeterControllerTest {
 
     @Autowired
@@ -111,54 +112,46 @@ public class MeterControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void showMetersPageTest() throws Exception {
         this.mockMvc.perform(get("/admin/meters").flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showMeterInfoPageTest() throws Exception {
         Long id = testUser.getId();
         this.mockMvc.perform(get("/admin/meters/" + id).flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showMeterData_WithoutParameters_PageTest() throws Exception {
         this.mockMvc.perform(get("/admin/meters/data").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showMeterData_WithParameters_PageTest() throws Exception {
         this.mockMvc.perform(get("/admin/meters/data?flat_id=1&service_id=1").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showMeterCreatePageTest() throws Exception {
         this.mockMvc.perform(get("/admin/meters/create").flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showMeterCreateAdditionalPage_WithoutParameters_Test() throws Exception {
         this.mockMvc.perform(get("/admin/meters/create-add").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    @WithUserDetails("test")
     void showMeterCreateAdditionalPage_WithParameters_Test() throws Exception {
         this.mockMvc.perform(get("/admin/meters/create-add?flat_id=1&service_id=1").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showMeterUpdatePageTest() throws Exception {
         Long id = testUser.getId();
         this.mockMvc.perform(get("/admin/meters/update/" + id).flashAttr("auth_admin", testUser)).andExpect(status().isOk());
@@ -167,7 +160,6 @@ public class MeterControllerTest {
     //todo post
 
     @Test
-    @WithUserDetails("test")
     void createMeterTest_NotValidated_Test() throws Exception {
         this.mockMvc.perform(post("/admin/meters/create").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk())
@@ -175,7 +167,6 @@ public class MeterControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void createMeterTest_Validated_Test() throws Exception {
         this.mockMvc.perform(post("/admin/meters/create").flashAttr("meterDataDTO", testDTO).with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
@@ -184,7 +175,6 @@ public class MeterControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void createAdditionalMeterTest_NotValidated_Test() throws Exception {
         this.mockMvc.perform(post("/admin/meters/create-add").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk())
@@ -192,7 +182,6 @@ public class MeterControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void createAdditionalMeterTest_Validated_Test() throws Exception {
         this.mockMvc.perform(post("/admin/meters/create-add").flashAttr("meterDataDTO", testDTO).with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection()).andExpect(model().attributeDoesNotExist("validation"))
@@ -200,7 +189,6 @@ public class MeterControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void updateMeterTest_NotValidated_Test() throws Exception {
         this.mockMvc.perform(post("/admin/meters/update/"+testMeter.getId()).with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk())
@@ -208,7 +196,6 @@ public class MeterControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void updateMeterTest_Validated_Test() throws Exception {
         this.mockMvc.perform(post("/admin/meters/update/"+testMeter.getId()).flashAttr("meterDataDTO", testDTO).with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
@@ -217,7 +204,6 @@ public class MeterControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void deleteMeterTest() throws Exception {
         this.mockMvc.perform(get("/admin/meters/delete/" + testMeter.getId()).with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
@@ -225,14 +211,12 @@ public class MeterControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void getMetersAJAX_WithoutParameters_Test() throws Exception {
         this.mockMvc.perform(get("/admin/meters/get-meters").with(csrf()).flashAttr("auth_admin",testUser))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    @WithUserDetails("test")
     void getMetersAJAX_WithIncorrectParameters_Test() throws Exception {
         this.mockMvc.perform(get("/admin/meters/get-meters?page=1").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isBadRequest());
@@ -245,7 +229,6 @@ public class MeterControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void getMetersAJAX_WithCorrectParameters_Test() throws Exception {
         this.mockMvc.perform(get("/admin/meters/get-meters?page=1&size=1&filters=null").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk())
@@ -253,7 +236,6 @@ public class MeterControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void getMeterDataAJAX_WithCorrectParameters_Test() throws Exception {
         this.mockMvc.perform(get("/admin/meters/get-meter-data?page=1&size=1&filters=null").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().is(200))

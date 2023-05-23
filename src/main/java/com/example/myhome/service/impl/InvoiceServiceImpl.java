@@ -477,21 +477,6 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
     }
 
     @Override
-    public void insertService(Invoice invoice, Sheet sheet, Row row) {
-
-        List<InvoiceComponents> componentsList = invoice.getComponents();
-        for (int i = 0; i < componentsList.size(); i++) {
-            Row newRow = sheet.createRow(row.getRowNum()+i+1);
-            InvoiceComponents component = componentsList.get(i);
-            newRow.createCell(0).setCellValue(component.getService().getName());
-            newRow.createCell(1).setCellValue(invoice.getTariff().getName());
-            newRow.createCell(2).setCellValue(component.getService().getUnit().getName());
-            newRow.createCell(3).setCellValue(component.getUnit_amount());
-            newRow.createCell(4).setCellValue(component.getTotalPrice());
-        }
-    }
-
-    @Override
     public void sendExcelInvoiceToEmail() {
 
     }

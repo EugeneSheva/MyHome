@@ -2,6 +2,7 @@ package com.example.myhome.controllers;
 
 import com.example.myhome.config.TestConfig;
 import com.example.myhome.controller.ServiceController;
+import com.example.myhome.exception.NotFoundException;
 import com.example.myhome.model.Admin;
 import com.example.myhome.model.Service;
 import com.example.myhome.model.ServiceForm;
@@ -30,6 +31,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
@@ -72,11 +74,11 @@ public class ServiceControllerTest {
     static void setupObjects() throws JsonProcessingException {
         jsonMapper = new ObjectMapper();
 
-        Service testService = new Service();
+        testService = new Service();
         testService.setId(1L);
         testService.setName("test");
 
-        Unit testUnit = new Unit();
+        testUnit = new Unit();
         testUnit.setId(1L);
         testUnit.setName("test");
         unitJSONString = jsonMapper.writeValueAsString(testUnit);
@@ -124,10 +126,10 @@ public class ServiceControllerTest {
     @Test
     void saveServices_WithIncorrectParameters_Test() throws Exception {
         this.mockMvc.perform(post("/admin/services")
-                        .param("new_service_names", null)
-                        .param("new_service_unit_names",null)
-                        .param("new_service_show_in_meters", null)
-                        .param("new_unit_names", null)
+                        .param("new_service_names", new String[]{""})
+                        .param("new_service_unit_names",new String[]{""})
+                        .param("new_service_show_in_meters", new String[]{""})
+                        .param("new_unit_names", new String[]{""})
                         .with(csrf())
                         .flashAttr("auth_admin",testUser)
                         .flashAttr("serviceForm", new ServiceForm()))
@@ -154,13 +156,31 @@ public class ServiceControllerTest {
     @Test
     void deleteServiceTest() throws Exception {
         this.mockMvc.perform(get("/admin/services/delete/" + testService.getId()).with(csrf()).flashAttr("auth_admin",testUser))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/services"));
+    }
+
+    @Test
+    void deleteService_Exception_Test() throws Exception {
+        doThrow(new NotFoundException()).when(service).deleteServiceById(anyLong());
+        this.mockMvc.perform(get("/admin/services/delete/" + testService.getId()).with(csrf()).flashAttr("auth_admin",testUser))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/services"));
     }
 
     @Test
     void deleteUnitTest() throws Exception {
         this.mockMvc.perform(get("/admin/services/delete-unit/"+testUnit.getId()).with(csrf()).flashAttr("auth_admin", testUser))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/services"));
+    }
+
+    @Test
+    void deleteUnit_Exception_Test() throws Exception {
+        doThrow(new NotFoundException()).when(service).deleteUnitById(anyLong());
+        this.mockMvc.perform(get("/admin/services/delete-unit/" + testUnit.getId()).with(csrf()).flashAttr("auth_admin",testUser))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/services"));
     }
 
     @Test

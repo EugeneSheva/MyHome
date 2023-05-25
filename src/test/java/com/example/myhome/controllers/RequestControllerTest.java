@@ -2,10 +2,12 @@ package com.example.myhome.controllers;
 
 import com.example.myhome.config.TestConfig;
 import com.example.myhome.controller.RequestController;
+import com.example.myhome.dto.ApartmentDTO;
 import com.example.myhome.dto.RepairRequestDTO;
 import com.example.myhome.mapper.RepairRequestDTOMapper;
 import com.example.myhome.model.*;
 import com.example.myhome.repository.RepairRequestRepository;
+import com.example.myhome.service.OwnerService;
 import com.example.myhome.service.RepairRequestService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +15,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,8 +30,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -37,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = TestConfig.class)
 @AutoConfigureMockMvc
+@WithUserDetails("test")
 public class RequestControllerTest {
 
     @Autowired
@@ -50,6 +53,9 @@ public class RequestControllerTest {
 
     @MockBean
     private RepairRequestService service;
+
+    @MockBean
+    private OwnerService ownerService;
 
     @Autowired
     private RepairRequestRepository repository;
@@ -93,6 +99,8 @@ public class RequestControllerTest {
     @BeforeEach
     void setupMocks() throws IllegalAccessException, JsonProcessingException {
         when(service.findAllBySpecification(any(), anyInt(), anyInt())).thenReturn(testPage);
+        when(service.findRequestDTOById(anyLong())).thenReturn(testDTO);
+        when(ownerService.findOwnerApartments(any())).thenReturn(List.of(new ApartmentDTO()));
     }
 
     @Test
@@ -105,33 +113,28 @@ public class RequestControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void showRequestsPageTest() throws Exception {
         this.mockMvc.perform(get("/admin/requests").flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showRequestInfoPageTest() throws Exception {
         Long id = testUser.getId();
-        this.mockMvc.perform(get("/admin/requests/" + id).flashAttr("auth_admin", testUser)).andExpect(status().isOk());
+        this.mockMvc.perform(get("/admin/requests/info/" + id).flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showRequestCreatePageTest() throws Exception {
         this.mockMvc.perform(get("/admin/requests/create").flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void showRequestUpdatePageTest() throws Exception {
         Long id = testUser.getId();
-        this.mockMvc.perform(get("/admin/requests/update/" + id).flashAttr("auth_admin", testUser)).andExpect(status().isOk());
+        this.mockMvc.perform(get("/admin/requests/update/" + id).flashAttr("auth_admin", testUser)).andExpect(status().isOk()).andReturn();
     }
 
     @Test
-    @WithUserDetails("test")
     void createRequest_NotValidated_Test() throws Exception {
         this.mockMvc.perform(post("/admin/requests/create").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk())
@@ -139,7 +142,6 @@ public class RequestControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void createRequest_Validated_Test() throws Exception {
         this.mockMvc.perform(post("/admin/requests/create").with(csrf()).flashAttr("repairRequestDTO", testDTO).flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
@@ -148,7 +150,6 @@ public class RequestControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void updateRequest_NotValidated_Test() throws Exception {
         this.mockMvc.perform(post("/admin/requests/update/"+testRequest.getId()).with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk())
@@ -156,7 +157,6 @@ public class RequestControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void updateRequest_Validated_Test() throws Exception {
         this.mockMvc.perform(post("/admin/requests/update/"+testRequest.getId()).with(csrf()).flashAttr("repairRequestDTO", testDTO).flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
@@ -165,21 +165,18 @@ public class RequestControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void deleteRequestTest() throws Exception {
         this.mockMvc.perform(get("/admin/requests/delete/"+testRequest.getId()).with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @WithUserDetails("test")
     void getRequestsAJAX_WithoutParameters_Test() throws Exception {
         this.mockMvc.perform(get("/admin/requests/get-requests").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    @WithUserDetails("test")
     void getRequestsAJAX_WithIncorrectParameters_Test() throws Exception {
         this.mockMvc.perform(get("/admin/requests/get-requests?page=1").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isBadRequest());
@@ -192,7 +189,6 @@ public class RequestControllerTest {
     }
 
     @Test
-    @WithUserDetails("test")
     void getRequestsAJAX_WithCorrectParameters_Test() throws Exception {
         this.mockMvc.perform(get("/admin/requests/get-requests?page=1&size=1&filters=null").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk())

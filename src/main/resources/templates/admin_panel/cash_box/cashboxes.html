@@ -181,7 +181,7 @@
                                     </div>
                                 </th>
                                 <th style="border-bottom:none"><select autocomplete="off" th:field="*{isCompleted}" class="form-select my_filters" id="isCompleted" name="isCompleted">
-                                    <option th:selected="${filterForm.isCompleted == null}" value="-" th:text="#{choise}"></option>
+                                    <option th:selected="${filterForm.isCompleted == null}" value="-"></option>
                                     <option value="сompleted"
                                             th:selected="${#strings.containsIgnoreCase(('сompleted'),((filterForm.isCompleted != null) ? (filterForm.isCompleted ): ('emp') ))}"
                                             th:text="#{complete}" >Проведен
@@ -194,7 +194,7 @@
 
                                 <th style="border-bottom:none"><select autocomplete="off" class="form-select my_filters" id="incomeExpenseItem" name="incomeExpenseItem">
                                     <option value="-"
-                                            th:selected="${filterForm.incomeExpenseItem == null}" th:text="#{choise}"></option>
+                                            th:selected="${filterForm.incomeExpenseItem == null}"></option>
                                     <option th:each="incomeExpenseItem : ${incomeExpenseItems}"
                                             th:text="${incomeExpenseItem.name}"
                                             th:value="${incomeExpenseItem.name}"
@@ -203,7 +203,7 @@
 
                                 <th style="border-bottom:none">
                                     <select autocomplete="off" id="owner" class="my_filters" name="owner">
-                                        <option th:if="${filterForm.owner == null}" value="" selected="selected" th:text="#{choise}">Выберите пользователя</option>
+                                        <option th:if="${filterForm.owner == null}" value="" selected="selected">Выберите пользователя</option>
                                         <option th:if="${filterForm.owner != null}" th:value="${filterForm.ownerEntity.id}" th:text="${filterForm.ownerEntity.getFullName()}"></option>
                                     </select>
                                 </th>
@@ -212,7 +212,7 @@
                                 </td>
 
                                 <th style="border-bottom:none"><select autocomplete="off" class="form-select my_filters" id="incomeExpenseType" name="incomeExpenseType">
-                                    <option th:selected="${filterForm.incomeExpenseType == null}" value="-" th:text="#{choise}"></option>
+                                    <option th:selected="${filterForm.incomeExpenseType == null}" value="-"></option>
                                     <option value="income"
                                             th:selected="${#strings.containsIgnoreCase(('income'),((filterForm.incomeExpenseType != null) ? (filterForm.incomeExpenseType ): ('emp') ))}"
                                             th:text="#{income}" >Приход
@@ -271,6 +271,7 @@
     let globalTableName = 'transactions';
     let totalPagesCount = [[${totalPagesCount}]];
     let placeholderText = [[#{select.placeholder}]];
+    console.log(placeholderText);
     let notFoundText = [[#{not-found}]];
     let tableData;
 
@@ -364,8 +365,6 @@
 <!--</script>-->
 <script>
     $(document).ready(function() {
-
-
 
         $("#isCompleted, #incomeExpenseItem, #incomeExpenseType").select2({placeholder: placeholderText, minimumResultsForSearch: Infinity});
 

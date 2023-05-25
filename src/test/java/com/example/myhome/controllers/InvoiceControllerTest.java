@@ -9,6 +9,7 @@ import com.example.myhome.dto.InvoiceDTO;
 import com.example.myhome.dto.OwnerDTO;
 import com.example.myhome.mapper.InvoiceDTOMapper;
 import com.example.myhome.model.*;
+import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.repository.InvoiceRepository;
 import com.example.myhome.service.*;
 import com.example.myhome.util.FileDownloadUtil;
@@ -19,6 +20,7 @@ import lombok.With;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,8 +44,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(classes = TestConfig.class)
@@ -65,6 +66,7 @@ public class InvoiceControllerTest {
     @MockBean private FileDownloadUtil fileDownloadUtil;
     @MockBean private WebsocketController websocketController;
     @MockBean private OwnerService ownerService;
+    @MockBean private ApartmentService apartmentService;
 
     @Autowired private InvoiceController controller;
     @Autowired private InvoiceRepository repository;
@@ -129,6 +131,9 @@ public class InvoiceControllerTest {
                 .thenReturn(dto);
         when(invoiceService.findTemplateById(anyLong())).thenReturn(testTemplate);
         when(invoiceService.turnInvoiceIntoExcel(any(Invoice.class), any(InvoiceTemplate.class))).thenReturn("test");
+        when(invoiceService.getFilteredInvoiceCount(any())).thenReturn(10L);
+        when(apartmentService.findApartmentDto(anyLong())).thenReturn(new ApartmentDTO());
+        when(apartmentService.findById(anyLong())).thenReturn(new Apartment());
     }
 
     @Test
@@ -158,6 +163,13 @@ public class InvoiceControllerTest {
     @Test
     void showInvoiceCreatePageTest() throws Exception {
         this.mockMvc.perform(get("/admin/invoices/create").flashAttr("auth_admin", testUser)).andExpect(status().isOk());
+    }
+
+    @Test
+    void showInvoiceCreatePage_WithFlatID_Test() throws Exception {
+        this.mockMvc.perform(get("/admin/invoices/create")
+                .param("flat_id", "1")
+                .flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
@@ -241,34 +253,63 @@ public class InvoiceControllerTest {
     }
 
     @Test
+    void openPrintTemplatePage_WithParams_Test() throws Exception {
+        this.mockMvc.perform(get("/admin/invoices/template?default_id=1")
+                        .flashAttr("auth_admin", testUser))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/invoices/template"));
+
+        this.mockMvc.perform(get("/admin/invoices/template?delete_id=1")
+                        .flashAttr("auth_admin", testUser))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/invoices/template"));
+    }
+
+    @Test
+    void saveTemplateTest() throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", "file.xls", "multipart/form-data", new byte[1]);
+        this.mockMvc.perform(multipart("/admin/invoices/template")
+                        .file(file)
+                .param("name","test")
+                .with(csrf())
+                .flashAttr("auth_admin", testUser))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/invoices/template"));
+    }
+
+    @Test
     void downloadFileTest() throws Exception {
-        this.mockMvc.perform(get("/download/test").flashAttr("auth_admin", testUser))
+        this.mockMvc.perform(get("/admin/invoces/download/test").flashAttr("auth_admin", testUser))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void printInvoiceTest() throws Exception {
-        this.mockMvc.perform(post("/print/"+dto.getId()).with(csrf()).flashAttr("auth_admin", testUser))
-                .andExpect(status().is4xxClientError());
+        this.mockMvc.perform(post("/admin/invoices/print/"+dto.getId())
+                        .with(csrf())
+                        .param("template", "1")
+                        .flashAttr("auth_admin", testUser))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/invoices/download/test"));
     }
 
     @Test
     void printInvoice_IOException_Test() throws Exception {
         when(invoiceService.turnInvoiceIntoExcel(any(), any())).thenThrow(IOException.class);
 
-        this.mockMvc.perform(post("/print/"+dto.getId()).with(csrf()).flashAttr("auth_admin", testUser))
-                .andExpect(status().is4xxClientError());
+        this.mockMvc.perform(post("/admin/invoices/print/"+dto.getId())
+                        .with(csrf())
+                        .param("template", "1")
+                        .flashAttr("auth_admin", testUser))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/invoices/print/"+dto.getId()));
     }
 
-    @Test
-    void saveTemplateTest() throws Exception {
-        this.mockMvc.perform(post("/admin/invoices/template").with(csrf()).flashAttr("auth_admin", testUser))
-                .andExpect(status().is4xxClientError());
-    }
 
     @Test
     void getInvoicesAJAX_WithoutParameters_Test() throws Exception {
-        this.mockMvc.perform(get("/admin/invoices/get-invoices").with(csrf()).flashAttr("auth_admin", testUser))
+        this.mockMvc.perform(get("/admin/invoices/get-invoices")
+                        .with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isBadRequest());
     }
 
@@ -286,7 +327,44 @@ public class InvoiceControllerTest {
 
     @Test
     void getInvoicesAJAX_WithCorrectParameters_Test() throws Exception {
+        this.mockMvc.perform(get("/admin/invoices/get-invoices?page=1&size=1&filters=null")
+                .with(csrf())
+                .flashAttr("auth_admin",testUser))
+                .andExpect(status().isOk());
     }
+
+    @Test
+    void getFilteredInvoiceCountTest() throws Exception {
+        FilterForm filterForm = new FilterForm();
+        filterForm.setId(1L);
+        filterForm.setName("brr");
+        this.mockMvc.perform(get("/admin/invoices/get-filtered-invoice-count")
+                .with(csrf())
+                .param("f_string", jsonMapper.writeValueAsString(filterForm))
+                .flashAttr("auth_admin", testUser))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void canSearchTest() throws Exception {
+        this.mockMvc.perform(get("/admin/invoices/search")
+                .with(csrf())
+                .param("flat_id", "1")
+                .flashAttr("auth_admin", testUser))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void canDownloadFileTest() throws Exception {
+        String jsonString = jsonMapper.writeValueAsString(10L);
+        this.mockMvc.perform(get("/admin/invoices/download/test")
+                .with(csrf())
+                .flashAttr("auth_admin", testUser))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(10L)));
+    }
+
+
 
 
 

@@ -134,8 +134,8 @@ public class RequestController {
 
         if(best_date == null) best_date = LocalDate.now().plusDays(2).toString();
         if(best_time == null) best_time = LocalTime.of(12, 0).toString();
-
-        repairRequestDTO.setBest_time(best_date + " - " + best_time);
+        String bestTimeString = best_date + " - " + best_time;
+        repairRequestDTO.setBest_time(null);
 
         validator.validate(repairRequestDTO, bindingResult);
         log.info(bindingResult.getAllErrors().toString());
@@ -146,6 +146,7 @@ public class RequestController {
             return "admin_panel/requests/request_card";
         }
 
+        repairRequestDTO.setBest_time(bestTimeString);
         repairRequestService.saveRequest(repairRequestDTO);
         return "redirect:/admin/requests";
     }

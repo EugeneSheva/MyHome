@@ -4,6 +4,7 @@ import com.example.myhome.dto.AdminDTO;
 
 import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.service.AdminService;
+import com.example.myhome.service.EmailService;
 import com.example.myhome.validator.AdminValidator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +29,7 @@ import java.util.Map;
 @Log
 public class AdminController {
     private final AdminService adminService;
+    private final EmailService emailService;
     private final AdminValidator validator;
 
     // показать страничку с таблицей всех пользователей
@@ -101,6 +103,11 @@ public class AdminController {
         else {
             model.addAttribute("validation", "passed");
             adminService.saveAdmin(dto);
+            if(dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+                try {
+                    emailService.send(dto.getEmail(), "Your password has been changed");
+                } catch (Exception e) {log.warning("Something went wrong during email sending after admin save");}
+            }
             return "redirect:/admin/admins";
         }
     }
@@ -139,10 +146,11 @@ public class AdminController {
         Map<String, Object> map = new HashMap<>();
         Map<String, Boolean> pagination = new HashMap<>();
         pagination.put("more", (page*5L) < adminService.countAllManagers());
-        map.put("results", adminService.findAllMasters(search, page-1));
+        map.put("results", adminService.findAllManagers(search, page-1));
         map.put("pagination", pagination);
         System.out.println(map.get("results").toString());
         System.out.println(map.get("pagination").toString());
+        System.out.println(map);
         return map;
     }
     @GetMapping("/get-admins")

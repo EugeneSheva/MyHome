@@ -27,6 +27,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.validation.ConstraintViolation;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -79,6 +80,12 @@ public class WebsiteControllerTest {
         testMainPage.setBlock_4_img("test");
         testMainPage.setBlock_5_img("test");
         testMainPage.setBlock_6_img("test");
+        testMainPage.setBlock_1_title("test");
+        testMainPage.setBlock_2_title("test");
+        testMainPage.setBlock_3_title("test");
+        testMainPage.setBlock_4_title("test");
+        testMainPage.setBlock_5_title("test");
+        testMainPage.setBlock_6_title("test");
         testMainPage.setBlock_1_description("test");
         testMainPage.setBlock_2_description("test");
         testMainPage.setBlock_3_description("test");
@@ -100,6 +107,8 @@ public class WebsiteControllerTest {
         testContactsPage.setPhone("test");
         testContactsPage.setEmail("test");
         testContactsPage.setMap_code("test");
+
+        testServicesPage.setServiceDescriptions(List.of(new ServicesPage.ServiceDescription()));
     }
 
     @BeforeEach
@@ -128,6 +137,16 @@ public class WebsiteControllerTest {
     @Transactional
     void showAboutPageEditTest() throws Exception {
         this.mockMvc.perform(get("/admin/website/about").flashAttr("auth_admin", testUser)).andExpect(status().isOk());
+    }
+
+    @Test
+    void updateMainPageTest() throws Exception {
+        this.mockMvc.perform(post("/admin/website/home")
+                .with(csrf())
+                .flashAttr("mainPage", testMainPage)
+                .flashAttr("auth_admin", testUser))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/website/home"));
     }
 
     @Test
@@ -206,7 +225,7 @@ public class WebsiteControllerTest {
 
         assertThat(violations1.size()).isEqualTo(14);
         assertThat(violations2.size()).isEqualTo(4);
-        assertThat(violations3.size()).isEqualTo(0);
+        assertThat(violations3.size()).isEqualTo(1);
         assertThat(violations4.size()).isEqualTo(9);
 
         this.mockMvc.perform(post("/admin/website/home")
@@ -218,14 +237,27 @@ public class WebsiteControllerTest {
 
         this.mockMvc.perform(post("/admin/website/about")
                         .with(csrf())
-                        .flashAttr("page", new AboutPage())
+                        .flashAttr("aboutPage", new AboutPage())
+                        .flashAttr("auth_admin", testUser))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("validation", "failed"));
+
+        MockMultipartFile firstFile = new MockMultipartFile("service_images", "filename.txt", "text/plain", "some xml".getBytes());
+        MockMultipartFile secondFile = new MockMultipartFile("service_images", "other-file-name.data", "text/plain", "some other type".getBytes());
+        this.mockMvc.perform(MockMvcRequestBuilders.multipart("/admin/website/services")
+                        .file(firstFile)
+                        .file(secondFile)
+                        .param("titles", new String[]{"test"})
+                        .param("descriptions", new String[]{"test"})
+                        .with(csrf())
+                        .flashAttr("servicesPage", new ServicesPage())
                         .flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("validation", "failed"));
 
         this.mockMvc.perform(post("/admin/website/contacts")
                         .with(csrf())
-                        .flashAttr("page", new ContactsPage())
+                        .flashAttr("contactsPage", new ContactsPage())
                         .flashAttr("auth_admin", testUser))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("validation", "failed"));

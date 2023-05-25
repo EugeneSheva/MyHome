@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @ControllerAdvice
@@ -86,6 +87,13 @@ public class GlobalControllerAdvice {
             model.addAttribute("auth_admin", dto);
         }
 
+    }
+
+    @ModelAttribute
+    public void showRequestLocale(Model model, HttpServletRequest request) {
+        log.info("LOCALE: " + request.getLocale());
+        log.info("COUNTRY: " + request.getLocale().getCountry());
+        log.info("LANGUAGE: " + request.getLocale().getLanguage());
     }
 
 }

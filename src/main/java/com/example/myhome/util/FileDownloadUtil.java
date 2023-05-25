@@ -31,7 +31,7 @@ public class FileDownloadUtil {
     private FileDownloadUtil() {
     }
 
-    public static void downloadInvoice(HttpServletResponse response, String fileName) throws IOException {
+    public void downloadInvoice(HttpServletResponse response, String fileName) throws IOException {
 
         downloadFile(response, fileName);
 
@@ -43,7 +43,7 @@ public class FileDownloadUtil {
         }
     }
 
-    public static void downloadFile(HttpServletResponse response, String fileName) throws IOException {
+    public void downloadFile(HttpServletResponse response, String fileName) throws IOException {
         File file = new File(FILE_PATH + fileName);
         if(file.exists()) {
             log.info("File found!");

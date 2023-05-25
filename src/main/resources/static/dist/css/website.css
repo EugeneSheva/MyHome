@@ -1,3 +1,10 @@
+*:not(.switch):not(#loading):not(.theme-toggler) {
+    transition: background-color 0.3s !important;
+}
+
+h1,h2,h3,h4,h5,h6,p {
+}
+
 .dropdown-links {
     margin:0;
     padding:5px;
@@ -237,9 +244,24 @@ textarea {
 }
 .select2-container .select2-selection--single {
     height: 45px !important;
+    font-weight:normal;
+}
+
+.dark-mode .select2-container .select2-selection--single {
+    background-color: #2c2929 !important;
+    border: 1px solid #544f4f;
+    color: white;
 }
 .select2-selection__arrow {
     height: 45px !important;
+}
+
+.dark-mode .select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: white !important;
+}
+
+.dark-mode .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: white !important
 }
 
 .select2-results__options {
@@ -251,6 +273,76 @@ textarea {
     font-size:40px;
     font-weight:bold;
 }
+
+.theme-toggler {
+    width: 80px;
+    height: 30px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.2s;
+    margin-right:10px;
+}
+
+.theme-toggler.theme-light {
+    background-color: #f1c988;
+    border: 1px solid #ff9d22;
+}
+
+.theme-toggler.theme-dark {
+    background-color: black;
+    border: 1px solid #4f4f4f;
+}
+
+.theme-toggler:hover {
+    box-shadow: 0px 0px 3px black;
+}
+
+.dark-mode .theme-toggler:hover {
+    box-shadow: 0px 0px 5px white !important;
+}
+
+.switch {
+    width: 30px;
+    height: 30px;
+    margin-left: 3px;
+    border: 1px solid rgb(212, 210, 210);
+    border-radius: 40px;
+    transition: all 0.3s;
+}
+
+.switch.theme-dark {
+    background-color: #1e2556;
+    color: white;
+}
+
+.switch.theme-light {
+    background-color: #ffc107;
+    color: black;
+    box-shadow: 0px 0px 2px black;
+}
+
+.content-wrapper {
+}
+
+.box.dark-box {
+    background-color: #393f45;
+    box-shadow: 0px -2px 2px rgb(100,100,100);
+}
+
+.box.dark-box .box-header {
+    border-bottom: none;
+}
+
+.dark-mode .content-header {
+    border-bottom: 1px solid rgb(135 128 128);
+}
+
+.dark-mode input {
+    background-color: #343a3f !important;
+    border: 0.2px solid #6c757d;
+    color: white;
+}
+
 
 
 

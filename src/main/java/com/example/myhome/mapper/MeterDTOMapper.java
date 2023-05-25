@@ -25,18 +25,19 @@ public class MeterDTOMapper {
 
         dto.setId(meter.getId());
         dto.setReadings(meter.getCurrentReadings());
-        dto.setApartmentID(meter.getApartment().getId());
-        dto.setApartmentNumber(meter.getApartment().getNumber());
-        dto.setBuildingID(meter.getBuilding().getId());
-        dto.setBuildingName(meter.getBuilding().getName());
-        dto.setServiceID(meter.getService().getId());
-        dto.setServiceName(meter.getService().getName());
-        dto.setServiceUnitName(meter.getService().getUnit().getName());
+        dto.setApartmentID((meter.getApartment() != null) ? meter.getApartment().getId() : 0);
+        dto.setApartmentNumber((meter.getApartment() != null) ? meter.getApartment().getNumber() : 0);
+        dto.setBuildingID((meter.getBuilding() != null) ? meter.getBuilding().getId() : 0);
+        dto.setBuildingName((meter.getBuilding() != null) ? meter.getBuilding().getName() : "N/A");
+        dto.setServiceID((meter.getService() != null) ? meter.getService().getId() : 0);
+        dto.setServiceName((meter.getService() != null) ? meter.getService().getName() : "N/A");
+        dto.setServiceUnitName((meter.getService() != null && meter.getService().getUnit() != null) ?
+                meter.getService().getUnit().getName() : "N/A");
         dto.setSection(meter.getSection());
-        dto.setStatus(meter.getStatus().getName());
+        dto.setStatus((meter.getStatus() != null) ? meter.getStatus().getName() : null);
         dto.setDate(meter.getDate());
-        dto.setApartmentOwnerID(meter.getApartment().getOwner().getId());
-        dto.setApartmentOwnerFullName(meter.getApartment().getOwner().getFullName());
+        dto.setApartmentOwnerID((meter.getApartment() != null && meter.getApartment().getOwner() != null) ? meter.getApartment().getOwner().getId() : 0);
+        dto.setApartmentOwnerFullName((meter.getApartment() != null && meter.getApartment().getOwner() != null) ? meter.getApartment().getOwner().getFullName() : "N/A");
 
         return dto;
     }

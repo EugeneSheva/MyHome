@@ -570,7 +570,7 @@ function drawRequestsTable() {
                                   '<td>' + request.masterTypeName + '</td>' +
                                   '<td style="max-width: 200px; text-overflow: ellipsis; white-space: nowrap; overflow:hidden">' + request.description + '</td>' +
                                   '<td><a href="/myhome/admin/apartments/' + request.apartmentID +'">кв. ' + request.apartmentNumber + ', ' + request.apartmentBuildingName + '</a></td>' +
-                                  '<td><a href="/myhome/admin/owners/' + request.owner + '">' + request.ownerFullName + '</a></td>' +
+                                  '<td><a href="/myhome/admin/owners/' + request.ownerID + '">' + request.ownerFullName + '</a></td>' +
                                   '<td>' + request.ownerPhoneNumber + '</td>' +
                                   '<td><a href="/myhome/admin/admins/' + request.masterID + '">' + ((request.masterFullName != null) ? request.masterFullName : '') + '</a></td>' +
                                   '<td><small class="label ' + ((request.statusName === 'Новое') ? 'label-primary' : (request.statusName === 'В работе') ? 'label-warning' : 'label-success') + '">' + request.statusName + '</small></td>' +

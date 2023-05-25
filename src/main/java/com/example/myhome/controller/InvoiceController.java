@@ -242,7 +242,7 @@ public class InvoiceController {
     public void downloadFile(@PathVariable String fileName,
                                HttpServletRequest request,
                                HttpServletResponse response) throws IOException {
-        FileDownloadUtil.downloadInvoice(response, fileName);
+        fileDownloadUtil.downloadInvoice(response, fileName);
     }
 
     @GetMapping("/template")

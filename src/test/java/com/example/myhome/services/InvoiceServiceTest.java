@@ -7,6 +7,7 @@ import com.example.myhome.model.*;
 import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.repository.*;
 import com.example.myhome.service.InvoiceService;
+import com.example.myhome.service.ServiceService;
 import com.example.myhome.util.ExcelHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,7 @@ public class InvoiceServiceTest {
     @MockBean private ApartmentRepository apartmentRepository;
     @MockBean private OwnerRepository ownerRepository;
     @MockBean private BuildingRepository buildingRepository;
+    @MockBean private ServiceService serviceService;
     @Autowired private InvoiceService invoiceService;
 
     @MockBean private ExcelHelper helper;
@@ -200,11 +202,13 @@ public class InvoiceServiceTest {
         Invoice expected = new Invoice();
         expected.setTotal_price(1000);
         ApartmentAccount account = new ApartmentAccount();
+        account.setId(1L);
         account.setBalance(10000.0);
         expected.setAccount(account);
         when(invoiceRepository.save(any(Invoice.class))).thenReturn(expected);
         when(accountRepository.save(any(ApartmentAccount.class))).thenReturn(account);
         when(accountRepository.findById(anyLong())).thenReturn(Optional.of(account));
+
         assertThat(invoiceService.saveInvoice(new Invoice())).isEqualTo(expected);
     }
 
@@ -288,7 +292,7 @@ public class InvoiceServiceTest {
 
     @Test
     void canGiveErrorOnDeleteTemplateByIdTest() {
-        when(invoiceTemplateRepository.findById(anyLong())).thenThrow(new NotFoundException());
+        doThrow(new NotFoundException()).when(invoiceTemplateRepository).delete(any());
         invoiceService.deleteTemplateById(1L);
     }
 
@@ -321,8 +325,8 @@ public class InvoiceServiceTest {
         List<Invoice> list = List.of(new Invoice(), new Invoice());
         Page<Invoice> page = new PageImpl<>(list,PageRequest.of(1,1),1);
         when(invoiceRepository.findByFilters(any(), any(), any())).thenReturn(page);
-//        assertThat(invoiceService.findAllBySpecificationAndPageCabinet(filters,1,1)).isInstanceOf(Page.class);
-        assertThat(invoiceService.findAllBySpecificationAndPageCabinet(filters,1,1)).isNull();
+        assertThat(invoiceService.findAllBySpecificationAndPageCabinet(filters,1,1)).isInstanceOf(Page.class);
+//        assertThat(invoiceService.findAllBySpecificationAndPageCabinet(filters,1,1)).isNull();
     }
 
     @Test
@@ -335,12 +339,17 @@ public class InvoiceServiceTest {
     @Test
     void canTurnInvoiceIntoExcelTest() throws IOException {
         when(helper.turnInvoiceIntoExcel(any(), any())).thenReturn("test");
-        assertThat(helper.turnInvoiceIntoExcel(new Invoice(), new InvoiceTemplate())).isEqualTo("test");
+        assertThat(invoiceService.turnInvoiceIntoExcel(new Invoice(), new InvoiceTemplate())).isEqualTo("test");
     }
 
     @Test
     void canGetListSumInvoicesByMonthTest() {
         assertThat(invoiceService.getListSumInvoicesByMonth().size()).isEqualTo(12);
+    }
+
+    @Test
+    void canGetListSumPaidInvoicesByMonthTest() {
+        assertThat(invoiceService.getListSumPaidInvoicesByMonth().size()).isEqualTo(12);
     }
 
     @Test
@@ -361,7 +370,34 @@ public class InvoiceServiceTest {
 
     @Test
     void canSendExcelInvoiceToEmailTest() {
+        invoiceService.sendExcelInvoiceToEmail();
+    }
 
+    @Test
+    void buildInvoiceTest() {
+        InvoiceDTO dto = mapper.fromInvoiceToDTO(invoice);
+        String date = "2022-11-11";
+        String[] services = new String[]{"1", "2"};
+        String[] unit_prices = new String[]{"0.1", "0.3"};
+        String[] unit_amounts = new String[]{"1","1"};
+
+        when(serviceService.findServiceById(anyLong())).thenReturn(new Service());
+
+        assertThat(invoiceService.buildInvoice(dto, date, services, unit_prices, unit_amounts)).isInstanceOf(InvoiceDTO.class);
+    }
+
+    @Test
+    void buildInvoiceTest_2() {
+        InvoiceDTO dto = mapper.fromInvoiceToDTO(invoice);
+        dto.setComponents(null);
+        String date = "2022-11-11";
+        String[] services = new String[]{"1", "2"};
+        String[] unit_prices = new String[]{"b", "b"};
+        String[] unit_amounts = new String[]{"a","a"};
+
+        when(serviceService.findServiceById(anyLong())).thenReturn(new Service());
+
+        assertThat(invoiceService.buildInvoice(dto, date, services, unit_prices, unit_amounts)).isInstanceOf(InvoiceDTO.class);
     }
 
 

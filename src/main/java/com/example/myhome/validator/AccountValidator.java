@@ -11,6 +11,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.util.Locale;
+import java.util.Objects;
 
 @Component
 public class AccountValidator implements Validator {
@@ -39,7 +40,9 @@ public class AccountValidator implements Validator {
         } else if(account.getApartment() == null || account.getApartment().getId() == 0L) {
             System.out.println("Error found(apartment)");
             errors.rejectValue("apartment", "apartment.empty", messageSource.getMessage("accounts.apartment.empty", null, locale));
-        } else if(accountService.apartmentHasAccount(account.getApartment().getId())) {
+        } else if(accountService.apartmentHasAccount(account.getApartment().getId())
+                && !Objects.equals(accountService.findAccountById(account.getId()).getApartment().getId(),
+                                    account.getApartment().getId())) {
             if(account.getChangedState() == null || !account.getChangedState()) errors.rejectValue("apartment", "apartment.has_account", messageSource.getMessage("accounts.apartment.has_account", null, locale));
         }
         if(account.getIsActive() == null) {

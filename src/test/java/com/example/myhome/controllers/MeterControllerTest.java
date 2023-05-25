@@ -6,7 +6,9 @@ import com.example.myhome.dto.BuildingDTO;
 import com.example.myhome.dto.MeterDataDTO;
 import com.example.myhome.mapper.MeterDTOMapper;
 import com.example.myhome.model.*;
+import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.repository.MeterDataRepository;
+import com.example.myhome.service.ApartmentService;
 import com.example.myhome.service.BuildingService;
 import com.example.myhome.service.MeterDataService;
 import com.example.myhome.service.ServiceService;
@@ -15,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +25,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -58,6 +62,8 @@ public class MeterControllerTest {
 
     @MockBean
     private ServiceService serviceService;
+    @MockBean
+    private ApartmentService apartmentService;
 
     @Autowired
     private MeterDataRepository repository;
@@ -72,34 +78,49 @@ public class MeterControllerTest {
     @BeforeEach
     void create() throws JsonProcessingException {
         testMeter.setId(1L);
-        Building building = new Building();
-        building.setId(1L);
-        testMeter.setBuilding(building);
-        testMeter.setSection("test");
         Service service1 = new Service();
         service1.setId(1L);
-        service1.setUnit(new Unit());
+        service1.setName("test");
+        Unit unit = new Unit();
+        unit.setId(1L);
+        unit.setName("test");
+        service1.setUnit(unit);
         testMeter.setService(service1);
         Apartment apartment = new Apartment();
-        apartment.setOwner(new Owner());
         apartment.setId(1L);
+        apartment.setNumber(10L);
+        Owner owner = new Owner();
+        owner.setId(1L);
+        apartment.setOwner(owner);
         testMeter.setApartment(apartment);
+        Building building = new Building();
+        building.setId(1L);
+        building.setName("test");
+        testMeter.setBuilding(building);
         testMeter.setStatus(MeterPaymentStatus.PAID);
-        testMeter.setDate(LocalDate.now().minusMonths(1L));
+        testMeter.setSection("test");
         testMeter.setCurrentReadings(100.0);
 
         jsonMapper.registerModule(new JavaTimeModule());
 
         testDTO = mapper.fromMeterToDTO(testMeter);
         testDTO.setDate(LocalDate.now().minusMonths(1));
-        Page<MeterDataDTO> testPage = new PageImpl<>(List.of(testDTO), PageRequest.of(1,1), 1);
+        List<MeterData> meterList = List.of(testMeter);
+        List<MeterDataDTO> dtoList = List.of(testDTO);
+        Page<MeterDataDTO> testPage = new PageImpl<>(dtoList, PageRequest.of(1,1), 1);
         jsonPageString = jsonMapper.writeValueAsString(testPage);
+        when(service.findAllByFiltersAndPage(any(), any())).thenReturn(testPage);
         when(service.findAllBySpecification(any(), anyInt(), anyInt())).thenReturn(testPage);
+        when(service.findSingleMeterData(any(FilterForm.class), any(Pageable.class))).thenReturn(testPage);
+        when(service.findSingleMeterData(anyLong(), anyLong())).thenReturn(meterList);
         when(service.saveMeterData(any(MeterDataDTO.class))).thenReturn(testMeter);
+        when(service.findMeterDataDTOById(anyLong())).thenReturn(testDTO);
+        when(service.saveMeterDataAJAX(any(),any(),any(),any(),any(),any(),any(),any())).thenReturn(testMeter);
 
         when(buildingService.findBuildingDTObyId(anyLong())).thenReturn(new BuildingDTO());
         when(buildingService.findAllDTO()).thenReturn(List.of(new BuildingDTO()));
         when(serviceService.findAllServices()).thenReturn(List.of(new Service()));
+        when(apartmentService.getNumberById(anyLong())).thenReturn(1L);
     }
 
     @Test
@@ -119,7 +140,7 @@ public class MeterControllerTest {
     @Test
     void showMeterInfoPageTest() throws Exception {
         Long id = testUser.getId();
-        this.mockMvc.perform(get("/admin/meters/" + id).flashAttr("auth_admin", testUser)).andExpect(status().isOk());
+        this.mockMvc.perform(get("/admin/meters/info/" + id).flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
@@ -240,5 +261,36 @@ public class MeterControllerTest {
         this.mockMvc.perform(get("/admin/meters/get-meter-data?page=1&size=1&filters=null").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().is(200))
                 .andExpect(content().string(jsonPageString));
+    }
+
+    @Test
+    void saveMeterAJAXTest() throws Exception {
+        this.mockMvc.perform(post("/admin/meters/save-meter")
+                .with(csrf())
+                .param("building","1")
+                .param("section","test")
+                .param("apartment","1")
+                .param("currentReadings","1")
+                .param("status","PAID")
+                .param("service","1")
+                .param("date", "2022-11-11")
+                .flashAttr("auth_admin",testUser))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void saveMeterAJAX_NotValidated_Test() throws Exception {
+        when(service.saveMeterDataAJAX(any(),any(),any(),any(),any(),any(),any(),any())).thenReturn(new MeterData());
+        this.mockMvc.perform(post("/admin/meters/save-meter")
+                        .with(csrf())
+                        .param("building","1")
+                        .param("section","test")
+                        .param("apartment","1")
+                        .param("currentReadings","1")
+                        .param("status","PAID")
+                        .param("service","1")
+                        .param("date", "2022-11-11")
+                        .flashAttr("auth_admin",testUser))
+                .andExpect(status().isOk());
     }
 }

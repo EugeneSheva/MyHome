@@ -20,8 +20,6 @@ import java.util.Set;
 @TestConfiguration
 public class TestConfig {
 
-    @MockBean private ApartmentService apartmentService;
-
     @Bean
     public UserDetails testUser() {
         Admin admin = new Admin();

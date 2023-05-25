@@ -215,13 +215,13 @@ public class ApartmentController {
         model.addAttribute("filter_form", new FilterForm());
         return "admin_panel/invoices/invoices";
     }
-@GetMapping("/metersDataByApartment/{id}")
-    public String metersDataByApartment(Model model, @PathVariable("id") Long id) {
-        List<MeterData>meterDataList = meterDataRepository.findAllByApartmentId(id);
-        model.addAttribute("meter_data_rows", meterDataList);
-    model.addAttribute("filter_form", new FilterForm());
-        return "admin_panel/meters/meters";
-    }
+    @GetMapping("/metersDataByApartment/{id}")
+        public String metersDataByApartment(Model model, @PathVariable("id") Long id) {
+            List<MeterData>meterDataList = meterDataRepository.findAllByApartmentId(id);
+            model.addAttribute("meter_data_rows", meterDataList);
+        model.addAttribute("filter_form", new FilterForm());
+            return "admin_panel/meters/meters";
+        }
 
     @GetMapping("/NewIncomesByApartment/{id}")
     public String NewIncomesByApartment(Model model, @PathVariable("id") Long id) {

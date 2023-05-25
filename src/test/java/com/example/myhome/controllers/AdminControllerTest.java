@@ -8,6 +8,9 @@ import com.example.myhome.model.Admin;
 import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.repository.AdminRepository;
 import com.example.myhome.service.AdminService;
+import com.example.myhome.service.EmailService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -26,9 +29,12 @@ import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.filter;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -58,25 +64,49 @@ public class AdminControllerTest {
     private AdminService adminService;
 
     @MockBean
+    private EmailService emailService;
+
+    @MockBean
     private AdminRepository repository;
 
     AdminDTO testDTO;
     AdminDTOMapper mapper = new AdminDTOMapper();
+    ObjectMapper jsonMapper = new ObjectMapper();
+    String jsonString = "";
+    Map<String, Object> testMap;
 
     @BeforeEach
-    void createUser() throws IllegalAccessException {
+    void createUser() throws IllegalAccessException, JsonProcessingException {
         testDTO = mapper.fromAdminToDTO(testUser);
-        testDTO.setPassword("");
+        testDTO.setPassword("test");
+        testDTO.setConfirm_password("test");
         testDTO.setFirst_name("test");
         testDTO.setLast_name("test");
         testDTO.setPhone_number("+380997524927");
         testDTO.setEmail("test@gmail.com");
+
+        List<AdminDTO> list = List.of(testDTO, testDTO);
 
         when(repository.existsByEmail(any(String.class))).thenReturn(true);
         when(adminService.saveAdmin(any(Admin.class))).thenReturn(testUser);
         when(adminService.findAdminDTOById(anyLong())).thenReturn(testDTO);
         when(adminService.findAdminById(anyLong())).thenReturn(testUser);
         when(adminService.findAllByFiltersAndPage(any(FilterForm.class), any(Pageable.class))).thenReturn(new PageImpl<>(List.of(testDTO), PageRequest.of(1,1), 1));
+        when(adminService.findAllBySpecification(any(FilterForm.class), anyInt(), anyInt())).thenReturn(new PageImpl<>(List.of(testDTO), PageRequest.of(1,1), 1));
+        when(adminService.countAllManagers()).thenReturn(10L);
+        when(adminService.countAllMasters()).thenReturn(10L);
+        when(adminService.findAllMasters()).thenReturn(list);
+        when(adminService.findAllMasters(anyString(), anyInt())).thenReturn(list);
+        when(adminService.findAllManagers()).thenReturn(list);
+        when(adminService.findAllManagers(anyString(), anyInt())).thenReturn(list);
+
+        testMap = new HashMap<>();
+        Map<String, Boolean> pagination = new HashMap<>();
+        pagination.put("more", false);
+        testMap.put("results", adminService.findAllMasters("search", 1));
+        testMap.put("pagination", pagination);
+
+        jsonString = jsonMapper.writeValueAsString(testMap);
     }
 
     @Test
@@ -155,5 +185,53 @@ public class AdminControllerTest {
         assertThat(result.getResponse().getContentAsString()).isEqualTo("User with ID " + testDTO.getId() + " - invited");
     }
 
-    // todo: /get-all-masters, /get-managers, /get-admins, /get-masters-by-type
+    @Test
+    void getAllMastersTest() throws Exception {
+        this.mockMvc.perform(get("/admin/admins/get-all-masters")
+                .with(csrf())
+                    .param("search","test")
+                    .param("page","1")
+                .flashAttr("auth_admin", testUser))
+                .andExpect(status().isOk())
+                .andExpect(content().json(jsonString));
+    }
+
+    @Test
+    void getManagersTest() throws Exception {
+        this.mockMvc.perform(get("/admin/admins/get-managers")
+                        .with(csrf())
+                        .param("search","test")
+                        .param("page","1")
+                        .flashAttr("auth_admin", testUser))
+                .andExpect(status().isOk())
+                .andExpect(content().json(jsonString));
+    }
+
+    @Test
+    void getAdminsTest() throws Exception {
+        FilterForm filterForm = new FilterForm();
+        filterForm.setId(1L);
+        filterForm.setName("test");
+        String jsonString = jsonMapper.writeValueAsString(new PageImpl<>(List.of(testDTO), PageRequest.of(1,1), 1));
+        this.mockMvc.perform(get("/admin/admins/get-admins")
+                        .with(csrf())
+                        .param("page","1")
+                        .param("size","1")
+                        .param("filters",jsonMapper.writeValueAsString(filterForm))
+                        .flashAttr("auth_admin", testUser))
+                .andExpect(status().isOk())
+                .andExpect(content().json(jsonString));
+    }
+
+    @Test
+    void getMastersByTypeTest() throws Exception {
+        String jsonString = jsonMapper.writeValueAsString(List.of(testDTO, testDTO));
+        this.mockMvc.perform(get("/admin/admins/get-masters-by-type")
+                        .with(csrf())
+                        .param("typeID","0")
+                        .flashAttr("auth_admin", testUser))
+                .andExpect(status().isOk())
+                .andExpect(content().json(jsonString));
+    }
+
 }

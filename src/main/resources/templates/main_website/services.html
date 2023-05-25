@@ -52,7 +52,7 @@
         <div class="container mt-5">
             <h2>Наши услуги</h2>
             <hr>
-            <div th:each="service : ${page.serviceDescriptions}" class="row align-items-center mb-3">
+            <div th:each="service : ${servicesPage.serviceDescriptions}" class="row align-items-center mb-3">
                 <div class="col-md-7">
                     <img th:src="@{/images/pages/services/{url}(url=${service.photo})}" class="img-fluid" alt="">
                 </div>

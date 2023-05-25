@@ -63,12 +63,24 @@ class MeterDataServiceTest {
     void setupMeter() {
         meterData.setId(1L);
         Service service1 = new Service();
-        service1.setUnit(new Unit());
+        service1.setId(1L);
+        service1.setName("test");
+        Unit unit = new Unit();
+        unit.setId(1L);
+        unit.setName("test");
+        service1.setUnit(unit);
         meterData.setService(service1);
         Apartment apartment = new Apartment();
-        apartment.setOwner(new Owner());
+        apartment.setId(1L);
+        apartment.setNumber(10L);
+        Owner owner = new Owner();
+        owner.setId(1L);
+        apartment.setOwner(owner);
         meterData.setApartment(apartment);
-        meterData.setBuilding(new Building());
+        Building building = new Building();
+        building.setId(1L);
+        building.setName("test");
+        meterData.setBuilding(building);
         meterData.setStatus(MeterPaymentStatus.PAID);
         meterData.setSection("test");
         meterData.setCurrentReadings(100.0);
@@ -215,23 +227,16 @@ class MeterDataServiceTest {
         form.setStatus("NEW");
         form.setDate("2022-11-11 to 2022-11-12");
 
-        MeterData meterData = new MeterData();
-        meterData.setId(1L);
-        Service service1 = new Service();
-        service1.setUnit(new Unit());
-        meterData.setService(service1);
-        Apartment apartment = new Apartment();
-        apartment.setOwner(new Owner());
-        meterData.setApartment(apartment);
-        meterData.setBuilding(new Building());
-        meterData.setStatus(MeterPaymentStatus.PAID);
-        meterData.setSection("test");
-        meterData.setCurrentReadings(100.0);
+
         List<MeterData> list = List.of(meterData, meterData, meterData);
         Page<MeterData> page = new PageImpl<>(list, PageRequest.of(1,1),1);
 
-        when(apartmentRepository.getReferenceById(anyLong())).thenReturn(new Apartment());
-        when(serviceRepository.getReferenceById(anyLong())).thenReturn(new Service());
+        Apartment apartment1 = new Apartment();
+        apartment1.setId(1L);
+        Service service2 = new Service();
+        service2.setId(1L);
+        when(apartmentRepository.getReferenceById(anyLong())).thenReturn(apartment1);
+        when(serviceRepository.getReferenceById(anyLong())).thenReturn(service2);
         when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
 
         assertThat(service.findSingleMeterData(form, PageRequest.of(1,1)).getContent().size()).isEqualTo(3);

@@ -10,6 +10,7 @@ import com.example.myhome.repository.OwnerRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,10 +18,10 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class InvoiceDTOMapper {
 
-    private BuildingRepository buildingRepository;
-    private AccountRepository accountRepository;
-    private OwnerRepository ownerRepository;
-    private ApartmentRepository apartmentRepository;
+    @Autowired private BuildingRepository buildingRepository;
+    @Autowired private AccountRepository accountRepository;
+    @Autowired private OwnerRepository ownerRepository;
+    @Autowired private ApartmentRepository apartmentRepository;
 
     public Invoice fromDTOToInvoice(InvoiceDTO dto) {
         if(dto == null) return null;
@@ -42,7 +43,7 @@ public class InvoiceDTOMapper {
         invoice.setSection(dto.getSection());
         invoice.setTariff(dto.getTariff());
 
-        invoice.getComponents().forEach(comp -> comp.setInvoice(invoice));
+        if(invoice.getComponents() != null) invoice.getComponents().forEach(comp -> comp.setInvoice(invoice));
 
         invoice.setBuilding(buildingRepository.getReferenceById(dto.getBuilding().getId()));
         invoice.setAccount(accountRepository.getReferenceById(dto.getAccount().getId()));
@@ -68,29 +69,33 @@ public class InvoiceDTOMapper {
                                     .tariff(invoice.getTariff())
                                     .build();
 
-        ApartmentAccount account = invoice.getApartment().getAccount();
-        if(account != null) dto.setAccount(ApartmentAccountDTO.builder()
-                            .id(account.getId())
-                            .build());
 
         Apartment apartment = invoice.getApartment();
-        if(apartment != null) dto.setApartment(ApartmentDTO.builder()
-                .id(apartment.getId())
-                .fullName("кв." + apartment.getNumber() + ", " + apartment.getBuilding().getName())
-                .build());
+        if(apartment != null) {
+            dto.setApartment(ApartmentDTO.builder()
+                    .id(apartment.getId())
+                    .fullName("кв." + apartment.getNumber() + ", " + apartment.getBuilding().getName())
+                    .build());
 
-        Owner owner = invoice.getApartment().getOwner();
-        if(owner != null) dto.setOwner(OwnerDTO.builder()
-                .id(owner.getId())
-                .fullName(owner.getFullName())
-                .phone_number(owner.getPhone_number())
-                .build());
+            ApartmentAccount account = invoice.getApartment().getAccount();
+            if(account != null) dto.setAccount(ApartmentAccountDTO.builder()
+                    .id(account.getId())
+                    .build());
 
-        Building building = invoice.getApartment().getBuilding();
-        if(building != null) dto.setBuilding(BuildingDTO.builder()
-                .id(building.getId())
-                .name(building.getName())
-                .build());
+            Owner owner = invoice.getApartment().getOwner();
+            if(owner != null) dto.setOwner(OwnerDTO.builder()
+                    .id(owner.getId())
+                    .fullName(owner.getFullName())
+                    .phone_number(owner.getPhone_number())
+                    .build());
+
+            Building building = invoice.getApartment().getBuilding();
+            if(building != null) dto.setBuilding(BuildingDTO.builder()
+                    .id(building.getId())
+                    .name(building.getName())
+                    .build());
+        }
+
 
         return dto;
     }

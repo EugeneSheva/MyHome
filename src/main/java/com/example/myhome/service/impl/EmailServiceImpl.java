@@ -35,7 +35,6 @@ public class EmailServiceImpl implements EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message);
             helper.setText(email, true);
             helper.setTo(to);
-            helper.setSubject("Email confirmation");
             helper.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
             log.info("Message created, sending...");
             mailSender.send(message);

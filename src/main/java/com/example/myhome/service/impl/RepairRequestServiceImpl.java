@@ -187,7 +187,7 @@ public class RepairRequestServiceImpl implements RepairRequestService {
             repairRequestRepository.deleteById(request_id);
         } catch (Exception e) {
             log.severe("Deletion failed!");
-            log.severe(e.getCause().getMessage());
+            log.severe(e.getMessage());
         }
         log.info("Request with ID " + request_id + " successfully deleted");
     }

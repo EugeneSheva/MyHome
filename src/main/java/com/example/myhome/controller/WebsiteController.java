@@ -108,7 +108,7 @@ public class WebsiteController {
     // Можно было сделать у страницы поля @Transient MultipartFile ... и убрать кучу лишних аргументов
     // ¯\_(ツ)_/¯
     @PostMapping("/about")
-    public String editAboutPage(@Valid @ModelAttribute AboutPage page,
+    public String editAboutPage(@Valid @ModelAttribute AboutPage aboutPage,
                                 BindingResult bindingResult,
                                 @RequestPart(required = false) MultipartFile page_director_photo,
                                 @RequestPart(required = false) MultipartFile[] page_photos,
@@ -124,16 +124,16 @@ public class WebsiteController {
             return "admin_panel/website_settings/website_about";
         }
 
-        page.setId(1);
-        page = websiteService.saveAboutPageInfo(page, page_director_photo, page_photos, page_add_photos, document_names, document_files);
-        websiteService.savePage(page);
+        aboutPage.setId(1);
+        aboutPage = websiteService.saveAboutPageInfo(aboutPage, page_director_photo, page_photos, page_add_photos, document_names, document_files);
+        websiteService.savePage(aboutPage);
 
         return "redirect:/admin/website/about";
     }
 
     // Сохранение контента страницы "Услуги"
     @PostMapping("/services")
-    public String editServicesPage(@Valid @ModelAttribute ServicesPage page,
+    public String editServicesPage(@Valid @ModelAttribute ServicesPage servicesPage,
                                    BindingResult bindingResult,
                                    @RequestParam String[] titles,
                                    @RequestParam String[] descriptions,
@@ -147,8 +147,8 @@ public class WebsiteController {
             return "admin_panel/website_settings/website_services";
         }
 
-        page = websiteService.saveServicesPageInfo(page, titles, descriptions, service_images);
-        websiteService.savePage(page);
+        servicesPage = websiteService.saveServicesPageInfo(servicesPage, titles, descriptions, service_images);
+        websiteService.savePage(servicesPage);
 
         return "redirect:/admin/website/services";
     }
@@ -156,19 +156,19 @@ public class WebsiteController {
 
     // Сохранение контента страницы "Контакты"
     @PostMapping("/contacts")
-    public String editContactsPage(@Valid @ModelAttribute ContactsPage page, BindingResult bindingResult, Model model){
+    public String editContactsPage(@Valid @ModelAttribute ContactsPage contactsPage, BindingResult bindingResult, Model model){
 
         if(bindingResult.hasErrors()) {
             log.info("Errors found");
             log.info(bindingResult.getObjectName());
             log.info(bindingResult.getAllErrors().toString());
-            model.addAttribute("page", page);
+            model.addAttribute("page", contactsPage);
             model.addAttribute("validation", "failed");
             return "admin_panel/website_settings/website_contacts";
         }
 
-        page.setId(1);
-        websiteService.savePage(page);
+        contactsPage.setId(1);
+        websiteService.savePage(contactsPage);
         return "redirect:/admin/website/contacts";
     }
 

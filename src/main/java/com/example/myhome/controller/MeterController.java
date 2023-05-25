@@ -1,6 +1,7 @@
 package com.example.myhome.controller;
 
 import com.example.myhome.dto.MeterDataDTO;
+import com.example.myhome.mapper.MeterDTOMapper;
 import com.example.myhome.model.MeterData;
 import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.service.ApartmentService;
@@ -42,6 +43,7 @@ public class MeterController {
     private final ApartmentService apartmentService;
 
     private final MeterValidator validator;
+    private final MeterDTOMapper mapper;
 
     // Открыть страничку показаний всех счетчиков (сгруппированных по ID квартиры+услуги)
     @GetMapping
@@ -118,7 +120,7 @@ public class MeterController {
         meter.setId(null);
 
         model.addAttribute("id",meterDataService.getMaxId()+1);
-        model.addAttribute("meterDataDTO", MappingUtils.fromMeterToDTO(meter));
+        model.addAttribute("meterDataDTO", mapper.fromMeterToDTO(meter));
         model.addAttribute("services", serviceService.findAllServices());
         model.addAttribute("buildings", buildingService.findAll());
         model.addAttribute("building", buildingService.findBuildingDTObyId(meter.getBuilding().getId()));
@@ -211,8 +213,9 @@ public class MeterController {
 
         MeterData meterToSave = meterDataService.saveMeterDataAJAX(id, building, section,
                 apartment, currentReadings, status, service, date);
+        MeterDataDTO dto = mapper.fromMeterToDTO(meterToSave);
         log.info(meterToSave.toString());
-        DataBinder binder = new DataBinder(meterToSave);
+        DataBinder binder = new DataBinder(dto);
         binder.setValidator(validator);
         binder.validate();
         if(binder.getBindingResult().hasErrors()) {
@@ -251,7 +254,6 @@ public class MeterController {
         log.info("method triggered");
         ObjectMapper mapper = new ObjectMapper();
         FilterForm form = mapper.readValue(filters, FilterForm.class);
-        log.info("filters: " + form.toString());
         return meterDataService.findSingleMeterData(form, PageRequest.of(page-1, size));
     }
 

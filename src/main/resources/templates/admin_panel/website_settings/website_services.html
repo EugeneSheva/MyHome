@@ -1,4 +1,4 @@
-website_home.html<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
@@ -51,7 +51,7 @@ website_home.html<!DOCTYPE html>
                 <h3 class="box-title" th:text="#{settings.website.services.card.header}">Редактирование страницы "Услуги"</h3>
               </div>
               <div class="box-body">
-                <form id="service_container" method="post" th:object="${page}" enctype="multipart/form-data">
+                <form id="service_container" method="post" th:object="${servicesPage}" enctype="multipart/form-data">
                   <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                   <h3 class="page-header" th:text="#{settings.website.services.card.services.header}">Услуги</h3>
                   <div id="template" style="display: none;" class="row">
@@ -80,7 +80,7 @@ website_home.html<!DOCTYPE html>
                       </div>
                     </div>
                   </div>
-                  <div th:each="service, iter : ${page.getServiceDescriptions()}" class="row">
+                  <div th:each="service, iter : ${servicesPage.getServiceDescriptions()}" class="row">
                     <div class="col-md-8">
                       <div class="form-group">
 

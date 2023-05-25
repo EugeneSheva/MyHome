@@ -19,7 +19,7 @@ public class MeterValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return MeterData.class.equals(clazz);
+        return MeterDataDTO.class.equals(clazz);
     }
 
     @Override

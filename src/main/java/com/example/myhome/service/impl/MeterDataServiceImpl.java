@@ -70,7 +70,7 @@ public class MeterDataServiceImpl implements MeterDataService {
             date_to = LocalDate.parse(date.split(" to ")[1]);
         }
         Specification<MeterData> spec = Specification.where(MeterSpecifications.hasApartment(apartmentRepository.getReferenceById(form.getApartment()))
-                                                    .and(MeterSpecifications.hasService(serviceRepository.getReferenceById(form.getService())))
+                                                    .and(MeterSpecifications.hasService((form.getService() != null) ? serviceRepository.getReferenceById(form.getService()) : null))
                                                     .and(MeterSpecifications.hasId(form.getId()))
                                                     .and(MeterSpecifications.hasStatus(status))
                                                     .and(MeterSpecifications.datesBetween(date_from, date_to)));

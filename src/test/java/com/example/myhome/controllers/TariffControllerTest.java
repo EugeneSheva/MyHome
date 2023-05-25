@@ -2,6 +2,7 @@ package com.example.myhome.controllers;
 
 import com.example.myhome.config.TestConfig;
 import com.example.myhome.controller.TariffController;
+import com.example.myhome.exception.NotFoundException;
 import com.example.myhome.model.Admin;
 import com.example.myhome.model.Service;
 import com.example.myhome.model.Tariff;
@@ -27,6 +28,7 @@ import java.util.Map;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -84,7 +86,7 @@ public class TariffControllerTest {
     @BeforeEach
     void setupMocks(){
         when(service.findTariffById(anyLong())).thenReturn(testTariff);
-        when(service.buildComponentsMap(any(String[].class), any(String[].class))).thenReturn(testMap1);
+        when(service.buildComponentsMap(any(),any())).thenReturn(testMap1);
     }
 
     @Test
@@ -102,6 +104,14 @@ public class TariffControllerTest {
     @Order(2)
     void showTariffsPageTest() throws Exception {
         this.mockMvc.perform(get("/admin/tariffs").flashAttr("auth_admin", testUser)).andExpect(status().isOk());
+    }
+
+    @Test
+    void showTariffsPage_WithSort_Test() throws Exception {
+        this.mockMvc.perform(get("/admin/tariffs?sort=asc")
+                .flashAttr("auth_admin", testUser)).andExpect(status().isOk());
+        this.mockMvc.perform(get("/admin/tariffs?sort=desc")
+                .flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
@@ -137,6 +147,18 @@ public class TariffControllerTest {
     }
 
     @Test
+    void createTariff_ValidatedWithSaveError_Test() throws Exception {
+        when(service.saveTariff(any())).thenThrow(new NotFoundException());
+        this.mockMvc.perform(post("/admin/tariffs/create")
+                        .with(csrf())
+                        .flashAttr("tariff", testTariff)
+                        .flashAttr("auth_admin", testUser))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/tariffs/create"))
+                .andExpect(model().attributeDoesNotExist("validation"));
+    }
+
+    @Test
     void updateTariff_NotValidated_Test() throws Exception {
         this.mockMvc.perform(post("/admin/tariffs/update/" + testTariff.getId())
                         .with(csrf())
@@ -154,6 +176,18 @@ public class TariffControllerTest {
                         .flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/tariffs"))
+                .andExpect(model().attributeDoesNotExist("validation"));
+    }
+
+    @Test
+    void updateTariff_ValidatedWithSaveError_Test() throws Exception {
+        when(service.saveTariff(any())).thenThrow(new NotFoundException());
+        this.mockMvc.perform(post("/admin/tariffs/update/" + testTariff.getId())
+                        .with(csrf())
+                        .flashAttr("tariff", testTariff)
+                        .flashAttr("auth_admin", testUser))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/tariffs/update/"+testTariff.getId()))
                 .andExpect(model().attributeDoesNotExist("validation"));
     }
 

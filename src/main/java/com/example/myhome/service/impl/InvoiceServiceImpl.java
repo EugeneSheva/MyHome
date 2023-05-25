@@ -478,7 +478,7 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
 
     @Override
     public void sendExcelInvoiceToEmail() {
-
+        System.out.println("brr");
     }
 
 }

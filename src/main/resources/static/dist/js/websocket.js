@@ -1,7 +1,8 @@
 var stompClient = null;
+let contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
 
 function connect() {
-    var socket = new SockJS('/websocket');
+    var socket = new SockJS(contextPath+'/websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);

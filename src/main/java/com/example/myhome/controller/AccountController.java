@@ -104,15 +104,14 @@ public class AccountController {
             log.info(bindingResult.getAllErrors().toString());
 
             ApartmentAccountDTO dto = (ApartmentAccountDTO) bindingResult.getTarget();
+            log.info("DTO " + dto.toString());
 
-            if(dto != null && dto.getBuilding() != null && dto.getBuilding().getId() != null) {
-                dto.setBuilding(buildingService.findBuildingDTObyId(dto.getBuilding().getId()));
-            }
+            dto.setBuilding(buildingService.findBuildingDTObyId(dto.getBuilding().getId()));
 
             model.addAttribute("apartmentAccountDTO", dto);
             model.addAttribute("id", accountService.getMaxAccountId()+1);
             model.addAttribute("buildings", buildingService.findAllDTO());
-
+            model.addAttribute("validation","failed");
             return "admin_panel/accounts/account_card";
         } else {
             ApartmentAccount account = accountService.saveAccount(apartmentAccountDTO);
@@ -137,6 +136,7 @@ public class AccountController {
             log.info("Errors found");
             log.info(bindingResult.getAllErrors().toString());
             model.addAttribute("buildings", buildingService.findAllDTO());
+            model.addAttribute("validation", "failed");
             log.info(buildingService.findAllDTO().toString());
             return "admin_panel/accounts/account_card";
         }

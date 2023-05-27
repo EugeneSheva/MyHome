@@ -160,7 +160,7 @@ public class AdminController {
                                                   @RequestParam String filters) throws JsonProcessingException, IllegalAccessException {
         ObjectMapper mapper = new ObjectMapper();
         FilterForm form = mapper.readValue(filters, FilterForm.class);
-        return adminService.findAllBySpecification(form, page, size);
+        return adminService.findAllByFiltersAndPage(form, PageRequest.of(page-1, size));
     }
 
     // Получить мастеров/управляющих конкретного типа (ID пользовательской роли)

@@ -34,8 +34,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Log
 public class BuildingServiceImpl implements BuildingService {
-    @Value("${upload.path}")
-    private String uploadPath;
     private final BuildingRepository buildingRepository;
     private final FileUploadUtil fileUploadUtil;
 
@@ -139,6 +137,7 @@ public class BuildingServiceImpl implements BuildingService {
             newBuilding.setId(id);
         }
 // file1
+        String uploadPath = "";
         if (file1.getSize() > 0) {
             String FileNameUuid = UUID.randomUUID() + "-" + file1.getOriginalFilename();
             fileUploadUtil.saveFile(uploadPath, FileNameUuid, file1);

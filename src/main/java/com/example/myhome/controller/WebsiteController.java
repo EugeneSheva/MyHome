@@ -47,7 +47,7 @@ public class WebsiteController {
         List<String> add_photos = Arrays.stream(page.getAdd_photos().split(","))
                 .filter((photo) -> !photo.equals(""))
                 .collect(Collectors.toList());
-        model.addAttribute("page", page);
+        model.addAttribute("aboutPage", page);
         model.addAttribute("photos", photos);
         model.addAttribute("add_photos", add_photos);
         model.addAttribute("documents", websiteService.getAllDocuments());

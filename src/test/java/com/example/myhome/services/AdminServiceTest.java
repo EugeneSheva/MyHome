@@ -433,7 +433,7 @@ class AdminServiceTest {
     }
 
     @Test
-    void canFindAllAdminsBySpecificationTest() {
+    void canFindAllAdminsBySpecificationTest() throws IllegalAccessException {
         Admin admin = testAdmin;
         AdminDTO dto = mapper.fromAdminToDTO(admin);
         List<Admin> list = List.of(admin,admin,admin);

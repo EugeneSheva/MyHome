@@ -24,7 +24,6 @@ public class AdminSpecifications {
         };
     }
 
-
 //    public static Specification<Admin> hasRole(UserRole role) {
 //        if(role == null) return (root, query, criteriaBuilder) -> null;
 //        return (root, query, cb) -> cb.equal(root.get(Admin_.ROLE), role);

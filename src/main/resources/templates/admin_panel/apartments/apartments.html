@@ -99,10 +99,10 @@
                                     <th></th>
                                 </tr>
                                 <tr>
-                                    <th style="border-bottom:none; display: flex; align-items: flex-start;"><input style="height: 44px" type="text" autocomplete="off" class="form-control my_filters" name="number"
-                                               th:field="${filterForm.number}" id="number"></th>
+                                    <th style="border-bottom:none; display: flex; align-items: flex-start;"><input style="height: 44px" type="text" autocomplete="off" class="form-control my_filters" th:field="*{number}"
+                                             ></th>
 
-                                    <th style="border-bottom:none; "><select  autocomplete="off" class="form-select my_filters" id="buildingName" name="buildingName">
+                                    <th style="border-bottom:none; "><select autocomplete="off" class="form-select my_filters" th:field="*{building}">
                                         <option value="-"
                                                 ></option>
                                         <option th:each="building : ${buildings}"
@@ -111,11 +111,11 @@
                                                 ></option>
                                     </select></th>
 
-                                    <th style="border-bottom:none"><select th:field="${section}" autocomplete="off" class="form-select my_filters" id="section" name="section">
+                                    <th style="border-bottom:none"><select autocomplete="off" class="form-select my_filters" th:field="*{section}">
                                         <option value="-"></option>
                                     </select></th>
 
-                                    <th style="border-bottom:none"><select th:field="${floor}" autocomplete="off" class="form-select my_filters" id="floor" name="floor">
+                                    <th style="border-bottom:none"><select autocomplete="off" class="form-select my_filters" th:field="*{floor}">
                                         <option value="-"></option>
 
 
@@ -130,7 +130,7 @@
 <!--                                            ></option>-->
 <!--                                        </select>-->
 
-                                        <select id="owner" name="owner" class="form-select my_filters">
+                                        <select th:field="*{owner}" class="form-select my_filters">
                                             <option th:if="${filterForm.owner == null}" value="" selected="selected">Выберите пользователя</option>
                                             <option th:if="${filterForm.owner != null}" th:value="${filterForm.ownerEntity.id}" th:text="${filterForm.ownerEntity.getFullName()}"></option>
 
@@ -152,103 +152,11 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-
-<!--                                <tr th:each="apartment : ${apartments}">-->
-<!--                                    <td><a style="display: block; color: black; text-decoration: none;"-->
-<!--                                           th:text="${apartment.number}"-->
-<!--                                           th:href="@{{id}(id=${apartment.id})}"></a></td>-->
-<!--                                    <td><a style="display: block; color: black; text-decoration: none;"-->
-<!--                                           th:if="${apartment.building != null}"-->
-<!--                                           th:text="${apartment.building.name}"-->
-<!--                                           th:href="@{{id}(id=${apartment.id})}"></a></td>-->
-<!--                                    &lt;!&ndash;                th:text="${apartment.building.name}" th:href="@{{id}(id=${apartment.id})}"&ndash;&gt;-->
-<!--                                    <td><a style="display: block; color: black; text-decoration: none;"-->
-<!--                                           th:text="${apartment.section}"-->
-<!--                                           th:href="@{{id}(id=${apartment.id})}"></a></td>-->
-<!--                                    <td><a style="display: block; color: black; text-decoration: none;"-->
-<!--                                           th:text="${apartment.floor}"-->
-<!--                                           th:href="@{{id}(id=${apartment.id})}"></a></td>-->
-<!--                                    <td><a style="display: block; color: black; text-decoration: none;"-->
-<!--                                           th:if="${apartment.ownerId != null}"-->
-<!--                                           th:text="${apartment.ownerId.first_name}+' '+${apartment.ownerId.last_name}+-->
-<!--                ' '+${apartment.ownerId.fathers_name}" th:href="@{{id}(id=${apartment.id})}"></a></td>-->
-<!--                                    <td><a style="display: block; color: black; text-decoration: none;"-->
-<!--                                           th:text="${apartment.balance}"-->
-<!--                                           th:href="@{{id}(id=${apartment.id})}"></a></td>-->
-<!--                                    <td>-->
-<!--                                        <div class="btn-group" role="group" aria-label="Basic outlined button group">-->
-<!--                                            <a th:href="@{edit/{id}(id=${apartment.id})}"-->
-<!--                                               class="btn btn-default btn-sm"><i class="fa fa-pencil"-->
-<!--                                                                               aria-hidden="true"></i></i></a>-->
-<!--                                            <a th:href="@{delete/{id}(id=${apartment.id})}"-->
-<!--                                               class="btn btn-default btn-sm"><i class="fa fa-trash-o"-->
-<!--                                                                               aria-hidden="true"></i></i></a>-->
-<!--                                        </div>-->
-<!--                                    </td>-->
-<!--                                </tr>-->
                                 </tbody>
                                 <tfoot>
                                 </tfoot>
                             </table>
                             <nav aria-label="Page navigation " class="pagination_container">
-<!--                                <ul class="pagination justify-content-center font-weight-medium">-->
-<!--                                    <li class="page-item" th:classappend="${apartments.number eq 0} ? 'disabled'">-->
-<!--                                        <a class="page-link" href="#"-->
-<!--                                           onclick="function(){changePageNumber(1); drawApartmentsTable()}" aria-label="Previous">-->
-<!--                                            <span aria-hidden="true">«</span>-->
-<!--                                        </a>-->
-<!--                                    </li>-->
-<!--                                    <li class="page-item" th:classappend="${apartments.number le 0} ? 'disabled'">-->
-<!--                                        <a class="page-link" href="#"-->
-<!--                                           onclick="function(){decreasePageByOne(); drawApartmentsTable()}" aria-label="Previous">-->
-<!--                                            <span aria-hidden="true">‹</span>-->
-<!--                                        </a>-->
-<!--                                    </li>-->
-<!--&lt;!&ndash;                                    <li class="page-item disabled" th:if="${apartments.number > 3 }">&ndash;&gt;-->
-<!--&lt;!&ndash;                                        <a class="page-link" href="#">...&ndash;&gt;-->
-<!--&lt;!&ndash;                                        </a>&ndash;&gt;-->
-<!--&lt;!&ndash;                                    </li>&ndash;&gt;-->
-<!--                                    <li class="page-item" th:classappend="${i eq apartments.number + 1} ? 'active'"-->
-<!--                                        th:each="i : ${#numbers.sequence(( apartments.number > 2 ? apartments.number - 2: apartments.number - (apartments.number - 1) ), (apartments.number + 4 < apartments.totalPages   ? apartments.number + 4 : apartments.totalPages), 1)}">-->
-<!--                                        <a class="page-link"-->
-<!--                                           href="#" onclick="function(){changePageNumber(...); drawApartmentsTable()}"-->
-<!--                                           th:text="${i}"-->
-<!--                                           th:title="${'Page '+ i}"-->
-<!--                                           rel="tooltip"></a></li>-->
-<!--&lt;!&ndash;                                    <li class="page-item disabled"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        th:if="${apartments.number + 4 < apartments.totalPages}">&ndash;&gt;-->
-<!--&lt;!&ndash;                                        <a class="page-link" href="#">...&ndash;&gt;-->
-<!--&lt;!&ndash;                                        </a>&ndash;&gt;-->
-<!--&lt;!&ndash;                                    </li>&ndash;&gt;-->
-<!--                                    <li class="page-item"-->
-<!--                                        th:classappend="${apartments.number ge apartments.totalPages - 2} ? 'disabled'">-->
-<!--                                        <a class="page-link" href="#"-->
-<!--                                           onclick="function(){decreasePageByOne(); drawApartmentsTable()}" aria-label="Next">-->
-<!--                                            <span aria-hidden="true">›</span>-->
-<!--                                        </a>-->
-<!--                                    </li>-->
-<!--                                    <li class="page-item"-->
-<!--                                        th:classappend="${apartments.number eq apartments.totalPages - 1} ? 'disabled'">-->
-<!--                                        <a class="page-link" href="#"-->
-<!--                                           onclick="function(){changePageNumber(...); drawApartmentsTable()}" aria-label="Previous">-->
-<!--                                            <span aria-hidden="true">↣</span>-->
-<!--                                        </a>-->
-<!--                                    </li>-->
-<!--                                    <div class="btn-group">-->
-<!--                                        <button type="button"-->
-<!--                                                class="btn btn-primary btn-sm dropdown-toggle page-size-display" data-bs-toggle="dropdown"-->
-<!--                                                aria-expanded="false">-->
-
-<!--                                        </button>-->
-<!--                                        <ul class="dropdown-menu dropdown-menu-end">-->
-<!--                                            <li><a class="dropdown-item" href="#" onclick="function(){changePageSize(5); drawApartmentsTable()}">5</a></li>-->
-<!--                                            <li><a class="dropdown-item" href="#" onclick="changePageSize(10)">10</a></li>-->
-<!--                                            <li><a class="dropdown-item" href="#" onclick="changePageSize(25)">25</a></li>-->
-<!--                                            <li><a class="dropdown-item" href="#" onclick="changePageSize(50)">50</a></li>-->
-<!--                                            <li><a class="dropdown-item" href="#" onclick="changePageSize(100)">100</a></li>-->
-<!--                                        </ul>-->
-<!--                                    </div>-->
-<!--                                </ul>-->
                             </nav>
                         </div>
                     </div>

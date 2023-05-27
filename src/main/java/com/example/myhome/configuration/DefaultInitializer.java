@@ -79,7 +79,7 @@ class DefaultInitializer implements CommandLineRunner {
             building.setImg4("4.jpg");
             building.setImg5("5.jpg");
             buildingRepository.save(building);
-            
+
         }
     }
     void checkForApartments() throws InterruptedException {
@@ -98,7 +98,7 @@ class DefaultInitializer implements CommandLineRunner {
 
             Building building = buildingRepository.findById(1L).orElseThrow();
             building.getApartments().add(savedApartment);
-            
+
         }
     }
     void checkForOwners() throws InterruptedException {
@@ -121,7 +121,7 @@ class DefaultInitializer implements CommandLineRunner {
             owner.setBirthdate(LocalDate.of(2000,11,11));
 
             ownerRepository.save(owner);
-            
+
         }
     }
     void checkForAccounts() throws InterruptedException {
@@ -306,7 +306,7 @@ class DefaultInitializer implements CommandLineRunner {
             userRole6.setPermissions(permissions6);
             userRoleRepository.save(userRole6);
 
-            
+
         }
         if(pageRoleDisplayRepository.count() == 0L || pageRoleDisplayRepository.findAll().size() == 0) {
             log.info("ADDING PAGE ROLES");
@@ -374,7 +374,7 @@ class DefaultInitializer implements CommandLineRunner {
             tariff.setDate(LocalDateTime.now());
             tariff.setComponents(Map.of(serviceRepository.findById(1L).orElseThrow(), 10.0, serviceRepository.findById(2L).orElseThrow(), 200.5));
             tariffRepository.save(tariff);
-            
+
         }
     }
     void checkForTransactionItems() throws InterruptedException {
@@ -388,7 +388,7 @@ class DefaultInitializer implements CommandLineRunner {
             testItem2.setName("TestExpenseItem");
 
             incomeExpenseRepository.saveAll(List.of(testItem1, testItem2));
-            
+
         }
     }
     void checkForServices() throws InterruptedException {
@@ -412,7 +412,7 @@ class DefaultInitializer implements CommandLineRunner {
 
             unitRepository.saveAll(List.of(unit,unit2));
             serviceRepository.saveAll(List.of(service,service2));
-            
+
         }
     }
     void checkForAdmins() throws InterruptedException {
@@ -472,7 +472,7 @@ class DefaultInitializer implements CommandLineRunner {
             admin6.setRole(userRoleRepository.findByName("Admin").orElseThrow());
             adminRepository.save(admin6);
 
-            
+
         }
     }
     void checkForPages() throws InterruptedException {
@@ -482,6 +482,7 @@ class DefaultInitializer implements CommandLineRunner {
             page.setId(1L);
             page.setTitle("test");
             page.setDescription("test");
+            page.setShow_links(true);
             page.setSlide1("7.jpg");
             page.setSlide2("8.jpg");
             page.setSlide3("9.jpg");
@@ -559,6 +560,6 @@ class DefaultInitializer implements CommandLineRunner {
             page.setServiceDescriptions(list);
             pageRepository.save(page);
         }
-        
+
     }
 }

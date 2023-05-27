@@ -29,7 +29,7 @@ public class WebsiteServiceImpl implements WebsiteService {
     @Autowired
     private FileUploadUtil fileUploadUtil;
 
-    private static final String imageSaveDir = "/pages/";
+    private static final String imageSaveDir = "";
 
     public MainPage getMainPage() {return pageRepository.getMainPage().orElseThrow();}
     public AboutPage getAboutPage() {return pageRepository.getAboutPage().orElseThrow();}

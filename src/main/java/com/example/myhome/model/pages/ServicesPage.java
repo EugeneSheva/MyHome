@@ -13,7 +13,6 @@ import java.util.List;
 public class ServicesPage extends Page {
 
     @ElementCollection
-    @NotNull
     List<ServiceDescription> serviceDescriptions;
 
     @Data

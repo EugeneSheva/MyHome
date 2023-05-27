@@ -49,7 +49,6 @@ public class BuildingController {
     @Autowired
     private final BuildingValidator validator;
 
-
     @Value("${upload.path}")
     private String uploadPath;
     private final BuildingService buildingService;

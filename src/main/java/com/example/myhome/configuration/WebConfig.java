@@ -31,7 +31,7 @@ public class WebConfig implements WebMvcConfigurer {
         System.out.println("CONFIG UPLOAD PATH " + uploadPath);
         System.out.println("CONFIG PREFIX " + prefix);
         registry
-                .addResourceHandler("/img/**")
+                .addResourceHandler("/img/**", "/images/**")
                 .addResourceLocations(prefix + uploadPath + "/", prefix + uploadPath + "/img/");
         registry
                 .addResourceHandler("/**")

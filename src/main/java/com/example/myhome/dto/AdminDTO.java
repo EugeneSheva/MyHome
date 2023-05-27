@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class AdminDTO {
 
     private Long id;
+
     private String text;
 
     private String first_name, last_name;

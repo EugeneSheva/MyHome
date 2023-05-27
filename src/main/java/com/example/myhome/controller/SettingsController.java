@@ -92,13 +92,14 @@ public class SettingsController {
 
     // Сохранить обновленную статью
     @PostMapping("/admin/income-expense/update/{id}")
-    public String updateTransaction(@Valid @ModelAttribute IncomeExpenseItems item, BindingResult bindingResult) {
+    public String updateTransaction(@PathVariable long id, @Valid @ModelAttribute IncomeExpenseItems item, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             log.info("errors found");
             log.info(bindingResult.getObjectName());
             log.info(bindingResult.getAllErrors().toString());
             return "admin_panel/system_settings/transaction_card";
         }
+        item.setId(id);
         settingsService.saveTransactionItem(item);
         return "redirect:/admin/income-expense";
     }

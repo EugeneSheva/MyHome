@@ -25,10 +25,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -125,9 +127,9 @@ public class AdminServiceImpl implements AdminService {
     public Long countAllMasters() {
 
         Specification<Admin> spec = Specification.not(
-                        AdminSpecifications.hasRole("Директор")
-                                .or(AdminSpecifications.hasRole("Управляющий"))
-                                .or(AdminSpecifications.hasRole("Бухгалтер")));
+                        AdminSpecifications.hasRole("Director")
+                                .or(AdminSpecifications.hasRole("Manager"))
+                                .or(AdminSpecifications.hasRole("Accountant")));
 
         return adminRepository.count(spec);
     }
@@ -135,9 +137,9 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Long countAllManagers() {
         Specification<Admin> spec = Specification.where(
-                AdminSpecifications.hasRole("Директор")
-                        .or(AdminSpecifications.hasRole("Управляющий"))
-                        .or(AdminSpecifications.hasRole("Бухгалтер")));
+                AdminSpecifications.hasRole("Director")
+                        .or(AdminSpecifications.hasRole("Manager"))
+                        .or(AdminSpecifications.hasRole("Accountant")));
 
         return adminRepository.count(spec);
     }
@@ -156,10 +158,16 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    @Transactional
     public Admin saveAdmin(Admin admin) {
+        Optional<Admin> opt = adminRepository.findById(admin.getId());
+        if(opt.isPresent()) {
+            Admin originalAdmin = opt.get();
+            if(admin.getPassword() == null) admin.setPassword(originalAdmin.getPassword());
+        }
         log.info("Trying to save admin...");
         log.info(admin.toString());
-        if(admin.getPassword() != null && !admin.getPassword().isEmpty()) admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+//        if(admin.getPassword() != null && !admin.getPassword().isEmpty()) admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         if(admin.getDateOfRegistry() == null) admin.setDateOfRegistry(LocalDate.now());
         log.info("Encoded admin password for saving");
         try {
@@ -169,7 +177,9 @@ public class AdminServiceImpl implements AdminService {
 
             // Обновление роли юзера в контексте
             Admin loggedInAdmin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if(loggedInAdmin.getUsername().equalsIgnoreCase(savedAdmin.getUsername())) {
+            log.info("LOGGED IN ADMIN DATA: ");
+            log.info(loggedInAdmin.toString());
+            if(Objects.equals(loggedInAdmin.getId(), savedAdmin.getId())) {
                 log.info("Updated logged in user, changing permissions in security context...");
                 SecurityContextHolder.getContext().setAuthentication(null);
                 SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(savedAdmin, savedAdmin.getPassword(), savedAdmin.getAuthorities()));
@@ -186,6 +196,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Admin saveAdmin(AdminDTO dto) {
         Admin admin = mapper.fromDTOToAdmin(dto);
+//        if(admin.getPassword() == null) admin.setPassword(adminRepository.findById(admin.getId()).orElseThrow().getPassword());
         admin.setRole(userRoleRepository.getReferenceById(dto.getUserRoleID()));
         return saveAdmin(admin);
     }
@@ -207,9 +218,10 @@ public class AdminServiceImpl implements AdminService {
         Pageable pageable = PageRequest.of(page, 5);
 
         Specification<Admin> spec = Specification.not(
-                AdminSpecifications.hasRole("Директор")
-            .or(AdminSpecifications.hasRole("Управляющий"))
-            .or(AdminSpecifications.hasRole("Бухгалтер")))
+                AdminSpecifications.hasRole("Director")
+            .or(AdminSpecifications.hasRole("Manager"))
+            .or(AdminSpecifications.hasRole("Accountant"))
+            .or(AdminSpecifications.hasRole("Admin")))
             .and(AdminSpecifications.hasNameLike(search));
 
         return adminRepository.findAll(spec, pageable)
@@ -219,9 +231,10 @@ public class AdminServiceImpl implements AdminService {
     }
 
     public List<AdminDTO> findAllMasters() {
-        Specification<Admin> spec = Specification.not(AdminSpecifications.hasRole("Директор")
-                                .or(AdminSpecifications.hasRole("Управляющий"))
-                                .or(AdminSpecifications.hasRole("Бухгалтер")));
+        Specification<Admin> spec = Specification.not(AdminSpecifications.hasRole("Director")
+                                                    .or(AdminSpecifications.hasRole("Manager"))
+                                                    .or(AdminSpecifications.hasRole("Accountant"))
+                                                    .or(AdminSpecifications.hasRole("Admin")));
 
         return adminRepository.findAll(spec).stream().map(mapper::fromAdminToDTO).collect(Collectors.toList());
     }
@@ -231,9 +244,10 @@ public class AdminServiceImpl implements AdminService {
         Pageable pageable = PageRequest.of(page, 5);
 
         Specification<Admin> spec = Specification.where(
-                AdminSpecifications.hasRole("Директор")
-            .or(AdminSpecifications.hasRole("Управляющий"))
-            .or(AdminSpecifications.hasRole("Администратор")))
+                AdminSpecifications.hasRole("Director")
+            .or(AdminSpecifications.hasRole("Manager"))
+            .or(AdminSpecifications.hasRole("Accountant"))
+            .or(AdminSpecifications.hasRole("Admin")))
             .and(AdminSpecifications.hasNameLike(search));
 
         return adminRepository.findAll(spec, pageable)
@@ -244,9 +258,10 @@ public class AdminServiceImpl implements AdminService {
 
     public List<AdminDTO> findAllManagers() {
         Specification<Admin> spec = Specification.where(
-                        AdminSpecifications.hasRole("Директор")
-                        .or(AdminSpecifications.hasRole("Управляющий"))
-                        .or(AdminSpecifications.hasRole("Администратор")));
+                        AdminSpecifications.hasRole("Director")
+                        .or(AdminSpecifications.hasRole("Manager"))
+                        .or(AdminSpecifications.hasRole("Accountant"))
+                        .or(AdminSpecifications.hasRole("Admin")));
 
         return adminRepository.findAll(spec).stream().map(mapper::fromAdminToDTO).collect(Collectors.toList());
     }
@@ -259,13 +274,14 @@ public class AdminServiceImpl implements AdminService {
 
         if(!filters.filtersPresent()) return null;
 
-        log.info("Building specification from filters: " + filters.toString());
+        log.info("Building specification from filters: " + filters);
 
         String name = filters.getName();
         UserRole role = userRoleRepository.findByName(filters.getRole()).orElse(null);
         String phone = filters.getPhone();
         String email = filters.getEmail();
         Boolean active = filters.getActive();
+        log.info(name + ' ' + role + ' ' + phone + ' ' + email + ' ' + active);
 
         Specification<Admin> specification = Specification.where(AdminSpecifications.hasNameLike(name)
                                                             .and(AdminSpecifications.hasRole((role != null) ? role.getName() : ""))
@@ -295,15 +311,12 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Page<AdminDTO> findAllBySpecification(FilterForm filters, Integer page, Integer size) {
+    public Page<AdminDTO> findAllBySpecification(FilterForm filters, Integer page, Integer size) throws IllegalAccessException {
         Pageable pageable = PageRequest.of(page-1, size);
-        List<AdminDTO> listDTO = new ArrayList<>();
-        Page<Admin> ownerList = adminRepository.findByFilters(filters.getName(), filters.getRole(), filters.getPhone(), filters.getEmail(), filters.getStatus(), pageable);
-        for (Admin admin : ownerList.getContent()) {
-                    listDTO.add(new AdminDTO(admin.getId(), admin.getFirst_name(), admin.getLast_name(),
-                    admin.getPhone_number(), admin.getEmail(), admin.isActive(), admin.getRole().getName(),
-                    admin.getRole().getId()));
-        }
+        Page<Admin> ownerList = adminRepository.findAll(buildSpecFromFilters(filters), pageable);
+        log.info("Page of found: " + ownerList + ", total elements " + ownerList.getTotalElements() + ", total pages " + ownerList.getTotalPages());
+        List<AdminDTO> listDTO = ownerList.getContent().stream().map(mapper::fromAdminToDTO).collect(Collectors.toList());
+        log.info("List of found: " + listDTO);
         return new PageImpl<>(listDTO, pageable, ownerList.getTotalElements());
     }
 }

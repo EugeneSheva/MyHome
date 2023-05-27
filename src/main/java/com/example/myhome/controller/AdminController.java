@@ -143,6 +143,7 @@ public class AdminController {
     // Получить всех управляющих: директор, админ, бухгалтер... (не специалистов) - для кассы
     @GetMapping("/get-managers")
     public @ResponseBody Map<String, Object> getAllManagers(@RequestParam String search, @RequestParam int page) {
+        log.info("Get managers method from AJAX activated");
         Map<String, Object> map = new HashMap<>();
         Map<String, Boolean> pagination = new HashMap<>();
         pagination.put("more", (page*5L) < adminService.countAllManagers());
@@ -156,7 +157,7 @@ public class AdminController {
     @GetMapping("/get-admins")
     public @ResponseBody Page<AdminDTO> getAdmins(@RequestParam Integer page,
                                                   @RequestParam Integer size,
-                                                  @RequestParam String filters) throws JsonProcessingException {
+                                                  @RequestParam String filters) throws JsonProcessingException, IllegalAccessException {
         ObjectMapper mapper = new ObjectMapper();
         FilterForm form = mapper.readValue(filters, FilterForm.class);
         return adminService.findAllBySpecification(form, page, size);

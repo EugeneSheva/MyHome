@@ -16,7 +16,7 @@ public class AdminDTOMapper {
         admin.setLast_name(dto.getLast_name());
         admin.setFull_name(dto.getFullName());
         admin.setEmail(dto.getEmail());
-        admin.setPassword((dto.getPassword() == null || dto.getPassword().isEmpty()) ? null : dto.getPassword());
+//        admin.setPassword((dto.getPassword() == null || dto.getPassword().isEmpty()) ? null : dto.getPassword());
         admin.setPhone_number(dto.getPhone_number());
 
         System.out.println("DTO PASSWORD IS " + dto.getPassword());

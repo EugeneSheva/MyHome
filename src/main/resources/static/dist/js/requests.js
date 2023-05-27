@@ -28,7 +28,7 @@ function loadApartments(input) {
 
     $("#ownerID").select2({
         ajax: {
-            url: '/admin/owners/get-all-owners',
+            url: '/myhome/admin/owners/get-all-owners',
             data: function(params){
                 console.log(params.page);
                 return {
@@ -50,7 +50,7 @@ function loadApartments(input) {
 
       $("#apartmentID").prop("disabled", (owner_id != '0') ? false : true);
 
-      $.get('/admin/owners/get-apartments/' + owner_id, function(data){
+      $.get('/myhome/admin/owners/get-apartments/' + owner_id, function(data){
         console.log(data);
 
         $("#apartmentID").html('');
@@ -67,7 +67,7 @@ function loadApartments(input) {
     $("#masterTypeID").change(function(){
       let master_type = $(this).val();
 
-      $.get('/admin/admins/get-masters-by-type', {typeID:master_type}, function(data){
+      $.get('/myhome/admin/admins/get-masters-by-type', {typeID:master_type}, function(data){
         console.log(data);
 
         $("#masters").html('');

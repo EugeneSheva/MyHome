@@ -35,7 +35,7 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#"><i class="fa fa-home" th:text="#{homePage}"></i></a></li>
+                            <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i> <span th:text="#{homePage}"></span></a></li>
                             <li class="breadcrumb-item active" th:text="#{buildings}"></li>
                         </ol>
                     </div>
@@ -57,6 +57,7 @@
                 <div class="card card card-primary card-outline" style="padding: 0px; border-top-color: #bbbbbb;">
                     <div class="card-header" style="background-color: transparent;">
                         <div class="form-group">
+                            <span style="margin: 0;font-size: 20px;font-weight: bold;color: red;" th:if="${fail}" th:text="${fail}"></span>
                             <a href="#" onclick="reset()" class="btn btn-default btn-sm float-right">
                                <h7 th:text="#{clear}"></h7></span><i class="fa fa-eraser visible-xs"></i>
                             </a>

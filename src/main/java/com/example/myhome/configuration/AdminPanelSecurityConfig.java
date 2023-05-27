@@ -60,6 +60,11 @@ public class AdminPanelSecurityConfig {
 
         log.info("setting up admin filter chain");
 
+        http.antMatcher("/**")
+                        .authorizeRequests()
+                .antMatchers("/home","/about","/services","/contacts").permitAll();
+
+
         http.antMatcher("/admin/**")
                 .authorizeRequests()
                 .antMatchers("/dist/**").permitAll()

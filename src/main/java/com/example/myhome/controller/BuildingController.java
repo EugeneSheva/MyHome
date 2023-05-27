@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,6 +28,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -56,6 +59,9 @@ public class BuildingController {
     private final BuildingValidator buildingValidator;
 
     private final BuildingDTOMapper mapper;
+
+    private final MessageSource messageSource;
+
     @GetMapping
     public String getBuildigs(Model model, @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC, size = 10) Pageable pageable) {
         Page<Building> buildingList = buildingService.findAll(pageable);
@@ -127,7 +133,7 @@ public class BuildingController {
     }
 
     @GetMapping("/delete/{id}")
-    public String dellete(@PathVariable("id") Long id) {
+    public String dellete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         Building building = buildingService.findById(id);
         try {
             Files.deleteIfExists(Path.of(uploadPath + building.getImg1()));
@@ -136,10 +142,18 @@ public class BuildingController {
             Files.deleteIfExists(Path.of(uploadPath + building.getImg4()));
             Files.deleteIfExists(Path.of(uploadPath + building.getImg5()));
         } catch (IOException e) {
+            log.severe("Error during deletion of photo");
             throw new RuntimeException(e);
         }
-        buildingService.deleteById(id);
-        return "redirect:/admin/buildings/";
+
+        try {
+            buildingService.deleteById(id);
+            return "redirect:/admin/buildings/";
+        } catch (Exception e) {
+            log.severe("Error during deletion of building");
+            redirectAttributes.addFlashAttribute("fail", messageSource.getMessage("building.delete.error", null, LocaleContextHolder.getLocale()));
+            return "redirect:/admin/buildings/";
+        }
     }
 
     @GetMapping("/get-sections/{id}")

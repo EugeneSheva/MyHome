@@ -2,6 +2,7 @@ package com.example.myhome.controller;
 
 import com.example.myhome.controller.socket.WebsocketController;
 import com.example.myhome.dto.ApartmentDTO;
+import com.example.myhome.dto.BuildingDTO;
 import com.example.myhome.dto.InvoiceDTO;
 import com.example.myhome.model.InvoiceTemplate;
 import com.example.myhome.model.filter.FilterForm;
@@ -89,13 +90,13 @@ public class InvoiceController {
         return "admin_panel/invoices/invoices";
     }
 
-    @GetMapping("/search")
-    public String showSearch(@RequestParam long flat_id, Model model) {
-        Apartment apartment = apartmentService.findById(flat_id);
-        model.addAttribute("current_date", LocalDate.now());
-        model.addAttribute("invoices", apartment.getInvoiceList());
-        return "admin_panel/invoices/invoices";
-    }
+//    @GetMapping("/search")
+//    public String showSearch(@RequestParam long flat_id, Model model) {
+//        Apartment apartment = apartmentService.findById(flat_id);
+//        model.addAttribute("current_date", LocalDate.now());
+//        model.addAttribute("invoices", apartment.getInvoiceList());
+//        return "admin_panel/invoices/invoices";
+//    }
 
     @GetMapping("/{id}")
     public String showInvoiceInfo(@PathVariable long id, Model model) {
@@ -111,7 +112,10 @@ public class InvoiceController {
     @GetMapping("/create")
     public String showCreateInvoicePage(@RequestParam(required = false) Long flat_id, Model model) {
         InvoiceDTO invoiceDTO = new InvoiceDTO();
+        BuildingDTO buildingDTO = new BuildingDTO();
+        ApartmentDTO apartmentDTO = new ApartmentDTO();
         if(flat_id != null) {
+            System.out.println("ID IS NOT NULL ALOAODFIOJDSFLKDSJKFDSJKFDSJKFDJSKL");
             ApartmentDTO apartment = apartmentService.findApartmentDto(flat_id);
             System.out.println(apartment.toString());
             invoiceDTO.setApartment(apartment);
@@ -119,6 +123,9 @@ public class InvoiceController {
             invoiceDTO.setOwner(apartment.getOwner());
             invoiceDTO.setAccount(apartment.getAccount());
             invoiceDTO.setSection(apartment.getSection());
+        } else {
+            invoiceDTO.setBuilding(buildingDTO);
+            invoiceDTO.setApartment(apartmentDTO);
         }
         model.addAttribute("id", invoiceService.getMaxInvoiceId()+1L);
         model.addAttribute("flat", invoiceDTO.getApartment());

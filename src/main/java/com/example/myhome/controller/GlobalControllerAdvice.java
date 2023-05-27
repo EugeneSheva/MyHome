@@ -79,6 +79,7 @@ public class GlobalControllerAdvice {
         if(!(object instanceof Admin)) return;
         else {
             Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if(admin == null) return;
             admin = adminService.findAdminByLogin(admin.getUsername());
             AdminDTO dto = new AdminDTO();
             dto.setId(admin.getId());
@@ -89,11 +90,11 @@ public class GlobalControllerAdvice {
 
     }
 
-    @ModelAttribute
-    public void showRequestLocale(Model model, HttpServletRequest request) {
-        log.info("LOCALE: " + request.getLocale());
-        log.info("COUNTRY: " + request.getLocale().getCountry());
-        log.info("LANGUAGE: " + request.getLocale().getLanguage());
-    }
+//    @ModelAttribute
+//    public void showRequestLocale(Model model, HttpServletRequest request) {
+//        log.info("LOCALE: " + request.getLocale());
+//        log.info("COUNTRY: " + request.getLocale().getCountry());
+//        log.info("LANGUAGE: " + request.getLocale().getLanguage());
+//    }
 
 }

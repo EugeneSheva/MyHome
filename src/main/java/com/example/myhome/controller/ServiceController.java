@@ -50,7 +50,8 @@ public class ServiceController {
                                  RedirectAttributes redirectAttributes,
                                  Model model) {
 
-        if(bindingResult.hasErrors()) {
+        if(bindingResult.hasErrors() && new_service_names.length < 2 && new_service_unit_names.length < 2) {
+            log.info("serviceform validation failed");
             model.addAttribute("validation", "failed");
             return "admin_panel/system_settings/settings_services";
         }
@@ -90,7 +91,7 @@ public class ServiceController {
             e.printStackTrace();
             String part1 = messageSource.getMessage("settings.system.units.delete.error.1", null, LocaleContextHolder.getLocale());
             String part2 = messageSource.getMessage("settings.system.services.delete.error.2", null, LocaleContextHolder.getLocale());
-            String fail_msg = part1 + "\"" + serviceService.getServiceNameById(id) +"\"," + part2;
+            String fail_msg = part1 + "\"" + serviceService.getUnitNameById(id) +"\"," + part2;
             redirectAttributes.addFlashAttribute("fail", fail_msg);
             return "redirect:/admin/services";
         }

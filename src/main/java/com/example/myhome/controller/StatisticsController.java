@@ -32,8 +32,8 @@ public class StatisticsController {
 
     @GetMapping
     public String getOwners(Model model) {
-        model.addAttribute("newRepairRequestQuant", repairRequestRepository.countRepairRequestsByStatus(RepairStatus.ACCEPTED));
-        model.addAttribute("inworkRepairRequestQuant", repairRequestRepository.countRepairRequestsByStatus(RepairStatus.IN_WORK));
+        model.addAttribute("newRepairRequestQuant", repairRequestRepository.countRepairRequestsByStatus(RepairStatus.ACCEPTED).orElse(0L));
+        model.addAttribute("inworkRepairRequestQuant", repairRequestRepository.countRepairRequestsByStatus(RepairStatus.IN_WORK).orElse(0L));
         model.addAttribute("ownersQuant", ownerService.getQuantity());
         model.addAttribute("buidingsQuant", buildingService.getQuantity());
         model.addAttribute("apartmentsQuant", apartmentService.getQuantity());

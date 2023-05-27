@@ -48,13 +48,13 @@ public class MainController {
 
     @GetMapping("/services")
     public String showServicesPage(Model model) {
-        model.addAttribute("page", websiteService.getServicesPage());
+        model.addAttribute("servicesPage", websiteService.getServicesPage());
         return "main_website/services";
     }
 
     @GetMapping("/contacts")
     public String showContactsPage(Model model) {
-        model.addAttribute("page", websiteService.getContactsPage());
+        model.addAttribute("contactsPage", websiteService.getContactsPage());
         return "main_website/contacts";
     }
 

@@ -14,6 +14,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -38,6 +40,8 @@ public class AccountController {
     private final AccountDTOMapper mapper;
 
     private final WebsocketController websocketController;
+
+    private final MessageSource messageSource;
 
     // Открыть страничку с таблицей всех счетов
     @GetMapping
@@ -149,8 +153,13 @@ public class AccountController {
 
     // Удалить лицевой счёт
     @GetMapping("/delete/{id}")
-    public String deleteAccount(@PathVariable long id) {
-        accountService.deleteAccountById(id);
+    public String deleteAccount(@PathVariable long id, RedirectAttributes redirectAttributes) {
+        try {
+            accountService.deleteAccountById(id);
+        } catch (Exception e) {
+            log.severe("Account deletion error");
+            redirectAttributes.addFlashAttribute("fail", messageSource.getMessage("account.delete.error", null, LocaleContextHolder.getLocale()));
+        }
         return "redirect:/admin/accounts";
     }
 

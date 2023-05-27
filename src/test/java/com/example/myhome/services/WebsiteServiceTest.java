@@ -18,6 +18,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -223,6 +224,7 @@ class WebsiteServiceTest {
     void saveServicesPageInfoTest_3() throws IOException {
         ServicesPage expected = new ServicesPage();
         expected.setId(10L);
+        expected.setServiceDescriptions(new ArrayList<>());
         given(repository.getServicesPage()).willReturn(Optional.of(expected));
         MockMultipartFile testFile = new MockMultipartFile("test", new byte[1024]);
         MockMultipartFile testFile2 = new MockMultipartFile("test", new byte[0]);

@@ -26,14 +26,14 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                    <h1 class="m-0" th:text="#{apartment} + ${apartment.number} + ', ' + ${apartment.building.name}"></h1>
+                    <h1 class="m-0" th:text="#{apartment} + ' ' + ${apartment.number} + ', ' + ${apartment.building.name}"></h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a th:href="@{/}"><i class="fa fa-home"></i> Главная</a></li>
-                            <li class="breadcrumb-item"><a th:href="@{/admin/apartments/}">Квартиры</a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/}" th:text="#{homePage}"><i class="fa fa-home"></i> Главная</a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/admin/apartments/}" th:text="#{apartments}">Квартиры</a></li>
                             <li class="breadcrumb-item active"
-                                th:text="#{apartment} + ${apartment.number} + ', ' + ${apartment.building.name}"></li>
+                                th:text="#{apartment} + ' ' + ${apartment.number} + ', ' + ${apartment.building.name}"></li>
                         </ol>
                     </div>
                 </div>
@@ -45,14 +45,14 @@
         <section class="content">
             <div class="container-fluid">
 
-                <div class="box" style="padding: 10px; border-top-color: #bbbbbb;">
+                <div class="box" style="padding: 10px; border-top-color: #bbbbbb; font-family:'Source Sans Pro'">
                     <div class="box-header">
                         <h3 class="box-title" th:text="#{viewApartment}">Просмотр квартиры</h3>
                         <div class="box-tools" style="top: 10px;">
                             <a th:href="@{edit/{id}(id=${id})}" class="btn btn-primary btn-sm float-right" style="margin-left: 2px" >
                                  <h7 th:text="#{editApartment}"></h7><i class="fa fa-pencil visible-xs" aria-hidden="true"></i></a>
-                            <a th:href="@{/admin/apartments/NewInvoiceByApartment/{id}(id=${apartment.id})}" class="btn btn-default btn-sm float-right" style="margin-left: 2px"><i></i><i class="fa fa-files-o visible-xs" aria-hidden="true" th:text="#{drawUpInvoice}"></i></a>
-                            <a th:href="@{/admin/apartments/NewIncomesByApartment/{id}(id=${apartment.id})}" class="btn btn-default btn-sm float-right" style="margin-left: 2px"><i class="fa fa-dollar visible-xs" aria-hidden="true" th:text="#{acceptPayment}"></i></a>
+                            <a th:href="@{/admin/apartments/NewInvoiceByApartment/{id}(id=${apartment.id})}" class="btn btn-default btn-sm float-right" style="margin-left: 2px"><i></i><i class="fa fa-files-o visible-xs" aria-hidden="true"></i> <span  th:text="#{drawUpInvoice}"></span></a>
+                            <a th:href="@{/admin/apartments/NewIncomesByApartment/{id}(id=${apartment.id})}" class="btn btn-default btn-sm float-right" style="margin-left: 2px"><i class="fa fa-dollar visible-xs" aria-hidden="true"></i> <span th:text="#{acceptPayment}"></span></a>
                         </div>
                     </div>
                     <div class="box-body">

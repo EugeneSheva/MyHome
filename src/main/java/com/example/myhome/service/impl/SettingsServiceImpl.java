@@ -46,8 +46,12 @@ public class SettingsServiceImpl implements SettingsService {
 
     @Override
     public IncomeExpenseItems saveTransactionItem(IncomeExpenseItems transaction) {
-        if(!incomeExpenseRepository.existsByName(transaction.getName())) return null;
-        else return incomeExpenseRepository.save(new IncomeExpenseItems(transaction.getName(), transaction.getIncomeExpenseType()));
+        if(incomeExpenseRepository.existsByName(transaction.getName()) &&
+           incomeExpenseRepository.existsByIncomeExpenseType(transaction.getIncomeExpenseType())) {
+            log.info("Transaction item already exists, skipping");
+            return null;
+        }
+        return incomeExpenseRepository.save(transaction);
     }
 
     @Override

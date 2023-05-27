@@ -35,14 +35,14 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                       <h1  th:text="${apartment.id != null} ? (#{apartment} + ${apartment.number} + ', ' + ${apartment.building.name}): (#{newApartment})"></h1>
+                       <h1  th:text="${apartment.id != null} ? (#{apartment} + ' ' + ${apartment.number} + ', ' + ${apartment.building.name}): (#{newApartment})"></h1>
                    </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a th:href="@{/}"><i class="fa fa-home"></i> Главная</a></li>
-                            <li class="breadcrumb-item"><a th:href="@{/admin/apartments/}">Квартиры</a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/}"><i class="fa fa-home"></i> <span th:text="#{homePage}"></span></a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/admin/apartments/}" th:text="#{apartments}">Квартиры</a></li>
                             <li class="breadcrumb-item active"
-                                th:text="${apartment.id != null}? (#{apartment} + apartment.number + ', ' + apartment.building.name + ' / редакторование'): #{newApartment}"></li>
+                                th:text="${apartment.id != null}? (#{apartment} + ${apartment.number} + ', ' + ${apartment.building.name}): #{newApartment}"></li>
                         </ol>
                     </div>
                 </div>
@@ -218,10 +218,10 @@
 <script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
 
 <script th:inline="javascript">
-    var choise = [[#{choise}]];
+    var placeholderText = [[#{select.placeholder}]];
     $(function () {
 
-        $('#building, #section, #floor, #tariff').select2({placeholder:choise,minimumResultsForSearch:Infinity});
+        $('#building, #section, #floor, #tariff').select2({placeholder:placeholderText,minimumResultsForSearch:Infinity});
         $("#owner").select2({
             ajax: {
                 url: '/myhome/admin/owners/get-all-owners',
@@ -234,7 +234,8 @@
                 },
 
             },
-            placeholder: choise
+            placeholder: placeholderText,
+            minimumInputLength: 2
         });
 
     })

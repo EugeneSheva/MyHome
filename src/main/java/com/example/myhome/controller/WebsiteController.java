@@ -57,7 +57,7 @@ public class WebsiteController {
     // Открыть страничку редактирования контента страницы "Услуги"
     @GetMapping("/services")
     public String showEditServicesPage(Model model) {
-        model.addAttribute("page", websiteService.getServicesPage());
+        model.addAttribute("servicesPage", websiteService.getServicesPage());
         return "admin_panel/website_settings/website_services";
     }
 

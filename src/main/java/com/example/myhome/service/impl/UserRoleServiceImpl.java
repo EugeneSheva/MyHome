@@ -43,12 +43,12 @@ public class UserRoleServiceImpl implements UserRoleService {
 
         clearRoles();
 
-        UserRole accountant = repository.findByName("Бухгалтер").orElseThrow();
-        UserRole admin = repository.findByName("Администратор").orElseThrow();
-        UserRole director = repository.findByName("Директор").orElseThrow();
-        UserRole electrician = repository.findByName("Электрик").orElseThrow();
-        UserRole manager = repository.findByName("Управляющий").orElseThrow();
-        UserRole plumber = repository.findByName("Сантехник").orElseThrow();
+        UserRole accountant = repository.findByName("Accountant").orElseThrow();
+        UserRole admin = repository.findByName("Admin").orElseThrow();
+        UserRole director = repository.findByName("Director").orElseThrow();
+        UserRole electrician = repository.findByName("Electrician").orElseThrow();
+        UserRole manager = repository.findByName("Manager").orElseThrow();
+        UserRole plumber = repository.findByName("Plumber").orElseThrow();
 
         for(PageRoleDisplay pageRole : list) {
             if(pageRole.getRole_accountant()) {

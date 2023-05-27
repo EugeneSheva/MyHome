@@ -86,15 +86,4 @@ public class ApartmentDTO {
 //        this.accountNo = accountNo;
 //    }
 
-    @Override
-    public String toString() {
-        return "ApartmentDTO{" +
-                "id=" + id +
-                ", section=" + section +
-                ", floor=" + floor +
-                ", number=" + number +
-                ", owner=" + owner +
-                ", balance=" + balance +
-                "}\n";
-    }
 }

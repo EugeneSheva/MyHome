@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Repository
 public interface RepairRequestRepository extends JpaRepository<RepairRequest, Long>, JpaSpecificationExecutor<RepairRequest> {
-    Long countRepairRequestsByStatus(RepairStatus status);
+    Optional<Long> countRepairRequestsByStatus(RepairStatus status);
 
     @Query("SELECT MAX(r.id) FROM RepairRequest r")
     Optional<Long> getMaxId();

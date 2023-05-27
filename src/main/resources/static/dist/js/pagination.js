@@ -107,7 +107,7 @@ function setFilters(filters) {
         $("#floor").val(null);
         $("#name").val(null);
         $("#number").val(null);
-        $("#role").val(null);
+        $("#role").val('').trigger('change');
         $("#description").val(null);
         $("#master_type").val('').trigger('change');
         $("#master").val('').trigger('change');
@@ -160,6 +160,10 @@ function setFilters(filters) {
 
 }
 
+function onlyUnique(value, index, array) {
+  return array.indexOf(value) === index;
+}
+
 //AJAX-вызов и получение данных по url
 function getTableData(url, pageNumber, pageSize, pageFiltersString) {
     let tp = /*[[${totalPagesCount}]]*/ 1
@@ -200,7 +204,7 @@ function drawApartmentsTable() {
                             '<td>' +
                                 '<div class="btn-group" role="group" aria-label="Basic outlined button group">' +
                                     '<a href="edit/'+apartment.id+'" class="btn btn-default btn-sm"><i class="fa fa-pencil aria-hidden="true"></i></i></a>' +
-                                    '<a href="delete/'+apartment.id+'" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i></a>' +
+                                    '<button onclick="deleteApartment(this)" data-url="delete/'+apartment.id+'" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i></a>' +
                                 '</div>' +
                             '</td>';
         let row_children = newTableRow.children;
@@ -641,8 +645,13 @@ function drawOwnersTable(){
     let $ownersTable = $("#ownersTable tbody");
     $ownersTable.html('');
     for(const owner of data.content) {
-
-        const buildingLinks = owner.buildings.map(function(buildingObject) {return ('<p style="margin:0"><a href="/myhome/admin/buildings/' + buildingObject.id + '">' + buildingObject.name + '</a></p>')});
+        const ownerBuildings = [];
+        let map = new Map();
+        for(const building of owner.buildings) {
+            if(!map.has(building)) ownerBuildings.push(building);
+            map.set(building,building);
+        }
+        const buildingLinks = ownerBuildings.map(function(buildingObject) {return ('<p style="margin:0"><a href="/myhome/admin/buildings/' + buildingObject.id + '">' + buildingObject.name + '</a></p>')});
         const finalBuildingString = buildingLinks.join('');
         const apartmentLinks = owner.apartments.map(function(apartmentObject) {return ('<p style="margin:0; font-size:13px"><a href="/myhome/admin/apartments/' + apartmentObject.id + '">' + apartmentObject.fullName + '</a></p>')});
         const finalApartmentString = apartmentLinks.join('');
@@ -658,12 +667,12 @@ function drawOwnersTable(){
                                   '<td>' + finalApartmentString + '</td>' +
                                   '<td>' + owner.date + '</td>' +
                                   '<td>' + owner.status + '</td>' +
-                                  '<td>' + owner.hasDebt + '</td>' +
+                                  '<td>' + ((owner.hasDebt) ? hasDebtText : hasNoDebtText) + '</td>' +
                                   '<td>' +
                                       '<div class="btn-group" role="group" aria-label="Basic outlined button group">' +
                                           '<a href="newTo/'+ owner.id + '" class="btn btn-default btn-sm"><i class="fa fa-envelope" aria-hidden="true"></i></a>' +
-                                          '<a href="edit/'+ owner.id + '" class="btn btn-default btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></i></a>' +
-                                          '<a href="delete/'+ owner.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i></a>' +
+                                          '<a href="edit/'+ owner.id + '" class="btn btn-default btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                          '<button onclick="deleteOwner(this)" data-url="delete/'+ owner.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></button>' +
                                       '</div>' +
                                   '</td>';
 
@@ -683,27 +692,28 @@ function drawOwnersTable(){
     }
     drawPagination();
 }
-
 function drawAdminsTable(){
     let pageFiltersString = JSON.stringify(gatherFilters());
     let data = getTableData('/myhome/admin/admins/get-admins', currentPageNumber, currentPageSize, pageFiltersString);
     let $adminsTable = $("#adminsTable tbody");
     $adminsTable.html('');
     for(const admin of data.content) {
+        console.log(admin);
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
         newTableRow.classList.add('user-row');
         newTableRow.innerHTML =   '<td>' + admin.id + '</td>' +
-            '<td>' + admin.fullName + '</td>' +
-            '<td>' + admin.role + '</td>' +
-            '<td>' + admin.phone_number + '</td>' +
-            '<td>' + admin.email + '</td>' +
-            '<td>' + admin.active + '</td>' +
-            '<div class="btn-group" role="group" aria-label="Basic outlined button group">' +
-            '<a class="btn btn-default btn-sm invite_button" title="Отправить приглашение"><i class="fa fa-repeat"></i></a>' +
-            '<a href="/myhome/admin/admins/update/'+ admin.id + '" class="btn btn-default btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></i></a>' +
-            '<a href="/myhome/admin/admins/delete/'+ admin.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i></a>' +
-            '</div>' +
+            '<td>' + ((admin.fullName) ? admin.fullName : notFoundText) + '</td>' +
+            '<td>' + ((admin.role) ? admin.role : notFoundText) + '</td>' +
+            '<td>' + ((admin.phone_number) ? admin.phone_number : notFoundText) + '</td>' +
+            '<td>' + ((admin.email) ? admin.email : notFoundText) + '</td>' +
+            '<td>' + ((admin.active) ? activeText : inactiveText) + '</td>' +
+            '<td>' +
+                '<div class="btn-group" role="group" aria-label="Basic outlined button group">' +
+                '<button onclick="alert("Приглашение отправлено!")" class="btn btn-default btn-sm invite_button" title="Отправить приглашение"><i class="fa fa-repeat"></i></button>' +
+                '<a href="/myhome/admin/admins/update/'+ admin.id + '" class="btn btn-default btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></i></a>' +
+                '<a href="/myhome/admin/admins/delete/'+ admin.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i></a>' +
+                '</div>' +
             '</td>';
 
         let row_children = newTableRow.children;
@@ -739,7 +749,7 @@ function drawBuildingsTable() {
                                   '<td>' +
                                       '<div class="btn-group" role="group" aria-label="Basic outlined button group">' +
                                           '<a href="edit/' + building.id +'" class="btn btn-default btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></i></a>' +
-                                          '<a href="delete/' + building.id +'" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i></a>' +
+                                          '<button onclick="deleteBuilding(this)" data-url="delete/' + building.id +'" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i></a>' +
                                       '</div>' +
                                   '</td>';
         let row_children = newTableRow.children;
@@ -991,6 +1001,27 @@ function drawPagination() {
 
     $pagination.append(ul);
 }
+
+//Удаление сущностей
+function deleteOwner(button) {
+    let url = button.dataset.url;
+    if(confirm('Удалить пользователя?')) {
+        window.location.href="/myhome/admin/owners/"+url;
+    }
+}
+function deleteBuilding(button) {
+    let url = button.dataset.url;
+    if(confirm('Удалить дом?')) {
+        window.location.href="/myhome/admin/buildings/"+url;
+    }
+}
+function deleteApartment(button) {
+    let url = button.dataset.url;
+    if(confirm('Удалить квартиру?')) {
+        window.location.href="/myhome/admin/apartments/"+url;
+    }
+}
+//Удаление сущностей
 
 //Установка слушателей на фильтры
 $(document).ready(function(){

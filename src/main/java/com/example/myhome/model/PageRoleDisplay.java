@@ -19,12 +19,12 @@ public class PageRoleDisplay {
     private String page_name;
     private String code;
 
-    private Boolean role_director = false;
-    private Boolean role_admin = false;
-    private Boolean role_manager = false;
-    private Boolean role_accountant = false;
-    private Boolean role_plumber = false;
-    private Boolean role_electrician = false;
+    private Boolean role_director = true;
+    private Boolean role_admin = true;
+    private Boolean role_manager = true;
+    private Boolean role_accountant = true;
+    private Boolean role_plumber = true;
+    private Boolean role_electrician = true;
 
     public String getRoles() throws IllegalAccessException {
         List<String> roleNames = new ArrayList<>();

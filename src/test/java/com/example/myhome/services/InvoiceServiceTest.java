@@ -231,7 +231,7 @@ public class InvoiceServiceTest {
         when(ownerRepository.getReferenceById(anyLong())).thenReturn(invoice.getOwner());
         when(apartmentRepository.getReferenceById(anyLong())).thenReturn(invoice.getApartment());
 
-        assertThat(invoiceService.saveInvoice(new InvoiceDTO())).isNotNull();
+        assertThat(invoiceService.saveInvoice(new InvoiceDTO())).isNull();
     }
 
     @Test

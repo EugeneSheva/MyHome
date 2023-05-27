@@ -35,7 +35,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="/"><i class="fa fa-home" th:text="#{homePage}"></i></a></li>
+                            <li class="breadcrumb-item"><a href="/"><i class="fa fa-home"></i> <span th:text="#{homePage}"></span></a></li>
                             <li class="breadcrumb-item active" th:text="#{owners}"></li>
                         </ol>
                     </div><!-- /.col -->
@@ -65,6 +65,7 @@
                 <div class="card card card-primary card-outline" style="padding: 0px; border-top-color: #bbbbbb;">
                     <div class="card-header" style="background-color: transparent;">
                         <div class="form-group">
+                            <span style="margin: 0;font-size: 20px;font-weight: bold;color: red;" th:if="${delete_fail}" th:text="${delete_fail}"></span>
                             <a href="#" onclick="reset()" class="btn btn-default btn-sm float-right">
                                 <h7 th:text="#{clear}"></h7> </span><i class="fa fa-eraser visible-xs"></i>
                             </a>
@@ -109,7 +110,7 @@
                                     <th><input type="text" autocomplete="off" class="form-control my_filters" name="email"
                                                th:field="${filterForm.email}" id="email"></th>
 
-                                    <th><select autocomplete="off"  class="form-select my_filters" id="buildingName" name="buildingName" onchange="changeFilterData()">
+                                    <th><select autocomplete="off"  class="form-select my_filters" th:field="*{building}">
                                         <option value="" th:selected="${filterForm.buildingName == null}"></option>
                                         <option th:each="building : ${buildings}"
                                                 th:text="${building.name}"
@@ -117,7 +118,7 @@
                                                 th:selected="${#strings.containsIgnoreCase((building.name),((filterForm.buildingName != null) ? (filterForm.buildingName ): ('empty') ))}"></option>
                                     </select></th>
 
-                                    <th><input autocomplete="off" type="number" class="form-control my_filters" name="apartment"
+                                    <th><input autocomplete="off" type="text" class="form-control my_filters" name="apartment"
                                                th:field="${filterForm.apartment}" id="apartment"></th>
 
                                     <th>
@@ -128,7 +129,7 @@
                                         </div>
                                     </th>
 
-                                    <th><select autocomplete="off" class="form-select my_filters" id="status" name="status">
+                                    <th><select autocomplete="off" class="form-select my_filters" th:field="*{status}">
                                         <option th:selected="${filterForm.debtSting == null}" value=""></option>
                                         <option value="ACTIVE"
                                                 th:selected="${#strings.containsIgnoreCase(('active'),((filterForm.status != null) ? (filterForm.status ): ('emp') ))}"
@@ -144,7 +145,7 @@
                                         </option>
                                     </select></th>
 
-                                    <th><select autocomplete="off" class="form-select my_filters" id="debtSting" name="debtSting">
+                                    <th><select autocomplete="off" class="form-select my_filters" th:field="*{debt}">
                                         <option th:selected="${filterForm.debtSting == null}" value=""></option>
                                         <option th:value="true"
                                                 th:selected="${#strings.containsIgnoreCase(('true'),((filterForm.debtSting != null) ? (filterForm.debtSting ): ('emp') ))}"
@@ -198,6 +199,9 @@
     let globalTableName = 'owners';
     let totalPagesCount = [[${totalPagesCount}]];
     let tableData;
+    let placeholderText = [[#{select.placeholder}]];
+    let hasDebtText = [[#{owner.debt}]];
+    let hasNoDebtText = [[#{owner.no-debt}]];
 
     $(document).ready(function(){
 
@@ -207,36 +211,24 @@
 
 </script>
 
-
-<!--<script>-->
-<!--    let timeoutId;-->
-
-<!--    function handleFormSubmit() {-->
-<!--        const form = document.getElementById('1');-->
-<!--        form.submit();-->
-<!--        console.log("Форма отправлена!");-->
-<!--    }-->
-
-<!--    function handleInputChange() {-->
-<!--        clearTimeout(timeoutId);-->
-<!--        timeoutId = setTimeout(changeFilterData, 3000);-->
-<!--    }-->
-
-<!--    // event listener on field-->
-<!--    const input = document.querySelector('input[type="text"]');-->
-<!--    input.addEventListener('input', handleInputChange);-->
-
-<!--    // event on Enter-->
-<!--    document.addEventListener('keydown', function (event) {-->
-<!--        if (event.key === "Enter") {-->
-<!--            changeFilterData();-->
-<!--        }-->
-<!--    });-->
-
-<!--    $(document).ready(function(){-->
-<!--        $("#buildingName, #status, #debt").select2({placeholder: 'Выберите...', minimumResultsForSearch:Infinity});-->
-<!--    });-->
-<!--</script>-->
+<script>
+    $(function(){
+        $("#status, #debt").select2({placeholder: placeholderText, minimumResultsForSearch:Infinity});
+        $("#building").select2({
+            ajax: {
+                url: '/myhome/admin/buildings/get-buildings',
+                data: function(params){
+                    console.log(params.page);
+                    return {
+                        search: params.term || "",
+                        page: params.page || 1
+                    }
+                },
+            },
+            placeholder: placeholderText
+        });
+    });
+</script>
 
 <style>
         a.selected {
@@ -254,6 +246,14 @@
         a.page-link {
             width: 42px;
             text-align: center;
+        }
+
+        table thead th {
+            vertical-align: top !important;
+        }
+
+        table thead input {
+            padding-block: 23px !important;
         }
 </style>
 

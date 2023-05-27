@@ -87,7 +87,7 @@ public class RequestControllerTest {
         role.setId(1L);
         testRequest.setMaster_type(role);
         testRequest.setComment("test");
-        testRequest.setBest_time_request(LocalDateTime.now().plusDays(1));
+        testRequest.setBest_time_request(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
 
         testDTO = mapper.fromRequestToDTO(testRequest);
 
@@ -167,7 +167,8 @@ public class RequestControllerTest {
     @Test
     void deleteRequestTest() throws Exception {
         this.mockMvc.perform(get("/admin/requests/delete/"+testRequest.getId()).with(csrf()).flashAttr("auth_admin", testUser))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/requests"));
     }
 
     @Test
@@ -184,7 +185,7 @@ public class RequestControllerTest {
                 .andExpect(status().isBadRequest());
         this.mockMvc.perform(get("/admin/requests/get-requests?page=1&size=1").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isBadRequest());
-        this.mockMvc.perform(get("/admin/requests/get-requests?page=1&size=1&filters=").with(csrf()).flashAttr("auth_admin", testUser))
+        this.mockMvc.perform(get("/admin/requests/get-requests?page=1&filters=null").with(csrf()).flashAttr("auth_admin", testUser))
                 .andExpect(status().isBadRequest());
     }
 

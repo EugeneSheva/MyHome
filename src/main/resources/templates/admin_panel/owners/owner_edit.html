@@ -33,13 +33,13 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0" th:text="#{newOwner}"></h1>
+                        <h1 class="m-0" th:text="${owner.id == null} ? #{newOwner} : ${owner.getFullName()}"></h1>
                     </div>
                     <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="/"><i class="fa fa-home" th:text="#{homePage}"></i></a></li>
-                            <li class="breadcrumb-item"><a th:href="@{/admin/owners}" th:text="#{apartmentsOwners}">Владельцы квартир</a></li>
-                            <li class="breadcrumb-item active" th:text="#{newOwner}">Новый владелец</li>
+                        <ol class="breadcrumb float-sm-right" style="font-size: 13px; text-decoration: none;">
+                            <li class="breadcrumb-item"><a href="/" style="text-decoration:none"><i class="fa fa-home"></i> <span th:text="#{homePage}"></span></a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/admin/owners}" style="text-decoration:none" th:text="#{apartmentsOwners}">Владельцы квартир</a></li>
+                            <li class="breadcrumb-item active" th:text="${owner.id == null} ? #{newOwner} : ${owner.getFullName()}">Новый владелец</li>
                         </ol>
                     </div><!-- /.col -->
                 </div>
@@ -57,11 +57,11 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="row">
-                                    <div class="col-md-3" style="margin-bottom: 10px">
-                                        <img th:src="@{/images/placeholder.jpg}" alt="user-avatar"
-                                             class="img-circle img-fluid">
+                                    <div class="col-md-3" style="margin-bottom: 10px;height:150px;width:150px;overflow:hidden;border-radius:50%;padding:0">
+                                        <img th:src="*{profile_picture != null} ? @{/images/{url}(url=*{profile_picture})} : @{/images/placeholder.jpg}" alt="user-avatar" id="avatar"
+                                             class="img-circle img-fluid" style="max-width:1000px; max-height:1000px; aspect-ratio:1.0; width:150px">
                                     </div>
-                                    <div class="col-md-9" style="margin-bottom: 10px">
+                                    <div class="col-md-9 d-flex flex-column align-items-start justify-content-center" style="margin-bottom: 10px">
                                         <label class="control-label" for="img1" th:text="#{changeImg}">Сменить изображение</label>
                                         <input type="file"  id="img1" name="img1"
                                                accept="image/*">
@@ -83,7 +83,7 @@
 
 
                                     <div class="md-form md-outline input-with-post-icon datepicker" style="padding: 0; margin-bottom: 25px">
-                                        <label for="birthdate" th:text="#{birthDate}">Дата рождения</label>
+                                        <label for="birthdate" th:text="#{birthDate}" style="padding-left: 12px">Дата рождения</label>
                                         <input placeholder="Select date" th:field="*{birthdate}" type="date" id="birthdate" name="birthdate" class="form-control">
                                     </div>
                                     <div style="color: #d80450" th:if="${#fields.hasErrors('birthdate')}" th:errors="*{birthdate}"></div>
@@ -123,8 +123,8 @@
                             </div>
                             <div class="col-md-6">
 
-                                    <label for="status" th:text="*{status}"  class="form-label" th:field="#{status}">Статус</label>
-                                    <select class="form-select" id="status" name="status">
+                                    <label for="status" th:text="#{status}" class="form-label">Статус</label>
+                                    <select class="form-select" id="status" th:field="*{status}">
                                         <option selected=""  value="ACTIVE" th:text="#{new}">Новый</option>
                                         <option value="NEW" th:text="#{active}">Активен</option>
                                         <option value="DISABLED" th:text="#{disabled}">Отключен</option>
@@ -167,32 +167,15 @@
 
 <script th:inline="javascript">
 
-<!--    function selectBuilding() {-->
+    let fileInput = document.getElementById('img1');
+    fileInput.addEventListener('change', function(){
+      console.log(this);
+      let photo = this.files[0];
+      let image = document.getElementById('avatar');
+      let imagePath = URL.createObjectURL(photo);
+      image.src = imagePath;
+    });
 
-<!--        var list = /*[[${buildings}]]*/ [];-->
-<!--        var selectedIndex = document.getElementById("building").selectedIndex - 1;-->
-
-<!--        //sections-->
-<!--        var select = document.getElementById("section");-->
-<!--        select.innerHTML = "<option selected=\"\" disabled=\"\" value=\"\">Choose...</option>";-->
-<!--        var options = list[selectedIndex].sections;-->
-<!--        for (let i = 0; i < options.length; i++) {-->
-<!--            const option = document.createElement("option");-->
-<!--            option.value = options[i];-->
-<!--            option.textContent = options[i];-->
-<!--            select.appendChild(option);-->
-<!--        }-->
-<!--        //floors-->
-<!--        var selectF = document.getElementById("floor");-->
-<!--        selectF.innerHTML = "<option selected=\"\" disabled=\"\" value=\"\">Choose...</option>";-->
-<!--        var optionsF = list[selectedIndex].floors;-->
-<!--        for (let i = 0; i < optionsF.length; i++) {-->
-<!--            const optionF = document.createElement("option");-->
-<!--            optionF.value = optionsF[i];-->
-<!--            optionF.textContent = optionsF[i];-->
-<!--            selectF.appendChild(optionF);-->
-<!--        }-->
-<!--    }-->
 </script>
 <!-- REQUIRED SCRIPTS -->
 <!-- Icons -->

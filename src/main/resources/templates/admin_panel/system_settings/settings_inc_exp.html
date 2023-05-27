@@ -80,6 +80,9 @@
                         </td>
                       </a>
                     </tr>
+                  <tr th:if="${transactions.size() < 1}">
+                    <td colspan="3" th:text="#{search.results.empty}"></td>
+                  </tr>
                   </tbody>
                 </table>
               </div>

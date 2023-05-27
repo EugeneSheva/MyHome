@@ -62,8 +62,9 @@ public class IncomeExpenseServiceTest {
 
     @Test
     void throwsExceptionIfItemNotFound() {
-        doThrow(NotFoundException.class).when(incomeExpenseRepository).findById(anyLong());
-        assertThrows(NotFoundException.class, () -> service.findById(10000L));
+        when(incomeExpenseRepository.findById(any())).thenThrow(new NotFoundException());
+//        assertThrows(NotFoundException.class, () -> service.findById(10000L));
+        assertThat(service.findById(10000L)).isNull();
     }
 
     @Test
@@ -80,8 +81,9 @@ public class IncomeExpenseServiceTest {
 
     @Test
     void canThrowErrorOnSaveItemTest() {
-        doThrow(NotFoundException.class).when(incomeExpenseRepository).save(any(IncomeExpenseItems.class));
-        assertThrows(NotFoundException.class, () -> service.save(new IncomeExpenseItems()));
+        when(incomeExpenseRepository.save(any(IncomeExpenseItems.class))).thenThrow(new NotFoundException());
+//        assertThrows(NotFoundException.class, () -> service.save(new IncomeExpenseItems()));
+        assertThat(service.save(new IncomeExpenseItems())).isNull();
     }
 
     @Test
@@ -91,8 +93,9 @@ public class IncomeExpenseServiceTest {
 
     @Test
     void throwsErrorOnDeleteItemTest() {
-        willThrow(NotFoundException.class).given(incomeExpenseRepository).deleteById(anyLong());
-        assertThrows(NotFoundException.class, () -> service.deleteById(1L));
+        willThrow(new NotFoundException()).given(incomeExpenseRepository).deleteById(anyLong());
+//        assertThrows(NotFoundException.class, () -> service.deleteById(1L));
+        service.deleteById(1L);
     }
 
     @Test

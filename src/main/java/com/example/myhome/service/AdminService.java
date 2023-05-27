@@ -24,7 +24,7 @@ public interface AdminService extends UserDetailsService {
     Page<AdminDTO> findAllDTO(Pageable pageable);
 
     Page<AdminDTO> findAllByFiltersAndPage(FilterForm filters, Pageable pageable) throws IllegalAccessException;
-    Page<AdminDTO> findAllBySpecification(FilterForm filters, Integer page, Integer size);
+    Page<AdminDTO> findAllBySpecification(FilterForm filters, Integer page, Integer size) throws IllegalAccessException;
 
     Admin saveAdmin(Admin admin);
     Admin saveAdmin(AdminDTO dto);

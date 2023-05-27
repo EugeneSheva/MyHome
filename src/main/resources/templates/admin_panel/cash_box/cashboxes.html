@@ -18,8 +18,8 @@
     <link rel="stylesheet" th:href="@{/dist/css/adminlte.min.css}">
     <link rel="stylesheet" th:href="@{/plugins/overlayScrollbars/css/OverlayScrollbars.min.css}">
 
-    <link rel="stylesheet" href="../../plugins/select2/css/select2.min.css">
-    <link rel="stylesheet" href="../../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}">
+    <link rel="stylesheet" th:href="@{/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css}">
     <style>
 /*<!--        .select2-container .select2-selection&#45;&#45;single {-->*/
 /*<!--            height: 38px;-->*/
@@ -54,7 +54,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="/" th:text="#{homePage}"><i class="fa fa-home"></i>  Главная</a></li>
+                            <li class="breadcrumb-item"><a href="/"><i class="fa fa-home"></i>  <span th:text="#{homePage}"></span></a></li>
                             <li class="breadcrumb-item active" th:text="#{cashBox}">Касса</li>
                         </ol>
                     </div><!-- /.col -->
@@ -254,7 +254,8 @@
 <script th:src="@{/plugins/bs-stepper/js/bs-stepper.min.js}"></script>
 <script th:src="@{/dist/js/adminlte.min.js}"></script>
 <script th:src="@{https://kit.fontawesome.com/41663a8b50.js}" crossorigin="anonymous"></script>
-<script src="../../plugins/select2/js/select2.full.min.js"></script>
+<script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
 

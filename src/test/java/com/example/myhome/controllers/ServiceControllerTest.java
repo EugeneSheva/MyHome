@@ -126,10 +126,6 @@ public class ServiceControllerTest {
     @Test
     void saveServices_WithIncorrectParameters_Test() throws Exception {
         this.mockMvc.perform(post("/admin/services")
-                        .param("new_service_names", new String[]{""})
-                        .param("new_service_unit_names",new String[]{""})
-                        .param("new_service_show_in_meters", new String[]{""})
-                        .param("new_unit_names", new String[]{""})
                         .with(csrf())
                         .flashAttr("auth_admin",testUser)
                         .flashAttr("serviceForm", new ServiceForm()))

@@ -192,24 +192,24 @@
 <script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
 
 <script th:inline="javascript">
-    var choise = [[#{choise}]];
+    var placeholderText = [[#{select.placeholder}]];
     $(function () {
         //Initialize Select2 Elements
-        $('#incomeExpenseItem, #account_select').select2({placeholder: choise, minimumResultsForSearch: Infinity});
+        $('#incomeExpenseItem, #account_select').select2({placeholder: placeholderText, minimumResultsForSearch: Infinity});
 
         $('#admin').select2({
-            placeholder: choise,
+            placeholder: placeholderText,
             minimumResultsForSearch:Infinity,
-<!--            ajax: {-->
-<!--                url: '/admin/admins/get-managers',-->
-<!--                data: function(params) {-->
-<!--                    console.log(params.page);-->
-<!--                    return {-->
-<!--                        search: params.term || "",-->
-<!--                        page: params.page || 1-->
-<!--                    }-->
-<!--                }-->
-<!--            }-->
+            ajax: {
+                url: '/myhome/admin/admins/get-managers',
+                data: function(params) {
+                    console.log(params.page);
+                    return {
+                        search: params.term || "",
+                        page: params.page || 1
+                    }
+                }
+            }
         });
 
         let $owner_select = $("#owner_select");
@@ -226,7 +226,7 @@
                 },
 
             },
-            placeholder: choise
+            placeholder: placeholderText
         });
 
         let urlParams = new URL(window.location.href).searchParams;

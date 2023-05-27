@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface IncomeExpenseRepository extends JpaRepository<IncomeExpenseItems, Long> {
     boolean existsByName(String name);
-    boolean existsByIncomeExpenseType(String type);
+    boolean existsByIncomeExpenseType(IncomeExpenseType type);
 
     List<IncomeExpenseItems> findAllByOrderByIncomeExpenseTypeAsc();
     List<IncomeExpenseItems> findAllByOrderByIncomeExpenseTypeDesc();

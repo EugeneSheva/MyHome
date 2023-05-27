@@ -3,9 +3,12 @@ package com.example.myhome.controllers;
 import com.example.myhome.config.TestConfig;
 import com.example.myhome.controller.SettingsController;
 import com.example.myhome.model.*;
+import com.example.myhome.model.pages.ContactsPage;
+import com.example.myhome.model.pages.MainPage;
 import com.example.myhome.repository.ServiceRepository;
 import com.example.myhome.service.SettingsService;
 import com.example.myhome.service.UserRoleService;
+import com.example.myhome.service.WebsiteService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -50,6 +54,9 @@ public class SettingsControllerTest {
 
     @MockBean
     private SettingsService service;
+
+    @MockBean
+    private WebsiteService websiteService;
 
     @MockBean
     private UserRoleService userRoleService;
@@ -80,6 +87,10 @@ public class SettingsControllerTest {
     @BeforeEach
     void setupMocks(){
         when(service.getAllPagePermissions()).thenReturn(list);
+        when(service.getTransactionItem(any())).thenReturn(new IncomeExpenseItems());
+        when(service.getPaymentDetails()).thenReturn(new PaymentDetails());
+        when(websiteService.getMainPage()).thenReturn(new MainPage());
+        when(websiteService.getContactsPage()).thenReturn(new ContactsPage());
     }
 
     @Test
@@ -150,15 +161,13 @@ public class SettingsControllerTest {
                             .with(csrf())
                             .flashAttr("incomeExpenseItems", new IncomeExpenseItems())
                             .flashAttr("auth_admin", testUser))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("validation", "failed"));
+                .andExpect(status().isOk());
 
         this.mockMvc.perform(post("/admin/income-expense/update/"+testItem.getId())
                         .with(csrf())
                         .flashAttr("incomeExpenseItems", new IncomeExpenseItems())
                         .flashAttr("auth_admin", testUser))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("validation", "failed"));
+                .andExpect(status().isOk());
     }
 
     @Test

@@ -90,10 +90,13 @@ public class InvoiceDTOMapper {
                     .build());
 
             Building building = invoice.getApartment().getBuilding();
-            if(building != null) dto.setBuilding(BuildingDTO.builder()
-                    .id(building.getId())
-                    .name(building.getName())
-                    .build());
+            if(building != null) {
+                dto.setBuilding(BuildingDTO.builder()
+                        .id(building.getId())
+                        .name(building.getName())
+                        .build());
+                dto.getApartment().setBuilding(dto.getBuilding());
+            }
         }
 
 

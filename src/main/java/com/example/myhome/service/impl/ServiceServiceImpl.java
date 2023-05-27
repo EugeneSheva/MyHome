@@ -67,7 +67,7 @@ public class ServiceServiceImpl implements ServiceService {
 
         log.info(serviceList.toString());
 
-        for (int i = 0; i < new_service_names.length-1; i++) {
+        for (int i = 0; i < new_service_names.length; i++) {
             if(new_service_names[i].equalsIgnoreCase("") || new_service_names[i] == null) continue;
             Service service = new Service();
             service.setName(new_service_names[i]);

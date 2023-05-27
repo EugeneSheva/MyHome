@@ -102,7 +102,7 @@ public class AdminControllerTest {
 
         testMap = new HashMap<>();
         Map<String, Boolean> pagination = new HashMap<>();
-        pagination.put("more", false);
+        pagination.put("more", true);
         testMap.put("results", adminService.findAllMasters("search", 1));
         testMap.put("pagination", pagination);
 

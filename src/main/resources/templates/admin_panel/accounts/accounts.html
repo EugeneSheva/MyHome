@@ -109,6 +109,7 @@
           <div class="col-md-12">
             <div class="box" style="padding:0;">
               <div class="box-header with-border">
+                <span style="margin: 0;font-size: 20px;font-weight: bold;color: red;" th:if="${fail}" th:text="${fail}"></span>
                 <h3 class="box-title"></h3>
                 <div class="box-tools" style="top:45px">
                   <a href="#" onclick="reset()" class="btn btn-default btn-sm">
@@ -281,6 +282,55 @@
                 },
             },
             placeholder: placeholderText
+        });
+
+        $('#building').on('change', function() {
+            var buildingName = $(this).val();
+            if (buildingName == null || buildingName == ('-')) {
+            $('#section').empty();
+            $('#floor').empty();
+            } else {
+                // Запрос на сервер для получения списка элементов для секций
+                $.ajax({
+                    url: '/myhome/admin/apartments/getSections',
+                    data: {buildingName: buildingName},
+                    success: function (data) {
+                        console.log('success ' + data)
+                        // Очистка второго селектора
+                        $('#section').empty();
+                        // Добавление первой пустой опции
+                        $('#section').prepend($('<option>', {
+                            value: '',
+                            text: placeholderText
+                        }));
+                        // Добавление новых опций второго селектора на основе полученных данных
+                        $.each(data, function (index, item) {
+                            var option = $('<option>').val(item).text(item);
+                            $('#section').append(option);
+                        });
+                        $('#section').trigger('change');
+                    }
+                });
+                // Запрос на сервер для получения списка элементов для этажей
+                $.ajax({
+                    url: '/myhome/admin/apartments/getFloors',
+                    data: {buildingName: buildingName},
+                    success: function (data) {
+                        console.log('success ' + data)
+                        $('#floor').empty();
+                        $('#floor').prepend($('<option>', {
+                            value: '',
+                            text: placeholderText
+                        }));
+                        $.each(data, function (index, item) {
+                            var option = $('<option>').val(item).text(item);
+                            $('#floor').append(option);
+                        });
+                        // Обновление Select2 для второго селектора
+                        $('#floor').trigger('change');
+                    }
+                });
+            }
         });
     });
 </script>

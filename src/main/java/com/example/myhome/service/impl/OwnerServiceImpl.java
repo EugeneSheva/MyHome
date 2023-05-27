@@ -18,6 +18,7 @@ import com.example.myhome.model.Owner;
 import com.example.myhome.util.FileUploadUtil;
 import com.example.myhome.util.UserStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Log
 public class OwnerServiceImpl implements OwnerService {
 
     @Value("${upload.path}")
@@ -104,13 +106,7 @@ public class OwnerServiceImpl implements OwnerService {
         Pageable pageable = PageRequest.of(page_number, 10);
         return ownerRepository.findByName(name, pageable)
                 .stream()
-                .map(owner -> new OwnerDTO(
-                            owner.getId(),
-                            owner.getFirst_name(),
-                            owner.getLast_name(),
-                            owner.getFathers_name()
-                        )
-                )
+                .map(ownerDTOMapper::fromOwnerToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -231,10 +227,12 @@ public class OwnerServiceImpl implements OwnerService {
     public Owner save(Owner owner) { return ownerRepository.save(owner); }
 
     @Override
-    public void deleteById(Long id) { ownerRepository.deleteById(id); }
+    public void deleteById(Long id) {
+        ownerRepository.deleteById(id);
+    }
 
     @Override
-    public Long getQuantity() { return ownerRepository.countAllBy();}
+    public Long getQuantity() { return ownerRepository.count();}
 
     @Override
     public List<Long> getOwnerApartmentAccountsIds(Long id) {
@@ -251,8 +249,8 @@ public class OwnerServiceImpl implements OwnerService {
 // file1
         if(file1.getSize() > 0) {
             String FileNameUuid = UUID.randomUUID() + "-" + file1.getOriginalFilename();
-            fileUploadUtil.saveFile(localPath, FileNameUuid, file1);
-            fileName = (localPath + FileNameUuid);
+            fileUploadUtil.saveFile(uploadPath, FileNameUuid, file1);
+            fileName = (FileNameUuid);
             if(oldOwner.getProfile_picture() != null) {
             Files.deleteIfExists(Paths.get(uploadPath + oldOwner.getProfile_picture()));
 

@@ -20,7 +20,7 @@ public class AdminSpecifications {
         if(role == null) return (root, query, criteriaBuilder) -> null;
         return (root, query, cb) -> {
             Join<Admin, UserRole> adminRoleJoin = root.join("role", JoinType.INNER);
-            return    cb.like(adminRoleJoin.get("name"), role);
+            return cb.like(adminRoleJoin.get("name"), role);
         };
     }
 

@@ -4,6 +4,8 @@ import com.example.myhome.dto.OwnerDTO;
 import com.example.myhome.model.Owner;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
+
 @Component
 public class OwnerDTOMapper {
 
@@ -35,6 +37,8 @@ public class OwnerDTOMapper {
             dto.setPhone_number(owner.getPhone_number());
             dto.setEmail(owner.getEmail());
             dto.setStatus(status);
+            dto.setText(dto.getFullName() + "(ID:" + dto.getId() + ")");
+            dto.setDate(owner.getAdded_at().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         }
 
         return dto;

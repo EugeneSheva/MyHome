@@ -2,6 +2,7 @@ package com.example.myhome.model.pages;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -21,6 +22,7 @@ public class ContactsPage extends Page {
 
     //Карта
     @NotBlank(message = "Необходимо заполнить поле")
+    @Column(columnDefinition = "TEXT", name = "map_code")
     private String map_code;
 
 }

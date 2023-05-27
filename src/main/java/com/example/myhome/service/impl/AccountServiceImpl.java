@@ -174,7 +174,7 @@ public class AccountServiceImpl implements AccountService {
     public boolean apartmentHasAccount(long apartment_id) {
         return (apartmentRepository.findById(apartment_id).orElseThrow().getAccount() != null);
     }
-    public Long getQuantity() { return accountRepository.countAllBy();}
+    public Long getQuantity() { return accountRepository.count();}
     public Double getSumOfAccountBalances() {
         return accountRepository.findAll().stream()
                 .map(ApartmentAccount::getAccountBalance)

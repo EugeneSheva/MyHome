@@ -44,9 +44,8 @@
                         <h1 class="m-0" th:text="#{newMessage}"></h1>
                     </div>
                     <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a th:href="@{/}"><i class="fa fa-home"
-                                                                             th:text="#{homePage}"></i></a></li>
+                        <ol class="breadcrumb float-sm-right" style="font-size: 13px">
+                            <li class="breadcrumb-item"><a th:href="@{/}"><i class="fa fa-home"></i> <span th:text="#{homePage}"></span></a></li>
                             <li class="breadcrumb-item"><a th:href="@{/admin/messages/}"
                                                            th:text="#{messages}">Сообщения</a></li>
                             <li class="breadcrumb-item active"

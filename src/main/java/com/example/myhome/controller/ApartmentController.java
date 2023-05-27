@@ -16,7 +16,10 @@ import com.example.myhome.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -37,6 +41,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
+@Log
 @RequestMapping("/admin/apartments")
 public class ApartmentController {
 
@@ -62,6 +67,8 @@ public class ApartmentController {
 
     private final AccountDTOMapper accountDTOMapper;
     private final ApartmentDTOMapper apartmentDTOMapper;
+
+    private final MessageSource messageSource;
 
 
     @GetMapping
@@ -137,7 +144,7 @@ public class ApartmentController {
         if (bindingResult.hasErrors()) {
             return "admin_panel/apartments/apartment_edit";
         } else {
-            apartment.setBalance(apartment.getAccount().getBalance());
+            apartment.setBalance((apartment.getAccount() != null) ? apartment.getAccount().getBalance() : 0);
             apartmentService.save(apartment);
             return "redirect:/admin/apartments/";
         }
@@ -180,8 +187,13 @@ public class ApartmentController {
     }
 
     @GetMapping("/delete/{id}")
-    public String dellete(@PathVariable("id") Long id) {
-        apartmentService.deleteById(id);
+    public String dellete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            apartmentService.deleteById(id);
+        } catch (Exception e) {
+            log.severe("Apartment deletion error");
+            redirectAttributes.addFlashAttribute("fail",messageSource.getMessage("apartment.delete.error", null, LocaleContextHolder.getLocale()));
+        }
         return "redirect:/admin/apartments/";
     }
 

@@ -83,7 +83,7 @@
                                       <span class="input-group-btn">
                                         <button type="button"
                                                 class="btn btn-default form-row-remove-btn"
-                                                th:attr="data-url='/admin/services/delete/' + *{serviceList[__${iter.index}__].id}"
+                                                th:attr="data-url='/myhome/admin/services/delete/' + *{serviceList[__${iter.index}__].id}"
                                                 onclick="if(confirm('Удалить услугу?')) window.location.href=this.dataset.url"
                                                 no-delete-msg="Эта услуга используется в квитанциях. Удаление невозможно.">
                                           <i class="fa fa-trash"></i>
@@ -158,7 +158,7 @@
                                       <span class="input-group-btn">
                                         <button type="button"
                                                 class="btn btn-default form-row-remove-btn"
-                                                th:attr="data-url='/admin/services/delete-unit/' + *{unitList[__${iter.index}__].id}"
+                                                th:attr="data-url='/myhome/admin/services/delete-unit/' + *{unitList[__${iter.index}__].id}"
                                                 onclick="if(confirm('удалить?')) window.location.href=this.dataset.url"
                                                 no-delete-msg="Эта ед.изм. используется в услуге. Удаление невозможно."><i class="fa fa-trash"></i></button>
                                       </span>

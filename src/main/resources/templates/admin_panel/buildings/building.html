@@ -30,7 +30,7 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a th:href="@{/}"><i class="fa fa-home" th:text="#{homePage}"></i></a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/}"><i class="fa fa-home"></i> <span th:text="#{homePage}"></span></a></li>
                             <li class="breadcrumb-item"><a th:href="@{/admin/buildings/}" th:text="#{buildings}"></a></li>
                             <li class="breadcrumb-item active" th:text="#{building}+' '+${building.name}"></li>
                         </ol>
@@ -94,22 +94,17 @@
                             <div class="post">
                                 <div class="row mb-3">
                                     <div class="col-sm-6">
-                                        <img class="img-fluid" th:src="${building.img1 != null && !building.img1.isEmpty()} ?
-                                   @{${building.img1}} :  @{/images/placeholder.jpg}" alt="Photo">
+                                        <img class="img-fluid" th:src="${building.img1 != null && !building.img1.isEmpty()} ?@{/images/{url}(url=${building.img1})} :  @{/images/placeholder.jpg}" alt="Photo">
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <img class="img-fluid mb-3" th:src="${building.img2 != null && !building.img2.isEmpty()} ?
-                                   @{${building.img2}} :  @{/images/placeholder.jpg}" alt="Photo">
-                                                <img class="img-fluid" th:src="${building.img3 != null && !building.img3.isEmpty()} ?
-                                   @{${building.img3}} :  @{/images/placeholder.jpg}" alt="Photo">
+                                                <img class="img-fluid mb-3" th:src="${building.img2 != null && !building.img2.isEmpty()} ? @{/images/{url}(url=${building.img2})} :  @{/images/placeholder.jpg}" alt="Photo">
+                                                <img class="img-fluid" th:src="${building.img3 != null && !building.img3.isEmpty()} ? @{/images/{url}(url=${building.img3})} :  @{/images/placeholder.jpg}" alt="Photo">
                                             </div>
                                             <div class="col-sm-6">
-                                                <img class="img-fluid mb-3" th:src="${building.img4 != null && !building.img4.isEmpty()} ?
-                                   @{${building.img4}} :  @{/images/placeholder.jpg}" alt="Photo">
-                                                <img class="img-fluid" th:src="${building.img5 != null && !building.img5.isEmpty()} ?
-                                   @{${building.img5}} :  @{/images/placeholder.jpg}" alt="Photo">
+                                                <img class="img-fluid mb-3" th:src="${building.img4 != null && !building.img4.isEmpty()} ? @{/images/{url}(url=${building.img4})} :  @{/images/placeholder.jpg}" alt="Photo">
+                                                <img class="img-fluid" th:src="${building.img5 != null && !building.img5.isEmpty()} ? @{/images/{url}(url=${building.img5})} :  @{/images/placeholder.jpg}" alt="Photo">
                                             </div>
                                         </div>
                                     </div>

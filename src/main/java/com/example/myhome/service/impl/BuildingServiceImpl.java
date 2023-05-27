@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 public class BuildingServiceImpl implements BuildingService {
     @Value("${upload.path}")
     private String uploadPath;
-    private String localPath = "/img/buildings/";
     private final BuildingRepository buildingRepository;
     private final FileUploadUtil fileUploadUtil;
 
@@ -128,7 +127,7 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Override
     public Long getQuantity() {
-        return buildingRepository.countAllBy();
+        return buildingRepository.count();
     }
 
     @Override
@@ -142,8 +141,8 @@ public class BuildingServiceImpl implements BuildingService {
 // file1
         if (file1.getSize() > 0) {
             String FileNameUuid = UUID.randomUUID() + "-" + file1.getOriginalFilename();
-            fileUploadUtil.saveFile(localPath, FileNameUuid, file1);
-            newBuilding.setImg1(localPath + FileNameUuid);
+            fileUploadUtil.saveFile(uploadPath, FileNameUuid, file1);
+            newBuilding.setImg1(FileNameUuid);
             if (oldBuilding.getImg1() != null) {
                 Files.deleteIfExists(Paths.get(uploadPath + oldBuilding.getImg1()));
             }
@@ -153,8 +152,8 @@ public class BuildingServiceImpl implements BuildingService {
 // file2
         if (file2.getSize() > 0) {
             String FileNameUuid = UUID.randomUUID() + "-" + file2.getOriginalFilename();
-            fileUploadUtil.saveFile(localPath, FileNameUuid, file2);
-            newBuilding.setImg2(localPath + FileNameUuid);
+            fileUploadUtil.saveFile(uploadPath, FileNameUuid, file2);
+            newBuilding.setImg2(FileNameUuid);
             if (oldBuilding.getImg2() != null) {
                 Files.deleteIfExists(Paths.get(uploadPath + oldBuilding.getImg2()));
             }
@@ -164,8 +163,8 @@ public class BuildingServiceImpl implements BuildingService {
 // file3
         if (file3.getSize() > 0) {
             String FileNameUuid = UUID.randomUUID() + "-" + file3.getOriginalFilename();
-            fileUploadUtil.saveFile(localPath, FileNameUuid, file3);
-            newBuilding.setImg3(localPath + FileNameUuid);
+            fileUploadUtil.saveFile(uploadPath, FileNameUuid, file3);
+            newBuilding.setImg3(FileNameUuid);
             if (oldBuilding.getImg3() != null) {
                 Files.deleteIfExists(Paths.get(uploadPath + oldBuilding.getImg3()));
             }
@@ -175,8 +174,8 @@ public class BuildingServiceImpl implements BuildingService {
 // file4
         if (file4.getSize() > 0) {
             String FileNameUuid = UUID.randomUUID() + "-" + file4.getOriginalFilename();
-            fileUploadUtil.saveFile(localPath, FileNameUuid, file4);
-            newBuilding.setImg4(localPath + FileNameUuid);
+            fileUploadUtil.saveFile(uploadPath, FileNameUuid, file4);
+            newBuilding.setImg4(FileNameUuid);
             if (oldBuilding.getImg4() != null) {
                 Files.deleteIfExists(Paths.get(uploadPath + oldBuilding.getImg4()));
             }
@@ -186,8 +185,8 @@ public class BuildingServiceImpl implements BuildingService {
 // file5
         if (file5.getSize() > 0) {
             String FileNameUuid = UUID.randomUUID() + "-" + file5.getOriginalFilename();
-            fileUploadUtil.saveFile(localPath, FileNameUuid, file5);
-            newBuilding.setImg5(localPath + FileNameUuid);
+            fileUploadUtil.saveFile(uploadPath, FileNameUuid, file5);
+            newBuilding.setImg5(FileNameUuid);
             if (oldBuilding.getImg5() != null) {
                 Files.deleteIfExists(Paths.get(uploadPath + oldBuilding.getImg5()));
             }

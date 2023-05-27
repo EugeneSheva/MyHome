@@ -309,11 +309,13 @@ class MeterDataServiceTest {
 
     @Test
     void canSaveMeterDataTest() {
+        when(repository.save(any(MeterData.class))).thenReturn(meterData);
         assertThat(service.saveMeterData(new MeterData())).isInstanceOf(MeterData.class);
     }
 
     @Test
     void canSaveMeterDataFromDTOTest() {
+        when(repository.save(any(MeterData.class))).thenReturn(meterData);
         MeterDataDTO dto = mapper.fromMeterToDTO(meterData);
         dto.setStatus(meterData.getStatus().name());
         when(apartmentRepository.getReferenceById(anyLong())).thenReturn(new Apartment());

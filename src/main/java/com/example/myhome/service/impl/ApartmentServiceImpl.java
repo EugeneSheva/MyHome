@@ -11,6 +11,7 @@ import com.example.myhome.service.BuildingService;
 import com.example.myhome.util.FileUploadUtil;
 import com.example.myhome.util.MappingUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,10 +24,10 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Log
 public class ApartmentServiceImpl implements ApartmentService {
     @Value("${upload.path}")
     private String uploadPath;
-    private String localPath = "/img/apartment/";
     private final ApartmentRepository apartmentRepository;
     private final FileUploadUtil fileUploadUtil;
     private final BuildingService buildingService;
@@ -124,7 +125,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     public Long getQuantity() {
-        return apartmentRepository.countAllBy();
+        return apartmentRepository.count();
     }
 
     public Page<ApartmentDTO> findBySpecificationAndPage(Integer page, Integer size, FilterForm filters) {

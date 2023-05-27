@@ -136,7 +136,7 @@ public class WebsiteControllerTest {
     @Test
     @Transactional
     void showAboutPageEditTest() throws Exception {
-        this.mockMvc.perform(get("/admin/website/about").flashAttr("auth_admin", testUser)).andExpect(status().isOk());
+        this.mockMvc.perform(get("/admin/website/about").flashAttr("aboutPage", testAboutPage).flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test
@@ -161,7 +161,8 @@ public class WebsiteControllerTest {
 
     @Test
     void showServicesPageEditTest() throws Exception {
-        this.mockMvc.perform(get("/admin/website/services").flashAttr("auth_admin", testUser)).andExpect(status().isOk());
+        this.mockMvc.perform(get("/admin/website/services")
+                .flashAttr("servicesPage", testServicesPage).flashAttr("auth_admin", testUser)).andExpect(status().isOk());
     }
 
     @Test

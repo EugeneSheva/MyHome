@@ -1,37 +1,36 @@
 version: '3.3'
 services:
 
-  db:
+  db_mysql:
+    container_name: db_mysql
     image: mysql
-    volumes:
-      - /opt/test:/var/lib/mysql
-      - ./mysql-dump:/docker-entrypoint-initdb.d
-    environment:
-      MYSQL_ROOT_PASSWORD: OUlIg40qOZ
-      MYSQL_DATABASE: myhome_prod
-      MYSQL_USER: avada_kino
-      MYSQL_PASSWORD: OUlIg40qOZ
     ports:
-      - "3308:3306"
-
+      - "5000:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: myhome2
+      MYSQL_PASSWORD: root
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 5s
+      retries: 5
   phpmyadmin:
     depends_on:
-      - db
+        db_mysql:
+          condition: service_healthy
     image: phpmyadmin/phpmyadmin
     ports:
-      - '8888:80'
+      - '9001:80'
     environment:
-      PMA_HOST: db
+      PMA_HOST: db_mysql
+  web:
+      build: .
+      ports:
+        - '9002:8080'
+      environment:
+        SPRING_DATASOURCE_URL: jdbc:mysql://db_mysql:3306/myhome2?createDatabaseIfNotExist=true
+      depends_on:
+          db_mysql:
+            condition: service_healthy
 
-  vilkipalki:
-    depends_on:
-      - db
-    image: temporalparadox/vilkipalki
-#    volumes:
-#      - ./target/vilkipalki.war:/usr/local/tomcat/webapps/vilkipalki.war
-    ports:
-      - '8082:8080'
-    environment:
-      MYSQL_DATABASE: avada_kino
-      MYSQL_USER: avada_kino
-      MYSQL_PASSWORD: OUlIg40qOZ
+

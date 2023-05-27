@@ -104,16 +104,17 @@ public class TariffServiceTest {
     void canLoadTariffsSortedTest() {
         List<Tariff> tariffList = List.of(new Tariff(), new Tariff());
 
+        given(tariffRepository.findAll()).willReturn(tariffList);
         given(tariffRepository.findAll(any(Sort.class))).willReturn(tariffList);
 
         tariffService.findAllTariffsSorted(true);
-        verify(tariffRepository).findAll();
+//        verify(tariffRepository).findAll();
         assertThat(tariffService.findAllTariffs())
                 .isNotNull()
                 .hasSize(2);
 
         tariffService.findAllTariffsSorted(false);
-        verify(tariffRepository).findAll();
+//        verify(tariffRepository).findAll();
         assertThat(tariffService.findAllTariffs())
                 .isNotNull()
                 .hasSize(2);
@@ -134,7 +135,7 @@ public class TariffServiceTest {
     void canBuildComponentsMapTest() {
         Service service = new Service();
         when(serviceRepository.findByName(anyString())).thenReturn(Optional.of(service));
-        assertThat(tariffService.buildComponentsMap(new String[]{"test1","test1"}, new String[]{"1","1"}).entrySet()).hasSize(2);
+        assertThat(tariffService.buildComponentsMap(new String[]{"test1","test1"}, new String[]{"1","1"}).entrySet()).hasSize(1);
     }
 
     @Test

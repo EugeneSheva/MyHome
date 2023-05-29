@@ -86,7 +86,7 @@
                             </tr>
                             <tr>
                                 <td><b th:text="#{owner}">Владелец</b></td>
-                                <td th:text="${apartment.owner.first_name}+ ' '+${apartment.owner.last_name}+' '+${apartment.owner.fathers_name}">?</td>
+                                <td th:text="${apartment.owner.fullName}">?</td>
                             </tr>
                             <tr>
                                 <td><b th:text="#{tariff}">Тариф</b></td>

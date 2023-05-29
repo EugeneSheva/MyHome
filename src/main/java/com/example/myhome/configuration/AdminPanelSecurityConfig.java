@@ -44,12 +44,6 @@ public class AdminPanelSecurityConfig {
         tokenRepository.setDataSource(dataSource);
         return tokenRepository;
     }
-
-    @Bean
-    public PersistentTokenBasedRememberMeServices rememberMeServicesAdmin() {
-        return new PersistentTokenBasedRememberMeServices("secretKey", adminDetailsService, persistentTokenRepository());
-    }
-
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return new CustomAccessDeniedHandler();
@@ -108,7 +102,7 @@ public class AdminPanelSecurityConfig {
                         .deleteCookies("JSESSIONID")
                 .and()
                 .rememberMe()
-                    .rememberMeServices(rememberMeServicesAdmin())
+                    .key("secretKey")
                     .tokenValiditySeconds(600);
 
         return http.build();

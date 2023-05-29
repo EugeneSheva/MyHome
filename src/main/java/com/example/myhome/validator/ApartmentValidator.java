@@ -1,5 +1,6 @@
 package com.example.myhome.validator;
 
+import com.example.myhome.dto.ApartmentDTO;
 import com.example.myhome.model.Apartment;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -10,12 +11,12 @@ public class ApartmentValidator implements Validator {
 
 
         public boolean supports(Class clazz) {
-            return Apartment.class.equals(clazz);
+            return ApartmentDTO.class.equals(clazz);
         }
 
     @Override
     public void validate(Object obj, Errors e) {
-        Apartment apartment = (Apartment) obj;
+        ApartmentDTO apartment = (ApartmentDTO) obj;
         if (apartment.getNumber() == null) {
             e.rejectValue("number", "number.empty", "Заполните поле");
         }

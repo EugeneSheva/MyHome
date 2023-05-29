@@ -1,5 +1,6 @@
 package com.example.myhome.service;
 
+import com.example.myhome.controller.ApartmentController;
 import com.example.myhome.dto.BuildingDTO;
 import com.example.myhome.model.Apartment;
 import com.example.myhome.model.Building;
@@ -53,4 +54,6 @@ public interface BuildingService {
     List<BuildingDTO> convertBuildingToBuildingDTO(List<Building> buildingList);
 
     BuildingDTO convertBuildingToBuildingDTO(Building building);
+
+    Building findByName(String buildingName);
 }

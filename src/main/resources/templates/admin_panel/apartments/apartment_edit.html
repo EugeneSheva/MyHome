@@ -75,19 +75,18 @@
                                 <div style="color: #d80450" th:if="${#fields.hasErrors('square')}" th:errors="*{square}"></div>
 
                                 <label for="building"  class="form-label" th:text="#{building}">Дом</label>
-                                <select class="form-select" id="building" name="building" th:onchange="selectBuilding()">
-                                    <option selected="" disabled="" value="" th:text="#{choise}">Choose...</option>
-                                    <option  th:each="building : ${buildings}"
+                                <select class="form-select" id="building" th:field="*{building.id}" th:onchange="selectBuilding()">
+                                    <option value="" th:text="#{choise}">Choose...</option>
+                                    <option th:each="building : ${buildings}"
                                     th:text="${building.name}"
                                     th:value="${building.id}"
-                                             th:selected="${#strings.containsIgnoreCase((building.name),((apartment.building != null) ? (apartment.building.name ): ('empty') ))}"
                                     ></option>
                                 </select>
                                 <div style="color: #d80450" th:if="${#fields.hasErrors('building')}" th:errors="*{building}"></div>
 
                                 <label for="section"   class="form-label" th:text="#{section}">Секция</label>
                                 <select class="form-select"  id="section" name="section">
-                                    <option selected="" disabled="" value="">Choose...</option>
+                                    <option value="">Choose...</option>
                                     <option  th:if="${apartment.building != null}"
                                              th:each="section : ${sections}"
                                              th:text="${section}"
@@ -98,8 +97,8 @@
                                 <div style="color: #d80450" th:if="${#fields.hasErrors('section')}" th:errors="*{section}"></div>
 
                                 <label for="floor"  class="form-label" th:text="#{floor}">Этаж</label>
-                                <select class="form-select"   id="floor" name="floor">
-                                    <option selected="" disabled="" value="">Choose...</option>
+                                <select class="form-select" th:field="*{floor}">
+                                    <option value="">Choose...</option>
                                     <option  th:if="${apartment.building != null}"
                                              th:each="floor : ${floors}"
                                              th:text="${floor}"
@@ -111,19 +110,14 @@
 
                                 <div class="form-group">
                                     <label th:text="#{owner}">Владелец</label>
-                                    <select class="form-control" id="owner" name="owner" style="width: 100%;">
+                                    <select class="form-control" id="owner" th:field="*{owner.id}" style="width: 100%;">
                                         <option selected="" disabled="" value="" th:text="#{choise}">Choose...</option>
-                                        <option  th:each="owner : ${owners}"
-                                                 th:text="${owner.first_name}+ ' '+${owner.last_name}+' '+${owner.fathers_name}"
-                                                 th:value="${owner.id}"
-                                                 th:selected="${owner.id == (apartment.owner != null ? apartment.owner.id:0)}"
-                                        ></option>
                                     </select>
                                     <div style="color: #d80450" th:if="${#fields.hasErrors('owner')}" th:errors="*{owner}"></div>
                                 </div>
                                 <label for="tariff" class="form-label" th:text="#{tariff}">Тариф</label>
                                 <select class="form-select" id="tariff" name="tariff">
-                                    <option selected="" disabled="" value="" th:text="#{choise}">Choose...</option>
+                                    <option value="" th:text="#{choise}">Choose...</option>
                                     <option  th:each="tariff: ${tariffs}"
                                              th:text="${tariff.name}"
                                              th:value="${tariff.id}"
@@ -134,10 +128,10 @@
                             <div class="col-md-6">
 
                                 <label for="account" class="form-label" th:text="#{apartmentAccount}">Лицевой счет</label>
-                                <input type="account" id="account" class="form-control" th:field="${apartment.account}" name="account"
+                                <input type="account" class="form-control"
                                        placeholder="">
-                                <select class="form-select" id="accounts" name="accounts">
-                                    <option selected="" disabled="" value="" th:text="#{choise}">Choose...</option>
+                                <select class="form-select" th:field="*{account}">
+                                    <option value=""  th:text="#{choise}">Choose...</option>
                                     <option  th:each="account: ${accounts}"
                                              th:text="${T(java.lang.String).format('%010d',account.id)}"
                                              th:value="${account.id}"
@@ -219,6 +213,9 @@
 
 <script th:inline="javascript">
     var placeholderText = [[#{select.placeholder}]];
+    var apartmentID = [[*{id}]];
+    console.log('APARTMENT ID ');
+    console.log(id);
     $(function () {
 
         $('#building, #section, #floor, #tariff').select2({placeholder:placeholderText,minimumResultsForSearch:Infinity});
@@ -237,7 +234,21 @@
             placeholder: placeholderText,
             minimumInputLength: 2
         });
-
+        if(apartmentID != null) {
+            $.ajax({
+                type: 'GET',
+                url: '/myhome/admin/owners/get-apartment-owner/' + apartmentID
+            }).then(function (data) {
+                var option = new Option(data.fullName, data.id, true, true);
+                $("#owner").append(option).trigger('change');
+                $("#owner").trigger({
+                    type: 'select2:select',
+                    params: {
+                        data: data
+                    }
+                });
+            });
+        }
     })
 
 </script>

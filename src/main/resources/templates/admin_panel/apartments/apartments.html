@@ -70,8 +70,8 @@
                     <div class="card-header" style="background-color: transparent;">
                         <span style="margin: 0;font-size: 20px;font-weight: bold;color: red;" th:if="${fail}" th:text="${fail}"></span>
                         <div class="form-group">
-                            <a href="#" onclick="resetAll()" class="btn btn-default btn-sm float-right"><h7 th:text="#{clear}"></h7>
-                                </span><i class="fa fa-eraser visible-xs"></i>
+                            <a href="#" onclick="reset()" class="btn btn-default btn-sm float-right"><h7 th:text="#{clear}"></h7>
+                                <i class="fa fa-eraser visible-xs"></i>
                             </a>
                         </div>
                     </div>
@@ -103,33 +103,19 @@
                                              ></th>
 
                                     <th style="border-bottom:none; "><select autocomplete="off" class="form-select my_filters" th:field="*{building}">
-                                        <option value="-"
-                                                ></option>
+                                        <option value=""></option>
                                         <option th:each="building : ${buildings}"
                                                 th:text="${building.name}"
-                                                th:value="${building.name}"
+                                                th:value="${building.id}"
                                                 ></option>
                                     </select></th>
 
                                     <th style="border-bottom:none"><select autocomplete="off" class="form-select my_filters" th:field="*{section}">
-                                        <option value="-"></option>
                                     </select></th>
-
                                     <th style="border-bottom:none"><select autocomplete="off" class="form-select my_filters" th:field="*{floor}">
-                                        <option value="-"></option>
-
 
                                     </select></th>
                                     <th style="border-bottom:none">
-<!--                                        <select class="form-control select2bs4" name="ownerId" style="width: 100%;">-->
-<!--                                            <option value="0" th:selected="${filterForm.ownerId == null}"></option>-->
-<!--                                            <option th:each="ownerId : ${owners}"-->
-<!--                                                    th:text="${ownerId.first_name}+ ' '+${ownerId.last_name}+' '+${ownerId.fathers_name}"-->
-<!--                                                    th:value="${ownerId.id}"-->
-<!--                                                    th:selected="${#strings.containsIgnoreCase((ownerId.id),((filterForm.ownerId != null) ? (filterForm.ownerId ): ('emp') ))}"-->
-<!--                                            ></option>-->
-<!--                                        </select>-->
-
                                         <select th:field="*{owner}" class="form-select my_filters">
                                             <option th:if="${filterForm.owner == null}" value="" selected="selected">Выберите пользователя</option>
                                             <option th:if="${filterForm.owner != null}" th:value="${filterForm.ownerEntity.id}" th:text="${filterForm.ownerEntity.getFullName()}"></option>
@@ -137,7 +123,7 @@
                                         </select>
                                     </th>
                                     <th style="border-bottom:none"><select class="form-select my_filters" id="debtSting" name="debtSting">
-                                        <option value="-"></option>
+                                        <option value=""></option>
                                         <option value="true"
                                                 th:selected="${#strings.containsIgnoreCase(('true'),((filterForm.debtSting != null) ? (filterForm.debtSting ): ('emp') ))}"
                                         th:text="#{debtS}">Есть долг
@@ -188,7 +174,7 @@
     var choise = [[#{choise}]];
     $(document).ready(function() {
 
-        $("#buildingName, #debtSting").select2({placeholder:choise, minimumResultsForSearch:Infinity});
+        $("#building, #debtSting").select2({placeholder:choise, minimumResultsForSearch:Infinity});
 
         $('#owner').select2({
             ajax: {
@@ -230,17 +216,18 @@
         });
 
         $('#building').on('change', function() {
-            var buildingName = $(this).val();
-            if (buildingName == null || buildingName == ('-')) {
+            var buildingID = this.value;
+            console.log(buildingID);
+            if (buildingID == null || buildingID == 0) {
             $('#section').empty();
             $('#floor').empty();
             } else {
                 // Запрос на сервер для получения списка элементов для секций
                 $.ajax({
-                    url: '/myhome/admin/apartments/getSections',
-                    data: {buildingName: buildingName},
+                    url: '/myhome/admin/buildings/get-sections/' + buildingID,
                     success: function (data) {
-                        console.log('success ' + data)
+                        console.log('success ' + data);
+                        console.log(data);
                         // Очистка второго селектора
                         $('#section').empty();
                         // Добавление первой пустой опции
@@ -258,8 +245,7 @@
                 });
                 // Запрос на сервер для получения списка элементов для этажей
                 $.ajax({
-                    url: '/myhome/admin/apartments/getFloors',
-                    data: {buildingName: buildingName},
+                    url: '/myhome/admin/buildings/get-sections/' + buildingID,
                     success: function (data) {
                         console.log('success ' + data)
                         $('#floor').empty();
@@ -308,7 +294,7 @@
 
     let tableData;
 
-    let totalPagesCount = [[${totalPagesCount}]];
+    let totalPagesCount = [[${totalPagesCount}]] 1;
 
     let globalTableName = 'apartments';
 

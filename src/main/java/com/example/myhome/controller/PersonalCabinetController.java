@@ -45,13 +45,8 @@ public class PersonalCabinetController {
 
     @Autowired
     private OwnerService ownerService;
-
     @Autowired
     private PersistentTokenRepository repository;
-
-    @Autowired
-    private PersistentTokenBasedRememberMeServices rememberMeServices;
-
     @Autowired
     private ApartmentService apartmentService;
     @Autowired

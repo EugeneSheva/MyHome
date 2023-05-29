@@ -2,9 +2,11 @@ package com.example.myhome.controller;
 
 import com.example.myhome.dto.BuildingDTO;
 import com.example.myhome.dto.OwnerDTO;
+import com.example.myhome.mapper.OwnerDTOMapper;
 import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.repository.OwnerRepository;
 import com.example.myhome.service.AccountService;
+import com.example.myhome.service.ApartmentService;
 import com.example.myhome.service.BuildingService;
 import com.example.myhome.model.Apartment;
 import com.example.myhome.model.Owner;
@@ -50,9 +52,10 @@ public class OwnerController {
     private String uploadPath;
     private final OwnerService ownerService;
     private final OwnerValidator ownerValidator;
-    private final OwnerRepository ownerRepository;
     private final BuildingService buildingService;
     private final AccountService accountService;
+    private final ApartmentService apartmentService;
+    private final OwnerDTOMapper mapper;
 
     private final MessageSource messageSource;
 
@@ -60,49 +63,32 @@ public class OwnerController {
     public String getOwners(Model model, @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC, size = 10) Pageable pageable) {
         List<BuildingDTO>buildingDTOList = buildingService.findAllDTO();
         model.addAttribute("buildings", buildingDTOList);
-        Page<Owner> ownerList = ownerService.findAll(pageable);
-        model.addAttribute("owners", ownerList);
-        model.addAttribute("totalPagesCount", ownerList.getTotalPages());
         model.addAttribute("filterForm", new FilterForm());
         return "admin_panel/owners/owners";
     }
-//    @PostMapping("/filter")
-//    public String filterApartments(Model model, @ModelAttribute FilterForm filterForm, @RequestParam(name = "id",required = false) Long id, @RequestParam(name = "ownerName",required = false) String ownerName,
-//                                   @RequestParam(name = "phonenumber",required = false) String phonenumber, @RequestParam(name = "email",required = false) String email,
-//                                   @RequestParam(name = "buildingName", required = false) String buildingName, @RequestParam(name = "apartment", required = false) Long apartment,
-//                                   @RequestParam(name = "localDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate localDate, @RequestParam(name = "status",required = false) String status,
-//                                   @RequestParam(name = "debtSting",required = false) String debt, @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC, size = 10) Pageable pageable) throws IOException {
-//        System.out.println(localDate);
-//        Page<Owner>ownerList = ownerRepository.findByFilters(id,ownerName,phonenumber, email, buildingName, apartment, localDate, ownerService.stringStatusConverter(status), ownerService.isHaveDebt(debt), pageable);
-//        System.out.println(ownerList);
-//        model.addAttribute("owners", ownerList);
-//        model.addAttribute("filterForm", filterForm);
-//        return "admin_panel/owners/owners";
-//
-//    }
 
     @GetMapping("/{id}")
     public String getOwner(@PathVariable("id") Long id, Model model) {
-        Owner owner = ownerService.findById(id);
+        OwnerDTO owner = ownerService.findByIdDTO(id);
         model.addAttribute("owner", owner);
         return "admin_panel/owners/owner";
     }
 
     @GetMapping("/new")
     public String createOwner(Model model) {
-        Owner owner = new Owner();
+        OwnerDTO owner = new OwnerDTO();
         model.addAttribute("owner", owner);
         return "admin_panel/owners/owner_edit";
     }
     @GetMapping("edit/{id}")
     public String editeOwner(@PathVariable("id") Long id, Model model) {
-        Owner owner = ownerService.findById(id);
+        OwnerDTO owner = ownerService.findByIdDTO(id);
         model.addAttribute("owner", owner);
         return "admin_panel/owners/owner_edit";
     }
 
     @PostMapping("/save")
-    public String saveCoffee(@Valid @ModelAttribute("owner") Owner owner, BindingResult bindingResult, @RequestParam("img1") MultipartFile file) throws IOException {
+    public String saveCoffee(@Valid @ModelAttribute("owner") OwnerDTO owner, BindingResult bindingResult, @RequestParam("img1") MultipartFile file) throws IOException {
         ownerValidator.validate(owner, bindingResult);
         if (bindingResult.hasErrors()) {
             return "admin_panel/owners/owner_edit";
@@ -114,7 +100,7 @@ public class OwnerController {
     }
 
     @GetMapping("/delete/{id}")
-    public String dellete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         Owner owner = ownerService.findById(id);
 //        try {
 //            Files.deleteIfExists(Path.of(uploadPath + owner.getProfile_picture()));
@@ -146,6 +132,12 @@ public class OwnerController {
         ApartmentAccount account = accountService.findAccountById(account_id);
         Owner owner = account.getApartment().getOwner();
         return owner.transformIntoDTO();
+    }
+
+    @GetMapping("/get-apartment-owner/{apartment_id}")
+    public @ResponseBody OwnerDTO getApartmentOwner(@PathVariable long apartment_id) {
+        Apartment apartment = apartmentService.findById(apartment_id);
+        return mapper.fromOwnerToDTO(apartment.getOwner());
     }
 
     @GetMapping("/get-owners")

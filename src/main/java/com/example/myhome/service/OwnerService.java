@@ -41,6 +41,7 @@ public interface OwnerService {
     Page<OwnerDTO> findByNameFragmentDTO(String name, Pageable pageable);
 
     Owner save(Owner owner);
+    Owner save(OwnerDTO dto);
 
     void deleteById(Long id);
 

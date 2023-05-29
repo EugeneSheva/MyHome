@@ -39,6 +39,7 @@ public class OwnerDTOMapper {
             dto.setStatus(status);
             dto.setText(dto.getFullName() + "(ID:" + dto.getId() + ")");
             dto.setDate(owner.getAdded_at().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+            dto.setBirthdate(owner.getBirthdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         }
 
         return dto;

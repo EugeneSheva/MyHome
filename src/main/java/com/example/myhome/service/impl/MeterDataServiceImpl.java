@@ -137,6 +137,11 @@ public class MeterDataServiceImpl implements MeterDataService {
     }
 
     @Override
+    public List<MeterData> findAllByApartmentId(Long id) {
+        return meterDataRepository.findAllByApartmentId(id);
+    }
+
+    @Override
     public Long getMaxId() {return meterDataRepository.getMaxId().orElse(0L);}
 
     @Override

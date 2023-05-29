@@ -210,4 +210,9 @@ public class BuildingServiceImpl implements BuildingService {
     public BuildingDTO convertBuildingToBuildingDTO(Building building) {
         return new BuildingDTO(building.getId(),building.getName(), building.getSections(),building.getAddress(), building.getFloors());
     }
+
+    @Override
+    public Building findByName(String buildingName) {
+        return buildingRepository.findByName(buildingName);
+    }
 }

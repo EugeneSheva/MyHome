@@ -11,4 +11,6 @@ public interface IncomeExpenseItemService {
     IncomeExpenseItems save(IncomeExpenseItems item);
     void deleteById(Long id);
 
+    List<IncomeExpenseItems> findAllIncomeItems();
+    List<IncomeExpenseItems> findAllExpenseItems();
 }

@@ -1,6 +1,8 @@
 package com.example.myhome.dto;
 
 
+import com.example.myhome.model.Tariff;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +24,7 @@ public class ApartmentDTO {
     private BuildingDTO building;
     private ApartmentAccountDTO account;
     private OwnerDTO owner;
+    @JsonIgnore private Tariff tariff;
     private Long accountNo;
 
     public ApartmentDTO(Long id, BuildingDTO building, String section, String floor, Long number, Long account, OwnerDTO owner, Double balance) {
@@ -71,19 +74,5 @@ public class ApartmentDTO {
         this.building = building;
         this.accountNo = account;
     }
-
-//    public ApartmentDTO(Long id, String section, String floor, Long number, Double balance, Double square, String fullName, BuildingDTO building, ApartmentAccountDTO account, OwnerDTO owner, Long accountNo) {
-//        this.id = id;
-//        this.section = section;
-//        this.floor = floor;
-//        this.number = number;
-//        this.balance = balance;
-//        this.square = square;
-//        this.fullName = fullName;
-//        this.building = building;
-//        this.account = account;
-//        this.owner = owner;
-//        this.accountNo = accountNo;
-//    }
 
 }

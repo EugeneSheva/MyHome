@@ -45,6 +45,9 @@ public class ApartmentServiceImpl implements ApartmentService {
     public Apartment save(Apartment apartment) {
         return apartmentRepository.save(apartment);
     }
+    public Apartment save(ApartmentDTO dto) {
+        return apartmentRepository.save(mapper.fromDTOToApartment(dto));
+    }
 
     public void deleteById(Long id) {
         apartmentRepository.deleteById(id);

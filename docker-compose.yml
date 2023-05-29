@@ -14,6 +14,8 @@ services:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       timeout: 5s
       retries: 5
+    volumes:
+      - mysql-data:/var/lib/mysql
   phpmyadmin:
     depends_on:
         db_mysql:
@@ -33,4 +35,6 @@ services:
           db_mysql:
             condition: service_healthy
 
+volumes:
+  mysql-data:
 

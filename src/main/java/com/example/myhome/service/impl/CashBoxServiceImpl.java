@@ -185,4 +185,14 @@ public Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page
         }
         return isCom;
     }
+
+    @Override
+    public List<CashBox> findAllByApartmentAccountId(Long id) {
+        return cashBoxRepository.findAllByApartmentAccountId(id);
+    }
+
+    @Override
+    public Double getSumAmount() {
+        return cashBoxRepository.sumAmount().orElse(0.0);
+    }
 }

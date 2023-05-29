@@ -198,15 +198,14 @@
         });
 
         $('#building').on('change', function() {
-            var buildingName = $(this).val();
-            if (buildingName == null || buildingName == ('-')) {
+            var buildingID = this.value;
+            if (buildingID == null || buildingID == 0) {
             $('#section').empty();
             $('#floor').empty();
             } else {
                 // Запрос на сервер для получения списка элементов для секций
                 $.ajax({
-                    url: '/myhome/admin/apartments/getSections',
-                    data: {buildingName: buildingName},
+                    url: '/myhome/admin/buildings/get-sections/'+buildingID,
                     success: function (data) {
                         console.log('success ' + data)
                         // Очистка второго селектора
@@ -226,8 +225,7 @@
                 });
                 // Запрос на сервер для получения списка элементов для этажей
                 $.ajax({
-                    url: '/myhome/admin/apartments/getFloors',
-                    data: {buildingName: buildingName},
+                    url: '/myhome/admin/buildings/get-floors/'+buildingID,
                     success: function (data) {
                         console.log('success ' + data)
                         $('#floor').empty();

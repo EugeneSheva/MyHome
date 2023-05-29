@@ -1,6 +1,7 @@
 package com.example.myhome.service.impl;
 import com.example.myhome.exception.NotFoundException;
 import com.example.myhome.model.IncomeExpenseItems;
+import com.example.myhome.model.IncomeExpenseType;
 import com.example.myhome.repository.IncomeExpenseRepository;
 import com.example.myhome.service.IncomeExpenseItemService;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +56,16 @@ public class IncomeExpenseItemServiceImpl implements IncomeExpenseItemService {
             log.severe("Something went wrong during deletion");
             log.severe(e.getMessage());
         }
+    }
+
+    @Override
+    public List<IncomeExpenseItems> findAllIncomeItems() {
+        return incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.INCOME);
+    }
+
+    @Override
+    public List<IncomeExpenseItems> findAllExpenseItems() {
+        return incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.EXPENSE);
     }
 
 

@@ -46,40 +46,31 @@ import java.util.stream.Collectors;
 @Log
 public class BuildingController {
 
-    @Autowired
-    private final BuildingValidator validator;
-
     @Value("${upload.path}")
     private String uploadPath;
+
     private final BuildingService buildingService;
-    private final BuildingRepository buildingRepository;
     private final AdminService adminService;
-
     private final BuildingValidator buildingValidator;
-
     private final BuildingDTOMapper mapper;
-
     private final MessageSource messageSource;
 
     @GetMapping
-    public String getBuildigs(Model model, @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC, size = 10) Pageable pageable) {
-        Page<Building> buildingList = buildingService.findAll(pageable);
-        model.addAttribute("buildings", buildingList);
-        model.addAttribute("totalPagesCount", buildingList.getTotalPages());
+    public String getBuildings(Model model, @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC, size = 10) Pageable pageable) {
         FilterForm filterForm = new FilterForm();
         model.addAttribute("filterForm", filterForm);
         return "admin_panel/buildings/buildings";
     }
 
     @GetMapping("/{id}")
-    public String getBuildig(@PathVariable("id") Long id, Model model) {
-        Building building = buildingService.findById(id);
+    public String getBuilding(@PathVariable("id") Long id, Model model) {
+        BuildingDTO building = buildingService.findBuildingDTObyId(id);
         model.addAttribute("building", building);
         return "admin_panel/buildings/building";
     }
 
     @GetMapping("/new")
-    public String createBuildig(Model model) {
+    public String createBuilding(Model model) {
         Building building = new Building();
         model.addAttribute("building", building);
         List<AdminDTO>adminList=adminService.findAllDTO();
@@ -117,20 +108,6 @@ public class BuildingController {
             }
     }
 
-    @PostMapping("/filter")
-    public String filterBuildig(Model model, @RequestParam("name") String name, @RequestParam("address") String address, @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC, size = 10) Pageable pageable) throws IOException {
-        System.out.println("name "+name);
-        System.out.println("address "+address);
-        Page<Building> buildingList = buildingRepository.findByFilters(name,address,pageable);
-        System.out.println(buildingList);
-        FilterForm filterForm = new FilterForm();
-        filterForm.setName(name);
-        filterForm.setAddress(address);
-        model.addAttribute("filterForm", filterForm);
-        model.addAttribute("buildings", buildingList);
-            return "admin_panel/buildings/buildings";
-    }
-
     @GetMapping("/delete/{id}")
     public String dellete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         Building building = buildingService.findById(id);
@@ -158,6 +135,11 @@ public class BuildingController {
     @GetMapping("/get-sections/{id}")
     public @ResponseBody List<String> getBuildingSections(@PathVariable long id) {
         return buildingService.findById(id).getSections();
+    }
+
+    @GetMapping("/get-floors/{id}")
+    public @ResponseBody List<String> getBuildingFloors(@PathVariable long id) {
+        return buildingService.findById(id).getFloors();
     }
 
     @GetMapping("/get-section-apartments")

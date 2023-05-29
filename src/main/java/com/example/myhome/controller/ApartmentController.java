@@ -49,21 +49,16 @@ public class ApartmentController {
     private String uploadPath;
 
     private final ApartmentService apartmentService;
-    private final ApartmentRepository apartmentRepository;
     private final AccountService accountService;
     private final BuildingService buildingService;
-    private final BuildingRepository buildingRepository;
+    private final InvoiceService invoiceService;
     private final OwnerService ownerService;
     private final TariffService tariffService;
-    private final CashBoxRepository cashBoxRepository;
     private final CashBoxService cashBoxService;
-    private final InvoiceRepository invoiceRepository;
+    private final IncomeExpenseItemService incomeExpenseItemService;
     private final ApartmentValidator apartmentValidator;
-    private  final AccountRepository accountRepository;
-    private  final MeterDataRepository meterDataRepository;
-    private  final IncomeExpenseRepository incomeExpenseRepository;
-    private  final AdminService adminService;
-    private  final MeterDataService meterDataService;
+    private final AdminService adminService;
+    private final MeterDataService meterDataService;
 
     private final AccountDTOMapper accountDTOMapper;
     private final ApartmentDTOMapper apartmentDTOMapper;
@@ -82,14 +77,6 @@ public class ApartmentController {
         List<String> floorList = new ArrayList<>();
         model.addAttribute("floor", floorList);
 
-
-        Page<Apartment> apartmentList = apartmentService.findAll(pageable);
-        model.addAttribute("apartments", apartmentList);
-
-        //
-        model.addAttribute("paginatedList", apartmentList);
-        model.addAttribute("totalPagesCount", apartmentList.getTotalPages());
-
         FilterForm filterForm = new FilterForm();
         System.out.println(filterForm.getBuildingName());
         model.addAttribute("filterForm", filterForm);
@@ -98,7 +85,7 @@ public class ApartmentController {
 
     @GetMapping("/{id}")
     public String getApartment(@PathVariable("id") Long id, Model model) {
-        Apartment apartment = apartmentService.findById(id);
+        ApartmentDTO apartment = apartmentService.findApartmentDto(id);
         model.addAttribute("apartment", apartment);
         return "admin_panel/apartments/apartment";
     }
@@ -107,8 +94,8 @@ public class ApartmentController {
     public String createApartment(Model model) throws JsonProcessingException {
         List<OwnerDTO> ownerDTOList = ownerService.findAllDTO();
         model.addAttribute("owners", ownerDTOList);
-        Apartment apartment = new Apartment();
-        model.addAttribute("apartment", apartment);
+        ApartmentDTO apartmentDTO = new ApartmentDTO();
+        model.addAttribute("apartment", apartmentDTO);
         List<BuildingDTO> buildingList = buildingService.findAllDTO();
         model.addAttribute("buildings", buildingList);
         List<Tariff>tariffs = tariffService.findAllTariffs();
@@ -121,7 +108,7 @@ public class ApartmentController {
     public String editApartment(@PathVariable("id") Long id, Model model) {
         List<OwnerDTO> ownerDTOList = ownerService.findAllDTO();
         model.addAttribute("owners", ownerDTOList);
-        Apartment apartment = apartmentService.findById(id);
+        ApartmentDTO apartment = apartmentService.findApartmentDto(id);
         model.addAttribute("apartment", apartment);
         List<BuildingDTO> buildingList = buildingService.findAllDTO();
         model.addAttribute("buildings", buildingList);
@@ -139,7 +126,7 @@ public class ApartmentController {
     }
 
     @PostMapping("/save")
-    public String saveApartment(@Valid @ModelAttribute("apartment") Apartment apartment, BindingResult bindingResult) throws IOException {
+    public String saveApartment(@Valid @ModelAttribute("apartment") ApartmentDTO apartment, BindingResult bindingResult) throws IOException {
         apartmentValidator.validate(apartment, bindingResult);
         if (bindingResult.hasErrors()) {
             return "admin_panel/apartments/apartment_edit";
@@ -148,8 +135,10 @@ public class ApartmentController {
             apartmentService.save(apartment);
             return "redirect:/admin/apartments/";
         }
-    }@PostMapping("/save&new")
-    public String saveAndNew(@Valid @ModelAttribute("apartment") Apartment apartment, BindingResult bindingResult) throws IOException {
+    }
+
+    @PostMapping("/save&new")
+    public String saveAndNew(@Valid @ModelAttribute("apartment") ApartmentDTO apartment, BindingResult bindingResult) throws IOException {
         apartmentValidator.validate(apartment, bindingResult);
         if (bindingResult.hasErrors()) {
             return "admin_panel/apartments/apartment_edit";
@@ -160,34 +149,8 @@ public class ApartmentController {
         }
     }
 
-    @PostMapping("/filter")
-    public String filterApartments(Model model, @ModelAttribute FilterForm filterForm, @RequestParam(name = "number",required = false) Long number, @RequestParam(name = "buildingName",required = false) String buildingName,
-                                   @RequestParam(name = "section",required = false) String section, @RequestParam(name = "floor",required = false) String floor,
-                                   @RequestParam(name = "owner", required = false) Long owner, @RequestParam(name = "debtSting",required = false) String debt,
-                                   @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC, size = 10) Pageable pageable) throws IOException {
-        filterForm.setOwnerEntity(ownerService.findByIdDTO(owner));
-        Page<Apartment> apartmentList = apartmentRepository.findByFilters(number,buildingName,section,floor,owner,debt,pageable);
-        model.addAttribute("apartments", apartmentList);
-        List<OwnerDTO> ownerDTOList = ownerService.findAllDTO();
-        model.addAttribute("owners", ownerDTOList);
-        List<BuildingDTO> buildingList = buildingService.findAllDTO();
-        model.addAttribute("buildings", buildingList);
-        List<String> sectionList = new ArrayList<>();
-        List<String> floorList = new ArrayList<>();
-        if(buildingName!=null && buildingName.length()>0 && !buildingName.equalsIgnoreCase("-")) {
-            Building b = buildingRepository.findByName(buildingName);
-            sectionList=b.getSections();
-            floorList=b.getFloors();
-        }
-        model.addAttribute("sections", sectionList);
-        model.addAttribute("floors", floorList);
-        model.addAttribute("filterForm", filterForm);
-        return "admin_panel/apartments/apartments";
-
-    }
-
     @GetMapping("/delete/{id}")
-    public String dellete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
             apartmentService.deleteById(id);
         } catch (Exception e) {
@@ -197,29 +160,20 @@ public class ApartmentController {
         return "redirect:/admin/apartments/";
     }
 
-    @GetMapping("/get-owner")
-    public @ResponseBody Owner getOwner(@RequestParam long flat_id) {
-        return apartmentService.findById(flat_id).getOwner();
-    }
-
-    @GetMapping("/get-meters")
-    public @ResponseBody List<MeterData> getMeters(@RequestParam long flat_id) {
-        return apartmentService.findById(flat_id).getMeterDataList();
-    }
 
     @GetMapping("/incomesByApartmentAccount/{id}")
     public String incomesByApartmentAccount(Model model, @PathVariable("id") Long id) {
-        List<CashBox>cashBoxes=cashBoxRepository.findAllByApartmentAccountId(id);
+        List<CashBox>cashBoxes=cashBoxService.findAllByApartmentAccountId(id);
         model.addAttribute("cashBoxList", cashBoxes);
-        model.addAttribute("cashBoxSum", cashBoxRepository.sumAmount());
-        model.addAttribute("accountBalance", accountRepository.getSumOfAccountBalances());
-        model.addAttribute("sumDebt", accountRepository.getSumOfAccountDebts());
+        model.addAttribute("cashBoxSum", cashBoxService.getSumAmount());
+        model.addAttribute("accountBalance", accountService.getSumOfAccountBalances());
+        model.addAttribute("sumDebt", accountService.getSumOfAccountDebts());
         return "admin_panel/cash_box/cashboxes";
     }
 
     @GetMapping("/invoicesByApartment/{id}")
     public String invoicesByApartment(Model model, @PathVariable("id") Long id) {
-        List<Invoice>invoices=invoiceRepository.findAllByApartmentId(id);
+        List<Invoice>invoices=invoiceService.findAllByApartmentId(id);
         model.addAttribute("invoices", invoices);
         model.addAttribute("cashbox_balance", cashBoxService.calculateBalance());
         model.addAttribute("account_balance", accountService.getSumOfAccountBalances());
@@ -229,7 +183,7 @@ public class ApartmentController {
     }
     @GetMapping("/metersDataByApartment/{id}")
         public String metersDataByApartment(Model model, @PathVariable("id") Long id) {
-            List<MeterData>meterDataList = meterDataRepository.findAllByApartmentId(id);
+            List<MeterData>meterDataList = meterDataService.findAllByApartmentId(id);
             model.addAttribute("meter_data_rows", meterDataList);
         model.addAttribute("filter_form", new FilterForm());
             return "admin_panel/meters/meters";
@@ -238,7 +192,7 @@ public class ApartmentController {
     @GetMapping("/NewIncomesByApartment/{id}")
     public String NewIncomesByApartment(Model model, @PathVariable("id") Long id) {
         Apartment apartment = apartmentService.findById(id);
-        List<IncomeExpenseItems>incomeItemsList=incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.INCOME);
+        List<IncomeExpenseItems>incomeItemsList=incomeExpenseItemService.findAllIncomeItems();
         model.addAttribute("incomeItemsList", incomeItemsList);
 
         List<AdminDTO>adminDTOList = adminService.findAllManagers();
@@ -259,8 +213,6 @@ public class ApartmentController {
         return "admin_panel/cash_box/cashbox_edit";
     }
 
-
-
     @GetMapping("/NewInvoiceByApartment/{id}")
     public String NewInvoiceByApartment(Model model, @PathVariable("id") Long id) {
         Invoice invoice = new Invoice();
@@ -280,20 +232,6 @@ public class ApartmentController {
         return ownerPage;
     }
 
-    @GetMapping("/getSections")
-    @ResponseBody
-    public List<String> getSections(@RequestParam(name = "buildingName", defaultValue = "") String buildingName) {
-        List<String>sections = buildingRepository.findByName(buildingName).getSections();
-        return sections;
-    }
-
-    @GetMapping("/getFloors")
-    @ResponseBody
-    public List<String> getFloors(@RequestParam(name = "buildingName", defaultValue = "") String buildingName) {
-        List<String>floors = buildingRepository.findByName(buildingName).getFloors();
-        return floors;
-    }
-
     @GetMapping("/get-apartments-page")
     @ResponseBody
     public Page<ApartmentDTO> getApartmentsByPage(@RequestParam Integer page,
@@ -302,8 +240,6 @@ public class ApartmentController {
         ObjectMapper mapper = new ObjectMapper();
         FilterForm form = mapper.readValue(filters, FilterForm.class);
         return apartmentService.findBySpecificationAndPage(page, size, form);
-
-
     }
 
     @GetMapping("/get-section")
@@ -318,5 +254,15 @@ public class ApartmentController {
     public @ResponseBody ApartmentDTO getSingleApartment(@RequestParam Long id) {
         Apartment apartment = apartmentService.findById(id);
         return apartmentDTOMapper.fromApartmentToDTO(apartment);
+    }
+
+    @GetMapping("/get-owner")
+    public @ResponseBody Owner getOwner(@RequestParam long flat_id) {
+        return apartmentService.findById(flat_id).getOwner();
+    }
+
+    @GetMapping("/get-meters")
+    public @ResponseBody List<MeterData> getMeters(@RequestParam long flat_id) {
+        return apartmentService.findById(flat_id).getMeterDataList();
     }
 }

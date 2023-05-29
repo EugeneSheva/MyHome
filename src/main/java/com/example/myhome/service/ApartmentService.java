@@ -18,6 +18,7 @@ public interface ApartmentService {
     Apartment findByNumber(Long number);
 
     Apartment save(Apartment apartment);
+    Apartment save(ApartmentDTO dto);
 
     void deleteById(Long id);
 

@@ -35,4 +35,8 @@ public interface CashBoxService {
     IncomeExpenseType getIncomeExpenseTypeFromString(String incomeExpenseTypeString);
 
     Boolean getIsCompleteFromString(String isCopmlete);
+
+    List<CashBox> findAllByApartmentAccountId(Long id);
+
+    Double getSumAmount();
 }

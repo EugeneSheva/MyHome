@@ -54,17 +54,10 @@ public class OwnerServiceImpl implements OwnerService {
     private final ApartmentDTOMapper apartmentDTOMapper;
     private final OwnerDTOMapper ownerDTOMapper;
 
-
-
     @Override
     public OwnerDTO findByIdDTO(Long id) {
         Owner owner = ownerRepository.findById(id).orElseThrow(() -> new NotFoundException());
-        return OwnerDTO.builder()
-                .id(owner.getId())
-                .first_name(owner.getFirst_name())
-                .last_name(owner.getLast_name())
-                .fullName(owner.getFirst_name()+" "+owner.getLast_name()+" "+owner.getFathers_name())
-                .build();
+        return ownerDTOMapper.fromOwnerToDTO(owner);
     }
 
     @Override
@@ -225,6 +218,11 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public Owner save(Owner owner) { return ownerRepository.save(owner); }
+
+    @Override
+    public Owner save(OwnerDTO dto) {
+        return ownerRepository.save(ownerDTOMapper.fromDTOToOwner(dto));
+    }
 
     @Override
     public void deleteById(Long id) {

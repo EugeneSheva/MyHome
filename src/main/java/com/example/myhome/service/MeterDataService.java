@@ -30,4 +30,6 @@ public interface MeterDataService {
     Specification<MeterData> buildSpecFromFilters(FilterForm filterForm);
 
     Page<MeterDataDTO> findAllBySpecification(FilterForm form, Integer page, Integer size);
+
+    List<MeterData> findAllByApartmentId(Long id);
 }

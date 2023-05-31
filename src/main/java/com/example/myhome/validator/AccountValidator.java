@@ -40,10 +40,10 @@ public class AccountValidator implements Validator {
         } else if(account.getApartment() == null || account.getApartment().getId() == 0L) {
             System.out.println("Error found(apartment)");
             errors.rejectValue("apartment", "apartment.empty", messageSource.getMessage("accounts.apartment.empty", null, locale));
-        } else if(accountService.apartmentHasAccount(account.getApartment().getId())
-                && !Objects.equals(accountService.findAccountById(account.getId()).getApartment().getId(),
-                                    account.getApartment().getId())) {
-            if(account.getChangedState() == null || !account.getChangedState()) errors.rejectValue("apartment", "apartment.has_account", messageSource.getMessage("accounts.apartment.has_account", null, locale));
+        } else if(accountService.apartmentHasAccount(account.getApartment().getId())) {
+            if(account.getId() == null || (!Objects.equals(accountService.findAccountById(account.getId()).getApartment().getId(),
+               account.getApartment().getId()) && (account.getChangedState() == null || !account.getChangedState())))
+                errors.rejectValue("apartment", "apartment.has_account", messageSource.getMessage("accounts.apartment.has_account", null, locale));
         }
         if(account.getIsActive() == null) {
             System.out.println("Error found(active)");

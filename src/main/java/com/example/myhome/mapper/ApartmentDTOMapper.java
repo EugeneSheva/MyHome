@@ -12,15 +12,15 @@ import com.example.myhome.repository.AccountRepository;
 import com.example.myhome.repository.BuildingRepository;
 import com.example.myhome.repository.OwnerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class ApartmentDTOMapper {
 
-    private final BuildingRepository buildingRepository;
-    private final OwnerRepository ownerRepository;
-    private final AccountRepository accountRepository;
+    @Autowired private BuildingRepository buildingRepository;
+    @Autowired private OwnerRepository ownerRepository;
+    @Autowired private AccountRepository accountRepository;
 
     public Apartment fromDTOToApartment(ApartmentDTO dto) {
 

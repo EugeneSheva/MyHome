@@ -57,13 +57,8 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Override
     public List<BuildingDTO> findAllDTO() {
-        List<BuildingDTO> buildingDTOList = new ArrayList<>();
-        for (Building building : buildingRepository.findAll()) {
-            buildingDTOList.add(new BuildingDTO(building.getId(), building.getName(), building.getSections(), building.getAddress(), building.getFloors()));
-        }
-        return buildingDTOList;
+        return buildingRepository.findAll().stream().map(mapper::fromBuildingToDTO).collect(Collectors.toList());
     }
-
 
     @Override
     public BuildingDTO findBuildingDTObyId(Long id) {
@@ -72,7 +67,6 @@ public class BuildingServiceImpl implements BuildingService {
         dto.setApartments(building.getApartments().stream().map(apartmentMapper::fromApartmentToDTO).collect(Collectors.toList()));
         return dto;
     }
-
 
     @Override
     public Building save(Building building) {
@@ -85,13 +79,7 @@ public class BuildingServiceImpl implements BuildingService {
         Page<Building> initialPage = buildingRepository.findAll(buildSpecFromFilters(filters), pageable);
 
         List<BuildingDTO> listDTO = initialPage.getContent().stream()
-                .map(
-                        building -> BuildingDTO.builder()
-                                .id(building.getId())
-                                .name(building.getName())
-                                .address(building.getAddress())
-                                .build()
-                )
+                .map(mapper::fromBuildingToDTO)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(listDTO, pageable, initialPage.getTotalElements());
@@ -99,12 +87,8 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Override
     public List<BuildingDTO> findByPage(String search, int page) {
-        log.info(buildingRepository.findAll().toString());
-        log.info(buildingRepository.findAll(PageRequest.of(page - 1, 5)).getContent().toString());
-        log.info(buildingRepository.findByName(search, PageRequest.of(page - 1, 5)).toString());
-
         return buildingRepository.findByName(search, PageRequest.of(page - 1, 5)).stream()
-                .map(building -> new BuildingDTO(building.getId(), building.getName())).collect(Collectors.toList());
+                .map(mapper::fromBuildingToDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -129,7 +113,7 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public Building saveBuildindImages(Long id, MultipartFile file1, MultipartFile file2, MultipartFile file3, MultipartFile file4, MultipartFile file5) throws IOException {
+    public Building saveBuildingImages(Long id, MultipartFile file1, MultipartFile file2, MultipartFile file3, MultipartFile file4, MultipartFile file5) throws IOException {
         Building newBuilding = new Building();
         Building oldBuilding = new Building();
         if (id > 0) {
@@ -198,17 +182,13 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Override
     public List<BuildingDTO> convertBuildingToBuildingDTO(List<Building> buildingList) {
-        List<BuildingDTO> DTOList = new ArrayList<>();
-        for (Building building : buildingList) {
-            DTOList.add(new BuildingDTO(building.getId(), building.getName(), building.getSections(), building.getAddress(), building.getFloors()));
-        }
-        return DTOList;
+        return buildingList.stream().map(mapper::fromBuildingToDTO).collect(Collectors.toList());
     }
 
 
     @Override
     public BuildingDTO convertBuildingToBuildingDTO(Building building) {
-        return new BuildingDTO(building.getId(),building.getName(), building.getSections(),building.getAddress(), building.getFloors());
+        return mapper.fromBuildingToDTO(building);
     }
 
     @Override

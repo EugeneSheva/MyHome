@@ -697,6 +697,7 @@ function drawAdminsTable(){
     let data = getTableData('/myhome/admin/admins/get-admins', currentPageNumber, currentPageSize, pageFiltersString);
     let $adminsTable = $("#adminsTable tbody");
     $adminsTable.html('');
+    console.log(data);
     for(const admin of data.content) {
         console.log(admin);
         let newTableRow = document.createElement('tr');

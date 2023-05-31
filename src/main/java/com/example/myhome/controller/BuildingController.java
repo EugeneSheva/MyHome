@@ -97,7 +97,7 @@ public class BuildingController {
                 return "admin_panel/buildings/building_edit";
             } else {
             System.out.println("admins "+admins);
-                Building building = buildingService.saveBuildindImages(id, file1, file2, file3, file4, file5);
+                Building building = buildingService.saveBuildingImages(id, file1, file2, file3, file4, file5);
                 building.setName(name);
                 building.setAddress(address);
                 building.setFloors(floors);
@@ -166,6 +166,7 @@ public class BuildingController {
     public @ResponseBody Map<String, Object> getBuildings(@RequestParam String search,
                                                      @RequestParam int page) {
         log.info("Getting all buildings that have in their name: " + search);
+        log.info("Page " + page + ", " + (page-1));
         Map<String, Object> map = new HashMap<>();
         Map<String, Boolean> pagination = new HashMap<>();
         pagination.put("more", ((long) page*5) < buildingService.countBuildings());

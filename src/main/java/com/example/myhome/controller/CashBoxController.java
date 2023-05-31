@@ -43,12 +43,10 @@ public class CashBoxController {
 
     private final CashBoxService cashBoxService;
     private final OwnerService ownerService;
-    private final OwnerRepository ownerRepository;
     private final AdminService adminService;
     private final AccountService accountService;
     private final IncomeExpenseItemServiceImpl incomeExpenseItemService;
     private final IncomeExpenseRepository incomeExpenseRepository;
-    private final AccountRepository accountRepository;
     private final CashBoxRepository cashBoxRepository;
     private final CashBoxtValidator cashBoxtValidator;
 

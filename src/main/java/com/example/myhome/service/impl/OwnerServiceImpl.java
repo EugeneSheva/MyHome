@@ -45,7 +45,6 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Value("${upload.path}")
     private String uploadPath;
-    private String localPath = "/img/ownerId/";
     private final OwnerRepository ownerRepository;
     private final BuildingService buildingService;
     private final ApartmentService apartmentService;
@@ -56,7 +55,7 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public OwnerDTO findByIdDTO(Long id) {
-        Owner owner = ownerRepository.findById(id).orElseThrow(() -> new NotFoundException());
+        Owner owner = ownerRepository.findById(id).orElseThrow(NotFoundException::new);
         return ownerDTOMapper.fromOwnerToDTO(owner);
     }
 
@@ -80,17 +79,7 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public List<OwnerDTO> findAllDTO() {
-        List<OwnerDTO>ownerDTOList=new ArrayList<>();
-        for (Owner owner : ownerRepository.findAll()) {
-            OwnerDTO newDTO = OwnerDTO.builder()
-                                                .id(owner.getId())
-                                                .first_name(owner.getFirst_name())
-                                                .last_name(owner.getLast_name())
-                                                .fullName(owner.getFirst_name()+" "+owner.getLast_name()+" "+owner.getFathers_name())
-                                                .build();
-            ownerDTOList.add(newDTO);
-        }
-        return ownerDTOList;
+        return ownerRepository.findAll().stream().map(ownerDTOMapper::fromOwnerToDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -105,17 +94,8 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public Page<OwnerDTO> findAllDTO(Pageable pageable) {
-        List<OwnerDTO> ownerDTOList = new ArrayList<>();
         Page<Owner> ownerPage = ownerRepository.findAll(pageable);
-        for (Owner owner : ownerPage) {
-            OwnerDTO newDTO = OwnerDTO.builder()
-                    .id(owner.getId())
-                    .first_name(owner.getFirst_name())
-                    .last_name(owner.getLast_name())
-                    .fullName(owner.getFirst_name()+" "+owner.getLast_name()+" "+owner.getFathers_name())
-                    .build();
-            ownerDTOList.add(newDTO);
-        }
+        List<OwnerDTO> ownerDTOList = ownerPage.stream().map(ownerDTOMapper::fromOwnerToDTO).collect(Collectors.toList());
         return new PageImpl<>(ownerDTOList, pageable, ownerPage.getTotalElements());
     }
 
@@ -126,29 +106,7 @@ public class OwnerServiceImpl implements OwnerService {
         Page<Owner> initialPage = ownerRepository.findAll(buildSpecFromFilters(filters), pageable);
 
         List<OwnerDTO> listDTO = initialPage.getContent().stream()
-                .map(owner -> {
-                    List<BuildingDTO> buildings = new ArrayList<>();
-                    List<ApartmentDTO> apartments = new ArrayList<>();
-                    String date = (owner.getAdded_at() != null) ? owner.getAdded_at().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "";
-                    String status = (owner.getStatus() != null) ? owner.getStatus().getName() : "";
-                    owner.getApartments().forEach(
-                            apart -> {
-                                buildings.add(BuildingDTO.builder().id(apart.getBuilding().getId()).name(apart.getBuilding().getName()).build());
-                                apartments.add(ApartmentDTO.builder().id(apart.getId()).fullName("№"+apart.getNumber()+", " + apart.getBuilding().getName()).build());
-                            }
-                    );
-                    return OwnerDTO.builder()
-                            .id(owner.getId())
-                            .fullName(owner.getFullName())
-                            .phone_number(owner.getPhone_number())
-                            .email(owner.getEmail())
-                            .buildings(buildings)
-                            .apartments(apartments)
-                            .date(date)
-                            .status(status)
-                            .hasDebt(owner.isHas_debt())
-                            .build();
-                })
+                .map(ownerDTOMapper::fromOwnerToDTO)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(listDTO, pageable, initialPage.getTotalElements());

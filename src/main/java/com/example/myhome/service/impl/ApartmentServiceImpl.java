@@ -71,11 +71,11 @@ public class ApartmentServiceImpl implements ApartmentService {
 
 
     public List<ApartmentDTO> convertApartmentsToApartmentsDTO(List<Apartment> apartmentList) {
-        return apartmentList.stream().map(MappingUtils::fromApartmentToDTO).collect(Collectors.toList());
+        return apartmentList.stream().map(mapper::fromApartmentToDTO).collect(Collectors.toList());
     }
 
     public ApartmentDTO convertApartmentsToApartmentsDTO(Apartment apartment) {
-        return MappingUtils.fromApartmentToDTO(apartment);
+        return mapper.fromApartmentToDTO(apartment);
     }
 
 
@@ -86,45 +86,45 @@ public class ApartmentServiceImpl implements ApartmentService {
 
 
     public List<ApartmentDTO> findDtoApartmentsWithDebt() {
-        return apartmentRepository.findApartmentsByBalanceBefore(0D).stream().map(MappingUtils::fromApartmentToDTO).collect(Collectors.toList());
+        return apartmentRepository.findApartmentsByBalanceBefore(0D).stream().map(mapper::fromApartmentToDTO).collect(Collectors.toList());
     }
 
     public List<ApartmentDTO> findDtoApartmentsByBuilding(Long building_id) {
-        return apartmentRepository.findApartmentsByBuildingId(building_id).stream().map(MappingUtils::fromApartmentToDTO).collect(Collectors.toList());
+        return apartmentRepository.findApartmentsByBuildingId(building_id).stream().map(mapper::fromApartmentToDTO).collect(Collectors.toList());
     }
 
     public List<ApartmentDTO> findDtoApartmentsByBuildingWithDebt(Long building_id) {
-        return apartmentRepository.findApartmentsByBuildingIdAndBalanceBefore(building_id, 0D).stream().map(MappingUtils::fromApartmentToDTO).collect(Collectors.toList());
+        return apartmentRepository.findApartmentsByBuildingIdAndBalanceBefore(building_id, 0D).stream().map(mapper::fromApartmentToDTO).collect(Collectors.toList());
     }
 
     public List<ApartmentDTO> findDtoApartmentsByBuildingAndSection(Long building_id, String section) {
         return apartmentRepository.findApartmentsByBuildingIdAndSectionContainingIgnoreCase(building_id, section).stream()
-                .map(MappingUtils::fromApartmentToDTO).collect(Collectors.toList());
+                .map(mapper::fromApartmentToDTO).collect(Collectors.toList());
     }
 
     public List<ApartmentDTO> findDtoApartmentsByBuildingAndSectionWithDebt(Long building_id, String section) {
         return apartmentRepository.findApartmentsByBuildingIdAndSectionContainingIgnoreCaseAndBalanceBefore(building_id, section, 0D)
-                .stream().map(MappingUtils::fromApartmentToDTO).collect(Collectors.toList());
+                .stream().map(mapper::fromApartmentToDTO).collect(Collectors.toList());
     }
 
     public List<ApartmentDTO> findDtoApartmentsByBuildingAndFloor(Long building_id, String floor) {
         return apartmentRepository.findApartmentsByBuildingIdAndFloorContainingIgnoreCase(building_id, floor)
-                .stream().map(MappingUtils::fromApartmentToDTO).collect(Collectors.toList());
+                .stream().map(mapper::fromApartmentToDTO).collect(Collectors.toList());
     }
 
     public List<ApartmentDTO> findDtoApartmentsByBuildingAndFloorWithDebt(Long building_id, String floor) {
         return apartmentRepository.findApartmentsByBuildingIdAndFloorContainingIgnoreCaseAndBalanceBefore(building_id, floor, 0D)
-                .stream().map(MappingUtils::fromApartmentToDTO).collect(Collectors.toList());
+                .stream().map(mapper::fromApartmentToDTO).collect(Collectors.toList());
     }
 
     public List<ApartmentDTO> findDtoApartmentsByBuildingAndSectionAndFloor(Long building_id, String section, String floor) {
         return apartmentRepository.findApartmentsByBuildingIdAndSectionContainingIgnoreCaseAndFloorContainingIgnoreCase(building_id, section, floor)
-                .stream().map(MappingUtils::fromApartmentToDTO).collect(Collectors.toList());
+                .stream().map(mapper::fromApartmentToDTO).collect(Collectors.toList());
     }
 
     public List<ApartmentDTO> findDtoApartmentsByBuildingAndSectionAndFloorWithDebt(Long building_id, String section, String floor) {
         return apartmentRepository.findApartmentsByBuildingIdAndSectionContainingIgnoreCaseAndFloorContainingIgnoreCaseAndBalanceBefore(building_id, section, floor, 0D)
-                .stream().map(MappingUtils::fromApartmentToDTO).collect(Collectors.toList());
+                .stream().map(mapper::fromApartmentToDTO).collect(Collectors.toList());
     }
 
     public Long getQuantity() {

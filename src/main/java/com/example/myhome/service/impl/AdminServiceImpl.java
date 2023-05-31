@@ -116,7 +116,9 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Page<AdminDTO> findAllByFiltersAndPage(FilterForm filters, Pageable pageable) throws IllegalAccessException {
         log.info("Getting admins by specified filters and page...");
-        Page<Admin> initialPage = adminRepository.findAll(buildSpecFromFilters(filters), pageable);
+        Specification<Admin> spec = buildSpecFromFilters(filters);
+        if(spec != null) log.info(spec.toString());
+        Page<Admin> initialPage = adminRepository.findAll(spec, pageable);
         log.info("Found " + initialPage.getContent().size() + " elements (page " + pageable.getPageNumber()+1 + "/" + initialPage.getTotalPages() + ")");
         List<AdminDTO> listDTO = initialPage.getContent().stream().map(mapper::fromAdminToDTO).collect(Collectors.toList());
         log.info("Turned admins from DB into DTOs");

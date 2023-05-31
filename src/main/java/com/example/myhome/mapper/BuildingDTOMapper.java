@@ -30,6 +30,7 @@ public class BuildingDTOMapper {
         dto.setSections(building.getSections());
         dto.setAddress(building.getAddress());
         dto.setFloors(building.getFloors());
+        dto.setText(building.getName());
 
         return dto;
     }

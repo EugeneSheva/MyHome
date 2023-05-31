@@ -23,7 +23,7 @@ public class MessageServiceImpl implements MessageService {
 
 
     @Override
-    public Message findById(Long id) { return messageRepository.findById(id).orElseThrow(() -> new NotFoundException());}
+    public Message findById(Long id) { return messageRepository.findById(id).orElseThrow(NotFoundException::new);}
 
     @Override
     public List<Message> findAll() { return messageRepository.findAll(); }

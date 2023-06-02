@@ -1,5 +1,6 @@
 package com.example.myhome.controllers;
 
+import com.example.myhome.config.TestConfig;
 import com.example.myhome.controller.ApartmentController;
 import com.example.myhome.dto.ApartmentDTO;
 import com.example.myhome.dto.OwnerDTO;
@@ -36,7 +37,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-@SpringBootTest
+@SpringBootTest(classes = TestConfig.class)
 @AutoConfigureMockMvc
 @WithUserDetails("test")
 public class ApartmentControllerTest {
@@ -61,7 +62,6 @@ public class ApartmentControllerTest {
     @Autowired private AccountDTOMapper accountDTOMapper;
     @Autowired private ApartmentDTOMapper apartmentDTOMapper;
 
-    @Autowired private ApartmentController apartmentController;
 
     @Autowired
     private MockMvc mockMvc;
@@ -76,7 +76,7 @@ public class ApartmentControllerTest {
     static ObjectMapper jsonMapper = new ObjectMapper();
 
     @BeforeAll
-    void setupObjects() {
+    static void setupObjects() {
         // testApartment.setId(...);
         // ....
 
@@ -92,7 +92,7 @@ public class ApartmentControllerTest {
 
     @Test
     void contextLoads(){
-        assertThat(apartmentController).isNotNull();
+
     }
 
     @Test

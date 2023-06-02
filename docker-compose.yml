@@ -26,11 +26,13 @@ services:
     environment:
       PMA_HOST: db_mysql
   web:
-      build: .
+      container_name: myhome
+      image: temporalparadox/myhome:master
+#      build: .
       ports:
-        - '9002:8080'
+        - '9005:8080'
       environment:
-        SPRING_DATASOURCE_URL: jdbc:mysql://db_mysql:3306/myhome?createDatabaseIfNotExist=true
+        SPRING_DATASOURCE_URL: jdbc:mysql://db_mysql:3306/myhome
       depends_on:
           db_mysql:
             condition: service_healthy

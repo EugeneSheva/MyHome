@@ -23,8 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -81,6 +80,16 @@ public class ApartmentServiceTest {
         when(apartmentRepository.findById(anyLong())).thenReturn(Optional.ofNullable(testApartment));
         when(apartmentRepository.save(any(Apartment.class))).thenReturn(testApartment);
         when(apartmentRepository.findAll()).thenReturn(apartmentList);
+        when(apartmentRepository.findApartmentsByBalanceBefore(anyDouble())).thenReturn(apartmentList);
+        when(apartmentRepository.findApartmentsByBuildingId(anyLong())).thenReturn(apartmentList);
+        when(apartmentRepository.findApartmentsByBuildingIdAndBalanceBefore(anyLong(), anyDouble())).thenReturn(apartmentList);
+        when(apartmentRepository.findApartmentsByBuildingIdAndSectionContainingIgnoreCase(anyLong(),anyString())).thenReturn(apartmentList);
+        when(apartmentRepository.findApartmentsByBuildingIdAndSectionContainingIgnoreCaseAndBalanceBefore(anyLong(), anyString(), anyDouble())).thenReturn(apartmentList);
+        when(apartmentRepository.findApartmentsByBuildingIdAndFloorContainingIgnoreCase(anyLong(),anyString())).thenReturn(apartmentList);
+        when(apartmentRepository.findApartmentsByBuildingIdAndFloorContainingIgnoreCaseAndBalanceBefore(anyLong(),anyString(),anyDouble())).thenReturn(apartmentList);
+        when(apartmentRepository.findApartmentsByBuildingIdAndSectionContainingIgnoreCaseAndFloorContainingIgnoreCase(anyLong(),anyString(),anyString())).thenReturn(apartmentList);
+        when(apartmentRepository.findApartmentsByBuildingIdAndSectionContainingIgnoreCaseAndFloorContainingIgnoreCaseAndBalanceBefore(anyLong(),anyString(),anyString(),anyDouble())).thenReturn(apartmentList);
+
     }
 
     @Test
@@ -150,7 +159,47 @@ public class ApartmentServiceTest {
 
     @Test
     void findDTOWithDebtTest() {
+        assertThat(apartmentService.findDtoApartmentsWithDebt()).isEqualTo(apartmentDTOList);
+    }
 
+    @Test
+    void findDTOByBuildingTest() {
+        assertThat(apartmentService.findDtoApartmentsByBuilding(testApartment.getId())).isEqualTo(apartmentDTOList);
+    }
+
+    @Test
+    void findDTOByBuildingWithDebtTest() {
+        assertThat(apartmentService.findDtoApartmentsByBuildingWithDebt(testApartment.getId())).isEqualTo(apartmentDTOList);
+    }
+
+    @Test
+    void findDTOByBuildingAndSectionTest() {
+        assertThat(apartmentService.findDtoApartmentsByBuildingAndSection(testApartment.getId(),testApartment.getSection())).isEqualTo(apartmentDTOList);
+    }
+
+    @Test
+    void findDTOByBuildingAndSectionWithDebtTest() {
+        assertThat(apartmentService.findDtoApartmentsByBuildingAndSectionWithDebt(testApartment.getId(),testApartment.getSection())).isEqualTo(apartmentDTOList);
+    }
+
+    @Test
+    void findDTOByBuildingAndFloorTest() {
+        assertThat(apartmentService.findDtoApartmentsByBuildingAndFloor(testApartment.getId(),testApartment.getFloor())).isEqualTo(apartmentDTOList);
+    }
+
+    @Test
+    void findDTOByBuildingAndFloorWithDebtTest() {
+        assertThat(apartmentService.findDtoApartmentsByBuildingAndFloorWithDebt(testApartment.getId(), testApartment.getFloor())).isEqualTo(apartmentDTOList);
+    }
+
+    @Test
+    void findDTOByBuildingSectionAndFloorTest() {
+        assertThat(apartmentService.findDtoApartmentsByBuildingAndSectionAndFloor(testApartment.getId(), testApartment.getSection(), testApartment.getFloor())).isEqualTo(apartmentDTOList);
+    }
+
+    @Test
+    void findDTOByBuildingSectionAndFloorWithDebtTest() {
+        assertThat(apartmentService.findDtoApartmentsByBuildingAndSectionAndFloorWithDebt(testApartment.getId(),testApartment.getSection(),testApartment.getFloor())).isEqualTo(apartmentDTOList);
     }
 
     @Test

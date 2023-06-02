@@ -1,5 +1,6 @@
 package com.example.myhome.controllers;
 
+import com.example.myhome.config.TestConfig;
 import com.example.myhome.controller.BuildingController;
 import com.example.myhome.dto.BuildingDTO;
 import com.example.myhome.mapper.BuildingDTOMapper;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest(classes = TestConfig.class)
 @AutoConfigureMockMvc
 @WithUserDetails("test")
 public class BuildingControllerTest {

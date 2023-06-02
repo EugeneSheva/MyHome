@@ -2,7 +2,7 @@ package com.example.myhome.services;
 
 import com.example.myhome.dto.OwnerDTO;
 import com.example.myhome.mapper.OwnerDTOMapper;
-import com.example.myhome.model.Owner;
+import com.example.myhome.model.*;
 import com.example.myhome.repository.OwnerRepository;
 import com.example.myhome.service.ApartmentService;
 import com.example.myhome.service.BuildingService;
@@ -68,6 +68,20 @@ public class OwnerServiceTest {
         testOwner.setLast_name("test");
         testOwner.setFathers_name("test");
 
+        Apartment apartment = new Apartment();
+        apartment.setId(1L);
+        apartment.setOwner(testOwner);
+        apartment.setTariff(new Tariff());
+        apartment.setSquare(100.0);
+        apartment.setBalance(100.0);
+        apartment.setNumber(100L);
+        apartment.setAccount(new ApartmentAccount());
+        apartment.setBuilding(new Building());
+        apartment.setFloor("1");
+        apartment.setSection("1");
+
+        testOwner.setApartments(List.of(apartment,apartment,apartment));
+
         mapper = new OwnerDTOMapper();
 
         testDTO = mapper.fromOwnerToDTO(testOwner);
@@ -99,6 +113,11 @@ public class OwnerServiceTest {
     }
 
     @Test
+    void findByIdDTOTest() {
+        assertThat(ownerService.findByIdDTO(testOwner.getId())).isEqualTo(testDTO);
+    }
+
+    @Test
     void findByLoginTest() {
         assertThat(ownerService.findByLogin(testOwner.getEmail())).isEqualTo(testOwner);
     }
@@ -115,7 +134,8 @@ public class OwnerServiceTest {
 
     @Test
     void findOwnerApartmentsTest() {
-
+        assertThat(ownerService.findOwnerApartments(testOwner.getId())).isInstanceOf(List.class);
+        assertThat(ownerService.findOwnerApartments(testOwner.getId())).hasSize(3);
     }
 
     @Test

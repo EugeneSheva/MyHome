@@ -1,5 +1,6 @@
 package com.example.myhome.controllers;
 
+import com.example.myhome.config.TestConfig;
 import com.example.myhome.controller.socket.WebsocketController;
 import com.example.myhome.mapper.AccountDTOMapper;
 import com.example.myhome.model.Admin;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest(classes = TestConfig.class)
 @AutoConfigureMockMvc
 @WithUserDetails("test")
 public class CashboxControllerTest {

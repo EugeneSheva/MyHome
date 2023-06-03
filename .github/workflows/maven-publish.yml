@@ -66,6 +66,7 @@ jobs:
             password: ${{ secrets.SERVER_PASSWORD }}
             script: sudo docker-compose -f docker-compose-myhome.yml down
 
+
       - uses: appleboy/ssh-action@v0.1.10
         name: Update image
         with:

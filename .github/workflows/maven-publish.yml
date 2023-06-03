@@ -67,20 +67,12 @@ jobs:
             script: sudo docker-compose -f docker-compose-myhome.yml down
 
       - uses: appleboy/ssh-action@v0.1.10
-        name: Delete old myhome container
+        name: Update image
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
-          script: sudo docker rm myhome
-
-      - uses: appleboy/ssh-action@v0.1.10
-        name: Delete old myhome image
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          script: sudo docker rmi temporalparadox/myhome
+          script: sudo docker pull temporalparadox/myhome
 
       - uses: appleboy/ssh-action@v0.1.10
         name: Build new Docker Compose with updated image

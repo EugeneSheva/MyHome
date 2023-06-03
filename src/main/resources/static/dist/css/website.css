@@ -352,6 +352,10 @@ textarea {
     border: 0.5px solid #44e5e9;
 }
 
+.pagination_container {
+    height: 40px;
+}
+
 
 
 

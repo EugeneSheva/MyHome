@@ -2,9 +2,13 @@ package com.example.myhome.config;
 
 import com.example.myhome.model.Admin;
 import com.example.myhome.model.UserRole;
+import com.example.myhome.repository.IncomeExpenseRepository;
 import com.example.myhome.service.AccountService;
 import com.example.myhome.service.ApartmentService;
+import com.example.myhome.service.IncomeExpenseItemService;
 import com.example.myhome.service.impl.AccountServiceImpl;
+import com.example.myhome.service.impl.IncomeExpenseItemServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
@@ -19,6 +23,15 @@ import java.util.Set;
 
 @TestConfiguration
 public class TestConfig {
+
+    @Autowired
+    private IncomeExpenseRepository incomeExpenseRepository;
+
+    @Primary
+    @Bean
+    public IncomeExpenseItemService incomeExpenseItemService() {
+        return new IncomeExpenseItemServiceImpl(incomeExpenseRepository);
+    }
 
     @Bean
     public UserDetails testUser() {

@@ -3,6 +3,7 @@ package com.example.myhome.services;
 import com.example.myhome.dto.CashBoxDTO;
 import com.example.myhome.mapper.CashboxDTOMapper;
 import com.example.myhome.model.*;
+import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.repository.CashBoxRepository;
 import com.example.myhome.service.CashBoxService;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,8 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -76,6 +76,10 @@ public class CashboxServiceTest {
         when(cashBoxRepository.findAll(any(Pageable.class))).thenReturn(boxPage);
         when(cashBoxRepository.save(any(CashBox.class))).thenReturn(testBox);
         when(cashBoxRepository.findAll()).thenReturn(boxList);
+
+        when(cashBoxRepository.findByFilters(anyLong(), any(LocalDate.class), any(LocalDate.class),
+                any(Boolean.class),anyString(), anyLong(), anyLong(), any(IncomeExpenseType.class),
+                any(Pageable.class))).thenReturn(boxPage);
     }
 
     @Test
@@ -105,7 +109,12 @@ public class CashboxServiceTest {
 
     @Test
     void findAllBySpecificationTest() {
-
+        FilterForm filters = new FilterForm();
+        filters.setDate("2022-11-11 - 2022-13-11");
+        assertThat(cashBoxService.findAllBySpecification2(filters, 1,1)).isInstanceOf(Page.class);
+        assertThat(cashBoxService.findAllBySpecification2(filters, 1,1).getContent()).hasSize(3);
+        assertThat(cashBoxService.findAllBySpecification2(filters, 1,1).getContent()).hasAtLeastOneElementOfType(CashBoxDTO.class);
+        assertThat(cashBoxService.findAllBySpecification2(filters, 1,1).getContent().get(0)).isEqualTo(testDTO);
     }
 
     @Test

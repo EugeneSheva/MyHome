@@ -137,6 +137,7 @@
                                              th:value="${account.id}"
                                              ></option>
                                 </select>
+                                <div style="color: #d80450" th:if="${#fields.hasErrors('account')}" th:errors="*{account}"></div>
 
                             </div>
                         </div>

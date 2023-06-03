@@ -68,4 +68,4 @@ jobs:
               sudo docker stop myhome
               sudo docker rm myhome
               sudo docker rmi temporalparadox/myhome
-              sudo docker-compose -f docker-compose-myhome.yml up
+              sudo docker-compose -f docker-compose-myhome.yml -d up

@@ -3,6 +3,7 @@ package com.example.myhome.services;
 import com.example.myhome.dto.ApartmentDTO;
 import com.example.myhome.mapper.ApartmentDTOMapper;
 import com.example.myhome.model.*;
+import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.repository.ApartmentRepository;
 import com.example.myhome.service.ApartmentService;
 import com.example.myhome.service.BuildingService;
@@ -18,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -89,7 +91,8 @@ public class ApartmentServiceTest {
         when(apartmentRepository.findApartmentsByBuildingIdAndFloorContainingIgnoreCaseAndBalanceBefore(anyLong(),anyString(),anyDouble())).thenReturn(apartmentList);
         when(apartmentRepository.findApartmentsByBuildingIdAndSectionContainingIgnoreCaseAndFloorContainingIgnoreCase(anyLong(),anyString(),anyString())).thenReturn(apartmentList);
         when(apartmentRepository.findApartmentsByBuildingIdAndSectionContainingIgnoreCaseAndFloorContainingIgnoreCaseAndBalanceBefore(anyLong(),anyString(),anyString(),anyDouble())).thenReturn(apartmentList);
-
+        when(apartmentRepository.findByFilters(anyLong(), anyString(), anyString(), anyString(), anyLong(), anyString(),
+                any(Pageable.class))).thenReturn(apartmentPage);
     }
 
     @Test
@@ -205,6 +208,17 @@ public class ApartmentServiceTest {
     @Test
     void getQuantityTest() {
         assertThat(apartmentService.getQuantity()).isEqualTo(3);
+    }
+
+    @Test
+    void findBySpecificationAndPageTest() {
+        FilterForm filters = new FilterForm();
+        filters.setNumber(1L);
+        filters.setBuilding(1L);
+        filters.setFloor("test");
+        assertThat(apartmentService.findBySpecificationAndPage(1,1, filters)).isInstanceOf(Page.class);
+        assertThat(apartmentService.findBySpecificationAndPage(1,1, filters).getContent()).hasSize(3);
+        assertThat(apartmentService.findBySpecificationAndPage(1,1, filters).getContent()).hasAtLeastOneElementOfType(ApartmentDTO.class);
     }
 
 }

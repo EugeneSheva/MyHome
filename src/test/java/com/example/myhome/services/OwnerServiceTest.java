@@ -3,6 +3,7 @@ package com.example.myhome.services;
 import com.example.myhome.dto.OwnerDTO;
 import com.example.myhome.mapper.OwnerDTOMapper;
 import com.example.myhome.model.*;
+import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.repository.OwnerRepository;
 import com.example.myhome.service.ApartmentService;
 import com.example.myhome.service.BuildingService;
@@ -19,7 +20,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -67,6 +71,7 @@ public class OwnerServiceTest {
         testOwner.setFirst_name("test");
         testOwner.setLast_name("test");
         testOwner.setFathers_name("test");
+        testOwner.setProfile_picture("test");
 
         Apartment apartment = new Apartment();
         apartment.setId(1L);
@@ -75,7 +80,9 @@ public class OwnerServiceTest {
         apartment.setSquare(100.0);
         apartment.setBalance(100.0);
         apartment.setNumber(100L);
-        apartment.setAccount(new ApartmentAccount());
+        ApartmentAccount account = new ApartmentAccount();
+        account.setId(1L);
+        apartment.setAccount(account);
         apartment.setBuilding(new Building());
         apartment.setFloor("1");
         apartment.setSection("1");
@@ -99,7 +106,12 @@ public class OwnerServiceTest {
         when(ownerRepository.findByEmail(anyString())).thenReturn(Optional.of(testOwner));
         when(ownerRepository.findAll()).thenReturn(ownerList);
         when(ownerRepository.findAll(any(Pageable.class))).thenReturn(ownerPage);
+        when(ownerRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(ownerPage);
+        when(ownerRepository.findByFilters(anyLong(), anyString(), anyString(),anyString(),anyString(),
+                anyLong(), any(LocalDate.class),any(UserStatus.class),anyString(), any(Pageable.class))).thenReturn(ownerPage);
         when(ownerRepository.findByName(anyString(), any(Pageable.class))).thenReturn(ownerPage);
+        when(ownerRepository.findByNameFragment(anyString(),any(Pageable.class))).thenReturn(ownerPage);
+        when(ownerRepository.getReferenceById(anyLong())).thenReturn(testOwner);
     }
 
     @Test
@@ -155,22 +167,63 @@ public class OwnerServiceTest {
 
     @Test
     void findAllBySpecificationTest() {
+        FilterForm filters = new FilterForm();
+        filters.setId(1L);
+        filters.setOwnerName("test");
+        filters.setPhone("test");
+        filters.setEmail("test");
+        filters.setBuilding(1L);
+        filters.setApartment(1L);
+        filters.setDate("2022-11-11");
+        filters.setStatus("NEW");
+        filters.setDebt(true);
 
+        assertThat(ownerService.findAllBySpecification(filters,1,1)).isInstanceOf(Page.class);
+        assertThat(ownerService.findAllBySpecification(filters,1,1).getContent()).hasSize(3);
+        assertThat(ownerService.findAllBySpecification(filters,1,1).getContent()).hasAtLeastOneElementOfType(OwnerDTO.class);
     }
 
     @Test
     void buildSpecTest() {
+        FilterForm filters = new FilterForm();
+        filters.setId(1L);
+        filters.setOwnerName("test");
+        filters.setPhone("test");
+        filters.setEmail("test");
+        filters.setBuilding(1L);
+        filters.setApartment(1L);
+        filters.setDate("2022-11-11");
+        filters.setStatus("NEW");
+        filters.setDebt(true);
 
+        assertThat(ownerService.buildSpecFromFilters(filters)).isInstanceOf(Specification.class);
     }
 
     @Test
     void findAllBySpecificationTest_2() {
+        FilterForm filters = new FilterForm();
+        filters.setId(1L);
+        filters.setOwnerName("test");
+        filters.setPhone("test");
+        filters.setEmail("test");
+        filters.setBuilding(1L);
+        filters.setApartment(1L);
+        filters.setDate("2022-11-11");
+        filters.setStatus("NEW");
+        filters.setDebt(true);
 
+        when(ownerRepository.findByFilters(anyLong(), anyString(), anyString(),anyString(),anyString(),
+                anyLong(), any(LocalDate.class),any(UserStatus.class),anyString(), any(Pageable.class))).thenReturn(ownerPage);
+
+        assertThat(ownerService.findAllBySpecification2(filters,1,1)).isInstanceOf(Page.class);
+        assertThat(ownerService.findAllBySpecification2(filters,1,1).getContent()).hasSize(3);
+        assertThat(ownerService.findAllBySpecification2(filters,1,1).getContent()).hasAtLeastOneElementOfType(OwnerDTO.class);
     }
 
     @Test
     void findByNameFragmentDTOTest() {
-
+        assertThat(ownerService.findByNameFragmentDTO(testOwner.getFullName(), PageRequest.of(1,1))).isInstanceOf(Page.class);
+        assertThat(ownerService.findByNameFragmentDTO(testOwner.getFullName(), PageRequest.of(1,1)).getContent()).hasSize(1);
     }
 
     @Test
@@ -195,12 +248,20 @@ public class OwnerServiceTest {
 
     @Test
     void getOwnerApartmentAccountIdsTest() {
-
+        assertThat(ownerService.getOwnerApartmentAccountsIds(testOwner.getId())).isInstanceOf(List.class);
+        assertThat(ownerService.getOwnerApartmentAccountsIds(testOwner.getId())).hasSameElementsAs(List.of(1L,1L,1L));
     }
 
     @Test
-    void saveOwnerImagesTest() {
+    void saveOwnerImagesTest() throws IOException {
+        MockMultipartFile file = new MockMultipartFile("file", "file.txt", "multipart/form-data", new byte[1]);
+        assertThat(ownerService.saveOwnerImage(testOwner.getId(), file)).isInstanceOf(String.class);
+    }
 
+    @Test
+    void saveOwnerImagesTest_2() throws Exception {
+        MockMultipartFile empty_file = new MockMultipartFile("empty_file", "empty_file.txt", "multipart/form-data", new byte[0]);
+        assertThat(ownerService.saveOwnerImage(testOwner.getId(), empty_file)).isInstanceOf(String.class);
     }
 
     @Test

@@ -8,11 +8,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import javax.mail.MessagingException;
+import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class EmailServiceTest {
@@ -30,12 +31,14 @@ public class EmailServiceTest {
 
     @Test
     void sendTest() {
+        when(mailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
         emailService.send("test", "test");
     }
 
     @Test
     void failSendTest() {
-        doThrow(new NotFoundException()).when(mailSender).send((MimeMessage) any());
+        when(mailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
+        doAnswer(invocation -> {throw new MessagingException();}).when(mailSender).send((MimeMessage) any());
         emailService.send("test", "test");
     }
 }

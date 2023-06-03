@@ -89,11 +89,14 @@ public class BuildingController {
 
     @PostMapping("/save")
     public String saveBuildig(@Valid @ModelAttribute("building") Building build, BindingResult bindingResult, @RequestParam("name") String name, @RequestParam("address") String address,
-                              @RequestParam("sections") List<String> sections, @RequestParam(name = "id", defaultValue = "0") Long id, @RequestParam("floors") List<String> floors, @RequestParam("admins") List<Admin> admins,
+                              @RequestParam("sections") List<String> sections, @RequestParam(name = "id", defaultValue = "0") Long id, @RequestParam("floors") List<String> floors, @RequestParam(name="admins",required = false) List<Admin> admins,
                               @RequestParam("img01") MultipartFile file1, @RequestParam("img02") MultipartFile file2, @RequestParam("img03") MultipartFile file3, @RequestParam("img04") MultipartFile file4,
-                              @RequestParam("img05") MultipartFile file5) throws IOException {
+                              @RequestParam("img05") MultipartFile file5, Model model) throws IOException {
         buildingValidator.validate(build, bindingResult);
         if (bindingResult.hasErrors()) {
+                List<AdminDTO>adminList=adminService.findAllDTO();
+                model.addAttribute("adminList", adminList);
+                model.addAttribute("validation", "failed");
                 return "admin_panel/buildings/building_edit";
             } else {
             System.out.println("admins "+admins);

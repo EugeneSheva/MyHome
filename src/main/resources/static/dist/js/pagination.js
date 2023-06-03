@@ -10,7 +10,7 @@ if(history.state != null) {
     setFilters(pageFiltersString);
 } else {
     currentPageNumber = 1;
-    currentPageSize = 5;
+    currentPageSize = 10;
     pageFiltersString = '';
 }
 
@@ -894,7 +894,7 @@ function drawPagination() {
 
     let $pagination = $(".pagination_container");
     $pagination.html('');
-//    if(totalPagesCount < 1) return;
+    if(totalPagesCount <= 1) return;
 
     let ul = document.createElement('ul');
     ul.classList.add('pagination', 'justify-content-center', 'font-weight-medium');

@@ -49,13 +49,13 @@
                 </ol>
                 <div class="carousel-inner" id="car">
                     <div class="carousel-item selected" data-index="0">
-                        <img class="d-block w-100" th:src="@{/images/pages/{url}(url=${page.slide1})}" alt="First slide">
+                        <img class="d-block w-100" th:src="@{/images/{url}(url=${page.slide1})}" alt="First slide">
                     </div>
                     <div class="carousel-item" th:if="${page.slide2 != null && !page.slide3.equals('')}" data-index="1">
-                        <img class="d-block w-100" th:src="@{/images/pages/{url}(url=${page.slide2})}" alt="Second slide">
+                        <img class="d-block w-100" th:src="@{/images/{url}(url=${page.slide2})}" alt="Second slide">
                     </div>
                     <div class="carousel-item" th:if="${page.slide3 != null && !page.slide3.equals('')}" data-index="2">
-                        <img class="d-block w-100" th:src="@{/images/pages/{url}(url=${page.slide3})}" alt="Third slide">
+                        <img class="d-block w-100" th:src="@{/images/{url}(url=${page.slide3})}" alt="Third slide">
                     </div>
                 </div>
                 <a class="carousel-control-prev" id="prev" role="button" data-slide="prev" data-interval="1000">
@@ -124,7 +124,7 @@
                 <hr>
                 <div class="col-md-4">
                     <div class="block mb-5">
-                        <img class="img-fluid mb-4" th:src="@{/images/pages/{url}(url=${page.block_1_img})}" alt="">
+                        <img class="img-fluid mb-4" th:src="@{/images/{url}(url=${page.block_1_img})}" alt="">
                         <br>
                         <h3 th:utext="${page.block_1_title}">Магазины, банки, школы</h3>
                         <p th:utext="${page.block_1_description}">
@@ -136,7 +136,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="block mb-5">
-                        <img class="img-fluid mb-4" th:src="@{/images/pages/{url}(url=${page.block_2_img})}" alt="">
+                        <img class="img-fluid mb-4" th:src="@{/images/{url}(url=${page.block_2_img})}" alt="">
                         <br>
                         <h3 th:utext="${page.block_2_title}">Магазины, банки, школы</h3>
                         <p th:utext="${page.block_2_description}">
@@ -148,7 +148,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="block mb-5">
-                        <img class="img-fluid mb-4" th:src="@{/images/pages/{url}(url=${page.block_3_img})}" alt="">
+                        <img class="img-fluid mb-4" th:src="@{/images/{url}(url=${page.block_3_img})}" alt="">
                         <br>
                         <h3 th:utext="${page.block_3_title}">Магазины, банки, школы</h3>
                         <p th:utext="${page.block_3_description}">
@@ -160,7 +160,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="block mb-5">
-                        <img class="img-fluid mb-4" th:src="@{/images/pages/{url}(url=${page.block_4_img})}" alt="">
+                        <img class="img-fluid mb-4" th:src="@{/images/{url}(url=${page.block_4_img})}" alt="">
                         <br>
                         <h3 th:utext="${page.block_4_title}">Магазины, банки, школы</h3>
                         <p th:utext="${page.block_4_description}">
@@ -172,7 +172,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="block mb-5">
-                        <img class="img-fluid mb-4" th:src="@{/images/pages/{url}(url=${page.block_5_img})}" alt="">
+                        <img class="img-fluid mb-4" th:src="@{/images/{url}(url=${page.block_5_img})}" alt="">
                         <br>
                         <h3 th:utext="${page.block_5_title}">Магазины, банки, школы</h3>
                         <p th:utext="${page.block_5_description}">
@@ -184,7 +184,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="block mb-5">
-                        <img class="img-fluid mb-4" th:src="@{/images/pages/{url}(url=${page.block_6_img})}" alt="">
+                        <img class="img-fluid mb-4" th:src="@{/images/{url}(url=${page.block_6_img})}" alt="">
                         <br>
                         <h3 th:utext="${page.block_6_title}">Магазины, банки, школы</h3>
                         <p th:utext="${page.block_6_description}">

@@ -1,6 +1,7 @@
 package com.example.myhome.services;
 
 import com.example.myhome.model.IncomeExpenseItems;
+import com.example.myhome.model.IncomeExpenseType;
 import com.example.myhome.model.PageRoleDisplay;
 import com.example.myhome.model.PaymentDetails;
 import com.example.myhome.repository.IncomeExpenseRepository;
@@ -19,8 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -80,12 +80,19 @@ public class SettingsServiceTest {
 
     @Test
     void getAllTransactionItemsSortTest() {
-        assertThat(service.getAllTransactionItems(Sort.by(Sort.Direction.ASC))).isEqualTo(incomeExpenseItemsList);
+        assertThat(service.getAllTransactionItems(Sort.by(Sort.Direction.ASC, "name"))).isEqualTo(incomeExpenseItemsList);
     }
 
     @Test
     void saveTransactionItemTest() {
         assertThat(service.saveTransactionItem(incomeExpenseItems)).isEqualTo(incomeExpenseItems);
+    }
+
+    @Test
+    void doesntSaveExistingTransactionItemTest() {
+        when(incomeExpenseRepository.existsByName(anyString())).thenReturn(true);
+        when(incomeExpenseRepository.existsByIncomeExpenseType(any(IncomeExpenseType.class))).thenReturn(true);
+        assertThat(service.saveTransactionItem(incomeExpenseItems)).isNull();
     }
 
     @Test

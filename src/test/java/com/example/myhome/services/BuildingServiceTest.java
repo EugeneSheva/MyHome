@@ -63,6 +63,11 @@ public class BuildingServiceTest {
         testBuilding.setFloors(List.of("test","test"));
         testBuilding.setSections(List.of("test","test"));
         testBuilding.setName("test");
+        testBuilding.setImg1("test");
+        testBuilding.setImg2("test");
+        testBuilding.setImg3("test");
+        testBuilding.setImg4("test");
+        testBuilding.setImg5("test");
 
         buildingDTOMapper = new BuildingDTOMapper();
 
@@ -82,6 +87,7 @@ public class BuildingServiceTest {
         when(buildingRepository.findById(anyLong())).thenReturn(Optional.ofNullable(testBuilding));
         when(buildingRepository.save(any(Building.class))).thenReturn(testBuilding);
         when(buildingRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(buildingPage);
+        when(buildingRepository.findAll(any(Pageable.class))).thenReturn(buildingPage);
         when(buildingRepository.findByName(anyString())).thenReturn(testBuilding);
         when(buildingRepository.findByName(anyString(), any())).thenReturn(buildingPage);
         when(buildingRepository.getSectionApartments(anyLong(), anyString())).thenReturn(testBuilding.getApartments());
@@ -102,6 +108,11 @@ public class BuildingServiceTest {
     @Test
     void findAllTest() {
         assertThat(buildingService.findAll()).isEqualTo(buildingList);
+    }
+
+    @Test
+    void findAllPageTest() {
+        assertThat(buildingService.findAll(PageRequest.of(1,1))).isEqualTo(buildingPage);
     }
 
     @Test
@@ -156,6 +167,17 @@ public class BuildingServiceTest {
         MockMultipartFile file3 = new MockMultipartFile("file3", "file3.jpg", "multipart/form-data", new byte[1]);
         MockMultipartFile file4 = new MockMultipartFile("file4", "file4.jpg", "multipart/form-data", new byte[1]);
         MockMultipartFile file5 = new MockMultipartFile("file5", "file5.jpg", "multipart/form-data", new byte[1]);
+
+        assertThat(buildingService.saveBuildingImages(1L,file1,file2,file3,file4,file5)).isInstanceOf(Building.class);
+    }
+
+    @Test
+    void saveBuildingImagesTest_2() throws IOException {
+        MockMultipartFile file1 = new MockMultipartFile("file1", "file1.jpg", "multipart/form-data", new byte[0]);
+        MockMultipartFile file2 = new MockMultipartFile("file2", "file2.jpg", "multipart/form-data", new byte[0]);
+        MockMultipartFile file3 = new MockMultipartFile("file3", "file3.jpg", "multipart/form-data", new byte[0]);
+        MockMultipartFile file4 = new MockMultipartFile("file4", "file4.jpg", "multipart/form-data", new byte[0]);
+        MockMultipartFile file5 = new MockMultipartFile("file5", "file5.jpg", "multipart/form-data", new byte[0]);
 
         assertThat(buildingService.saveBuildingImages(1L,file1,file2,file3,file4,file5)).isInstanceOf(Building.class);
     }

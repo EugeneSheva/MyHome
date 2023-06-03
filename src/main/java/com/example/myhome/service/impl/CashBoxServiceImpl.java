@@ -37,61 +37,6 @@ public class CashBoxServiceImpl implements CashBoxService {
     @Override
     public CashBox save(CashBox cashBox) { return cashBoxRepository.save(cashBox); }
 
-//    public Page<CashBoxDTO> findAllBySpecification(FilterForm filters, Integer page, Integer size) {
-//        Pageable pageable = PageRequest.of(page-1, size);
-//        Page<CashBox> initialPage = cashBoxRepository.findAll(buildSpecFromFilters(filters), pageable);
-//
-//        List<CashBoxDTO> listDTO = initialPage.getContent().stream()
-//                .map(cashbox -> {
-//                    String transactionItemName = (cashbox.getIncomeExpenseItems() != null) ? cashbox.getIncomeExpenseItems().getName() : "";
-//                    String ownerFullName = (cashbox.getOwner() != null) ? cashbox.getOwner().getFullName() : "";
-//                    String accountNumber = (cashbox.getApartmentAccount() != null) ? String.format("%010d", cashbox.getApartmentAccount().getId()) : "";
-//                    String transactionType = (cashbox.getIncomeExpenseType() != null) ? cashbox.getIncomeExpenseType().getName() : "";
-//                    return CashBoxDTO.builder()
-//                            .id(cashbox.getId())
-//                            .date(cashbox.getDate())
-//                            .completed(cashbox.getCompleted())
-//                            .transactionItemName(transactionItemName)
-//                            .ownerFullName(ownerFullName)
-//                            .accountNumber(accountNumber)
-//                            .transactionType(transactionType)
-//                            .amount(cashbox.getAmount())
-//                            .build();
-//                })
-//                .collect(Collectors.toList());
-//
-//        return new PageImpl<>(listDTO, pageable, initialPage.getTotalElements());
-//    }
-
-//    private Specification<CashBox> buildSpecFromFilters(FilterForm filters) {
-//        Long id = filters.getId();
-//        String date = filters.getDate();
-//        Boolean completed = filters.getCompleted();
-//        Long transactionItemID = filters.getIncomeExpenseItem();
-//        Long ownerID = filters.getOwner();
-//        Long accountID = (filters.getAccount() != null) ? Long.parseLong(filters.getAccount()) : null;
-//        IncomeExpenseType transactionType = (filters.getIncomeExpenseType() != null) ? IncomeExpenseType.valueOf(filters.getIncomeExpenseType()) : null;
-//
-//        LocalDate from = null, to = null;
-//
-//        if(date != null && !date.isEmpty()) {
-//            String date_from = date.split(" - ")[0];
-//            from =
-//                    LocalDate.parse(date_from);
-//            String date_to = date.split(" - ")[1];
-//            to =
-//                    LocalDate.parse(date_to);
-//        }
-//
-//        return Specification.where(CashBoxSpecification.hasId(id)
-//                .and(CashBoxSpecification.hasDatesBetween(from, to))
-//                .and(CashBoxSpecification.isCompletedContains(completed))
-//                .and(CashBoxSpecification.hasTransactionItemID(transactionItemID))
-//                .and(CashBoxSpecification.hasOwnerID(ownerID))
-//                .and(CashBoxSpecification.hasAccountID(accountID))
-//                .and(CashBoxSpecification.hasTransactionType(transactionType)));
-//
-//    }
 @Override
 public Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page, Integer size) {
     Pageable pageable = PageRequest.of(page-1, size);
@@ -176,11 +121,11 @@ public Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page
     }
 
     @Override
-    public Boolean getIsCompleteFromString(String isCopmlete) {
+    public Boolean getIsCompleteFromString(String isComplete) {
         Boolean isCom = null;
-        if (isCopmlete.equalsIgnoreCase("сompleted")) {
+        if (isComplete.equalsIgnoreCase("сompleted")) {
             isCom = true;
-        } else if (isCopmlete.equalsIgnoreCase("notComplete")) {
+        } else if (isComplete.equalsIgnoreCase("notComplete")) {
             isCom = false;
         }
         return isCom;

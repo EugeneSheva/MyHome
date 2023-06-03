@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -175,11 +176,14 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public Owner save(Owner owner) { return ownerRepository.save(owner); }
+    public Owner save(Owner owner) {
+        if(owner.getId() == null || owner.getAdded_at() == null) owner.setAdded_at(LocalDateTime.now());
+        return ownerRepository.save(owner);
+    }
 
     @Override
     public Owner save(OwnerDTO dto) {
-        return ownerRepository.save(ownerDTOMapper.fromDTOToOwner(dto));
+        return save(ownerDTOMapper.fromDTOToOwner(dto));
     }
 
     @Override

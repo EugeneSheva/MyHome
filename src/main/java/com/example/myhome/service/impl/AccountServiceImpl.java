@@ -122,6 +122,7 @@ public class AccountServiceImpl implements AccountService {
         account.setApartment(apartment);
         account.setOwner(apartment.getOwner());
         account.setBuilding(apartment.getBuilding());
+        account.setBalance(account.getAccountBalance());
         return saveAccount(account);
 
     }

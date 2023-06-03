@@ -1,4 +1,6 @@
 package com.example.myhome.controller;
+import com.example.myhome.dto.AdminDTO;
+import com.example.myhome.model.Admin;
 import com.example.myhome.service.registration.LoginRequest;
 import com.example.myhome.service.registration.RegistrationRequest;
 import com.example.myhome.service.registration.RegisterService;
@@ -66,7 +68,15 @@ public class LoginController {
     }
 
     @GetMapping("/admin/site/login")
-    public String showAdminLoginPage(Model model) {return "main_website/admin_login";}
+    public String showAdminLoginPage(Model model) {
+        Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!(object instanceof Admin)) return "main_website/admin_login";
+        else {
+            Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if(admin == null) return "main_website/admin_login";
+            return "redirect:/admin";
+        }
+    }
 
     @GetMapping("/cabinet/site/register")
     public String showRegisterPage(Model model) {

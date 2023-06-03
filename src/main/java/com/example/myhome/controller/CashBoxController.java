@@ -257,7 +257,7 @@ public class CashBoxController {
                 ApartmentAccount account = accountService.findAccountById(accountId);
                 if(!account.getTransactions().contains(cashBoxItem)) {
                     account.getTransactions().add(cashBoxItem);
-                    account.addToBalance(cashBoxItem.getAmount());
+                    account.setBalance(account.getAccountBalance());
                     cashBoxItem.setApartmentAccount(account);
                 }
             }

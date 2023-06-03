@@ -65,7 +65,8 @@ jobs:
             username: ${{ secrets.SERVER_USERNAME }}
             password: ${{ secrets.SERVER_PASSWORD }}
             script: |
-              sudo docker stop myhome
-              sudo docker rm myhome
-              sudo docker rmi temporalparadox/myhome
+#              sudo docker stop myhome
+#              sudo docker rm myhome
+#              sudo docker rmi temporalparadox/myhome
+              sudo docker-compose -f docker-compose-myhome.yml down
               sudo docker-compose -f docker-compose-myhome.yml -d up

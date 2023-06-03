@@ -80,4 +80,4 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
-          script: sudo docker-compose -f docker-compose-myhome.yml -d up
+          script: sudo docker-compose -f docker-compose-myhome.yml up -d

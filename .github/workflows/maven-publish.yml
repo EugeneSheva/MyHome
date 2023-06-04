@@ -83,7 +83,7 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
-          script: sudo docker rmi temporalparadox/myhome
+          script: sudo docker rmi temporalparadox/myhome:latest
 
 #      - uses: appleboy/ssh-action@v0.1.10
 #        name: Update image

@@ -98,10 +98,8 @@ jobs:
       - uses: appleboy/ssh-action@v0.1.10
         name: Create new container with updated image
         if: ${{ success() || failure() }}
-        env:
-          DB_URL: jdbc:mysql://172.17.0.2:3306/myhome
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
-          script: sudo docker run -p 9002:8080 -P --name myhome -e SPRING_DATASOURCE_URL=$DB_URL -d temporalparadox/myhome:latest
+          script: sudo docker run -p 9002:8080 -P --name myhome -e SPRING_DATASOURCE_URL=jdbc:mysql://172.17.0.2:3306/myhome -d temporalparadox/myhome:latest

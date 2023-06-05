@@ -245,6 +245,11 @@ public class InvoiceController {
         }
     }
 
+    @GetMapping("/email/{id}")
+    public String redirectToPrintPage(@PathVariable long id) {
+        return "redirect:/admin/invoices/print/" + id;
+    }
+
     @GetMapping("/download/{fileName}")
     public void downloadFile(@PathVariable String fileName,
                                HttpServletRequest request,

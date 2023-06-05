@@ -114,14 +114,14 @@
                         </button>
                         <ul class="dropdown-menu" style="width:230px;">
                             <li><a th:href="@{/admin/cashbox/newIncome}"
-                                   style="padding-inline:15px;display: block; color: black; text-decoration: none;" th:text="#{createIncome}">Создать
+                                   style="padding-inline:15px;display: block; text-decoration: none;" th:text="#{createIncome}">Создать
                                 приход</a>
                             </li>
                             <li><a th:href="@{/admin/cashbox/newExpense}"
-                                   style="padding-inline:15px;display: block; color: black; text-decoration: none;" th:text="#{createExpense}">Создать
+                                   style="padding-inline:15px;display: block; text-decoration: none;" th:text="#{createExpense}">Создать
                                 расход</a></li>
                             <li onclick="downloadExcelTable()"
-                                style="display: block; color: black; text-decoration: none;"><a th:text="#{uploadToExele}">Выгрузить в Excel</a>
+                                style="display: block; text-decoration: none;"><a th:text="#{uploadToExele}">Выгрузить в Excel</a>
                             </li>
                             </li>
                         </ul>

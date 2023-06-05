@@ -47,6 +47,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addConverter(new StringToBuildingDTOConverter());
         registry.addConverter(new StringToAccountDTOConverter());
         registry.addConverter(new StringToOwnerDTOConverter());
+//        registry.addConverter(new StringToUnitConverter());
         registry.addConverter(new AccountDTOToStringConverter());
         registry.addConverter(new OwnerDTOToStringConverter());
     }

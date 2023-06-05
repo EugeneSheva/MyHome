@@ -35,9 +35,9 @@ public class ApartmentValidator implements Validator {
         if (apartment.getOwner() == null || apartment.getOwner().getId() == null) {
             e.rejectValue("owner", "owner.empty", "Заполните поле");
         }
-        if(apartment.getAccount() == null || apartment.getAccount().getId() == null) {
-            e.rejectValue("account", "account.empty", "Заполните поле");
-        }
+//        if(apartment.getAccount() == null || apartment.getAccount().getId() == null) {
+//            e.rejectValue("account", "account.empty", "Заполните поле");
+//        }
 
     }
 }

@@ -31,6 +31,11 @@ public class BuildingDTOMapper {
         dto.setAddress(building.getAddress());
         dto.setFloors(building.getFloors());
         dto.setText(building.getName());
+        dto.setImg1(building.getImg1());
+        dto.setImg2(building.getImg2());
+        dto.setImg3(building.getImg3());
+        dto.setImg4(building.getImg4());
+        dto.setImg5(building.getImg5());
 
         return dto;
     }

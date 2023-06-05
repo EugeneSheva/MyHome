@@ -140,7 +140,12 @@ public class OwnerServiceImpl implements OwnerService {
     public Page<OwnerDTO> findAllBySpecification2(FilterForm filters, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page-1, size);
         List<OwnerDTO> listDTO = new ArrayList<>();
-        Page<Owner>ownerList = ownerRepository.findByFilters(filters.getId(),filters.getOwnerName(),filters.getPhone(),filters.getEmail(), filters.getBuildingName(),filters.getApartment(), filters.getDate() != null ? LocalDate.parse(filters.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null, filters.getStatus()!=null? UserStatus.valueOf(filters.getStatus()) : null, String.valueOf(filters.getDebtSting()), pageable);
+        Page<Owner>ownerList = ownerRepository.findByFilters(
+                filters.getId(),filters.getOwnerName(),filters.getPhone(),
+                filters.getEmail(), filters.getBuildingName(),filters.getApartment(),
+                filters.getDate() != null ? LocalDate.parse(filters.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null,
+                filters.getStatus() != null? UserStatus.valueOf(filters.getStatus()) : null,
+                filters.getDebt(), pageable);
         for (Owner owner : ownerList) {
             List<ApartmentDTO> apartments = new ArrayList<>();
             List<BuildingDTO> buildings = new ArrayList<>();

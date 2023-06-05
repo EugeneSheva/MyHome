@@ -30,13 +30,13 @@ public class ApartmentDTOMapper {
         apartment.setId(dto.getId());
         apartment.setNumber(dto.getNumber());
         apartment.setSquare(dto.getSquare());
-        apartment.setBuilding(buildingRepository.getReferenceById(dto.getBuilding().getId()));
         apartment.setSection(dto.getSection());
         apartment.setFloor(dto.getFloor());
-        apartment.setOwner(ownerRepository.getReferenceById(dto.getOwner().getId()));
         apartment.setTariff(dto.getTariff());
-        apartment.setAccount(accountRepository.getReferenceById(dto.getAccount().getId()));
         apartment.setBalance(dto.getBalance());
+        if(dto.getBuilding() != null && dto.getBuilding().getId() != null) apartment.setBuilding(buildingRepository.getReferenceById(dto.getBuilding().getId()));
+        if(dto.getOwner() != null && dto.getOwner().getId() != null) apartment.setOwner(ownerRepository.getReferenceById(dto.getOwner().getId()));
+        if(dto.getAccount() != null && dto.getAccount().getId() != null) apartment.setAccount(accountRepository.getReferenceById(dto.getAccount().getId()));
 
         return apartment;
     }

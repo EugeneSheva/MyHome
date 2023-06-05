@@ -11,9 +11,11 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +28,7 @@ public class ServiceController {
 
     private final ServiceService serviceService;
     private final MessageSource messageSource;
+    private final Validator validator;
 
     // Открыть страничку настройки услуг и ед.изм.
     @GetMapping
@@ -35,6 +38,7 @@ public class ServiceController {
         serviceForm.setUnitList(serviceService.findAllUnits());
         model.addAttribute("serviceForm", serviceForm);
         model.addAttribute("units", serviceService.findAllUnits());
+        model.addAttribute("totalServiceCount",serviceForm.getServiceList().size());
         return "admin_panel/system_settings/settings_services";
     }
 
@@ -50,17 +54,34 @@ public class ServiceController {
                                  RedirectAttributes redirectAttributes,
                                  Model model) {
 
-        if(bindingResult.hasErrors() && new_service_names.length < 2 && new_service_unit_names.length < 2) {
-            log.info("serviceform validation failed");
+        List<Service> serviceList = serviceForm.getServiceList();
+        List<Unit> unitList = serviceForm.getUnitList().stream().filter((unit) -> unit.getId() != null).collect(Collectors.toList());
+        log.info(serviceList.toString());
+        log.info(unitList.toString());
+
+        if(bindingResult.hasErrors()) {
+            log.info("ERRORS FOUND");
+            log.info(bindingResult.getAllErrors().toString());
             model.addAttribute("validation", "failed");
+            model.addAttribute("totalServiceCount",serviceForm.getServiceList().size());
             return "admin_panel/system_settings/settings_services";
         }
 
-        List<Service> serviceList = serviceForm.getServiceList();
-        List<Unit> unitList = serviceForm.getUnitList().stream().filter((unit) -> unit.getId() != null).collect(Collectors.toList());
-
-        serviceService.addNewUnits(unitList, new_unit_names);
-        serviceService.addNewServices(serviceList, new_service_names, new_service_unit_names, new_service_show_in_meters);
+        try {
+//            serviceService.addNewUnits(unitList, new_unit_names);
+//            serviceService.addNewServices(serviceList, new_service_names, new_service_unit_names, new_service_show_in_meters);
+            serviceService.saveUnits(unitList);
+            serviceService.saveServices(serviceList);
+        } catch (ConstraintViolationException e) {
+            log.info("serviceform validation failed");
+            model.addAttribute("validation", "failed");
+            return "admin_panel/system_settings/settings_services";
+        } catch (Exception e) {
+            log.info("validation not failed, but other error during saving");
+            log.info(e.getMessage());
+            redirectAttributes.addFlashAttribute("fail", "error during saving");
+            return "admin_panel/system_settings/settings_services";
+        }
 
         return "redirect:/admin/services";
     }

@@ -33,14 +33,28 @@ public class ServiceServiceImpl implements ServiceService {
     public String getUnitNameById(Long unit_id) {return unitRepository.findById(unit_id).orElseThrow(NotFoundException::new).getName();}
     @Override
     public Service saveService(Service service) {return serviceRepository.save(service);}
+
+    @Override
+    public List<Service> saveServices(List<Service> list) {
+        return serviceRepository.saveAll(list);
+    }
+
+    @Override
+    public Unit saveUnit(Unit unit) {
+        return unitRepository.save(unit);
+    }
+
+    @Override
+    public List<Unit> saveUnits(List<Unit> list) {
+        return unitRepository.saveAll(list);
+    }
+
     @Override
     public void deleteServiceById(Long service_id) {serviceRepository.deleteById(service_id);}
     @Override
     public void deleteUnitById(Long unit_id) {unitRepository.deleteById(unit_id);}
     @Override
     public List<Unit> addNewUnits(List<Unit> unitList, String[] new_unit_names) {
-        log.info(unitList.toString());
-        log.info(Arrays.toString(new_unit_names));
 
         if(new_unit_names != null) {
 
@@ -66,16 +80,20 @@ public class ServiceServiceImpl implements ServiceService {
                                         String[] new_service_show_in_meters) {
 
         log.info(serviceList.toString());
+        log.info("SERVICE NAMES: " + Arrays.toString(new_service_names));
+        log.info("UNIT NAMES: " + Arrays.toString(new_service_unit_names));
+        log.info("SHOW IN METERS: " + Arrays.toString(new_service_show_in_meters));
 
         for (int i = 0; i < new_service_names.length; i++) {
-            if(new_service_names[i].equalsIgnoreCase("") || new_service_names[i] == null) continue;
+            if(new_service_names[i].isBlank() || new_service_unit_names[i].isBlank()) continue;
             Service service = new Service();
             service.setName(new_service_names[i]);
-            service.setShow_in_meters(true);
+            service.setShow_in_meters(Boolean.parseBoolean(new_service_show_in_meters[i]));
             service.setUnit(unitRepository.findByName(new_service_unit_names[i]).orElseGet(Unit::new));
             serviceList.add(service);
         }
 
         return serviceRepository.saveAll(serviceList);
     }
+
 }

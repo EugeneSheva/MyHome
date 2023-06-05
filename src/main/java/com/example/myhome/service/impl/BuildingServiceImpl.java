@@ -1,8 +1,10 @@
 package com.example.myhome.service.impl;
 
 
+import com.example.myhome.dto.AdminDTO;
 import com.example.myhome.dto.BuildingDTO;
 import com.example.myhome.exception.NotFoundException;
+import com.example.myhome.mapper.AdminDTOMapper;
 import com.example.myhome.mapper.ApartmentDTOMapper;
 import com.example.myhome.mapper.BuildingDTOMapper;
 import com.example.myhome.model.Apartment;
@@ -39,6 +41,7 @@ public class BuildingServiceImpl implements BuildingService {
 
     private final BuildingDTOMapper mapper;
     private final ApartmentDTOMapper apartmentMapper;
+    private final AdminDTOMapper adminMapper;
 
     @Override
     public Building findById(Long id) {
@@ -65,6 +68,7 @@ public class BuildingServiceImpl implements BuildingService {
         Building building = buildingRepository.findById(id).orElseThrow();
         BuildingDTO dto = mapper.fromBuildingToDTO(building);
         dto.setApartments(building.getApartments().stream().map(apartmentMapper::fromApartmentToDTO).collect(Collectors.toList()));
+        dto.setAdmins(building.getAdmins().stream().map(adminMapper::fromAdminToDTO).collect(Collectors.toList()));
         return dto;
     }
 

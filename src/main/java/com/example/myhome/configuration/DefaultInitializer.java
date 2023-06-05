@@ -42,23 +42,23 @@ class DefaultInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         checkForRoles();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForAdmins();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForServices();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForTransactionItems();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForTariffs();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForOwners();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForBuildings();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForApartments();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForAccounts();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForPages();
         log.info("INITIAL CHECK COMPLETED");
     }

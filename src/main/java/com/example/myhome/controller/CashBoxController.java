@@ -274,8 +274,9 @@ public class CashBoxController {
         if(bindingResult.hasErrors()) {
             return "admin_panel/cash_box/cashbox_edit";
         }
-        cashBoxService.save(cashBoxItem);
-
+        CashBox savedCashbox = cashBoxService.save(cashBoxItem);
+        savedCashbox.getApartmentAccount().addToBalance(savedCashbox.getAmount());
+        accountService.saveAccount(savedCashbox.getApartmentAccount());
         websocketController.sendCashboxItem(cashBoxItem);
 
         return "redirect:/admin/cashbox";

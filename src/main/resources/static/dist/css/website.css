@@ -80,16 +80,20 @@ h1,h2,h3,h4,h5,h6,p {
     column-gap: 10px;
 }
 
-/*.dropdown-menu a {
-    color: rgba(0,0,0,0.5);
+.dropdown-menu a {
+    /*color: rgba(0,0,0,0.5);*/
     padding-left: 15px;
+    cursor:pointer;
 }
 
+/*
 .dropdown-menu li:hover {
     background-color: rgba(128,128,128,0.4);
     cursor: pointer;
 }
+*/
 
+/*
 .dropdown-menu li:hover a {
     color: black;
 }*/

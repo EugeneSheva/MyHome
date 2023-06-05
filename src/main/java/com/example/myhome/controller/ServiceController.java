@@ -42,6 +42,7 @@ public class ServiceController {
         return "admin_panel/system_settings/settings_services";
     }
 
+
     // Сохранить все услуги/единицы измерения
     // Список всех имеющихся услуг и единиц привязывается к объекту ServiceForm
     // Затем в этот список добавляются и сохраняются новые услуги/единицы через соотв.массивы

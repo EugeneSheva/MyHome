@@ -108,7 +108,7 @@ public class OwnerServiceTest {
         when(ownerRepository.findAll(any(Pageable.class))).thenReturn(ownerPage);
         when(ownerRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(ownerPage);
         when(ownerRepository.findByFilters(anyLong(), anyString(), anyString(),anyString(),anyString(),
-                anyLong(), any(LocalDate.class),any(UserStatus.class),anyString(), any(Pageable.class))).thenReturn(ownerPage);
+                anyLong(), any(LocalDate.class),any(UserStatus.class),anyBoolean(), any(Pageable.class))).thenReturn(ownerPage);
         when(ownerRepository.findByName(anyString(), any(Pageable.class))).thenReturn(ownerPage);
         when(ownerRepository.findByNameFragment(anyString(),any(Pageable.class))).thenReturn(ownerPage);
         when(ownerRepository.getReferenceById(anyLong())).thenReturn(testOwner);
@@ -213,7 +213,7 @@ public class OwnerServiceTest {
         filters.setDebt(true);
 
         when(ownerRepository.findByFilters(anyLong(), anyString(), anyString(),anyString(),anyString(),
-                anyLong(), any(LocalDate.class),any(UserStatus.class),anyString(), any(Pageable.class))).thenReturn(ownerPage);
+                anyLong(), any(LocalDate.class),any(UserStatus.class),anyBoolean(), any(Pageable.class))).thenReturn(ownerPage);
 
         assertThat(ownerService.findAllBySpecification2(filters,1,1)).isInstanceOf(Page.class);
         assertThat(ownerService.findAllBySpecification2(filters,1,1).getContent()).hasSize(3);

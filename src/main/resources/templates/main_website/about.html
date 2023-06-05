@@ -43,7 +43,7 @@
 
     <div class="container">
         <ul class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/" style="text-decoration: none;"> Главная</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/}" style="text-decoration: none;"> Главная</a></li>
             <li class="breadcrumb-item active">О нас</li>
         </ul>
     </div>
@@ -101,12 +101,12 @@
                 <div th:each="document : ${documents}" class="media">
                     <div class="media-left">
                         <div class="media-object">
-                            <img style="width: 50px; height: 75px;" th:src="@{/images/documents/{url}(url=${document.file})}" alt="">
+                            <img style="width: 50px; height: 75px;" th:src="@{/images/{url}(url=${document.file})}" alt="">
                         </div>
                     </div>
                     <div class="media-body">
                         <h4 th:utext="${document.name}" class="media-heading">grt</h4>
-                        <a th:href="@{/images/documents/{url}(url=${document.file})}" download><i class="fa fa-download" aria-hidden="true"></i> Скачать</a>
+                        <a th:href="@{/images/{url}(url=${document.file})}" download><i class="fa fa-download" aria-hidden="true"></i> Скачать</a>
                     </div>
                 </div>
             </div>

@@ -22,7 +22,9 @@ public interface OwnerRepository extends JpaRepository<Owner, Long>, JpaSpecific
 
     Long countAllBy();
 
-    default Page<Owner> findByFilters(Long id, String name, String phoneNumber, String email, String buildingName, Long apartmentNumber, LocalDate added, UserStatus status, String is_debt, Pageable pageable) {
+    default Page<Owner> findByFilters(Long id, String name, String phoneNumber,
+                                      String email, String buildingName, Long apartmentNumber,
+                                      LocalDate added, UserStatus status, Boolean hasDebt, Pageable pageable) {
         Specification<Owner> spec = Specification.where(null);
         if (id != null ) {
             spec = spec.and(OwnerSpecifications.idContains(id));
@@ -48,12 +50,13 @@ public interface OwnerRepository extends JpaRepository<Owner, Long>, JpaSpecific
         if (status != null ) {
             spec = spec.and(OwnerSpecifications.statusContains(status));
         }
-        if (is_debt != null && !is_debt.isEmpty() && is_debt.equalsIgnoreCase("true" )) {
-            spec = spec.and(OwnerSpecifications.hasDebtContains());
-        }
-        if (is_debt != null && !is_debt.isEmpty() && is_debt.equalsIgnoreCase("false" )) {
-            spec = spec.and(OwnerSpecifications.noDebtContains());
-        }
+//        if (is_debt != null && !is_debt.isEmpty() && is_debt.equalsIgnoreCase("true" )) {
+//            spec = spec.and(OwnerSpecifications.hasDebtContains());
+//        }
+//        if (is_debt != null && !is_debt.isEmpty() && is_debt.equalsIgnoreCase("false" )) {
+//            spec = spec.and(OwnerSpecifications.noDebtContains());
+//        }
+        spec = spec.and(OwnerSpecifications.hasDebt(hasDebt));
         return findAll(spec, pageable);
     }
 

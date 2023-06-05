@@ -13,5 +13,5 @@ import java.util.List;
 public class ServiceForm {
 
     private List<@Valid Service> serviceList = new ArrayList<>();
-    private List<Unit> unitList = new ArrayList<>();
+    private List<@Valid Unit> unitList = new ArrayList<>();
 }

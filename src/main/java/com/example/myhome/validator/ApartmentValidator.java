@@ -23,18 +23,21 @@ public class ApartmentValidator implements Validator {
         if (apartment.getSquare() == null) {
             e.rejectValue("square", "square.empty", "Заполните поле");
         }
-        if (apartment.getBuilding() == null) {
+        if (apartment.getBuilding() == null || apartment.getBuilding().getId() == null) {
             e.rejectValue("building", "building.empty", "Заполните поле");
         }
-        if (apartment.getFloor() == null) {
+        if (apartment.getFloor() == null || apartment.getFloor().isEmpty()) {
             e.rejectValue("floor", "floor.empty", "Заполните поле");
         }
-        if (apartment.getSection() == null) {
+        if (apartment.getSection() == null || apartment.getSection().isEmpty()) {
             e.rejectValue("section", "section.empty", "Заполните поле");
         }
-        if (apartment.getOwner() == null) {
+        if (apartment.getOwner() == null || apartment.getOwner().getId() == null) {
             e.rejectValue("owner", "owner.empty", "Заполните поле");
         }
+//        if(apartment.getAccount() == null || apartment.getAccount().getId() == null) {
+//            e.rejectValue("account", "account.empty", "Заполните поле");
+//        }
 
     }
 }

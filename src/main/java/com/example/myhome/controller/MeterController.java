@@ -147,14 +147,16 @@ public class MeterController {
     // Сохранить созданное показание
     @PostMapping("/create")
     public String createMeter(@ModelAttribute MeterDataDTO meterDataDTO,BindingResult bindingResult, Model model) {
+        log.info(meterDataDTO.toString());
         validator.validate(meterDataDTO, bindingResult);
         log.info(bindingResult.getAllErrors().toString());
         if(bindingResult.hasErrors()) {
             model.addAttribute("id",meterDataService.getMaxId()+1);
-            model.addAttribute("building", buildingService.findBuildingDTObyId(meterDataDTO.getBuildingID()));
+            if(meterDataDTO.getBuildingID() != null && meterDataDTO.getBuildingID() != 0) model.addAttribute("building", buildingService.findBuildingDTObyId(meterDataDTO.getBuildingID()));
             model.addAttribute("services", serviceService.findAllServices());
             model.addAttribute("buildings", buildingService.findAllDTO());
             model.addAttribute("validation", "failed");
+//            model.addAttribute("meterDataDTO", meterDataDTO);
             return "admin_panel/meters/meter_card";
         }
         MeterData savedMeter = meterDataService.saveMeterData(meterDataDTO);

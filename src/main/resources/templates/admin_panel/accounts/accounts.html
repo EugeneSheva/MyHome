@@ -94,7 +94,7 @@
                         </button>
                         <ul class="dropdown-menu" style="width:230px;">
                             <li>
-                                <a th:href="@{/admin/accounts/create}" style="padding-inline:15px; color:black" th:text="#{accounts.mainTablePage.dropdown.option1}">
+                                <a th:href="@{/admin/accounts/create}" style="padding-inline:15px;" th:text="#{accounts.mainTablePage.dropdown.option1}">
                                 Добавить лицевой счет
                                 </a>
                             </li>
@@ -286,7 +286,7 @@
 
         $('#building').on('change', function() {
             var buildingID = this.value;
-            if (buildingID == null || buildingName == 0) {
+            if (buildingID == null || buildingID == 0) {
             $('#section').empty();
             $('#floor').empty();
             } else {

@@ -8,7 +8,7 @@ services:
       - "5000:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: myhome2
+      MYSQL_DATABASE: myhome
       MYSQL_PASSWORD: root
     healthcheck:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
@@ -26,11 +26,13 @@ services:
     environment:
       PMA_HOST: db_mysql
   web:
-      build: .
+      container_name: myhome
+      image: temporalparadox/myhome:master
+#      build: .
       ports:
-        - '9002:8080'
+        - '9005:8080'
       environment:
-        SPRING_DATASOURCE_URL: jdbc:mysql://db_mysql:3306/myhome2?createDatabaseIfNotExist=true
+        SPRING_DATASOURCE_URL: jdbc:mysql://db_mysql:3306/myhome
       depends_on:
           db_mysql:
             condition: service_healthy

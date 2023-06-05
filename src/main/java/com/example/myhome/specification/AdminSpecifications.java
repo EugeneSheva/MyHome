@@ -13,7 +13,7 @@ public class AdminSpecifications {
 
     public static Specification<Admin> hasNameLike(String s) {
         if(s == null) return (root, query, criteriaBuilder) -> null;
-        return (root, query, cb) -> cb.like(root.get(Admin_.FULL_NAME), "%"+s+"%");
+        return (root, query, cb) -> cb.like(root.get("first_name"), "%"+s+"%");
     }
 
     public static Specification<Admin> hasRole(String role) {
@@ -31,17 +31,17 @@ public class AdminSpecifications {
 
     public static Specification<Admin> hasPhoneLike(String s) {
         if(s == null) return (root, query, criteriaBuilder) -> null;
-        return (root, query, cb) -> cb.like(root.get(Admin_.PHONE_NUMBER), "%"+s+"%");
+        return (root, query, cb) -> cb.like(root.get("phone_number"), "%"+s+"%");
     }
 
     public static Specification<Admin> hasEmailLike(String s) {
         if(s == null) return (root, query, criteriaBuilder) -> null;
-        return (root, query, cb) -> cb.like(root.get(Admin_.EMAIL), "%"+s+"%");
+        return (root, query, cb) -> cb.like(root.get("email"), "%"+s+"%");
     }
 
     public static Specification<Admin> isActive(Boolean active) {
         if(active == null) return (root, query, criteriaBuilder) -> null;
-        return (root, query, cb) -> cb.equal(root.get(Admin_.ACTIVE), active);
+        return (root, query, cb) -> cb.equal(root.get("active"), active);
     }
 
 }

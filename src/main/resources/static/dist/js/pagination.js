@@ -10,7 +10,7 @@ if(history.state != null) {
     setFilters(pageFiltersString);
 } else {
     currentPageNumber = 1;
-    currentPageSize = 5;
+    currentPageSize = 10;
     pageFiltersString = '';
 }
 
@@ -697,6 +697,7 @@ function drawAdminsTable(){
     let data = getTableData('/myhome/admin/admins/get-admins', currentPageNumber, currentPageSize, pageFiltersString);
     let $adminsTable = $("#adminsTable tbody");
     $adminsTable.html('');
+    console.log(data);
     for(const admin of data.content) {
         console.log(admin);
         let newTableRow = document.createElement('tr');
@@ -893,7 +894,7 @@ function drawPagination() {
 
     let $pagination = $(".pagination_container");
     $pagination.html('');
-//    if(totalPagesCount < 1) return;
+    if(totalPagesCount <= 1) return;
 
     let ul = document.createElement('ul');
     ul.classList.add('pagination', 'justify-content-center', 'font-weight-medium');

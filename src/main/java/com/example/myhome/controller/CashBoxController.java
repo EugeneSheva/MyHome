@@ -43,12 +43,10 @@ public class CashBoxController {
 
     private final CashBoxService cashBoxService;
     private final OwnerService ownerService;
-    private final OwnerRepository ownerRepository;
     private final AdminService adminService;
     private final AccountService accountService;
     private final IncomeExpenseItemServiceImpl incomeExpenseItemService;
     private final IncomeExpenseRepository incomeExpenseRepository;
-    private final AccountRepository accountRepository;
     private final CashBoxRepository cashBoxRepository;
     private final CashBoxtValidator cashBoxtValidator;
 
@@ -259,7 +257,7 @@ public class CashBoxController {
                 ApartmentAccount account = accountService.findAccountById(accountId);
                 if(!account.getTransactions().contains(cashBoxItem)) {
                     account.getTransactions().add(cashBoxItem);
-                    account.addToBalance(cashBoxItem.getAmount());
+                    account.setBalance(account.getAccountBalance());
                     cashBoxItem.setApartmentAccount(account);
                 }
             }
@@ -276,8 +274,9 @@ public class CashBoxController {
         if(bindingResult.hasErrors()) {
             return "admin_panel/cash_box/cashbox_edit";
         }
-        cashBoxService.save(cashBoxItem);
-
+        CashBox savedCashbox = cashBoxService.save(cashBoxItem);
+        savedCashbox.getApartmentAccount().addToBalance(savedCashbox.getAmount());
+        accountService.saveAccount(savedCashbox.getApartmentAccount());
         websocketController.sendCashboxItem(cashBoxItem);
 
         return "redirect:/admin/cashbox";

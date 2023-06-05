@@ -42,23 +42,23 @@ class DefaultInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         checkForRoles();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForAdmins();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForServices();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForTransactionItems();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForTariffs();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForOwners();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForBuildings();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForApartments();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForAccounts();
-        Thread.sleep(200);
+        Thread.sleep(50);
         checkForPages();
         log.info("INITIAL CHECK COMPLETED");
     }
@@ -293,6 +293,8 @@ class DefaultInitializer implements CommandLineRunner {
             permissions6.add("services.write");
             permissions6.add("tariffs.read");
             permissions6.add("tariffs.write");
+            permissions6.add("users.read");
+            permissions6.add("users.write");
             permissions6.add("payment_details.read");
             permissions6.add("payment_details.write");
             permissions6.add("transaction_items.read");
@@ -421,7 +423,9 @@ class DefaultInitializer implements CommandLineRunner {
             Admin admin = new Admin();
             admin.setFirst_name("default");
             admin.setLast_name("director");
+            admin.setFull_name(admin.getFirst_name() + " " + admin.getLast_name());
             admin.setEmail("director");
+            admin.setPhone_number("380997524927");
             admin.setActive(true);
             admin.setPassword("$2a$12$FOhsYOephsRWkUHe2RoJcOZ/vAC0isIufmaNWB/rE4Lw07WZnBVZu");
             admin.setRole(userRoleRepository.findByName("Director").orElseThrow());

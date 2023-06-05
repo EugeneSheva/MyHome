@@ -70,11 +70,10 @@
                                   <div class="form-group">
                                     <label th:text="#{settings.system.services.unit-name}">Ед. изм.</label>
                                     <div class="input-group">
-                                      <p th:text="*{serviceList[__${iter.index}__].unit.name}" style="display:none;"></p>
                                       <select th:field="*{serviceList[__${iter.index}__].unit}"
                                               class="form-control" name="service_unit_names">
 <!--                                        <option value="undefined">Выберите...</option>-->
-                                        <option value="0" th:text="#{select.placeholder}">Выберите...</option>
+                                        <option value="" th:text="#{select.placeholder}">Выберите...</option>
                                         <option th:each="unit : *{unitList}"
                                                 th:if="${unit.id != 0}"
                                                 th:value="${unit.id}"
@@ -95,11 +94,14 @@
                                   <div style="padding-left: 7.5px; margin-bottom: 10px; color: red"
                                        th:if="${#fields.hasErrors('*{serviceList[__${iter.index}__].name}')}"
                                        th:errors="*{serviceList[__${iter.index}__].name}"></div>
+                                  <div style="padding-left: 7.5px; margin-bottom: 10px; color: red"
+                                       th:if="${#fields.hasErrors('*{serviceList[__${iter.index}__].unit}')}"
+                                       th:errors="*{serviceList[__${iter.index}__].unit}"></div>
                                 <div class="col-xs-12 col-sm-12">
                                   <input type="checkbox"
-                                                th:field="*{serviceList[__${iter.index}__].show_in_meters}"
-                                                name="show_in_meters"
-                                                th:checked="${service.show_in_meters}"> <span th:text="#{settings.system.services.show-in-meters}">Показывать в счетчиках</span>
+                                        th:field="*{serviceList[__${iter.index}__].show_in_meters}"
+                                        name="show_in_meters"
+                                        th:checked="${service.show_in_meters}"> <span th:text="#{settings.system.services.show-in-meters}">Показывать в счетчиках</span>
                                     <div style="margin-bottom: 16px;"></div>
                                 </div>
                               </div>
@@ -114,9 +116,9 @@
                                   <div class="form-group">
                                     <label th:text="#{settings.system.services.unit-name}">Ед. изм.</label>
                                     <div class="input-group">
-                                      <select class="form-control" name="new_service_unit_names" value="undefined">
-                                        <option value="undefined" th:text="#{select.placeholder}">Выберите...</option>
-                                        <option th:each="unit : *{unitList}" th:value="${unit.name}" th:text="${unit.name}"></option>
+                                      <select class="form-control" name="new_service_unit_names" value="">
+                                        <option value="" th:text="#{select.placeholder}">Выберите...</option>
+                                        <option th:each="unit : *{unitList}" th:value="${unit.id}" th:text="${unit.name}"></option>
                                       </select>
                                       <span class="input-group-btn">
                                         <button type="button"
@@ -195,7 +197,7 @@
 
                   <div class="row">
                     <div class="form-group submit-buttons">
-                      <a href="admin/website/home" class="btn btn-default" th:text="#{settings.system.services.cancel}">Отменить</a>
+                      <a th:href="@{/admin/website/home}" class="btn btn-default" th:text="#{settings.system.services.cancel}">Отменить</a>
                       <button type="submit" class="btn btn-success" th:text="#{settings.system.services.save}">Сохранить</button>
                     </div>
                   </div>
@@ -229,7 +231,9 @@
 <script th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/dist/js/adminlte.js}"></script>
 
-<script>
+<script th:inline="javascript">
+
+    let serviceCount = [[${totalServiceCount}]];
 
     document.getElementById("service_tab").addEventListener('click', () => {
       document.getElementById("service_tab").classList.add('active');
@@ -250,6 +254,18 @@
 
         let new_slot = service_template.cloneNode(true);
         new_slot.style = '';
+        let name_input = new_slot.firstElementChild.firstElementChild.lastElementChild;
+        let unit_input = new_slot.firstElementChild.nextElementSibling.lastElementChild.firstElementChild.nextElementSibling.firstElementChild;
+        let show_in_meters_input = new_slot.lastElementChild.firstElementChild;
+
+        name_input.setAttribute('name','serviceList[' + serviceCount + '].name');
+        name_input.id = 'serviceList' + serviceCount + '.name';
+        unit_input.setAttribute('name','serviceList[' + serviceCount + '].unit');
+        unit_input.id = 'serviceList' + serviceCount + '.unit';
+        show_in_meters_input.setAttribute('name','serviceList[' + serviceCount + '].show_in_meters');
+        show_in_meters_input.id = 'serviceList' + serviceCount + '.show_in_meters';
+
+        serviceCount++;
 
         console.log(new_slot);
 

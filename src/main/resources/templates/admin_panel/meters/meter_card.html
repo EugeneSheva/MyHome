@@ -91,10 +91,10 @@
                         </select>
                         <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('buildingID')}" th:errors="*{buildingID}"></h4>
                         <h4 class="mt-4"><b th:text="#{meters.editPage.card.section}">Секция</b></h4>
-                        <select class="selects" th:field="*{section}" disabled th:if="*{buildingID == null}" id="section_select">
+                        <select class="selects" th:field="*{section}" disabled th:if="*{buildingID == null || buildingID == 0}" id="section_select">
                           <option value="">Сначала выберите дом</option>
                         </select>
-                        <select class="selects" th:field="*{section}" th:if="*{buildingID != null}" id="section_select">
+                        <select class="selects" th:field="*{section}" th:if="*{buildingID != null && buildingID != 0}" id="section_select">
                           <option value="" th:text="#{select.placeholder}">Выберите...</option>
                           <option th:each="section : ${building.getSections()}"
                                   th:value="${section}"

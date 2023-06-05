@@ -15,6 +15,9 @@ public interface ServiceService {
     String getUnitNameById(Long unit_id);
 
     Service saveService(Service service);
+    List<Service> saveServices(List<Service> list);
+    Unit saveUnit(Unit unit);
+    List<Unit> saveUnits(List<Unit> list);
     void deleteServiceById(Long service_id);
     void deleteUnitById(Long unit_id);
 

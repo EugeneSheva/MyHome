@@ -3,6 +3,8 @@ package com.example.myhome.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Data
 @Entity
@@ -13,6 +15,8 @@ public class Unit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message="Название не может быть пустым!")
+    @Size(min=2,max=30, message = "Название должно быть размером от 2 до 30 символов!")
     private String name;
 
     public Unit() {

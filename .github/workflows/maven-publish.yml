@@ -35,11 +35,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-      with:
-        images: temporalparadox/myhome
+#    - name: Extract metadata (tags, labels) for Docker
+#      id: meta
+#      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+#      with:
+#        images: temporalparadox/myhome
 
     - name: Build and push Docker image
       uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
@@ -47,5 +47,58 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+        tags: temporalparadox/myhome:latest
+
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: appleboy/ssh-action@v0.1.10
+        name: Stop existing container
+        if: ${{ success() || failure() }}
+        with:
+            host: ${{ secrets.SERVER_HOST }}
+            username: ${{ secrets.SERVER_USERNAME }}
+            password: ${{ secrets.SERVER_PASSWORD }}
+            script: sudo docker stop myhome
+
+      - uses: appleboy/ssh-action@v0.1.10
+        name: Delete old container
+        if: ${{ success() || failure() }}
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: sudo docker rm myhome
+
+      - uses: appleboy/ssh-action@v0.1.10
+        name: Delete old image
+        if: ${{ success() || failure() }}
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: sudo docker rmi temporalparadox/myhome:latest
+
+#      - uses: appleboy/ssh-action@v0.1.10
+#        name: Update image
+#        if: ${{ success() || failure() }}
+#        with:
+#          host: ${{ secrets.SERVER_HOST }}
+#          username: ${{ secrets.SERVER_USERNAME }}
+#          password: ${{ secrets.SERVER_PASSWORD }}
+#          script: sudo docker pull temporalparadox/myhome
+
+      - uses: appleboy/ssh-action@v0.1.10
+        name: Create new container with updated image
+        if: ${{ success() || failure() }}
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: sudo docker run -p 9002:8080 -P --name myhome -e SPRING_DATASOURCE_URL=jdbc:mysql://172.17.0.2:3306/myhome -d temporalparadox/myhome:latest

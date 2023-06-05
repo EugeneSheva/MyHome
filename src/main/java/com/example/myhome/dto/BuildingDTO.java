@@ -27,6 +27,7 @@ public class BuildingDTO {
     private String img5;
 
     private List<ApartmentDTO> apartments = new ArrayList<>();
+    private List<AdminDTO> admins = new ArrayList<>();
 
     public BuildingDTO() {
     }

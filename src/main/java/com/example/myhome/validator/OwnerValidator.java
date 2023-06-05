@@ -1,45 +1,51 @@
 package com.example.myhome.validator;
 
+import com.example.myhome.dto.OwnerDTO;
 import com.example.myhome.model.Owner;
+import com.example.myhome.repository.OwnerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 @Component
 public class OwnerValidator implements Validator {
 
-
-        public boolean supports(Class clazz) {
+    public boolean supports(Class clazz) {
             return Owner.class.equals(clazz);
         }
 
     @Override
     public void validate(Object obj, Errors e) {
-        Owner owner = (Owner) obj;
-        if (owner.getFirst_name() == null ||  owner.getFirst_name().isEmpty()) {
+        OwnerDTO owner = (OwnerDTO) obj;
+        if (owner.getFirst_name() == null || owner.getFirst_name().isEmpty()) {
             e.rejectValue("first_name", "first_name.empty", "Заполните поле");
         } else if  (owner.getFirst_name().length()<2) {
             e.rejectValue("first_name", "first_name.empty", "Поле должно быть минимум 2 символа");
         }
-        if (owner.getLast_name() == null ||  owner.getLast_name().isEmpty()) {
+        if (owner.getLast_name() == null || owner.getLast_name().isEmpty()) {
             e.rejectValue("last_name", "last_name.empty", "Заполните поле");
         } else if  (owner.getLast_name().length()<2) {
             e.rejectValue("last_name", "last_name.empty", "Поле должно быть минимум 2 символа");
         }
-        if (owner.getFathers_name() == null ||  owner.getFathers_name().isEmpty()) {
+        if (owner.getFathers_name() == null || owner.getFathers_name().isEmpty()) {
             e.rejectValue("fathers_name", "fathers_name.empty", "Заполните поле");
         } else if  (owner.getFathers_name().length()<2) {
             e.rejectValue("fathers_name", "fathers_name.empty", "Поле должно быть минимум 2 символа");
         }
-        if (owner.getBirthdate() == null) {
+        if (owner.getBirthdate() == null || owner.getBirthdate().isEmpty()) {
             e.rejectValue("birthdate", "birthdate.empty", "Заполните поле");
-        } else if  (owner.getBirthdate().isAfter(LocalDate.now().minusYears(18L))) {
-            e.rejectValue("birthdate", "birthdate.empty", "Пользователь должен быть совершеннолетним");
-        } else if  (owner.getBirthdate().isBefore(LocalDate.now().minusYears(120))) {
-            e.rejectValue("birthdate", "birthdate.empty", "Введите актуальную дату");
+        } else {
+            LocalDate date = LocalDate.parse(owner.getBirthdate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            if  (date.isAfter(LocalDate.now().minusYears(18L))) {
+                e.rejectValue("birthdate", "birthdate.empty", "Пользователь должен быть совершеннолетним");
+            } else if  (date.isBefore(LocalDate.now().minusYears(120))) {
+                e.rejectValue("birthdate", "birthdate.empty", "Введите актуальную дату");
+            }
         }
         if (owner.getPhone_number() == null ||  owner.getPhone_number().isEmpty()) {
             e.rejectValue("phone_number", "phone_number.empty", "Заполните поле");
@@ -48,12 +54,21 @@ public class OwnerValidator implements Validator {
         }
         if (owner.getEmail() == null ||  owner.getEmail().isEmpty()) {
             e.rejectValue("email", "email.empty", "Заполните поле");
-        } else if  (!isValidEmailAdress(owner.getEmail()) ) {
+        } else if  (!isValidEmailAddress(owner.getEmail()) ) {
             e.rejectValue("email", "email.empty", "Неверный формат Email.");
+        }
+        if(owner.getPassword() != null && !owner.getPassword().isEmpty()) {
+            if(owner.getConfirm_password() != null && !owner.getConfirm_password().isEmpty()) {
+                if(owner.getPassword().equalsIgnoreCase(owner.getConfirm_password())) {
+                    e.rejectValue("password", "password.no-match", "Пароли не совпадают!");
+                    e.rejectValue("confirm_password", "password.no-match", "Пароли не совпадают!");
+                }
+            }
+            else e.rejectValue("confirm_password", "password.no-confirm", "Подтвердите пароль!");
         }
     }
 
-    private boolean isValidEmailAdress(String email) {
+    private boolean isValidEmailAddress(String email) {
         Pattern USERNAME_PATTERN = Pattern.compile("^[A-Za-z0-9._-]+$");
         Pattern DOMAIN_PATTERN = Pattern.compile("^[A-Za-z0-9._-]+$");
 

@@ -49,7 +49,7 @@ public interface BuildingService {
 
     Long getQuantity();
 
-    Building saveBuildindImages(Long id, MultipartFile file1, MultipartFile file2, MultipartFile file3, MultipartFile file4, MultipartFile file5) throws IOException;
+    Building saveBuildingImages(Long id, MultipartFile file1, MultipartFile file2, MultipartFile file3, MultipartFile file4, MultipartFile file5) throws IOException;
 
     List<BuildingDTO> convertBuildingToBuildingDTO(List<Building> buildingList);
 

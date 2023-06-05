@@ -126,9 +126,22 @@ public class ApartmentController {
     }
 
     @PostMapping("/save")
-    public String saveApartment(@Valid @ModelAttribute("apartment") ApartmentDTO apartment, BindingResult bindingResult) throws IOException {
+    public String saveApartment(@Valid @ModelAttribute("apartment") ApartmentDTO apartment, BindingResult bindingResult,
+    Model model) throws IOException {
         apartmentValidator.validate(apartment, bindingResult);
         if (bindingResult.hasErrors()) {
+            model.addAttribute("apartment", apartment);
+            List<BuildingDTO> buildingList = buildingService.findAllDTO();
+            model.addAttribute("buildings", buildingList);
+            List<Tariff>tariffs = tariffService.findAllTariffs();
+            model.addAttribute("tariffs", tariffs);
+            List<ApartmentAccountDTO> accountDTOList = accountService.findAllAccounts().stream().map(accountDTOMapper::fromAccountToDTO).collect(Collectors.toList());
+            model.addAttribute("accounts", accountDTOList);
+            List<String>sections = apartment.getBuilding().getSections();
+            List<String>floors = apartment.getBuilding().getFloors();
+            model.addAttribute("sections", sections);
+            model.addAttribute("floors", floors);
+            model.addAttribute("validation","failed");
             return "admin_panel/apartments/apartment_edit";
         } else {
             apartment.setBalance((apartment.getAccount() != null) ? apartment.getAccount().getBalance() : 0);
@@ -138,9 +151,22 @@ public class ApartmentController {
     }
 
     @PostMapping("/save&new")
-    public String saveAndNew(@Valid @ModelAttribute("apartment") ApartmentDTO apartment, BindingResult bindingResult) throws IOException {
+    public String saveAndNew(@Valid @ModelAttribute("apartment") ApartmentDTO apartment, BindingResult bindingResult,
+                             Model model) throws IOException {
         apartmentValidator.validate(apartment, bindingResult);
         if (bindingResult.hasErrors()) {
+            model.addAttribute("apartment", apartment);
+            List<BuildingDTO> buildingList = buildingService.findAllDTO();
+            model.addAttribute("buildings", buildingList);
+            List<Tariff>tariffs = tariffService.findAllTariffs();
+            model.addAttribute("tariffs", tariffs);
+            List<ApartmentAccountDTO> accountDTOList = accountService.findAllAccounts().stream().map(accountDTOMapper::fromAccountToDTO).collect(Collectors.toList());
+            model.addAttribute("accounts", accountDTOList);
+            List<String>sections = apartment.getBuilding().getSections();
+            List<String>floors = apartment.getBuilding().getFloors();
+            model.addAttribute("sections", sections);
+            model.addAttribute("floors", floors);
+            model.addAttribute("validation","failed");
             return "admin_panel/apartments/apartment_edit";
         } else {
             apartment.setBalance(apartment.getAccount().getBalance());

@@ -74,7 +74,7 @@
                       <tr>
                         <td></td>
                         <td style="padding: 10px">
-                          <input style="width: 100%; padding-block: 10px; border: 0.5px solid silver;" th:field="*{name}" data-name="name" autocomplete="off" class="my_filters" type="text">
+                          <input style="width: 100%; padding-block: 10px;" th:field="*{name}" data-name="name" autocomplete="off" class="my_filters" type="text">
                         </td>
                         <td style="padding: 10px">
                           <select style="width: 100%; padding-block: 10px" th:field="*{role}" data-name="role" autocomplete="off" class="my_filters my_select">
@@ -85,10 +85,10 @@
                           </select>
                         </td>
                         <td style="padding: 10px">
-                          <input style="width: 100%; padding-block: 10px; border: 0.5px solid silver;" th:field="*{phone}" data-name="phone" autocomplete="off" class="my_filters" type="text">
+                          <input style="width: 100%; padding-block: 10px;" th:field="*{phone}" data-name="phone" autocomplete="off" class="my_filters" type="text">
                         </td>
                         <td style="padding: 10px">
-                          <input style="width: 100%; padding-block: 10px; border: 0.5px solid silver;" th:field="*{email}" data-name="email" autocomplete="off" class="my_filters" type="text">
+                          <input style="width: 100%; padding-block: 10px;" th:field="*{email}" data-name="email" autocomplete="off" class="my_filters" type="text">
                         </td>
                         <td style="padding: 10px">
                           <select style="width: 100%; padding-block: 10px" th:field="*{active}" data-name="active" autocomplete="off" class="my_filters my_select">
@@ -101,29 +101,7 @@
                       </tr>
                     </thead>
                   <tbody>
-<!--                    <tr th:each="admin, iter : ${admins}" class="user-row" style="cursor: pointer;">-->
-<!--                      <input type="hidden" th:id="'input-' + ${iter.index}" th:value="${admin.id}">-->
-<!--                      <td th:text="${iter.index+1}">1</td>-->
-<!--                      <td th:text="${admin.first_name + ' ' + admin.last_name}">Elon Musk</td>-->
-<!--                      <td th:text="${admin.role}"></td>-->
-<!--                      <td th:text="${admin.phone_number}">+380990010101</td>-->
-<!--                      <td th:text="${admin.email}">admin@admin.com</td>-->
-<!--                      <td>-->
-<!--                        <small th:if="${admin.active}" class="label label-success">Активен</small>-->
-<!--                        <small th:if="${!admin.active}" class="label label-inactive">Неактивен</small>-->
-<!--                      </td>-->
-<!--                      <td>-->
-<!--                        <div class="btn-group pull-right">-->
-<!--                          <a class="btn btn-default btn-sm invite_button" title="Отправить приглашение" data-toggle="tooltip"><i class="fa fa-repeat"></i></a>-->
-<!--                          <a class="btn btn-default btn-sm" th:href="@{/admin/admins/update/{id}(id=${admin.id})}" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>-->
-<!--                          <a th:if="${admin.id > 0}" class="btn btn-default btn-sm" th:href="@{/admin/admins/delete/{id}(id=${admin.id})}" title="Удалить"><i class="fa fa-trash"></i></a>-->
-<!--                          <button th:if="${admin.id == 0}" class="btn btn-default btn-sm disabled"><i class="fa fa-trash"></i></button>-->
-<!--                        </div>-->
-<!--                      </td>-->
-<!--                    </tr>-->
-                    <tr th:if="${admins.getTotalElements() == 0}">
-                      <td colspan="7">Ничего не найдено...</td>
-                    </tr>
+
                   </tbody>
                 </table>
                   <div class="pagination_container"></div>
@@ -159,7 +137,7 @@
 <script th:inline="javascript">
 
     let globalTableName = 'admins';
-    let totalPagesCount = [[${totalPagesCount}]];
+    let totalPagesCount = 1;
     let tableData;
     let placeholderText = [[#{select.placeholder}]];
     let activeText = [[#{active}]];

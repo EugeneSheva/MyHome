@@ -12,15 +12,15 @@ import com.example.myhome.repository.AccountRepository;
 import com.example.myhome.repository.BuildingRepository;
 import com.example.myhome.repository.OwnerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class ApartmentDTOMapper {
 
-    private final BuildingRepository buildingRepository;
-    private final OwnerRepository ownerRepository;
-    private final AccountRepository accountRepository;
+    @Autowired private BuildingRepository buildingRepository;
+    @Autowired private OwnerRepository ownerRepository;
+    @Autowired private AccountRepository accountRepository;
 
     public Apartment fromDTOToApartment(ApartmentDTO dto) {
 
@@ -30,13 +30,13 @@ public class ApartmentDTOMapper {
         apartment.setId(dto.getId());
         apartment.setNumber(dto.getNumber());
         apartment.setSquare(dto.getSquare());
-        apartment.setBuilding(buildingRepository.getReferenceById(dto.getBuilding().getId()));
         apartment.setSection(dto.getSection());
         apartment.setFloor(dto.getFloor());
-        apartment.setOwner(ownerRepository.getReferenceById(dto.getOwner().getId()));
         apartment.setTariff(dto.getTariff());
-        apartment.setAccount(accountRepository.getReferenceById(dto.getAccount().getId()));
         apartment.setBalance(dto.getBalance());
+        if(dto.getBuilding() != null && dto.getBuilding().getId() != null) apartment.setBuilding(buildingRepository.getReferenceById(dto.getBuilding().getId()));
+        if(dto.getOwner() != null && dto.getOwner().getId() != null) apartment.setOwner(ownerRepository.getReferenceById(dto.getOwner().getId()));
+        if(dto.getAccount() != null && dto.getAccount().getId() != null) apartment.setAccount(accountRepository.getReferenceById(dto.getAccount().getId()));
 
         return apartment;
     }

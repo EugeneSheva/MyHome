@@ -32,17 +32,16 @@ public class MeterValidator implements Validator {
             e.rejectValue("date", "date.incorrect", messageSource.getMessage("meters.date.incorrect", null, locale));
         }
 
-        if(meter.getBuildingID() == null) {
+        if(meter.getBuildingID() == null || meter.getBuildingID() == 0) {
             System.out.println("Error found(building)");
             e.rejectValue("buildingID", "building.empty", messageSource.getMessage("meters.building.empty", null, locale));
         } else if(meter.getSection() == null || meter.getSection().equals("")) {
             System.out.println("Error found(section)");
             e.rejectValue("section", "section.empty", messageSource.getMessage("meters.section.empty", null, locale));
-        } else if(meter.getApartmentID() == null) {
+        } else if(meter.getApartmentID() == null || meter.getApartmentID() == 0) {
             System.out.println("Error found(apartment)");
             e.rejectValue("apartmentID", "apartment.empty", messageSource.getMessage("meters.apartment.empty", null, locale));
         }
-
         if(meter.getServiceID() == null) {
             System.out.println("Error found(service)");
             e.rejectValue("serviceID", "service.empty", messageSource.getMessage("meters.service.empty", null, locale));

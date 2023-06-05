@@ -62,7 +62,7 @@
                             <tbody>
                             <tr>
                                 <td ><b th:text="#{apartmentAccount}">Лицевой счет</b></td>
-                                <td th:text="${T(java.lang.String).format('%010d',apartment.account.id)}">?</td>
+                                <td th:text="${apartment.account == null} ? #{not-found} : ${T(java.lang.String).format('%010d',apartment.account.id)}">?</td>
                             </tr>
                             <tr>
                                 <td><b th:text="#{apartmentNumber}">Номер квартиры</b></td>
@@ -74,7 +74,7 @@
                             </tr>
                             <tr>
                                 <td><b th:text="#{building}">Дом</b></td>
-                                <td th:text="${apartment.building.name}"></td>
+                                <td th:text="${apartment.building == null ? '' : apartment.building.name}"></td>
                             </tr>
                             <tr>
                                 <td><b th:text="#{section}">Секция</b></td>
@@ -97,7 +97,7 @@
                         </table>
                         <div style="margin: 10px">
                             <a th:href="@{/admin/apartments/metersDataByApartment/{id}(id=${id})}" th:text="#{viewMeterReadings}">Посмотреть показания счетчиков</a><br>
-                            <a th:href="@{/admin/apartments/incomesByApartmentAccount/{id}(id=${apartment.account.id})}" th:text="#{viewIncomes}">Посмотреть приходы</a><br>
+                            <a th:if="${apartment.account != null}" th:href="@{/admin/apartments/incomesByApartmentAccount/{id}(id=${apartment.account.id})}" th:text="#{viewIncomes}">Посмотреть приходы</a><br>
                             <a th:href="@{/admin/apartments/invoicesByApartment/{id}(id=${id})}" th:text="#{viewInvoices}">Посмотреть квитанции</a><br>
                         </div>
                     </div>

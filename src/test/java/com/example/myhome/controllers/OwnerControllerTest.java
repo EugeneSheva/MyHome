@@ -1,5 +1,6 @@
 package com.example.myhome.controllers;
 
+import com.example.myhome.config.TestConfig;
 import com.example.myhome.controller.OwnerController;
 import com.example.myhome.dto.OwnerDTO;
 import com.example.myhome.mapper.OwnerDTOMapper;
@@ -10,6 +11,7 @@ import com.example.myhome.service.AccountService;
 import com.example.myhome.service.ApartmentService;
 import com.example.myhome.service.BuildingService;
 import com.example.myhome.service.OwnerService;
+import com.example.myhome.util.UserStatus;
 import com.example.myhome.validator.OwnerValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +24,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -29,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest(classes = TestConfig.class)
 @AutoConfigureMockMvc
 @WithUserDetails("test")
 public class OwnerControllerTest {
@@ -45,18 +50,34 @@ public class OwnerControllerTest {
 
     @MockBean private MessageSource messageSource;
 
-    @Autowired private OwnerDTOMapper mapper;
     @Autowired private OwnerController ownerController;
 
     static Owner testOwner;
     static OwnerDTO testDTO;
+    static OwnerDTOMapper mapper;
 
     @Autowired
     private MockMvc mockMvc;
 
     @BeforeAll
     static void setupObjects() {
+        testOwner = new Owner();
+        testOwner.setId(1L);
+        testOwner.setFirst_name("brr");
+        testOwner.setFathers_name("brr");
+        testOwner.setLast_name("brr");
+        testOwner.setPassword("test");
+        testOwner.setEmail("test");
+        testOwner.setDescription("test");
+        testOwner.setAdded_at(LocalDateTime.now());
+        testOwner.setEnabled(true);
+        testOwner.setViber("test");
+        testOwner.setBirthdate(LocalDate.now());
+        testOwner.setStatus(UserStatus.NEW);
 
+        mapper = new OwnerDTOMapper();
+
+        testDTO = mapper.fromOwnerToDTO(testOwner);
     }
 
     @BeforeEach

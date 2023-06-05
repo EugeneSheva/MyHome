@@ -31,7 +31,7 @@ public class StatisticsController {
     private final OwnerRepository ownerRepository;
 
     @GetMapping
-    public String getOwners(Model model) {
+    public String loadStatisticsPage(Model model) {
         model.addAttribute("newRepairRequestQuant", repairRequestRepository.countRepairRequestsByStatus(RepairStatus.ACCEPTED).orElse(0L));
         model.addAttribute("inworkRepairRequestQuant", repairRequestRepository.countRepairRequestsByStatus(RepairStatus.IN_WORK).orElse(0L));
         model.addAttribute("ownersQuant", ownerService.getQuantity());
@@ -40,8 +40,8 @@ public class StatisticsController {
         model.addAttribute("accountsQuant", accountService.getQuantity());
 
         model.addAttribute("cashBoxSum", cashBoxRepository.sumAmount().orElse(0.0));
-        model.addAttribute("accountBalance", accountRepository.getSumOfAccountBalances());
-        model.addAttribute("sumDebt", accountRepository.getSumOfAccountDebts());
+        model.addAttribute("accountBalance", accountService.getSumOfAccountBalances());
+        model.addAttribute("sumDebt", accountService.getSumOfAccountDebts());
 
         model.addAttribute("diagramIncomeCashBox", cashBoxService.getListSumIncomeByMonth());
         model.addAttribute("diagramExpenceCashBox", cashBoxService.getListSumExpenceByMonth());

@@ -110,7 +110,8 @@ public class AccountController {
             ApartmentAccountDTO dto = (ApartmentAccountDTO) bindingResult.getTarget();
             log.info("DTO " + dto.toString());
 
-            dto.setBuilding(buildingService.findBuildingDTObyId(dto.getBuilding().getId()));
+            if(dto.getBuilding() != null && dto.getBuilding().getId() != null)
+                dto.setBuilding(buildingService.findBuildingDTObyId(dto.getBuilding().getId()));
 
             model.addAttribute("apartmentAccountDTO", dto);
             model.addAttribute("id", accountService.getMaxAccountId()+1);

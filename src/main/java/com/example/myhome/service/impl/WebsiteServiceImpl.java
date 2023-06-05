@@ -213,6 +213,7 @@ public class WebsiteServiceImpl implements WebsiteService {
         List<ServicesPage.ServiceDescription> originalList = pageRepository.getServicesPage().orElseGet(ServicesPage::new).getServiceDescriptions();
         page.setServiceDescriptions(new ArrayList<>());
         for (int i = 1; i < titles.length; i++) {
+            if(titles[i].isEmpty() || descriptions[i].isEmpty()) continue;
             ServicesPage.ServiceDescription service = new ServicesPage.ServiceDescription();
             service.setTitle(titles[i]);
             service.setDescription(descriptions[i]);

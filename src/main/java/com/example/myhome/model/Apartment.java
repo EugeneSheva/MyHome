@@ -32,7 +32,7 @@ public class Apartment {
     private Double square;
 
     //В примере за каждой квартирой ставится только один лицевой счет
-    @OneToOne(mappedBy = "apartment")
+    @OneToOne(mappedBy = "apartment", cascade = CascadeType.MERGE)
     private ApartmentAccount account;
 
     @ManyToOne
@@ -83,5 +83,10 @@ public class Apartment {
                 ", number=" + number +
                 ", balance=" + balance +
                 "}\n";
+    }
+
+    @PreRemove
+    void clearAccount() {
+        this.account.setApartment(null);
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -20,8 +21,10 @@ public class Tariff {
     private Long id;
 
     @NotBlank(message = "#{settings.system.tariffs.name.empty}")
+    @Size(min=2,max=50,message = "Поле должно быть размеров 2-50 символов")
     private String name;
     @NotBlank(message = "Необходимо указать описание тарифа")
+    @Size(min=2,max=255,message = "Поле должно быть размеров 2-255 символов")
     private String description;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")

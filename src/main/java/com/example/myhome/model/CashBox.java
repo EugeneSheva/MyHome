@@ -47,5 +47,10 @@ public class CashBox {
         return this.incomeExpenseItems.getName();
     }
 
+    @PreRemove
+    void clearTransactionFromAccount() {
+        this.apartmentAccount.getTransactions().remove(this);
+        this.apartmentAccount.removeFromBalance(this.amount);
+    }
 
 }

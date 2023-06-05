@@ -2,6 +2,7 @@ package com.example.myhome.validator;
 
 import com.example.myhome.dto.InvoiceDTO;
 import com.example.myhome.model.Invoice;
+import com.example.myhome.model.InvoiceComponents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -46,6 +47,26 @@ public class InvoiceValidator implements Validator {
         }
         if(invoice.getComponents() == null || invoice.getComponents().size() == 0) {
             e.rejectValue("components", "components.empty", messageSource.getMessage("invoices.components.empty", null, locale));
+        }
+
+        for(InvoiceComponents component : invoice.getComponents()) {
+            if(component.getUnit_amount() < 0.1) {
+                e.rejectValue("components", "components.wrong-amounts", "Компонент квитанций не может иметь количество юнитов меньше 0.1");
+            } else if (component.getUnit_amount() > 10000.0) {
+                e.rejectValue("components", "components.wrong-amounts", "Компонент квитанций не может иметь количество юнитов больше 10000.0");
+            }
+
+            if(component.getUnit_price() < 0.1) {
+                e.rejectValue("components", "components.wrong-prices", "Юнит не может быть дешевле 0.1");
+            } else if(component.getUnit_price() > 10000.0) {
+                e.rejectValue("components", "components.wrong-amounts", "Юнит не может быть дороже 10000.0");
+            }
+
+            if(component.getTotalPrice() < 0.01) {
+                e.rejectValue("components", "components.wrong-prices", "Компонент квитанции не может быть дешевле 0.1");
+            } else if(component.getTotalPrice() > 10_000_000) {
+                e.rejectValue("components", "components.wrong-amounts", "Компонент квитанции не может быть дороже 10.000.000");
+            }
         }
     }
 }

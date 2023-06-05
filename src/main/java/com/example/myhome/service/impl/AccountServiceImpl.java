@@ -118,10 +118,11 @@ public class AccountServiceImpl implements AccountService {
 
         log.info("Forming account data to save from DTO");
         ApartmentAccount account = mapper.fromDTOToAccount(dto);
-        Apartment apartment = apartmentRepository.getReferenceById(dto.getApartment().getId());
-        account.setApartment(apartment);
-        account.setOwner(apartment.getOwner());
-        account.setBuilding(apartment.getBuilding());
+        if(dto.getApartment() != null && dto.getApartment().getId() != null && dto.getApartment().getId() != 0) {
+            Apartment apartment = apartmentRepository.getReferenceById(dto.getApartment().getId());
+            account.setOwner(apartment.getOwner());
+            account.setBuilding(apartment.getBuilding());
+        }
         account.setBalance(account.getAccountBalance());
         return saveAccount(account);
 

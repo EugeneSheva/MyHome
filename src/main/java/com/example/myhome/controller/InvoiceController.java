@@ -90,13 +90,13 @@ public class InvoiceController {
         return "admin_panel/invoices/invoices";
     }
 
-//    @GetMapping("/search")
-//    public String showSearch(@RequestParam long flat_id, Model model) {
-//        Apartment apartment = apartmentService.findById(flat_id);
-//        model.addAttribute("current_date", LocalDate.now());
-//        model.addAttribute("invoices", apartment.getInvoiceList());
-//        return "admin_panel/invoices/invoices";
-//    }
+    @GetMapping("/search")
+    public String showSearch(@RequestParam long flat_id, Model model) {
+        Apartment apartment = apartmentService.findById(flat_id);
+        model.addAttribute("current_date", LocalDate.now());
+        model.addAttribute("invoices", apartment.getInvoiceList());
+        return "admin_panel/invoices/invoices";
+    }
 
     @GetMapping("/{id}")
     public String showInvoiceInfo(@PathVariable long id, Model model) {
@@ -115,7 +115,7 @@ public class InvoiceController {
         BuildingDTO buildingDTO = new BuildingDTO();
         ApartmentDTO apartmentDTO = new ApartmentDTO();
         if(flat_id != null) {
-            System.out.println("ID IS NOT NULL ALOAODFIOJDSFLKDSJKFDSJKFDSJKFDJSKL");
+            System.out.println("ID IS NOT NULL");
             ApartmentDTO apartment = apartmentService.findApartmentDto(flat_id);
             System.out.println(apartment.toString());
             invoiceDTO.setApartment(apartment);

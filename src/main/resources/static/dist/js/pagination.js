@@ -247,7 +247,7 @@ function drawInvoicesTable(){
                                 '<td>' + invoice.id.toString().padStart(10, '0') + '</td>' +
                                 '<td>' +
                                     '<small class="label ' + (invoice.status == 'PAID' ? 'label-success' : invoice.status == 'UNPAID' ? 'label-danger' : 'label-warning') + '">' +
-                                    invoice.status +
+                                    invoice.statusName +
                                     '</small>' +
                                '</td>' +
                                 '<td>' + date.toISOString().split('T')[0] + '</td>' +
@@ -422,9 +422,9 @@ function drawAccountsTable(){
 
     for(const account of data.content) {
 
-        let apartName = (account.apartment) ? account.apartment.fullName : '';
-        let buildingName = (account.building) ? account.building.name : '';
-        let ownerName = (account.owner) ? account.owner.fullName : '';
+        let apartName = (account.apartment.fullName) ? account.apartment.fullName : '';
+        let buildingName = (account.building.name) ? account.building.name : '';
+        let ownerName = (account.owner.fullName) ? account.owner.fullName : '';
 
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';

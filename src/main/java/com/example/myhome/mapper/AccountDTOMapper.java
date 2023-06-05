@@ -8,12 +8,21 @@ import com.example.myhome.model.Apartment;
 import com.example.myhome.model.ApartmentAccount;
 import com.example.myhome.model.Building;
 import com.example.myhome.model.Owner;
+import com.example.myhome.repository.AccountRepository;
+import com.example.myhome.repository.ApartmentRepository;
+import com.example.myhome.repository.BuildingRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Log
 public class AccountDTOMapper {
+
+    @Autowired private AccountRepository accountRepository;
+    @Autowired private ApartmentRepository apartmentRepository;
+    @Autowired private BuildingRepository buildingRepository;
 
     public ApartmentAccount fromDTOToAccount(ApartmentAccountDTO dto) {
 
@@ -25,7 +34,8 @@ public class AccountDTOMapper {
         account.setChangedState(dto.getChangedState());
         account.setSection(dto.getSection());
         account.setBalance(dto.getBalance());
-
+        if(dto.getApartment() != null && dto.getApartment().getId() != null)
+            account.setApartment(apartmentRepository.getReferenceById(dto.getApartment().getId()));
         return account;
     }
     public ApartmentAccountDTO fromAccountToDTO(ApartmentAccount account) {

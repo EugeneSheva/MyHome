@@ -4,6 +4,7 @@ import com.example.myhome.dto.ApartmentDTO;
 import com.example.myhome.controller.socket.WebsocketController;
 import com.example.myhome.dto.BuildingDTO;
 
+import com.example.myhome.model.Admin;
 import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.repository.AdminRepository;
 import com.example.myhome.repository.ApartmentRepository;
@@ -22,6 +23,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,14 +78,17 @@ public class MessageController {
     }
 
 
-
     @PostMapping("/save")
     public String saveMessage(@Valid @ModelAttribute("message") Message message, BindingResult bindingResult, @RequestParam(name = "debt",
-            defaultValue = "false") Boolean debt, @RequestParam(name = "building", defaultValue = "0") Long buildingId,
+                                defaultValue = "false") Boolean debt, @RequestParam(name = "building", defaultValue = "0") Long buildingId,
                               @RequestParam(name = "section", defaultValue = "") String section, @RequestParam(name = "floor", defaultValue = "") String floor,
-                              @RequestParam(name = "apartmentId", defaultValue = "0") Long apartmentId, @RequestParam(name = "recipient", defaultValue = "0") Long recipient, Principal principal) throws IOException {
+                              @RequestParam(name = "apartmentId", defaultValue = "0") Long apartmentId,
+                              @RequestParam(name = "recipient", defaultValue = "0") Long recipient,
+                              Model model) throws IOException {
         messageValidator.validate(message, bindingResult);
         if (bindingResult.hasErrors()) {
+            List<BuildingDTO> buildingList = buildingService.findAllDTO();
+            model.addAttribute("buildings", buildingList);
             return "admin_panel/messages/message_edit";
         } else {
             List<Owner> recivers = new ArrayList<>();
@@ -149,8 +156,10 @@ public class MessageController {
                 recivers.add(owner);
                 message.setReceiversName(owner.getFullName());
             }
-            message.setSender(adminRepository.findByEmail(principal.getName()).orElseThrow());
+            Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            message.setSender(adminRepository.findByEmail(admin.getUsername()).orElseThrow());
             message.setReceivers(recivers);
+            message.setDate(LocalDateTime.now());
             messageService.save(message);
             websocketController.sendMessagesItem(message);
             return "redirect:/admin/messages/";

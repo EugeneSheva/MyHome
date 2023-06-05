@@ -72,7 +72,6 @@ public class CashBoxController {
         List<IncomeExpenseItems>incomeExpenseItems=incomeExpenseItemService.findAll();
         model.addAttribute("incomeExpenseItems", incomeExpenseItems);
 
-
         return "admin_panel/cash_box/cashboxes";
     }
 
@@ -92,7 +91,9 @@ public class CashBoxController {
         model.addAttribute("cashBoxSum", cashBoxRepository.sumAmount().orElse(0.0));
         model.addAttribute("accountBalance", accountService.getSumOfAccountBalances());
         model.addAttribute("sumDebt", accountService.getSumOfAccountDebts());
-        model.addAttribute("filterForm", new FilterForm());
+        FilterForm form = new FilterForm();
+        form.setAccountId(account_id);
+        model.addAttribute("filterForm", form);
         int pageNumber = 0;
         int pageSize = 2;
         Sort sort = Sort.by("fieldName").ascending(); // Сортировка по полю fieldName в порядке возрастания
@@ -108,8 +109,8 @@ public class CashBoxController {
 
     @GetMapping("/{id}")
     public String getCashBox(@PathVariable("id") Long id, Model model) {
-        CashBox cashBox = cashBoxService.findById(id);
-        model.addAttribute("cashBoxItem", cashBox);
+        CashBoxDTO cashBox = cashBoxService.findDTOById(id);
+        model.addAttribute("cashBox", cashBox);
         return "admin_panel/cash_box/cashbox";
     }
 
@@ -143,14 +144,14 @@ public class CashBoxController {
         }
 
         cashBox.setIncomeExpenseType(IncomeExpenseType.INCOME);
-        model.addAttribute("cashBoxItem", cashBox);
+        model.addAttribute("cashBox", cashBox);
         return "admin_panel/cash_box/cashbox_edit";
     }
 
     @GetMapping("/newExpense")
     public String createCashBoxEx(Model model) {
-        List<IncomeExpenseItems>expenseItemsList=incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.EXPENSE);
-        model.addAttribute("expenseItemsList", expenseItemsList);
+        List<IncomeExpenseItems>incomeItemsList=incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.EXPENSE);
+        model.addAttribute("incomeItemsList", incomeItemsList);
 
         model.addAttribute("nextId", cashBoxService.getMaxId()+1);
 
@@ -160,7 +161,7 @@ public class CashBoxController {
 
         CashBox cashBox = new CashBox();
         cashBox.setIncomeExpenseType(IncomeExpenseType.EXPENSE);
-        model.addAttribute("cashBoxItem", cashBox);
+        model.addAttribute("cashBox", cashBox);
         return "admin_panel/cash_box/cashbox_edit";
     }
 
@@ -179,8 +180,8 @@ public class CashBoxController {
             model.addAttribute("accounts", apartmentAccountDTOS);
 
         } else if (cashBox.getIncomeExpenseType().equals(IncomeExpenseType.EXPENSE)){
-            List<IncomeExpenseItems>expenseItemsList=incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.EXPENSE);
-            model.addAttribute("expenseItemsList", expenseItemsList);
+            List<IncomeExpenseItems>incomeItemsList=incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.EXPENSE);
+            model.addAttribute("incomeItemsList", incomeItemsList);
         }
 
         model.addAttribute("nextId", cashBoxService.getMaxId()+1);
@@ -189,50 +190,50 @@ public class CashBoxController {
 
         model.addAttribute("admins", adminDTOList);
 
-        model.addAttribute("cashBoxItem", cashBox);
+        model.addAttribute("cashBox", cashBox);
 
         return "admin_panel/cash_box/cashbox_edit";
     }
 
-    @GetMapping("/copy/{id}")
-    public String copyCashBox(@PathVariable("id") Long id, Model model) {
-        CashBox cashBox = cashBoxService.findById(id);
-        if(cashBox.getIncomeExpenseType().equals(IncomeExpenseType.INCOME)) {
-
-            List<IncomeExpenseItems> incomeItemsList = incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.INCOME);
-            model.addAttribute("incomeItemsList", incomeItemsList);
-
-            List<OwnerDTO> ownerDTOList = ownerService.findAllDTO();
-            model.addAttribute("owners", ownerDTOList);
-
-            List<ApartmentAccountDTO> apartmentAccountDTOS = accountService.findAllAccounts().stream().map(accountDTOMapper::fromAccountToDTO).collect(Collectors.toList());
-            model.addAttribute("accounts", apartmentAccountDTOS);
-
-        } else if (cashBox.getIncomeExpenseType().equals(IncomeExpenseType.EXPENSE)){
-            List<IncomeExpenseItems>expenseItemsList=incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.EXPENSE);
-            model.addAttribute("expenseItemsList", expenseItemsList);
-        }
-
-
-        List<AdminDTO>adminDTOList = adminService.findAllManagers();
-
-        model.addAttribute("admins", adminDTOList);
-
-        cashBox.setId(null);
-        model.addAttribute("cashBoxItem", cashBox);
-        return "admin_panel/cash_box/cashbox_edit";
-    }
+//    @GetMapping("/copy/{id}")
+//    public String copyCashBox(@PathVariable("id") Long id, Model model) {
+//        CashBox cashBox = cashBoxService.findById(id);
+//        if(cashBox.getIncomeExpenseType().equals(IncomeExpenseType.INCOME)) {
+//
+//            List<IncomeExpenseItems> incomeItemsList = incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.INCOME);
+//            model.addAttribute("incomeItemsList", incomeItemsList);
+//
+//            List<OwnerDTO> ownerDTOList = ownerService.findAllDTO();
+//            model.addAttribute("owners", ownerDTOList);
+//
+//            List<ApartmentAccountDTO> apartmentAccountDTOS = accountService.findAllAccounts().stream().map(accountDTOMapper::fromAccountToDTO).collect(Collectors.toList());
+//            model.addAttribute("accounts", apartmentAccountDTOS);
+//
+//        } else if (cashBox.getIncomeExpenseType().equals(IncomeExpenseType.EXPENSE)){
+//            List<IncomeExpenseItems>incomeItemsList=incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.EXPENSE);
+//            model.addAttribute("incomeItemsList", incomeItemsList);
+//        }
+//
+//
+//        List<AdminDTO>adminDTOList = adminService.findAllManagers();
+//
+//        model.addAttribute("admins", adminDTOList);
+//
+//        cashBox.setId(null);
+//        model.addAttribute("cashBox", cashBox);
+//        return "admin_panel/cash_box/cashbox_edit";
+//    }
 
     @PostMapping("/save")
-    public String saveCashBox(@Valid @ModelAttribute("cashBoxItem") CashBox cashBoxItem, BindingResult bindingResult, @RequestParam(name = "id", defaultValue = "0") Long id, @RequestParam(name = "owner", defaultValue = "0") Long ownerId,
+    public String saveCashBox(@Valid @ModelAttribute("cashBox") CashBox cashBox, BindingResult bindingResult, @RequestParam(name = "id", defaultValue = "0") Long id, @RequestParam(name = "owner", defaultValue = "0") Long ownerId,
                               @RequestParam(name = "manager", defaultValue = "0") Long adminId, @RequestParam(name = "apartmentAccount", defaultValue = "0") Long accountId,
                               @RequestParam(name = "amount", defaultValue = "0D") Double amount, @RequestParam(name = "incomeExpenseItems", defaultValue = "0") Long incomeExpenseItemId, Model model) throws IOException {
-        cashBoxtValidator.validate(cashBoxItem, bindingResult);
+        cashBoxtValidator.validate(cashBox, bindingResult);
 
-        System.out.println(cashBoxItem);
+        System.out.println(cashBox);
         System.out.println("bindingResult"+ bindingResult);
         if (bindingResult.hasErrors()) {
-            if(cashBoxItem.getIncomeExpenseType().equals(IncomeExpenseType.INCOME)){
+            if(cashBox.getIncomeExpenseType().equals(IncomeExpenseType.INCOME)){
                 List<IncomeExpenseItems>incomeItemsList=incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.INCOME);
                 model.addAttribute("incomeItemsList", incomeItemsList);
 
@@ -241,70 +242,79 @@ public class CashBoxController {
 
                 List<ApartmentAccountDTO> apartmentAccountDTOS = accountService.findAllAccounts().stream().map(accountDTOMapper::fromAccountToDTO).collect(Collectors.toList());
                 model.addAttribute("accounts", apartmentAccountDTOS);
-            } else if (cashBoxItem.getIncomeExpenseType().equals(IncomeExpenseType.EXPENSE)){
-                List<IncomeExpenseItems>expenseItemsList=incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.EXPENSE);
-                model.addAttribute("expenseItemsList", expenseItemsList);
+            } else if (cashBox.getIncomeExpenseType().equals(IncomeExpenseType.EXPENSE)){
+                List<IncomeExpenseItems>incomeItemsList=incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.EXPENSE);
+                model.addAttribute("incomeItemsList", incomeItemsList);
             }
             List<AdminDTO>adminDTOList = adminService.findAllDTO();
             model.addAttribute("admins", adminDTOList);
 
-            return "admin_panel/cash_box/cashBoxItem_edit";
+            return "admin_panel/cash_box/cashBox_edit";
         } else {
-            if (cashBoxItem.getIncomeExpenseType() == IncomeExpenseType.EXPENSE) {
-                if (amount > 0) cashBoxItem.setAmount(amount * (-1));
+            if (cashBox.getIncomeExpenseType() == IncomeExpenseType.EXPENSE) {
+                if (amount > 0) cashBox.setAmount(amount * (-1));
             } else {
-                cashBoxItem.setOwner(ownerService.findById(ownerId));
+                cashBox.setOwner(ownerService.findById(ownerId));
                 ApartmentAccount account = accountService.findAccountById(accountId);
-                if(!account.getTransactions().contains(cashBoxItem)) {
-                    account.getTransactions().add(cashBoxItem);
+                if(!account.getTransactions().contains(cashBox)) {
+                    account.getTransactions().add(cashBox);
                     account.setBalance(account.getAccountBalance());
-                    cashBoxItem.setApartmentAccount(account);
+                    cashBox.setApartmentAccount(account);
                 }
             }
-            cashBoxItem.setIncomeExpenseItems(incomeExpenseItemService.findById(incomeExpenseItemId));
-            cashBoxItem.setManager(adminService.findAdminById(adminId));
-            cashBoxService.save(cashBoxItem);
+            cashBox.setIncomeExpenseItems(incomeExpenseItemService.findById(incomeExpenseItemId));
+            cashBox.setManager(adminService.findAdminById(adminId));
+            cashBoxService.save(cashBox);
             return "redirect:/admin/cashbox/";
         }
     }
 
     @PostMapping("/newIncome")
-    public String saveNewIncome(@ModelAttribute CashBox cashBoxItem, BindingResult bindingResult, Model model) {
-        cashBoxtValidator.validate(cashBoxItem, bindingResult);
+    public String saveNewIncome(@ModelAttribute CashBox cashBox, BindingResult bindingResult, Model model) {
+        cashBoxtValidator.validate(cashBox, bindingResult);
         if(bindingResult.hasErrors()) {
+            List<IncomeExpenseItems> incomeItemsList = incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.INCOME);
+            model.addAttribute("incomeItemsList", incomeItemsList);
+            model.addAttribute("nextId", cashBoxService.getMaxId()+1);
             return "admin_panel/cash_box/cashbox_edit";
         }
-        CashBox savedCashbox = cashBoxService.save(cashBoxItem);
+        CashBox savedCashbox = cashBoxService.save(cashBox);
         savedCashbox.getApartmentAccount().addToBalance(savedCashbox.getAmount());
         accountService.saveAccount(savedCashbox.getApartmentAccount());
-        websocketController.sendCashboxItem(cashBoxItem);
+        websocketController.sendCashboxItem(cashBox);
 
         return "redirect:/admin/cashbox";
     }
 
     @PostMapping("/newExpense")
-    public String saveNewExpense(@ModelAttribute CashBox cashBoxItem, BindingResult bindingResult, Model model) {
-        cashBoxItem.setAmount(cashBoxItem.getAmount()*-1);
-        cashBoxtValidator.validate(cashBoxItem, bindingResult);
+    public String saveNewExpense(@ModelAttribute CashBox cashBox, BindingResult bindingResult, Model model) {
+        if(cashBox.getAmount() != null) cashBox.setAmount(cashBox.getAmount()*-1);
+        cashBoxtValidator.validate(cashBox, bindingResult);
         if(bindingResult.hasErrors()) {
+            List<IncomeExpenseItems> incomeItemsList = incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.EXPENSE);
+            model.addAttribute("incomeItemsList", incomeItemsList);
+            model.addAttribute("nextId", cashBoxService.getMaxId()+1);
             return "admin_panel/cash_box/cashbox_edit";
         }
-        cashBoxService.save(cashBoxItem);
+        cashBoxService.save(cashBox);
 
-        websocketController.sendCashboxItem(cashBoxItem);
+        websocketController.sendCashboxItem(cashBox);
 
         return "redirect:/admin/cashbox";
     }
 
     @PostMapping("/edit/{id}")
-    public String editCashBox(@ModelAttribute CashBox cashBoxItem, BindingResult bindingResult, Model model) {
-        cashBoxtValidator.validate(cashBoxItem, bindingResult);
+    public String editCashBox(@ModelAttribute CashBox cashBox, BindingResult bindingResult, Model model) {
+        cashBoxtValidator.validate(cashBox, bindingResult);
         if(bindingResult.hasErrors()) {
+            List<IncomeExpenseItems> incomeItemsList = incomeExpenseRepository.findAllByIncomeExpenseType(cashBox.getIncomeExpenseType());
+            model.addAttribute("incomeItemsList", incomeItemsList);
+            model.addAttribute("nextId", cashBoxService.getMaxId()+1);
             return "admin_panel/cash_box/cashbox_edit";
         }
-        cashBoxService.save(cashBoxItem);
+        cashBoxService.save(cashBox);
 
-        websocketController.sendCashboxItem(cashBoxItem);
+        websocketController.sendCashboxItem(cashBox);
 
         return "redirect:/admin/cashbox";
     }

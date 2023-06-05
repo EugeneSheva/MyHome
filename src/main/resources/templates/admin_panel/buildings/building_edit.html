@@ -265,8 +265,8 @@
                                                                 ></option>
                                                             </select>
                                                             <label for="adminrole" class="form-label"> </label>
-                                                            <input type="text" th:id="'adminrole-'+${item.count}"
-                                                                   th:value="${selectedAdmin != null ? selectedAdmin.role : ''}"
+                                                            <input type="text" readonly th:id="'adminrole-'+${item.count}"
+                                                                   th:value="${selectedAdmin != null ? selectedAdmin.role.getName() : ''}"
                                                                    class="form-control"
                                                                    name="users" style="margin-left: 10px;">
                                                             <button type="button"

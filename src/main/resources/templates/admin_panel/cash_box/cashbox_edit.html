@@ -29,14 +29,14 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0" th:text="${cashBoxItem.id == null} ? (${#strings.contains(cashBoxItem.incomeExpenseType,'INCOME')} ? #{newIncomeStatement}  : #{newExpenseStatement}  ):
-                                        (${#strings.contains(cashBoxItem.incomeExpenseType,'INCOME')} ? #{incomeStatement}  : #{expenseStatement})"></h1>
+                        <h1 class="m-0" th:text="${cashBox.id == null} ? (${#strings.contains(cashBox.incomeExpenseType,'INCOME')} ? #{newIncomeStatement}  : #{newExpenseStatement}  ):
+                                        (${#strings.contains(cashBox.incomeExpenseType,'INCOME')} ? #{incomeStatement}  : #{expenseStatement})"></h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a th:href="@{/}"><i class="fa fa-home"></i> Главная</a></li>
                             <li class="breadcrumb-item"><a th:href="@{/admin/cashbox/}">Касса</a></li>
-                            <li class="breadcrumb-item active" th:text="${cashBoxItem.id == null} ? (${#strings.contains(cashBoxItem.incomeExpenseType,'INCOME')} ?
+                            <li class="breadcrumb-item active" th:text="${cashBox.id == null} ? (${#strings.contains(cashBox.incomeExpenseType,'INCOME')} ?
                             #{newIncomeStatement}  : #{newExpenseStatement}  ): #{editimg}"></li>
                         </ol>
                     </div><!-- /.col -->
@@ -47,7 +47,7 @@
 
         <!-- Main content -->
         <section class="page_content">
-            <form method="post" th:object="${cashBoxItem}">
+            <form method="post" th:object="${cashBox}">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <input type="hidden" th:field="*{id}">
                 <div class="container-fluid">
@@ -63,7 +63,7 @@
                             <span style="display:inline;" th:text="#{from}">от </span>
                             <input id="date" style="width: 90%; display:inline-block;" type="date" th:field="*{date}"
                                    class="form-control">
-                            <script th:if="${cashBoxItem.id == null}">
+                            <script th:if="${cashBox.id == null}">
                                 document.getElementById('date').value = new Date().toISOString().substring(0, 10);
                             </script>
                         </div>
@@ -83,34 +83,34 @@
                                             <input type="hidden" id="incomeExpenseType" class="form-control" th:field="*{incomeExpenseType}" name="incomeExpenseType">
 
                                             <!--                      <div class="form-group">-->
-                                            <div th:if="${#strings.contains(cashBoxItem.incomeExpenseType,'INCOME')}" class="mb-2">
+                                            <div th:if="${#strings.contains(cashBox.incomeExpenseType,'INCOME')}" class="mb-2">
                                                 <label style="margin-top:6px " th:text="#{apartmentOwner}">Владелец квартиры</label>
                                                 <select class="form-control" name="owner" id="owner_select" style="width: 100%;">
                                                     <option selected="" disabled="" value="" th:text="#{choise}"></option>
                                                     <option th:each="owner : ${owners}"
                                                             th:text="${owner.getFullName() + '(ID: ' + owner.id + ')'}"
                                                             th:value="${owner.id}"
-                                                            th:selected="${owner.id == (cashBoxItem.owner != null ? cashBoxItem.owner.id:0)}"
+                                                            th:selected="${owner.id == (cashBox.owner != null ? cashBox.owner.id:0)}"
                                                             ></option>
                                                 </select>
                                                 <div style="color: #d80450" th:if="${#fields.hasErrors('owner')}" th:errors="*{owner}"></div>
                                             </div>
 
-                                            <div th:if="${#strings.contains(cashBoxItem.incomeExpenseType,'INCOME')}" class="mb-2">
+                                            <div th:if="${#strings.contains(cashBox.incomeExpenseType,'INCOME')}" class="mb-2">
                                                 <label th:text="#{apartmentAccount}">Лицевой счет</label>
-                                                <input type="hidden" th:value="${cashBoxItem.owner == null}">
-                                                <select class="form-control" th:disabled="${cashBoxItem.owner == null}" name="apartmentAccount" id="account_select" style="width: 100%;">
+                                                <input type="hidden" th:value="${cashBox.owner == null}">
+                                                <select class="form-control" th:disabled="${cashBox.owner == null}" name="apartmentAccount" id="account_select" style="width: 100%;">
                                                     <option selected="" disabled="" value="" th:text="#{choise}"></option>
                                                     <option th:each="account : ${accounts}"
                                                             th:text="${T(java.lang.String).format('%010d',account.id)}"
                                                             th:value="${account.id}"
-                                                            th:selected="${account.id == (cashBoxItem.apartmentAccount != null ? cashBoxItem.apartmentAccount.id:0)}"
+                                                            th:selected="${account.id == (cashBox.apartmentAccount != null ? cashBox.apartmentAccount.id:0)}"
                                                             ></option>
                                                 </select>
                                                 <div style="color: #d80450" th:if="${#fields.hasErrors('apartmentAccount')}" th:errors="*{apartmentAccount}"></div>
                                             </div>
 
-                                            <div th:if="${#strings.contains(cashBoxItem.incomeExpenseType,'INCOME')}" style="margin-top: 6px;" class="mb-2">
+                                            <div th:if="${#strings.contains(cashBox.incomeExpenseType,'INCOME')}" style="margin-top: 6px;" class="mb-2">
                                                 <label for="incomeExpenseItem" class="form-label" th:text="#{item}">Статья</label>
                                                 <select class="form-select" id="incomeExpenseItem"
                                                         name="incomeExpenseItems">
@@ -118,21 +118,21 @@
                                                     <option th:each="item : ${incomeItemsList}"
                                                             th:text="${item.name}"
                                                             th:value="${item.id}"
-                                                            th:selected="${item.id == (cashBoxItem.incomeExpenseItems != null ? cashBoxItem.incomeExpenseItems.id:0)}"
+                                                            th:selected="${item.id == (cashBox.incomeExpenseItems != null ? cashBox.incomeExpenseItems.id:0)}"
                                                     ></option>
 
                                                 </select>
                                                 <div style="color: #d80450" th:if="${#fields.hasErrors('incomeExpenseItems')}" th:errors="*{incomeExpenseItems}"></div>
                                             </div>
-                                            <div th:if="${#strings.contains(cashBoxItem.incomeExpenseType,'EXPENSE')}" style="margin-top: 6px;">
+                                            <div th:if="${#strings.contains(cashBox.incomeExpenseType,'EXPENSE')}" style="margin-top: 6px;">
                                                 <label for="incomeExpenseItem" class="form-label" th:text="#{item}">Статья</label>
                                                 <select class="form-select" id="incomeExpenseItem"
                                                         name="incomeExpenseItems">
                                                     <option selected="" disabled="" value="" th:text="#{choise}"></option>
-                                                    <option th:each="item : ${expenseItemsList}"
+                                                    <option th:each="item : ${incomeItemsList}"
                                                             th:text="${item.name}"
                                                             th:value="${item.id}"
-                                                            th:selected="${item.id == (cashBoxItem.incomeExpenseItems != null ? cashBoxItem.incomeExpenseItems.id:0)}"></option>
+                                                            th:selected="${item.id == (cashBox.incomeExpenseItems != null ? cashBox.incomeExpenseItems.id:0)}"></option>
                                                 </select>
                                                 <div style="color: #d80450" th:if="${#fields.hasErrors('incomeExpenseItems')}" th:errors="*{incomeExpenseItems}"></div>
                                             </div>
@@ -152,7 +152,7 @@
                                                 <option th:each="admin, item : ${admins}"
                                                         th:text="${admins[__${item.index}__].role}+' - '+${admins[__${item.index}__].first_name}+' '+${admins[__${item.index}__].last_name}"
                                                         th:value="${admins[__${item.index}__].id}"
-                                                        th:selected="${admins[__${item.index}__].id == (cashBoxItem.manager != null ? cashBoxItem.manager.id:0)}"></option>
+                                                        th:selected="${admins[__${item.index}__].id == (cashBox.manager != null ? cashBox.manager.id:0)}"></option>
                                             </select>
                                             <div style="color: #d80450" th:if="${#fields.hasErrors('manager')}" th:errors="*{manager}"></div>
                                         </div>

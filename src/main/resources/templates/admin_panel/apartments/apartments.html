@@ -245,7 +245,7 @@
                 });
                 // Запрос на сервер для получения списка элементов для этажей
                 $.ajax({
-                    url: '/myhome/admin/buildings/get-sections/' + buildingID,
+                    url: '/myhome/admin/buildings/get-floors/' + buildingID,
                     success: function (data) {
                         console.log('success ' + data)
                         $('#floor').empty();

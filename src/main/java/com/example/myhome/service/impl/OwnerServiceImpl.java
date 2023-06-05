@@ -182,7 +182,9 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public Owner save(Owner owner) {
-        if(owner.getId() == null || owner.getAdded_at() == null) owner.setAdded_at(LocalDateTime.now());
+        if(owner.getId() == null || owner.getId() == 0 || owner.getAdded_at() == null) owner.setAdded_at(LocalDateTime.now());
+        log.info("OWNER TO SAVE");
+        log.info(owner.toString());
         return ownerRepository.save(owner);
     }
 

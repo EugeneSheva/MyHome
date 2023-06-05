@@ -113,9 +113,9 @@
                           <div class="col-xs-6 col-md-4">
                             <div class="form-group">
                               <label th:text="#{settings.system.tariffs.editPage.service}">Услуга</label>
-                              <select name="service_names" class="form-control service-select">
+                              <select name="service_names" onclick="setUnit(this)" class="form-control service-select">
                                 <option value="" th:text="#{select.placeholder}">Выберите...</option>
-                                <option th:each="service : ${services}" th:value="${service.name}" th:text="${service.name}"></option>
+                                <option th:each="service : ${services}" th:value="${service.id}" th:text="${service.name}"></option>
                               </select>
                             </div>
                           </div>
@@ -137,8 +137,7 @@
                               <div class="input-group">
                                 <select name="service_currency" class="unit-select" id="0-serviceunit-name" disabled="">
                                   <option value="" th:text="#{select.placeholder}">Выберите...</option>
-                                  <option value="2">м31234</option>
-                                  <option value="3">кв.м.к</option>
+                                  <option th:each="unit : ${units}" th:value="${unit.id}" th:text="${unit.name}"></option>
                                 </select>
                                 <span class="input-group-btn">
                                   <button type="button" class="btn btn-default form-row-remove-btn service-delete-button" onclick="deleteService(this)">
@@ -193,8 +192,17 @@
     }
   }
 
-  function changeUnit() {
+  function setUnit(select) {
+    console.log(select.value);
+    let service_id = $(select).val();
+    console.log(service_id);
+    let unit = $(select).closest('.service-row').find('.unit-select');
+    console.log(unit);
 
+    $.get('/myhome/admin/services/get-unit', {id:select.value}, function(data){
+        console.log(data);
+        $(unit).val(data.id);
+    });
   }
 
   $(document).ready(function() {

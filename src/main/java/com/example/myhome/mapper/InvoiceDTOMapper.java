@@ -62,6 +62,7 @@ public class InvoiceDTOMapper {
                                     .completed(invoice.getCompleted())
                                     .section(invoice.getSection())
                                     .status(invoice.getStatus())
+                                    .statusName(invoice.getStatus().getName())
                                     .dateFrom(invoice.getDateFrom())
                                     .dateTo(invoice.getDateTo())
                                     .total_price(invoice.getTotal_price())

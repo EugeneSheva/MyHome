@@ -39,6 +39,8 @@ public interface ApartmentService {
     Long getNumberById(Long id);
     Long getQuantity();
 
+    boolean accountHasApartment(Long id);
+
     Page<ApartmentDTO> findBySpecificationAndPage(Integer page, Integer size, FilterForm filters);
 
 }

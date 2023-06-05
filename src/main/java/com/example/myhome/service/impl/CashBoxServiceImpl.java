@@ -29,7 +29,10 @@ public class CashBoxServiceImpl implements CashBoxService {
 
     @Override
     public CashBox findById(Long id) { return cashBoxRepository.findById(id).orElseThrow(NotFoundException::new);}
-
+    @Override
+    public CashBoxDTO findDTOById(Long id) {
+        return mapper.fromCashboxToDTO(cashBoxRepository.findById(id).orElseThrow(NotFoundException::new));
+    }
     @Override
     public List<CashBox> findAll() { return cashBoxRepository.findAll(); }
     @Override

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
@@ -13,7 +14,11 @@ public class AboutPage extends Page {
 
     //Информация
     @NotBlank
-    private String title, description;
+    @Size(min=2,max=50,message = "Название должно быть длиной 2-50 символов!")
+    private String title;
+    @NotBlank
+    @Size(min=2,max=255,message = "Описание должно быть длиной 2-255 символов!")
+    private String description;
     private String director_photo;
 
     //Фотогалерея
@@ -21,7 +26,11 @@ public class AboutPage extends Page {
 
     //Дополнительная информация
     @NotBlank
-    private String add_title, add_description;
+    @Size(min=2,max=50,message = "Название должно быть длиной 2-50 символов!")
+    private String add_title;
+    @NotBlank
+    @Size(min=2,max=255,message = "Описание должно быть длиной 2-255 символов!")
+    private String add_description;
 
     //Дополнительная фотогалерея
     private String add_photos = "";
@@ -37,6 +46,7 @@ public class AboutPage extends Page {
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         private long id;
         @NotBlank
+        @Size(min=2,max=50,message = "Название должно быть длиной 2-50 символов!")
         private String name;
         @NotBlank
         private String file;

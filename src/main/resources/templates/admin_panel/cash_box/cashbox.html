@@ -29,14 +29,14 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                                    <h1 class="m-0" th:text="${cashBoxItem.id == null} ? (${#strings.contains(cashBoxItem.incomeExpenseType,'INCOME')} ? #{newIncomeStatement}  : #{newExpenseStatement}  ):
-                                        (${#strings.contains(cashBoxItem.incomeExpenseType,'INCOME')} ? #{incomeStatement}  : #{expenseStatement})"></h1>
+                                    <h1 class="m-0" th:text="${cashBox.id == null} ? (${#strings.contains(cashBox.incomeExpenseType,'INCOME')} ? #{newIncomeStatement}  : #{newExpenseStatement}  ):
+                                        (${#strings.contains(cashBox.incomeExpenseType,'INCOME')} ? #{incomeStatement}  : #{expenseStatement})"></h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a th:href="@{/}"><i class="fa fa-home"></i> Главная</a></li>
                             <li class="breadcrumb-item"><a th:href="@{/cashbox/}">Касса</a></li>
-                            <li class="breadcrumb-item active" th:text="${cashBoxItem.id == null} ? (${#strings.contains(cashBoxItem.incomeExpenseType,'INCOME')} ?
+                            <li class="breadcrumb-item active" th:text="${cashBox.id == null} ? (${#strings.contains(cashBox.incomeExpenseType,'INCOME')} ?
                              #{newIncomeStatement}  : #{newExpenseStatement}  ): #{editimg}"></li>
                         </ol>
                     </div><!-- /.col -->
@@ -48,19 +48,19 @@
         <!-- Main content -->
         <section class="page_content">
             <div class="container-fluid">
-<!--                <form method="post" th:action="@{/admin/cashbox/save}" th:object="${cashBoxItem}">-->
+<!--                <form method="post" th:action="@{/admin/cashbox/save}" th:object="${cashBox}">-->
                 <div class="row">
                 <div class="col-md-3">
                     <span style="display:inline;">№ </span>
                     <input readonly style="width: 90%; display:inline;"
-                           th:value="${T(java.lang.String).format('%010d',cashBoxItem.id)}"
+                           th:value="${T(java.lang.String).format('%010d',cashBox.id)}"
                            class="form-control">
                 </div>
                 <div class="col-md-3">
                     <span style="display:inline;" th:text="#{from}">от </span>
-                    <input id="date" style="width: 90%; display:inline-block;" disabled type="date" th:value="${cashBoxItem.date}"
+                    <input id="date" style="width: 90%; display:inline-block;" disabled type="date" th:value="${cashBox.date}"
                            class="form-control">
-                    <script th:if="${cashBoxItem.id == null}">
+                    <script th:if="${cashBox.id == null}">
                     document.getElementById('date').value = new Date().toISOString().substring(0, 10);
                 </script>
                 </div>
@@ -72,12 +72,13 @@
                         <div class="box">
                         <style>.btn-default {background-color: #f8f9fa;border-color: #ddd;color: #444;}</style>
                         <div class="box-header with-border">
-                            <h3 class="box-title" th:text="${#strings.contains(cashBoxItem.incomeExpenseType,'INCOME')} ?
+                            <h3 class="box-title" th:text="${#strings.contains(cashBox.incomeExpenseType,'INCOME')} ?
                                    #{incomeStatement}  : #{expenseStatement} "></h3>
                             <div class="box-tools" style="top: 00.; top: 10px;">
-                                <a  class="btn btn-default btn-sm" th:href="@{/admin/cashbox/copy/{id}(id=${cashBoxItem.id})}"  style="margin-left: 2px" th:text="#{copy}">Копировать</a>
-                                <a  class="btn btn-default btn-sm" th:href="@{/admin/cashbox/delete/{id}(id=${cashBoxItem.id})}" style="margin-left: 2px" th:text="#{delete}">Удалить</a>
-                                <a  class="btn btn-primary btn-sm" th:href="@{/admin/cashbox/edit/{id}(id=${cashBoxItem.id})}" style="margin-left: 2px"><h7 th:text="#{editStatement}"></h7> <i class="fa fa-pencil visible-xs" aria-hidden="true"></i></a>
+<!--                                <a  class="btn btn-default btn-sm" th:href="@{/admin/cashbox/copy/{id}(id=${cashBox.id})}"  style="margin-left: 2px" th:text="#{copy}">Копировать</a>-->
+                                <a  class="btn btn-default btn-sm" href="#" onclick="copy()" style="margin-left: 2px" th:text="#{copy}">Копировать</a>
+                                <a  class="btn btn-default btn-sm" th:href="@{/admin/cashbox/delete/{id}(id=${cashBox.id})}" style="margin-left: 2px" th:text="#{delete}">Удалить</a>
+                                <a  class="btn btn-primary btn-sm" th:href="@{/admin/cashbox/edit/{id}(id=${cashBox.id})}" style="margin-left: 2px"><h7 th:text="#{editStatement}"></h7> <i class="fa fa-pencil visible-xs" aria-hidden="true"></i></a>
                                 <a  class="btn btn-default btn-sm" href="#"  style="margin-left: 2px" onclick="downloadExcelTable()" th:text="#{uploadToExele}">Выгрузить в Excel</a>
                             </div>
                         </div>
@@ -90,15 +91,15 @@
                                         <tbody>
                                         <tr>
                                             <td><b th:text="#{apartmentOwner}">Владелец квартиры</b></td>
-                                            <td th:text="${cashBoxItem.owner != null} ? ${cashBoxItem.owner.first_name}+' '+${cashBoxItem.owner.last_name}+' '+${cashBoxItem.owner.fathers_name} : '--отсутствует--'"></td>
+                                            <td th:text="${cashBox.ownerFullName != null} ? ${cashBox.ownerFullName} : #{empty}"></td>
                                         </tr>
                                         <tr>
                                             <td><b th:text="#{apartmentAccount}">Лицевой счет</b></td>
-                                            <td th:text="${cashBoxItem.apartmentAccount != null} ? ${cashBoxItem.apartmentAccount.id} : #{empty}">?</td>
+                                            <td th:text="${cashBox.apartmentAccount != null} ? ${cashBox.apartmentAccount} : #{empty}">?</td>
                                         </tr>
                                         <tr>
                                             <td><b th:text="#{item}">Статья</b></td>
-                                            <td th:text="${cashBoxItem.incomeExpenseItems != null} ? ${cashBoxItem.incomeExpenseItems.name} : #{empty}">?</td>
+                                            <td th:text="${cashBox.incomeExpenseItems != null} ? ${cashBox.incomeExpenseItems} : #{empty}">?</td>
                                         </tr>
 <!--                                        <tr>-->
 <!--                                            <td><b>Квитанция</b></td>-->
@@ -110,15 +111,15 @@
 <!--                                        </tr>-->
                                         <tr>
                                             <td><b th:text="#{manager}">Менеджер</b></td>
-                                            <td th:text="${cashBoxItem.incomeExpenseItems != null} ? ${cashBoxItem.manager.first_name}+' '+${cashBoxItem.manager.last_name} : '--отсутствует--'"></td>
+                                            <td th:text="${cashBox.managerFullName != null} ? ${cashBox.managerFullName} : #{empty}"></td>
                                         </tr>
                                         <tr>
                                             <td><b th:text="#{sum}">Сумма</b></td>
-                                            <td th:text="${cashBoxItem.amount}"></td>
+                                            <td th:text="${cashBox.amount}"></td>
                                         </tr>
                                         <tr>
                                             <td><b th:text="#{coment}">Комментарий</b></td>
-                                            <td th:text="${cashBoxItem.description}"></td>
+                                            <td th:text="${cashBox.description}"></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -164,7 +165,10 @@
 
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 
-<script>
+<script th:inline="javascript">
+    let cashbox = [[${cashBox}]];
+    console.log(JSON.stringify(cashbox));
+
     function downloadExcelTable() {
         console.log(1)
         const date = new Date();
@@ -177,6 +181,11 @@
         let excel_file = XLSX.utils.table_to_book(table);
         XLSX.writeFile(excel_file, "Касса " + `${day}-${month}-${year}` + ".xlsx");
         console.log(2)
+    }
+
+    function copy() {
+        navigator.clipboard.writeText(JSON.stringify(cashbox));
+        alert('Cashbox copied');
     }
 </script>
 

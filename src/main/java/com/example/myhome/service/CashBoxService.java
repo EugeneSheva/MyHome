@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface CashBoxService {
     CashBox findById(Long id);
+    CashBoxDTO findDTOById(Long id);
 
     List<CashBox> findAll();
 

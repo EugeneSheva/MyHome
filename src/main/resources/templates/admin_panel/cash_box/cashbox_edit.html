@@ -193,7 +193,24 @@
 
 <script th:inline="javascript">
     var placeholderText = [[#{select.placeholder}]];
+<!--    var cashbox = [[${cashBox}]];-->
+<!--    console.log(cashbox);-->
     $(function () {
+<!--        if(cashbox.owner != null && cashbox.owner.id != null) {-->
+<!--            $("#owner").append(new Option(cashbox.owner.first_name, cashbox.owner.id, null, null));-->
+<!--            $("#owner").val(cashbox.owner.id);-->
+<!--        }-->
+
+<!--        if(cashbox.apartmentAccount != null && cashbox.apartmentAccount.id != null) {-->
+<!--            $("#account_select").append(new Option(cashbox.apartmentAccount.id, cashbox.apartmentAccount.id, null, null));-->
+<!--            $("#account_select").val(cashbox.apartmentAccount.id);-->
+<!--        }-->
+
+<!--        if(cashbox.manager != null && cashbox.manager.id != null) {-->
+<!--            $("#admin").append(new Option(cashbox.manager.fullName, cashbox.manager.id, null, null));-->
+<!--            $("#admin").val(cashbox.manager.id);-->
+<!--        }-->
+
         //Initialize Select2 Elements
         $('#incomeExpenseItem, #account_select').select2({placeholder: placeholderText, minimumResultsForSearch: Infinity});
 

@@ -140,6 +140,11 @@ public class OwnerController {
         return mapper.fromOwnerToDTO(apartment.getOwner());
     }
 
+    @GetMapping("/get-owner")
+    public @ResponseBody OwnerDTO getSingleOwner(@RequestParam long id) {
+        return ownerService.findByIdDTO(id);
+    }
+
     @GetMapping("/get-owners")
     public @ResponseBody Page<OwnerDTO> getOwners(@RequestParam Integer page,
                                                   @RequestParam Integer size,

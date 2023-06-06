@@ -171,18 +171,20 @@ public class MeterDataServiceImpl implements MeterDataService {
                                        String service_id,
                                        String date) {
 
+        log.info(stat);
+        log.info(MeterPaymentStatus.getType(stat).toString());
         MeterData newMeter = (id == null || id.equals(getMaxId()+1)) ? new MeterData() : findMeterDataById(id);
         try {
-            newMeter.setBuilding((building_id != null) ? buildingService.findById(Long.parseLong(building_id)) : null);
+            newMeter.setStatus(MeterPaymentStatus.NEW);
             newMeter.setSection(section_name);
-            newMeter.setApartment((apartment_id != null) ? apartmentService.findById(Long.parseLong(apartment_id)) : null);
-            newMeter.setCurrentReadings((readings != null) ? Double.parseDouble(readings) : null);
-            newMeter.setStatus(MeterPaymentStatus.valueOf(stat));
-            newMeter.setService((service_id != null) ? serviceService.findServiceById(Long.parseLong(service_id)) : null);
             newMeter.setDate((date != null) ? LocalDate.parse(date) : null);
+            newMeter.setCurrentReadings((readings != null && !readings.isEmpty()) ? Double.parseDouble(readings) : null);
+            newMeter.setBuilding((building_id != null && !building_id.isEmpty()) ? buildingService.findById(Long.parseLong(building_id)) : null);
+            newMeter.setApartment((apartment_id != null && !apartment_id.isEmpty()) ? apartmentService.findById(Long.parseLong(apartment_id)) : null);
+            newMeter.setService((service_id != null && !service_id.isEmpty()) ? serviceService.findServiceById(Long.parseLong(service_id)) : null);
         } catch (Exception e) {
             log.info("Exception while creating meter");
-            log.info(Arrays.toString(e.getStackTrace()));
+            log.info(e.getMessage());
         }
 
         return newMeter;

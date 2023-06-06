@@ -38,6 +38,7 @@ public class Message {
     private String subject;
 
     //Содержание
+    @Column(columnDefinition = "TEXT")
     private String text;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")

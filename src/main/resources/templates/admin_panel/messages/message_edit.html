@@ -138,9 +138,9 @@
                             </script>
                         </div>
                         <!-- /.card-body -->
-                        <div class="card-footer" style="background-color: #fafafa">
+                        <div class="card-footer">
                             <div class="float-right">
-                                <button type="submit" class="btn btn-success"><i
+                                <button type="submit" class="btn btn-success"> <i
                                         class="far fa-envelope" th:text="#{send}"></i>
                                 </button>
                             </div>
@@ -177,9 +177,10 @@
 </script>
 <script th:inline="javascript">
 
+        var list = /*[[${buildings}]]*/ [];
+
     function selectBuilding() {
 
-        var list = /*[[${buildings}]]*/ [];
         var selectedIndex = document.getElementById("building").selectedIndex - 1;
         //sections
         var select = document.getElementById("section");

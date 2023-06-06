@@ -29,6 +29,14 @@ public class RequestSpecifications {
         return (root, query, cb) -> cb.equal(root.get(RepairRequest_.APARTMENT), apartment);
     }
 
+    public static Specification<RepairRequest> hasApartmentNumber(Long number) {
+        if(number == null) return (root, query, cb) -> null;
+        return (root,query,cb) ->  {
+            Join<Apartment, RepairRequest> requestApartment = root.join(RepairRequest_.APARTMENT);
+            return cb.equal(requestApartment.get(Apartment_.NUMBER), number);
+        };
+    }
+
     public static Specification<RepairRequest> hasOwner(Owner owner) {
         if(owner == null) return  (root, query, criteriaBuilder) -> null;
         return (root, query, cb) -> {

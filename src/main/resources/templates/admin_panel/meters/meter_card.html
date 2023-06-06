@@ -84,7 +84,7 @@
                         <select class="selects"
                                 th:field="*{buildingID}"
                                 id="house_select">
-                          <option value="0" th:text="#{select.placeholder}">Выберите...</option>
+                          <option value="" th:text="#{select.placeholder}">Выберите...</option>
                           <option th:each="building : ${buildings}"
                                   th:value="${building.id}"
                                   th:text="${building.name}"></option>

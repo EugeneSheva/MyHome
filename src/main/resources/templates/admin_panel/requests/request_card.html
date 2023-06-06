@@ -178,6 +178,12 @@
 <script th:inline="javascript">
   let placeholderText = [[#{select.placeholder}]];
   let notFoundText = [[#{search.results.empty}]];
+
+  let requestApartOwner = [[${repairRequestDTO.ownerID}]];
+  let requestApartID = [[${repairRequestDTO.apartmentID}]];
+
+  console.log(requestApartOwner);
+  console.log(requestApartID);
 </script>
 
 

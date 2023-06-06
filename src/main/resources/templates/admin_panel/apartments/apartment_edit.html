@@ -215,9 +215,20 @@
 <script th:inline="javascript">
     var placeholderText = [[#{select.placeholder}]];
     var apartmentID = [[*{id}]];
-    console.log('APARTMENT ID ');
-    console.log(id);
+    var apartmentSection = [[${apartment.section}]];
+    var apartmentFloor = [[${apartment.floor}]];
+    console.log(apartmentSection);
+    console.log(apartmentFloor);
     $(function () {
+
+        if(apartmentSection != null) {
+            $("#section").append(new Option(apartmentSection,apartmentSection,null,null));
+            $("#section").val(apartmentSection);
+        }
+        if(apartmentFloor != null) {
+            $("#floor").append(new Option(apartmentFloor,apartmentFloor,null,null));
+            $("#floor").val(apartmentFloor);
+        }
 
         $('#building, #section, #floor, #tariff').select2({placeholder:placeholderText,minimumResultsForSearch:Infinity});
         $("#owner").select2({

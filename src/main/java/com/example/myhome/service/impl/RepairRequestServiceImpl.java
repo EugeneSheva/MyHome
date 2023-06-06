@@ -82,12 +82,14 @@ public class RepairRequestServiceImpl implements RepairRequestService {
     @Override
     public Specification<RepairRequest> buildSpecFromFilters(FilterForm filters) {
 
+        log.info("Building spec from following filters: " + filters.toString());
         Long id = filters.getId();
         String description = filters.getDescription();
         UserRole masterType = (filters.getMaster_type() != null && filters.getMaster_type() > 0) ? userRoleRepository.getReferenceById(filters.getMaster_type()) : null;
         String phone = filters.getPhone();
         RepairStatus status = (filters.getStatus() != null) ? RepairStatus.valueOf(filters.getStatus()) : null;
-        Apartment apartment = (filters.getApartment() != null) ? apartmentService.findByNumber(filters.getApartment()) : null;
+//        Apartment apartment = (filters.getApartment() != null) ? apartmentService.findByNumber(filters.getApartment()) : null;
+        Long apartment = filters.getApartment();
         Owner owner = (filters.getOwner() != null) ? ownerService.findById(filters.getOwner()) : null;
         Admin master = (filters.getMaster() != null) ? adminService.findAdminById(filters.getMaster()) : null;
 
@@ -108,7 +110,7 @@ public class RepairRequestServiceImpl implements RepairRequestService {
         return Specification.where(RequestSpecifications.hasId(id)
                 .and(RequestSpecifications.hasMasterType(masterType))
                 .and(RequestSpecifications.hasDescriptionLike(description))
-                .and(RequestSpecifications.hasApartment(apartment))
+                .and(RequestSpecifications.hasApartmentNumber(apartment))
                 .and(RequestSpecifications.hasOwner(owner))
                 .and(RequestSpecifications.hasPhoneLike(phone))
                 .and(RequestSpecifications.hasMaster(master))

@@ -103,7 +103,7 @@ public class AdminPanelSecurityConfig {
                 .and()
                 .rememberMe()
                     .key("secretKey")
-                    .tokenValiditySeconds(600);
+                    .tokenValiditySeconds(6000);
 
         return http.build();
     }

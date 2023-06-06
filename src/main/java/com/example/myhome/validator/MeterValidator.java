@@ -54,7 +54,7 @@ public class MeterValidator implements Validator {
             System.out.println("Error found(readings)");
             e.rejectValue("readings", "currentReadings.empty", messageSource.getMessage("meters.currentReadings.empty", null, locale));
         }
-        else if(meter.getReadings() < 0) {
+        else if(meter.getReadings() <= 0) {
             e.rejectValue("readings", "currentReadings.negative", messageSource.getMessage("meters.currentReadings.negative", null, locale));
         }
         else if(meter.getReadings() > 1_000_000) {

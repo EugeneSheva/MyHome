@@ -71,7 +71,6 @@ public class WebsiteController {
     // =========================
 
     // Сохранение контента главной страницы
-    // Можно было сделать у страницы поля @Transient MultipartFile ... и убрать кучу лишних аргументов
     // ¯\_(ツ)_/¯
     @PostMapping("/home")
     public String editHomePage(@Valid @ModelAttribute MainPage mainPage,
@@ -87,7 +86,7 @@ public class WebsiteController {
                                @RequestPart(required = false) MultipartFile page_block_6_img,
                                Model model) throws IOException {
 
-        validator.validate(mainPage, bindingResult);
+        //validator.validate(mainPage, bindingResult);
 
         if(bindingResult.hasErrors()) {
             log.info("Errors found");
@@ -105,7 +104,6 @@ public class WebsiteController {
     }
 
     // Сохранение контента страницы "О нас"
-    // Можно было сделать у страницы поля @Transient MultipartFile ... и убрать кучу лишних аргументов
     // ¯\_(ツ)_/¯
     @PostMapping("/about")
     public String editAboutPage(@Valid @ModelAttribute AboutPage aboutPage,

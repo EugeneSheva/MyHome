@@ -1,5 +1,6 @@
 package com.example.myhome.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -24,6 +25,7 @@ public class CashBox {
 
     @ManyToOne
     @JoinColumn(name = "income_expense_items_id")
+    @JsonIgnore
     private IncomeExpenseItems incomeExpenseItems;
 
     @ManyToOne
@@ -43,9 +45,9 @@ public class CashBox {
 
     private Double amount;
 
-    public String getIncExpItemName() {
-        return this.incomeExpenseItems.getName();
-    }
+//    public String getIncExpItemName() {
+//        return this.incomeExpenseItems.getName();
+//    }
 
     @PreRemove
     void clearTransactionFromAccount() {

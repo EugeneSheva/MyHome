@@ -107,7 +107,7 @@ public class AdminServiceImpl implements AdminService {
     public Page<AdminDTO> findAllDTO(Pageable pageable) {
         log.info("Getting all admins...");
         Page<Admin> initialPage = adminRepository.findAll(pageable);
-        log.info("Found " + initialPage.getContent().size() + " elements (page " + pageable.getPageNumber()+1 + "/" + initialPage.getTotalPages() + ")");
+        log.info("Found " + initialPage.getContent().size() + " elements (page " + (pageable.getPageNumber()+1) + "/" + initialPage.getTotalPages() + ")");
         List<AdminDTO> listDTO = initialPage.getContent().stream().map(mapper::fromAdminToDTO).collect(Collectors.toList());
         log.info("Turned admins from DB into DTOs");
         return new PageImpl<>(listDTO, pageable, initialPage.getTotalPages());
@@ -119,7 +119,7 @@ public class AdminServiceImpl implements AdminService {
         Specification<Admin> spec = buildSpecFromFilters(filters);
         if(spec != null) log.info(spec.toString());
         Page<Admin> initialPage = adminRepository.findAll(spec, pageable);
-        log.info("Found " + initialPage.getContent().size() + " elements (page " + pageable.getPageNumber()+1 + "/" + initialPage.getTotalPages() + ")");
+        log.info("Found " + initialPage.getContent().size() + " elements (page " + (pageable.getPageNumber()+1) + "/" + initialPage.getTotalPages() + ")");
         List<AdminDTO> listDTO = initialPage.getContent().stream().map(mapper::fromAdminToDTO).collect(Collectors.toList());
         log.info("Turned admins from DB into DTOs");
         return new PageImpl<>(listDTO, pageable, initialPage.getTotalPages());
@@ -129,9 +129,10 @@ public class AdminServiceImpl implements AdminService {
     public Long countAllMasters() {
 
         Specification<Admin> spec = Specification.not(
-                        AdminSpecifications.hasRole("Director")
-                                .or(AdminSpecifications.hasRole("Manager"))
-                                .or(AdminSpecifications.hasRole("Accountant")));
+                                                        AdminSpecifications.hasRole("Director")
+                                                    .or(AdminSpecifications.hasRole("Manager"))
+                                                    .or(AdminSpecifications.hasRole("Accountant"))
+        );
 
         return adminRepository.count(spec);
     }
@@ -279,17 +280,21 @@ public class AdminServiceImpl implements AdminService {
         log.info("Building specification from filters: " + filters);
 
         String name = filters.getName();
-        UserRole role = userRoleRepository.findByName(filters.getRole()).orElse(null);
+        UserRole role = (filters.getRole() != null) ?
+                userRoleRepository.findById(Long.parseLong(filters.getRole())).orElse(null) : null;
         String phone = filters.getPhone();
         String email = filters.getEmail();
         Boolean active = filters.getActive();
         log.info(name + ' ' + role + ' ' + phone + ' ' + email + ' ' + active);
 
         Specification<Admin> specification = Specification.where(AdminSpecifications.hasNameLike(name)
-                                                            .and(AdminSpecifications.hasRole((role != null) ? role.getName() : ""))
+                                                            .and(AdminSpecifications.hasRole((role != null) ? role.getName() : null))
                                                             .and(AdminSpecifications.hasPhoneLike(phone))
                                                             .and(AdminSpecifications.hasEmailLike(email))
                                                             .and(AdminSpecifications.isActive(active)));
+
+//        Specification<Admin> specification = Specification.where(AdminSpecifications.hasNameLike(name)
+//                .and(AdminSpecifications.hasPhoneLike(phone)));
 
         log.info("Specification built! " + specification);
 

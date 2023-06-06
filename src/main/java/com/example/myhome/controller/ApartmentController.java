@@ -130,7 +130,9 @@ public class ApartmentController {
     Model model) throws IOException {
         apartmentValidator.validate(apartment, bindingResult);
         if (bindingResult.hasErrors()) {
-            model.addAttribute("apartment", apartment);
+            log.info(apartment.getSection());
+            log.info(apartment.getFloor());
+//            model.addAttribute("apartment", apartment);
             List<BuildingDTO> buildingList = buildingService.findAllDTO();
             model.addAttribute("buildings", buildingList);
             List<Tariff>tariffs = tariffService.findAllTariffs();

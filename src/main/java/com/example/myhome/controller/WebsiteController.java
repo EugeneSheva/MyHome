@@ -33,6 +33,9 @@ public class WebsiteController {
     @GetMapping("/home")
     public String showEditHomePage(Model model) {
         model.addAttribute("mainPage", websiteService.getMainPage());
+
+        model.addAttribute("homeEditPageActive", true);
+
         log.info(Objects.requireNonNull(model.getAttribute("mainPage")).toString());
         return "admin_panel/website_settings/website_home";
     }
@@ -51,6 +54,9 @@ public class WebsiteController {
         model.addAttribute("photos", photos);
         model.addAttribute("add_photos", add_photos);
         model.addAttribute("documents", websiteService.getAllDocuments());
+
+        model.addAttribute("aboutEditPageActive", true);
+
         return "admin_panel/website_settings/website_about";
     }
 
@@ -58,6 +64,9 @@ public class WebsiteController {
     @GetMapping("/services")
     public String showEditServicesPage(Model model) {
         model.addAttribute("servicesPage", websiteService.getServicesPage());
+
+        model.addAttribute("servicesEditPageActive", true);
+
         return "admin_panel/website_settings/website_services";
     }
 
@@ -65,6 +74,9 @@ public class WebsiteController {
     @GetMapping("/contacts")
     public String showEditContactsPage(Model model) {
         model.addAttribute("contactsPage", websiteService.getContactsPage());
+
+        model.addAttribute("contactsEditPageActive", true);
+
         return "admin_panel/website_settings/website_contacts";
     }
 
@@ -198,6 +210,12 @@ public class WebsiteController {
     public String deleteDocument(@PathVariable long id) {
         websiteService.deleteDocument(id);
         return "redirect:/admin/website/about";
+    }
+
+
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        model.addAttribute("websiteEditPageActive", true);
     }
 
 

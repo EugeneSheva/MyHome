@@ -168,4 +168,10 @@ public class TariffController {
         return comp_2;
     }
 
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        model.addAttribute("tariffsPageActive", true);
+        model.addAttribute("settingsEditPageActive", true);
+    }
+
 }

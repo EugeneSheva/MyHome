@@ -389,6 +389,19 @@ textarea {
     display: none;
 }*/
 
+.nav-link {
+    width: 100%;
+}
+
+.nav-link.selected {
+    background-color: rgba(0,255,0,0.2);
+    box-shadow: none;
+}
+
+.nav-link.selected:hover {
+    background-color: rgba(0,255,0,0.4);
+}
+
 
 
 

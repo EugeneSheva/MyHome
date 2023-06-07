@@ -46,6 +46,7 @@ public interface OwnerService {
     void deleteById(Long id);
 
     Long getQuantity();
+    Long getActiveOwnersQuantity();
 
     List<Long> getOwnerApartmentAccountsIds(Long id);
 

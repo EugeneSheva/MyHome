@@ -34,7 +34,7 @@ public class StatisticsController {
     public String loadStatisticsPage(Model model) {
         model.addAttribute("newRepairRequestQuant", repairRequestRepository.countRepairRequestsByStatus(RepairStatus.ACCEPTED).orElse(0L));
         model.addAttribute("inworkRepairRequestQuant", repairRequestRepository.countRepairRequestsByStatus(RepairStatus.IN_WORK).orElse(0L));
-        model.addAttribute("ownersQuant", ownerService.getQuantity());
+        model.addAttribute("ownersQuant", ownerService.getActiveOwnersQuantity());
         model.addAttribute("buidingsQuant", buildingService.getQuantity());
         model.addAttribute("apartmentsQuant", apartmentService.getQuantity());
         model.addAttribute("accountsQuant", accountService.getQuantity());
@@ -49,6 +49,8 @@ public class StatisticsController {
 
         model.addAttribute("diagramAllInvoices", invoiceService.getListSumInvoicesByMonth());
         model.addAttribute("diagramPaidInvoices", invoiceService.getListSumPaidInvoicesByMonth());
+
+        model.addAttribute("statsPageActive", true);
 
         return "admin_panel/statistics/statistics";
     }

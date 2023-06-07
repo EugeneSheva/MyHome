@@ -39,6 +39,10 @@ public class ServiceController {
         model.addAttribute("serviceForm", serviceForm);
         model.addAttribute("units", serviceService.findAllUnits());
         model.addAttribute("totalServiceCount",serviceForm.getServiceList().size());
+
+        model.addAttribute("servicesPageActive", true);
+        model.addAttribute("settingsEditPageActive", true);
+
         return "admin_panel/system_settings/settings_services";
     }
 

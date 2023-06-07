@@ -188,4 +188,9 @@ public class OwnerController {
         model.addAttribute("buildings", buildingList);
         return "admin_panel/messages/message_edit";
     }
+
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        model.addAttribute("ownersPageActive", true);
+    }
 }

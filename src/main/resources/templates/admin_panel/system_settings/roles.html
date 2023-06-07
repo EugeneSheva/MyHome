@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>МойДом24</title>
+  <title th:text="#{settings.system.roles.mainPage.pageName}">МойДом24</title>
+  <link rel="icon" type="image/png" href="http://myhouse24.avada-media.ua/favicon.png">
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=fallback">
   <link rel="stylesheet" th:href="@{/plugins/fontawesome-free/css/all.min.css}">
@@ -104,7 +105,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12" style="display:flex;justify-content:flex-end">
               <button type="button" class="btn btn-default" th:text="#{settings.system.roles.mainPage.cancel}">Отменить</button>
               <button type="submit" class="btn btn-success" th:text="#{settings.system.roles.mainPage.save}">Сохранить</button>
             </div>
@@ -164,7 +165,6 @@
     let td = document.getElementsByTagName("td");
     for (const cell of td) {
       let checkbox = cell.firstElementChild;
-      console.log(checkbox);
       cell.addEventListener("click", () => {
         if(checkbox.checked) checkbox.checked = false;
         else checkbox.checked = true;

@@ -314,5 +314,7 @@ public class InvoiceController {
         model.addAttribute("buildings", buildingService.findAll());
         model.addAttribute("tariffs", tariffService.findAllTariffs());
         model.addAttribute("services", serviceService.findAllServices());
+
+        model.addAttribute("invoicesPageActive", true);
     }
 }

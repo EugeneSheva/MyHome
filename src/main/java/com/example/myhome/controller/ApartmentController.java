@@ -260,4 +260,11 @@ public class ApartmentController {
     public @ResponseBody List<MeterData> getMeters(@RequestParam long flat_id) {
         return apartmentService.findById(flat_id).getMeterDataList();
     }
+
+
+
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        model.addAttribute("apartmentsPageActive", true);
+    }
 }

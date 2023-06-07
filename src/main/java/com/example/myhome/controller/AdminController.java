@@ -169,4 +169,10 @@ public class AdminController {
         return (typeID > 0) ? adminService.findMastersByType(typeID) : adminService.findAllMasters();
     }
 
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        model.addAttribute("adminsPageActive", true);
+        model.addAttribute("settingsEditPageActive", true);
+    }
+
 }

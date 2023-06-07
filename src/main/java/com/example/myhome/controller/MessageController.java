@@ -227,5 +227,10 @@ public class MessageController {
         System.out.println("controller " + form);
         return messageService.findAllBySpecification(form, page, size, null);
     }
+
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        model.addAttribute("messagesPageActive", true);
+    }
 }
 

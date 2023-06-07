@@ -18,9 +18,11 @@ import java.util.Optional;
 import java.time.LocalDate;
 public interface OwnerRepository extends JpaRepository<Owner, Long>, JpaSpecificationExecutor<Owner> {
 
-
-
     Long countAllBy();
+
+    @Query(nativeQuery = true
+            , value = "SELECT COUNT(*) FROM owners WHERE status='ACTIVE'")
+    Long countActive();
 
     default Page<Owner> findByFilters(Long id, String name, String phoneNumber,
                                       String email, String buildingName, Long apartmentNumber,

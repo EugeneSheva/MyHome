@@ -364,6 +364,10 @@ public class CashBoxController {
         return String.format(Locale.ROOT,   "%.2f", accountService.getSumOfAccountDebts());
     }
 
+    @ModelAttribute
+    public void addCashboxActivePageAttribute(Model model) {
+        model.addAttribute("cashboxPageActive", true);
+    }
 
 
 }

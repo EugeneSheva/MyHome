@@ -202,6 +202,9 @@ public class OwnerServiceImpl implements OwnerService {
     public Long getQuantity() { return ownerRepository.count();}
 
     @Override
+    public Long getActiveOwnersQuantity() {return ownerRepository.countActive();}
+
+    @Override
     public List<Long> getOwnerApartmentAccountsIds(Long id) {
         Owner owner = ownerRepository.findById(id).orElseThrow(NotFoundException::new);
         return owner.getApartments().stream().map(Apartment::getAccount).map(ApartmentAccount::getId).collect(Collectors.toList());

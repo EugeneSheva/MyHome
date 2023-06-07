@@ -182,6 +182,7 @@ public class AccountController {
 
     @ModelAttribute
     public void addAttributes(Model model) {
+        model.addAttribute("accountsPageActive", true);
     }
 
 }

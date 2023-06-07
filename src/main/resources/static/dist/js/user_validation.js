@@ -242,8 +242,14 @@ $(document).ready(function() {
     document.getElementById('showPass').addEventListener('click', () => {
         console.log(this);
         show_password = (show_password) ? false : true;
-        if(show_password) document.getElementById('password').type='text';
-        else document.getElementById('password').type='password';
+        if(show_password) {
+            document.getElementById('password').type='text';
+            document.getElementById("confirm_password").type='text';
+        }
+        else {
+            document.getElementById('password').type='password';
+            document.getElementById("confirm_password").type='password';
+        }
 
         console.log(document.getElementById('password'));
     });

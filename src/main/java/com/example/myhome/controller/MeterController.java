@@ -263,6 +263,7 @@ public class MeterController {
 
     @ModelAttribute
     public void addAttributes(Model model) {
+        model.addAttribute("metersPageActive", true);
     }
 
 

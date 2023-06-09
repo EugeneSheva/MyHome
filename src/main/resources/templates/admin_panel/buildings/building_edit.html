@@ -17,6 +17,9 @@
     <!-- add & del input field in navigation card bootstrap-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
+    <!-- mask -->
+    <script src="https://unpkg.com/imask"></script>
+
 </head>
 <body class="hold-transition light-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
@@ -360,6 +363,12 @@
 
       image.src = imagePath;
     });
+
+    let addressInput = document.getElementById('address');
+    let maskOptions = {
+        mask: '{ул.}aa[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa][ ][aaaaaaaaaaaaaaaaaaaaaaaaaaaaa][ ,000]'
+    }
+    let mask = IMask(addressInput, maskOptions);
 
 
 </script>

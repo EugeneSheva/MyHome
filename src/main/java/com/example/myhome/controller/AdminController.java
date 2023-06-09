@@ -2,6 +2,8 @@ package com.example.myhome.controller;
 
 import com.example.myhome.dto.AdminDTO;
 
+import com.example.myhome.dto.OwnerDTO;
+import com.example.myhome.model.Admin;
 import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.service.AdminService;
 import com.example.myhome.service.EmailService;
@@ -13,11 +15,14 @@ import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -167,6 +172,21 @@ public class AdminController {
     @GetMapping("/get-masters-by-type")
     public @ResponseBody List<AdminDTO> getMastersByType(@RequestParam Long typeID) {
         return (typeID > 0) ? adminService.findMastersByType(typeID) : adminService.findAllMasters();
+    }
+
+    @GetMapping("/update-last-active")
+    public @ResponseBody String updateLastActiveTimeForAdmin() {
+        if(SecurityContextHolder.getContext().getAuthentication() == null) return "Update failed";
+        Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!(object instanceof Admin)) return "Update failed";
+        else {
+            Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if(admin == null) return "Update failed";
+            admin = adminService.findAdminByLogin(admin.getUsername());
+            admin.setLastActive(LocalDateTime.now());
+            adminService.saveAdmin(admin);
+            return "Update successful";
+        }
     }
 
     @ModelAttribute

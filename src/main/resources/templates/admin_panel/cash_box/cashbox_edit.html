@@ -212,6 +212,30 @@
 <!--            $("#admin").val(cashbox.manager.id);-->
 <!--        }-->
 
+        let cashbox = [[${cashBox}]];
+        console.log(cashbox);
+        console.log(cashbox.owner);
+        console.log(cashbox.apartmentAccount);
+        console.log(cashbox.manager);
+
+        if(cashbox.owner != null && cashbox.owner.id != null) {
+            console.log('if block');
+            $("#owner_select").append(new Option(cashbox.owner.fullName, cashbox.owner.id, null, null));
+            $("#owner_select").val(cashbox.owner.id);
+        }
+
+        if(cashbox.apartmentAccount != null && cashbox.apartmentAccount.id != null) {
+            console.log('if block');
+            $("#account_select").append(new Option(cashbox.apartmentAccount.id.toString().padStart(10,'0'), cashbox.apartmentAccount.id, null, null));
+            $("#account_select").val(cashbox.apartmentAccount.id);
+        }
+
+        if(cashbox.manager != null && cashbox.manager.id != null) {
+            console.log('if block');
+            $("#admin").append(new Option(cashbox.manager.fullName, cashbox.manager.id, null, null));
+            $("#admin").val(cashbox.manager.id);
+        }
+
         //Initialize Select2 Elements
         $('#incomeExpenseItem, #account_select').select2({placeholder: placeholderText, minimumResultsForSearch: Infinity});
 

@@ -114,8 +114,8 @@
 
                                     <label for="status" th:text="#{status}" class="form-label">Статус</label>
                                     <select class="form-select" id="status" th:field="*{status}">
-                                        <option selected=""  value="ACTIVE" th:text="#{new}">Новый</option>
-                                        <option value="NEW" th:text="#{active}">Активен</option>
+                                        <option selected=""  value="NEW" th:text="#{new}">Новый</option>
+                                        <option value="ACTIVE" th:text="#{active}">Активен</option>
                                         <option value="DISABLED" th:text="#{disabled}">Отключен</option>
                                     </select>
 
@@ -156,6 +156,8 @@
 </div>
 
 <script th:inline="javascript">
+
+    console.log([[${owner}]]);
 
     let fileInput = document.getElementById('img1');
     fileInput.addEventListener('change', function(){

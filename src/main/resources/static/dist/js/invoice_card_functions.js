@@ -17,8 +17,7 @@ function count(element) {
    console.log(element);
    let unit_price = element.parentElement.parentElement.querySelector(".unit_prices").value;
    let unit_amount = element.parentElement.parentElement.querySelector(".unit_amounts").value;
-   let total_price = unit_price*unit_amount;
-
+   let total_price = (unit_price*unit_amount).toFixed(3);
 
    console.log(unit_price);
    console.log(unit_amount);

@@ -360,8 +360,10 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
         log.info("Old components cleared");
         log.info("Adding components");
         List<InvoiceComponents> componentsList = buildComponents(services, unit_prices, unit_amounts);
+        componentsList.forEach(comp -> log.info(String.valueOf(comp.getTotalPrice())));
         invoice.setComponents(componentsList);
         Double total_price = componentsList.stream().map(InvoiceComponents::getTotalPrice).reduce(Double::sum).orElse(0.0);
+        log.info(String.valueOf(total_price));
         invoice.setTotal_price(total_price);
         log.info("Total price of an invoice: " + total_price);
         log.info("Built invoice!");

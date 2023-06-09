@@ -6,6 +6,7 @@ import com.example.myhome.dto.OwnerDTO;
 import com.example.myhome.exception.NotFoundException;
 import com.example.myhome.mapper.ApartmentDTOMapper;
 import com.example.myhome.mapper.OwnerDTOMapper;
+import com.example.myhome.model.Admin;
 import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.repository.OwnerRepository;
 import com.example.myhome.service.ApartmentService;
@@ -81,6 +82,15 @@ public class OwnerServiceImpl implements OwnerService {
     @Override
     public List<OwnerDTO> findAllDTO() {
         return ownerRepository.findAll().stream().map(ownerDTOMapper::fromOwnerToDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OwnerDTO> getNewOwnerDTOForAdmin(Admin admin) {
+        System.out.println("Service method started");
+        List<Owner> ownerList = ownerRepository.getNewOwners((admin.getLastActive() != null) ?
+                admin.getLastActive() : LocalDateTime.now().minusYears(1));
+        System.out.println(ownerList.toString());
+        return ownerList.stream().map(ownerDTOMapper::fromOwnerToDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -203,6 +213,15 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public Long getActiveOwnersQuantity() {return ownerRepository.countActive();}
+
+    @Override
+    public Long getNotificationOwnerCountForAdmin(Admin admin) {
+       return ownerRepository.countNewOwnersForAdmin(
+               (admin.getLastActive() != null) ?
+                       admin.getLastActive() :
+                       LocalDateTime.now().minusYears(1)
+       );
+    }
 
     @Override
     public List<Long> getOwnerApartmentAccountsIds(Long id) {

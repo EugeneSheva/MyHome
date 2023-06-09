@@ -2,6 +2,7 @@ package com.example.myhome.service;
 
 import com.example.myhome.dto.ApartmentDTO;
 import com.example.myhome.dto.OwnerDTO;
+import com.example.myhome.model.Admin;
 import com.example.myhome.model.Owner;
 import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.util.UserStatus;
@@ -28,6 +29,8 @@ public interface OwnerService {
 
     List<OwnerDTO> findAllDTO();
 
+    List<OwnerDTO> getNewOwnerDTOForAdmin(Admin admin);
+
     List<OwnerDTO> getOwnerDTOByPage(String name, int page_number);
 
     Page<OwnerDTO> findAllDTO(Pageable pageable);
@@ -47,6 +50,7 @@ public interface OwnerService {
 
     Long getQuantity();
     Long getActiveOwnersQuantity();
+    Long getNotificationOwnerCountForAdmin(Admin admin);
 
     List<Long> getOwnerApartmentAccountsIds(Long id);
 

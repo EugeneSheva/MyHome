@@ -3,6 +3,7 @@ package com.example.myhome.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Locale;
 
 @Data
 @Entity
@@ -34,6 +35,11 @@ public class InvoiceComponents {
                 '}';
     }
 
-    public double getTotalPrice() {return this.unit_price*this.unit_amount;}
+    public Double getTotalPrice() {
+        Double mult = this.unit_price * this.unit_amount;
+        String formattedMult = String.format(Locale.ROOT, "%.2f", mult);
+        System.out.println(formattedMult);
+        return Double.parseDouble(formattedMult);
+    }
 
 }

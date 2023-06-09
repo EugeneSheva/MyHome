@@ -288,7 +288,6 @@ public class CashBoxController {
 
     @PostMapping("/newExpense")
     public String saveNewExpense(@ModelAttribute CashBox cashBox, BindingResult bindingResult, Model model) {
-        if(cashBox.getAmount() != null) cashBox.setAmount(cashBox.getAmount()*-1);
         cashBoxtValidator.validate(cashBox, bindingResult);
         if(bindingResult.hasErrors()) {
             List<IncomeExpenseItems> incomeItemsList = incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.EXPENSE);
@@ -296,6 +295,7 @@ public class CashBoxController {
             model.addAttribute("nextId", cashBoxService.getMaxId()+1);
             return "admin_panel/cash_box/cashbox_edit";
         }
+        if(cashBox.getAmount() != null) cashBox.setAmount(cashBox.getAmount()*-1);
         cashBoxService.save(cashBox);
 
         websocketController.sendCashboxItem(cashBox);

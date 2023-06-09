@@ -42,6 +42,60 @@ id="loading">
           </div>
         </div>
       </div>
+      <li class="dropdown notifications-menu">
+        <a href="#" class="dropdown" id="dropdown-toggle" aria-expanded="false" style="margin-right: 20px; margin-left: 10px">
+          <i class="fa fa-child fa-lg" id="notifier" aria-hidden="true"></i>
+          <span class="label label-danger" id="new-user-count" th:if="${newUserCount > 0}" style="
+              position: absolute;
+              top: -5px;
+              width: 15px;
+              height: 15px;
+              font-size: 10px;
+              padding: 0;
+              margin: 0;
+              padding-left: 1px;
+              text-align:center;
+              left: 10px;
+          " th:text="${newUserCount}">60</span>
+        </a>
+        <ul class="dropdown-menu" id="dropdown-menu" style="left: inherit; right: 0px; padding:1px">
+
+          <li class="menu-header">Новых пользователей: <span th:text="${newUserCount}"></span></li>
+          <div class="loader" id="loader" style="display:none;"></div>
+          <li id="user-list">
+            <!-- inner menu: contains the actual data -->
+<!--            <ul class="menu">-->
+<!--              <li>-->
+<!--                <a href="/admin/user/109">-->
+<!--                  Вася &lt;!&ndash;<i class="fa fa-angle-right pull-right" aria-hidden="true"></i>&ndash;&gt;-->
+<!--                </a>-->
+<!--              </li>-->
+<!--              <li>-->
+<!--                <a href="/admin/user/108">-->
+<!--                  1petro@petrenko.com &lt;!&ndash;<i class="fa fa-angle-right pull-right" aria-hidden="true"></i>&ndash;&gt;-->
+<!--                </a>-->
+<!--              </li>-->
+<!--              <li>-->
+<!--                <a href="/admin/user/107">-->
+<!--                  123@123.com &lt;!&ndash;<i class="fa fa-angle-right pull-right" aria-hidden="true"></i>&ndash;&gt;-->
+<!--                </a>-->
+<!--              </li>-->
+<!--              <li>-->
+<!--                <a href="/admin/user/106">-->
+<!--                  Петро Петрович Петренко &lt;!&ndash;<i class="fa fa-angle-right pull-right" aria-hidden="true"></i>&ndash;&gt;-->
+<!--                </a>-->
+<!--              </li>-->
+<!--              <li>-->
+<!--                <a href="/admin/user/1">-->
+<!--                  Лисенко Павел Михайлович &lt;!&ndash;<i class="fa fa-angle-right pull-right" aria-hidden="true"></i>&ndash;&gt;-->
+<!--                </a>-->
+<!--              </li>-->
+<!--            </ul>-->
+          </li>
+          <li class="menu-footer"><a th:href="@{/admin/owners}">Перейти в раздел пользователей</a></li>
+
+        </ul>
+      </li>
       <li class="dropdown user user-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
           <i class="fa fa-user-circle text-purple"></i>
@@ -343,6 +397,74 @@ id="loading">
         });
       });
 
+
+      //NOTIFICATION DROPDOWN
+      let dropdownToggle = document.getElementById('dropdown-toggle');
+      let dropdownMenu = document.getElementById('dropdown-menu');
+      let userNotifier = document.getElementById('notifier');
+      let menuOpened = false;
+      let usersLoaded = false;
+      console.log(dropdownToggle);
+      console.log(dropdownMenu);
+
+      window.addEventListener('click', (e) => {
+        if(e.target != dropdownMenu && e.target != userNotifier && menuOpened) {
+        console.log(e.target);
+        console.log('CLOSING MENU');
+         dropdownMenu.classList.remove('open');
+         menuOpened = false;
+         }
+      });
+
+      dropdownToggle.addEventListener('click',() => {
+        if(dropdownMenu.classList.contains('open')) {
+          dropdownMenu.classList.remove('open'); menuOpened = false;
+        }
+        else {
+          //open menu
+          dropdownMenu.classList.add('open');
+          menuOpened = true;
+
+          if([[${newUserCount}]] > 0 && !usersLoaded) {
+            document.getElementById('loader').style.display = 'block';
+
+          let userListContainer = document.getElementById('user-list');
+          userListContainer.innerHTML='';
+
+          //ajax call to load new users
+          const promise = new Promise((resolve, reject) => {
+            setTimeout(() => resolve(), 1000);
+          });
+          promise.then(() => {
+            $.get('/myhome/admin/owners/get-new-owners', function(data){
+              document.getElementById('loader').style.display = 'none';
+              console.log(data);
+
+              let userMenu = document.createElement('ul');
+              userMenu.classList.add('menu');
+              for(const user of data) {
+                let row = document.createElement('li');
+                let userLink = document.createElement('a');
+                userLink.href = '/myhome/admin/owners/' + user.id;
+                userLink.innerText = user.fullName;
+                row.appendChild(userLink);
+                userMenu.appendChild(row);
+              }
+              userListContainer.appendChild(userMenu);
+            });
+          }).then(() => {
+            $.get('/myhome/admin/admins/update-last-active', function(data){
+               console.log(data);
+               document.getElementById('new-user-count').style.display = 'none';
+               usersLoaded = true;
+            });
+          });
+          }
+        }
+      })
+
+
+
     </script>
 
     <script th:src="@{/dist/js/theme_switch.js}"></script>
@@ -351,6 +473,110 @@ id="loading">
       * {
         font-family: 'Source Sans Pro';
       }
+
+      @keyframes fadein {
+          from { opacity: 0; }
+          to { opacity: 1; }
+      }
+
+      #dropdown-menu {
+        left: inherit;
+        right: 0px;
+        padding: 1px;
+        font-size: 14px;
+        width: 200px;
+        color: black;
+        caret-color: transparent;
+      }
+
+      .dark-mode #dropdown-menu {
+        border: 1px solid black;
+        box-shadow: 0px 0px 5px black;
+      }
+
+      #dropdown-menu.open {
+        display:block;
+        animation: fadein 0.5s;
+      }
+
+      #dropdown-menu a {
+        text-decoration: none;
+        color: black;
+        display: block;
+        width: 100%;
+      }
+
+      .dark-mode #dropdown-menu a {
+        color: white;
+      }
+
+      #dropdown-menu a:hover {
+        font-weight:bold;
+      }
+
+      .menu-header {
+        padding-left: 5px;
+        text-align: center;
+        border-bottom: 1px solid silver;
+      }
+
+      .dark-mode .menu-header, .dark-mode .menu-footer {
+        color: white;
+      }
+
+      .menu-footer {
+        font-size: 11px;
+        border-top: 1px solid silver;
+      }
+
+      .menu {
+        list-style: none;
+        padding: 0;
+        font-size: 13px;
+      }
+
+      .menu li {
+        border-bottom: 1px solid silver;
+      }
+
+      .menu li:hover {
+        background-color: rgba(128,128,128,0.3);
+       }
+
+       .dropdown {
+        color: black;
+        transition: color 0.2s
+       }
+
+       .dropdown:hover {
+        color:blue;
+       }
+
+       .loader {
+          border: 16px solid #f3f3f3; /* Light grey */
+          border-top: 16px solid #3498db; /* Blue */
+          border-radius: 50%;
+          width: 120px;
+          height: 120px;
+          padding: 0;
+          margin:auto;
+          margin-block:15px;
+          animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        #notifier {
+          color: black;
+          transition: color 0.3s
+        }
+
+        .dark-mode #notifier {
+          color: white;
+        }
     </style>
   </aside>
 

@@ -13,6 +13,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import java.time.LocalDate;
@@ -23,6 +26,12 @@ public interface OwnerRepository extends JpaRepository<Owner, Long>, JpaSpecific
     @Query(nativeQuery = true
             , value = "SELECT COUNT(*) FROM owners WHERE status='ACTIVE'")
     Long countActive();
+
+    @Query("select count(o) from Owner o where o.added_at >= :lastActiveTime")
+    Long countNewOwnersForAdmin(LocalDateTime lastActiveTime);
+
+    @Query("select o from Owner o where o.added_at >= :lastActiveTime")
+    List<Owner> getNewOwners(LocalDateTime lastActiveTime);
 
     default Page<Owner> findByFilters(Long id, String name, String phoneNumber,
                                       String email, String buildingName, Long apartmentNumber,

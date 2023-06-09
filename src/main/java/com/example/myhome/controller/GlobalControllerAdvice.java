@@ -86,7 +86,13 @@ public class GlobalControllerAdvice {
             dto.setFirst_name(admin.getFirst_name());
             dto.setLast_name(admin.getLast_name());
             model.addAttribute("auth_admin", dto);
+            model.addAttribute("newUserCount", ownerService.getNotificationOwnerCountForAdmin(admin));
         }
+
+    }
+
+    @ModelAttribute
+    public void addNotificationOwnerCount(Model model) {
 
     }
 

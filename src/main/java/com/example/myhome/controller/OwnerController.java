@@ -1,19 +1,14 @@
 package com.example.myhome.controller;
 
+import com.example.myhome.dto.AdminDTO;
 import com.example.myhome.dto.BuildingDTO;
 import com.example.myhome.dto.OwnerDTO;
 import com.example.myhome.mapper.OwnerDTOMapper;
+import com.example.myhome.model.*;
 import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.repository.OwnerRepository;
-import com.example.myhome.service.AccountService;
-import com.example.myhome.service.ApartmentService;
-import com.example.myhome.service.BuildingService;
-import com.example.myhome.model.Apartment;
-import com.example.myhome.model.Owner;
-import com.example.myhome.service.OwnerService;
+import com.example.myhome.service.*;
 import com.example.myhome.validator.OwnerValidator;
-import com.example.myhome.model.ApartmentAccount;
-import com.example.myhome.model.Message;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,6 +33,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +48,7 @@ public class OwnerController {
     @Value("${upload.path}")
     private String uploadPath;
     private final OwnerService ownerService;
+    private final AdminService adminService;
     private final OwnerValidator ownerValidator;
     private final BuildingService buildingService;
     private final AccountService accountService;
@@ -167,6 +165,22 @@ public class OwnerController {
         System.out.println(map.get("results").toString());
         System.out.println(map.get("pagination").toString());
         return map;
+    }
+
+    @GetMapping("/get-new-owners")
+    public @ResponseBody List<OwnerDTO> getNewOwners() {
+        if(SecurityContextHolder.getContext().getAuthentication() == null) return new ArrayList<>();
+        Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!(object instanceof Admin)) return new ArrayList<>();
+        else {
+            Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if(admin == null) return new ArrayList<>();
+            admin = adminService.findAdminByLogin(admin.getUsername());
+            System.out.println("found admin: " + admin.toString());
+            List<OwnerDTO> list = ownerService.getNewOwnerDTOForAdmin(admin);
+            System.out.println("Found list: " + list.toString());
+            return list;
+        }
     }
 
     @GetMapping("/newMessage")

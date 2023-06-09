@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -44,6 +45,9 @@ public class Admin implements UserDetails {
     @JoinColumn(name="user_role_id")
     private UserRole role;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime lastActive;
+
     @JsonIgnore
     @ManyToMany(mappedBy = "receivers")
     private List<Message> messageList;
@@ -69,6 +73,7 @@ public class Admin implements UserDetails {
                 ", active=" + active +
                 ", dateOfRegistry=" + dateOfRegistry +
                 ", role=" + role +
+                ", lastActive=" + lastActive +
                 "}\n";
     }
 

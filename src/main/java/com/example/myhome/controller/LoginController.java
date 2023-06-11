@@ -67,6 +67,11 @@ public class LoginController {
         return "redirect:/cabinet";
     }
 
+    @GetMapping("/oauth2_login")
+    public String oauthLogin() {
+        return "oauth_login";
+    }
+
     @GetMapping("/admin/site/login")
     public String showAdminLoginPage(Model model) {
         Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

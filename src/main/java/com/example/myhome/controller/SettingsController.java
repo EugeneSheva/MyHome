@@ -6,6 +6,7 @@ import com.example.myhome.service.SettingsService;
 import com.example.myhome.service.UserRoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -25,8 +27,19 @@ import java.util.Set;
 @Log
 public class SettingsController {
 
+    private final ApplicationContext ctx;
     private final SettingsService settingsService;
     private final UserRoleService userRoleService;
+
+    // Получить все эндпойнты
+    @GetMapping("/endpoints")
+    public @ResponseBody List<String> getEndpoints() {
+        List<String> list = new ArrayList<>();
+        ctx.getBean(RequestMappingHandlerMapping.class)
+                .getHandlerMethods()
+                .forEach((key, value) -> list.add(String.valueOf(key)));
+        return list;
+    }
 
     // Редирект на начальную страницу
     @GetMapping("/admin")

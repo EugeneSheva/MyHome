@@ -7,8 +7,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
@@ -30,13 +37,28 @@ public class AdminPanelSecurityConfig {
     private AdminService adminDetailsService;
 
 //    @Bean
-//    public PasswordEncoder passwordEncoder() {return new BCryptPasswordEncoder(12);}
-
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-//            throws Exception {
-//        return authenticationConfiguration.getAuthenticationManager();
+//    public OAuth2AuthorizedClientManager authorizedClientManager(
+//            ClientRegistrationRepository clientRegistrationRepository,
+//            OAuth2AuthorizedClientRepository authorizedClientRepository) {
+//
+//        OAuth2AuthorizedClientProvider authorizedClientProvider = //
+//                OAuth2AuthorizedClientProviderBuilder.builder() //
+//                        .authorizationCode() //
+//                        .refreshToken() //
+//                        .clientCredentials() //
+//                        .password() //
+//                        .build();
+//
+//        DefaultOAuth2AuthorizedClientManager authorizedClientManager =
+//                new DefaultOAuth2AuthorizedClientManager( //
+//                        clientRegistrationRepository, //
+//                        authorizedClientRepository);
+//        authorizedClientManager //
+//                .setAuthorizedClientProvider(authorizedClientProvider);
+//
+//        return authorizedClientManager;
 //    }
+//}
 
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
@@ -56,13 +78,15 @@ public class AdminPanelSecurityConfig {
 
         http.antMatcher("/**")
                         .authorizeRequests()
-                .antMatchers("/home","/about","/services","/contacts").permitAll();
+                .antMatchers("/home","/about","/services","/contacts","/error","/webjars/**").permitAll();
 
 
         http.antMatcher("/admin/**")
                 .authorizeRequests()
                 .antMatchers("/dist/**").permitAll()
                 .antMatchers("/images/**").permitAll()
+                .antMatchers("/error").permitAll()
+                .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/**/statistics").hasAuthority("statistics.read")
                 .antMatchers(HttpMethod.GET,"/**/cashbox/**").hasAuthority("cashbox.read")
                 .antMatchers(HttpMethod.POST, "/**/cashbox/**").hasAuthority("cashbox.write")
@@ -88,6 +112,11 @@ public class AdminPanelSecurityConfig {
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler())
                 .and()
+                .oauth2Login(o2 -> o2.loginPage("/oauth2_login").permitAll()
+                        .authorizationEndpoint()
+                        .baseUri("/oauth2/authorize-client").and()
+                        .defaultSuccessUrl("/admin")
+                        .failureUrl("/oauth2_login?error"))
                 .formLogin()
                     .loginPage("/admin/site/login").permitAll()
                     .loginProcessingUrl("/admin/site/login")

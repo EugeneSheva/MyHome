@@ -169,10 +169,9 @@
                           </td>
                           <td style="padding: 10px">
                               <select style="width: 100%; padding-block: 10px" autocomplete="off" th:field="*{owner}" class="my_filters">
-                                  <option value=""></option>
-                                  <option th:each="owner : ${owners}"
-                                          th:value="${owner.id}"
-                                          th:text="${owner.getFullName()}"></option>
+                                  <option th:if="${filterForm.owner == null}" value="" selected="selected" th:text="#{choise}">Выберите пользователя</option>
+                                  <option th:if="${filterForm.owner != null}" th:value="${filterForm.ownerEntity.id}" th:text="${filterForm.ownerEntity.getFullName()}"></option>
+
                               </select>
                           </td>
                           <td style="padding: 10px">
@@ -254,20 +253,43 @@
     // ФИЛЬТРЫ
     $(document).ready(function(){
         $("#active, #debt, #section").select2({placeholder: placeholderText, minimumResultsForSearch:Infinity});
-        $("#owner").select2({
+        $('#owner').select2({
             ajax: {
-                url: '/myhome/admin/owners/get-all-owners',
-                data: function(params){
-                    console.log(params.page);
+                url: '/myhome/admin/owners/getUsers',
+                // dataType: 'json',
+                delay: 250,
+                data: function(params) {
                     return {
-                        search: params.term || "",
-                        page: params.page || 1
-                    }
+                        searchQuerie: params.term,
+                        page: params.page || 0,
+                        size: params.page ? 10 : 10
+                    };
                 },
+                processResults: function(data, params) {
+                    console.log(data)
+                    params.page = params.page || 0;
+                    var results = $.map(data.content, function(owner) {
+                        return {id: owner.id,
+                            text: owner.first_name + ' ' + owner.last_name + ' ' + owner.fathers_name,
+                        };
+                    });
+                    return {
+                        results: results,
+                        pagination: {
+                            more: data.pageable.pageNumber + 1 < data.totalPages
+                        }
+                    };
+                },
+                cache: true
+            },
+            placeholder: '',
+            minimumInputLength: 0,
+            allowClear: true,
+            templateSelection: function(selection) {
+                return selection.text;
 
             },
-            placeholder: placeholderText,
-            minimumInputLength: 2
+
         });
 
         $("#building").select2({

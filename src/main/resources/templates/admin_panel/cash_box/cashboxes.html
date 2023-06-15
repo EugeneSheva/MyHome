@@ -203,7 +203,7 @@
 
                                 <th style="border-bottom:none">
                                     <select autocomplete="off" id="owner" class="my_filters" name="owner">
-                                        <option th:if="${filterForm.owner == null}" value="" selected="selected">Выберите пользователя</option>
+                                        <option th:if="${filterForm.owner == null}" value="" selected="selected" th:text="#{choise}">Выберите пользователя</option>
                                         <option th:if="${filterForm.owner != null}" th:value="${filterForm.ownerEntity.id}" th:text="${filterForm.ownerEntity.getFullName()}"></option>
                                     </select>
                                 </th>
@@ -378,7 +378,7 @@
                     return {
                         searchQuerie: params.term,
                         page: params.page || 0,
-                        size: params.page ? 2 : 4
+                        size: params.page ? 10 : 10
                     };
                 },
                 processResults: function(data, params) {
@@ -399,7 +399,7 @@
                 cache: true
             },
             placeholder: '',
-            minimumInputLength: 2,
+            minimumInputLength: 0,
             allowClear: true,
             templateSelection: function(selection) {
                     return selection.text;

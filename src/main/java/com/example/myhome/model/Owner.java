@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -52,6 +53,11 @@ public class Owner {
     @ToString.Exclude
     @ManyToMany(mappedBy = "receivers")
     private List<Message> messages;
+
+    @JsonIgnore
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "unreadReceivers")
+    private List<Message>unreadMessages;
 
     private boolean has_debt;
 

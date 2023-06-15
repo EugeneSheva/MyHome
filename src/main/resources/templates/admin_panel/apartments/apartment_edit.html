@@ -111,7 +111,8 @@
                                 <div class="form-group">
                                     <label th:text="#{owner}">Владелец</label>
                                     <select class="form-control" id="owner" th:field="*{owner.id}" style="width: 100%;">
-                                        <option selected="" disabled="" value="" th:text="#{choise}">Choose...</option>
+                                        <option th:if="${apartment.owner == null}" value="" selected="selected" th:text="#{choise}">Выберите пользователя</option>
+                                        <option th:if="${apartment.owner != null}" th:value="${apartment.owner.id}" th:text="${apartment.owner.getFullName()}"></option>
                                     </select>
                                     <div style="color: #d80450" th:if="${#fields.hasErrors('owner')}" th:errors="*{owner}"></div>
                                 </div>
@@ -220,37 +221,46 @@
     $(function () {
 
         $('#building, #section, #floor, #tariff').select2({placeholder:placeholderText,minimumResultsForSearch:Infinity});
-        $("#owner").select2({
+        $('#owner').select2({
             ajax: {
-                url: '/myhome/admin/owners/get-all-owners',
-                data: function(params){
-                    console.log(params.page);
+                url: '/myhome/admin/owners/getUsers',
+                // dataType: 'json',
+                delay: 250,
+                data: function(params) {
                     return {
-                        search: params.term || "",
-                        page: params.page || 1
-                    }
+                        searchQuerie: params.term,
+                        page: params.page || 0,
+                        size: params.page ? 10 : 10
+                    };
                 },
+                processResults: function(data, params) {
+                    console.log(data)
+                    params.page = params.page || 0;
+                    var results = $.map(data.content, function(owner) {
+                        return {id: owner.id,
+                            text: owner.first_name + ' ' + owner.last_name + ' ' + owner.fathers_name,
+                        };
+                    });
+                    return {
+                        results: results,
+                        pagination: {
+                            more: data.pageable.pageNumber + 1 < data.totalPages
+                        }
+                    };
+                },
+                cache: true
+            },
+            placeholder: '',
+            minimumInputLength: 0,
+            allowClear: true,
+            templateSelection: function(selection) {
+                return selection.text;
 
             },
-            placeholder: placeholderText,
-            minimumInputLength: 2
+
         });
-        if(apartmentID != null) {
-            $.ajax({
-                type: 'GET',
-                url: '/myhome/admin/owners/get-apartment-owner/' + apartmentID
-            }).then(function (data) {
-                var option = new Option(data.fullName, data.id, true, true);
-                $("#owner").append(option).trigger('change');
-                $("#owner").trigger({
-                    type: 'select2:select',
-                    params: {
-                        data: data
-                    }
-                });
-            });
-        }
-    })
+    });
+
 
 </script>
 </body>

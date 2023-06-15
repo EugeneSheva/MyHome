@@ -33,6 +33,15 @@ public class Message {
             joinColumns = @JoinColumn(name = "message_id"),
             inverseJoinColumns = @JoinColumn(name = "owner_id"))
     private List<Owner> receivers;
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "unread_messages_users",
+            joinColumns = @JoinColumn(name = "message_id"),
+            inverseJoinColumns = @JoinColumn(name = "owner_id"))
+    private List<Owner> unreadReceivers;
+
     private String receiversName;
     //Тема сообщения
     private String subject;
@@ -44,6 +53,7 @@ public class Message {
     private LocalDateTime date;
 
     @Override
+
     public String toString() {
         return "Message{" +
                 "id=" + id +

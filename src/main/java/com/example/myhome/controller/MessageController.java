@@ -151,14 +151,24 @@ public class MessageController {
             }
             message.setSender(adminRepository.findByEmail(principal.getName()).orElseThrow());
             message.setReceivers(recivers);
-            messageService.save(message);
+            message.setUnreadReceivers(recivers);
+            Long messageId = messageService.save(message).getId();
+//            for (Owner reciver : recivers) {
+//               if (!reciver.getUnreadMessages().contains(messageId))
+//                 reciver.getUnreadMessages().add(messageId);
+//                ownerService.save(reciver);
+//            }
             websocketController.sendMessagesItem(message);
             return "redirect:/admin/messages/";
         }
     }
 
     @GetMapping("/delete/{id}")
-    public String dellete(@PathVariable("id") Long id) {
+    public String dellete(@PathVariable("id") Long id, Principal principal) {
+//        for (Owner receiver : messageService.findById(id).getReceivers()) {
+//            receiver.getUnreadMessages().remove(id);
+//            ownerService.save(receiver);
+//        }
         messageService.deleteById(id);
         return "redirect:/admin/messages/";
     }
@@ -169,10 +179,7 @@ public class MessageController {
                                             @RequestParam(name = "building_id", defaultValue = "0") Long buildingId,
                                             @RequestParam(name = "section", defaultValue = "") String section,
                                             @RequestParam(name = "floor", defaultValue = "") String floor) {
-        System.out.println("getApartments start");
-        System.out.println("b=" + buildingId + " s=" + section.length() + " f=" + floor.length() + " d=" + debt);
         List<ApartmentDTO> apartmentDTOList = new ArrayList<>();
-
         if (floor.length() == 0 && section.length() == 0 && buildingId == 0 && debt == false) {
             apartmentDTOList = apartmentService.findDtoApartments();
         } else if (floor.length() == 0 && section.length() == 0 && buildingId == 0 && debt == true) {

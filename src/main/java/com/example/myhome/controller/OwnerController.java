@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -150,6 +151,21 @@ public class OwnerController {
         return ownerService.findAllBySpecification2(form, page, size);
     }
 
+    @GetMapping("/getUsers")
+    @ResponseBody
+    public Page<OwnerDTO> getOwners(@RequestParam(name = "searchQuerie", defaultValue = "") String searchQuerie,
+                                    @RequestParam(name = "page", defaultValue = "0") int page,
+                                    @RequestParam(name = "size", defaultValue = "2") int size) {
+
+        System.out.println("page" + page + "size" + size);
+        System.out.println("searchQuerie " + searchQuerie);
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<OwnerDTO> ownerPage = ownerService.findByNameFragmentDTO(searchQuerie, pageable);
+
+        return ownerPage;
+    }
+
     @GetMapping("/get-all-owners")
     public @ResponseBody Map<String, Object> getAllOwners(@RequestParam String search, @RequestParam int page) {
         log.info(ownerService.findAllDTO().toString());
@@ -161,6 +177,7 @@ public class OwnerController {
         map.put("pagination", pagination);
         System.out.println(map.get("results").toString());
         System.out.println(map.get("pagination").toString());
+        System.out.println("map get-all-owners"+map);
         return map;
     }
 

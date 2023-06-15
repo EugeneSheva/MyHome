@@ -44,15 +44,6 @@
                         <a th:href="@{/admin/admins/update/{id}(id=${auth_admin.id})}" class="btn btn-warning" th:text="#{profile}">Профиль</a>
                     </div>
                     <div >
-                        <form id="languageForm" action="#" th:action="@{/change-language}" method="post" >
-                            <input type="hidden" name="url" th:value="${#httpServletRequest.requestURI}" />
-                            <select class="form-group" name="language" onchange="document.getElementById('languageForm').submit()" style="margin-bottom: 0; width: 92px; height: 36px;">
-                                <option th:selected="${#locale.language == 'uk'}" value="uk_UA">Укр</option>
-                                <option th:selected="${#locale.language == 'ru'}" value="ru_UA">Рус</option>
-                            </select>
-                        </form>
-                    </div>
-                    <div >
                         <a th:href="@{/admin/logout}" class="btn btn-danger" th:text="#{exit}">Выйти</a>
                     </div>
                 </li>

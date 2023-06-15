@@ -50,6 +50,8 @@ public class WebConfig implements WebMvcConfigurer {
 //        registry.addConverter(new StringToUnitConverter());
         registry.addConverter(new AccountDTOToStringConverter());
         registry.addConverter(new OwnerDTOToStringConverter());
+        registry.addConverter(new AdminToStringConverter());
+        registry.addConverter(new RoleToStringConverter());
     }
 
     @Override

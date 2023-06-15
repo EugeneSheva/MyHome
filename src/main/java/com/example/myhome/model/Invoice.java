@@ -83,4 +83,10 @@ public class Invoice implements Serializable {
         }
     }
 
+    @PreRemove
+    void clearInvoiceFromAccount() {
+        this.account.getInvoices().remove(this);
+        this.account.addToBalance(this.total_price);
+    }
+
 }

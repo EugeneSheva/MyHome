@@ -29,10 +29,10 @@ public interface AdminRepository extends JpaRepository<Admin, Long>, JpaSpecific
         if (name != null && !name.isEmpty()) {
             spec = spec.and(AdminSpecifications.hasNameLike(name));
         }
-
-        if (role != null && !role.isEmpty()) {
-            spec = spec.and(AdminSpecifications.hasRole(role));
-        }
+//
+//        if (role != null && !role.isEmpty()) {
+//            spec = spec.and(AdminSpecifications.hasRole(role));
+//        }
 
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
             spec = spec.and(AdminSpecifications.hasPhoneLike(phoneNumber));

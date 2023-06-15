@@ -170,6 +170,7 @@ public class RequestController {
 
     @ModelAttribute
     public void addAttributes(Model model) {
+        model.addAttribute("requestsPageActive", true);
     }
 
 }

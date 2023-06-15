@@ -9,6 +9,7 @@ import com.example.myhome.model.ApartmentAccount;
 import com.example.myhome.model.Building;
 import com.example.myhome.model.Owner;
 import com.example.myhome.repository.AccountRepository;
+import com.example.myhome.repository.ApartmentRepository;
 import com.example.myhome.repository.BuildingRepository;
 import com.example.myhome.repository.OwnerRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +22,13 @@ public class ApartmentDTOMapper {
     @Autowired private BuildingRepository buildingRepository;
     @Autowired private OwnerRepository ownerRepository;
     @Autowired private AccountRepository accountRepository;
+    @Autowired private ApartmentRepository apartmentRepository;
 
     public Apartment fromDTOToApartment(ApartmentDTO dto) {
 
         if(dto == null) return null;
 
-        Apartment apartment = new Apartment();
-        apartment.setId(dto.getId());
+        Apartment apartment = (dto.getId() == null) ? new Apartment() : apartmentRepository.getReferenceById(dto.getId());
         apartment.setNumber(dto.getNumber());
         apartment.setSquare(dto.getSquare());
         apartment.setSection(dto.getSection());

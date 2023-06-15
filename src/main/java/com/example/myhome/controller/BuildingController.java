@@ -188,4 +188,10 @@ public class BuildingController {
         FilterForm form = mapper.readValue(filters, FilterForm.class);
         return buildingService.findAllBySpecification(form, page, size);
     }
+
+
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        model.addAttribute("buildingsPageActive", true);
+    }
 }

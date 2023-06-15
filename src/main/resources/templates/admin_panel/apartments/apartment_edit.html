@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:text="#{myHome24}">МойДом24</title>
+    <title th:text="#{apartment}">МойДом24</title>
+    <link rel="icon" type="image/png" href="http://myhouse24.avada-media.ua/favicon.png">
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=fallback">
     <link rel="stylesheet" th:href="@{/plugins/fontawesome-free/css/all.min.css}">
@@ -216,9 +217,20 @@
 <script th:inline="javascript">
     var placeholderText = [[#{select.placeholder}]];
     var apartmentID = [[*{id}]];
-    console.log('APARTMENT ID ');
-    console.log(id);
+    var apartmentSection = [[${apartment.section}]];
+    var apartmentFloor = [[${apartment.floor}]];
+    console.log(apartmentSection);
+    console.log(apartmentFloor);
     $(function () {
+
+        if(apartmentSection != null) {
+            $("#section").append(new Option(apartmentSection,apartmentSection,null,null));
+            $("#section").val(apartmentSection);
+        }
+        if(apartmentFloor != null) {
+            $("#floor").append(new Option(apartmentFloor,apartmentFloor,null,null));
+            $("#floor").val(apartmentFloor);
+        }
 
         $('#building, #section, #floor, #tariff').select2({placeholder:placeholderText,minimumResultsForSearch:Infinity});
         $('#owner').select2({

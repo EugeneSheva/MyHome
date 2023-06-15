@@ -2,6 +2,9 @@ package com.example.myhome.mapper;
 
 import com.example.myhome.dto.OwnerDTO;
 import com.example.myhome.model.Owner;
+import com.example.myhome.repository.OwnerRepository;
+import com.example.myhome.util.UserStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -10,12 +13,14 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class OwnerDTOMapper {
 
+    @Autowired private OwnerRepository ownerRepository;
+
     public Owner fromDTOToOwner(OwnerDTO dto){
 
         if(dto == null) return null;
 
-        Owner owner = new Owner();
-        owner.setId((dto.getId() == null || dto.getId() == 0L) ? dto.getId() : null);
+        Owner owner = (dto.getId() != null && dto.getId() != 0) ? ownerRepository.getReferenceById(dto.getId()) : new Owner();
+        owner.setId(dto.getId());
         owner.setFirst_name(dto.getFirst_name());
         owner.setLast_name(dto.getLast_name());
         owner.setFathers_name(dto.getFathers_name());
@@ -23,7 +28,7 @@ public class OwnerDTOMapper {
         owner.setBirthdate(LocalDate.parse(dto.getBirthdate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         owner.setPhone_number(dto.getPhone_number());
         owner.setDescription(dto.getDescription());
-
+        owner.setStatus(UserStatus.valueOf(dto.getStatus()));
 
         return owner;
     }
@@ -32,7 +37,7 @@ public class OwnerDTOMapper {
         OwnerDTO dto = new OwnerDTO();
 
         if(owner != null) {
-            String status = (owner.getStatus() != null) ? owner.getStatus().getName() : "";
+            String status = (owner.getStatus() != null) ? owner.getStatus().name() : "";
             dto.setId(owner.getId());
             dto.setFirst_name(owner.getFirst_name());
             dto.setLast_name(owner.getLast_name());

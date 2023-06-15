@@ -29,7 +29,7 @@ public class AdminSpecificationTest {
 
     @Test
     void roleSpecTest() {
-        Specification<Admin> spec = AdminSpecifications.hasRole(null);
+        Specification<Admin> spec = AdminSpecifications.hasRole((Long) null);
         CriteriaBuilder cb = em.getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Admin> cq = cb.createQuery(Admin.class);
         Root<Admin> root = cq.from(Admin.class);

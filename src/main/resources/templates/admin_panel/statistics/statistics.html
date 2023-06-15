@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:text="#{myHome24}">МойДом24</title>
+    <title th:text="#{statistics}">МойДом24</title>
+    <link rel="icon" type="image/png" href="http://myhouse24.avada-media.ua/favicon.png">
     <link rel="stylesheet"
           th:href="@{https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=fallback}">
     <link rel="stylesheet" th:href="@{/plugins/fontawesome-free/css/all.min.css}">
@@ -16,6 +17,10 @@
 <body class="hold-transition light-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
 
+    <script>
+        Chart.defaults.color = "#ff0000";
+        Chart.defaults.global.defaultFontColor = "#fff";
+    </script>
 
     <!-- navbar header/sidebar -->
     <div th:insert="~{main-template :: loading}"></div>
@@ -100,7 +105,7 @@
                             <div class="icon">
                                 <i class="fa fa-wrench" aria-hidden="true"></i>
                             </div>
-                            <a th:href="@{/admin/requests/}" class="small-box-footer" th:text="#{moreInfo}"><i class="fas fa-arrow-circle-right"></i></a>
+                            <a th:href="@{/admin/requests?status=IN_WORK}" class="small-box-footer" th:text="#{moreInfo}"><i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                         <div class="small-box bg-warning">
                             <div class="inner">
@@ -110,7 +115,7 @@
                             <div class="icon">
                                 <i class="fa fa-user-plus" aria-hidden="true"></i>
                             </div>
-                            <a th:href="@{/admin/requests/}" class="small-box-footer" th:text="#{moreInfo}"><i class="fas fa-arrow-circle-right"></i></a>
+                            <a th:href="@{/admin/requests?status=ACCEPTED}" class="small-box-footer" th:text="#{moreInfo}"><i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                 </div>
@@ -191,6 +196,12 @@
 
 
 <script th:inline="javascript">
+
+    Chart.defaults.color = () => {
+        const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        return isDarkMode ? 'red' : 'blue'
+    }
+
     /*<![CDATA[*/
     var months = /*[[${diagramMonths}]]*/ [];
     var dataInv = /*[[${diagramAllInvoices}]]*/ [];
@@ -209,6 +220,18 @@
     $(function () {
         var areaChartData = {
             labels: months,
+            scales: {
+              x: {
+                ticks: {
+                  color: "red"
+                }
+              },
+              y: {
+                ticks: {
+                  color: "green"
+                }
+              }
+            },
             datasets: [
                 {
                     label               : debtName,
@@ -244,6 +267,7 @@
 
         var barChartOptions = {
             responsive              : true,
+            scaleFontColor          : "#FFFFFF",
             maintainAspectRatio     : false,
             datasetFill             : false
         }
@@ -267,6 +291,18 @@
     $(function () {
         var areaChartData = {
             labels: months,
+            scales: {
+              x: {
+                ticks: {
+                  color: "red"
+                }
+              },
+              y: {
+                ticks: {
+                  color: "green"
+                }
+              }
+            },
             datasets: [
                 {
                     label               : incomeName,
@@ -313,5 +349,7 @@
         })
     })
 </script>
+
+
 </body>
 </html>

@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>МойДом24</title>
+  <title th:text="#{settings.system.transactions.editPage.pageName.edit}">МойДом24</title>
+  <link rel="icon" type="image/png" href="http://myhouse24.avada-media.ua/favicon.png">
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=fallback">
   <link rel="stylesheet" th:href="@{/plugins/fontawesome-free/css/all.min.css}">
@@ -26,7 +27,9 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0" th:text="#{settings.system.transactions.editPage.pageName}">Новая статья</h1>
+            <h1 class="m-0" th:text="${incomeExpenseItems.id != null && incomeExpenseItems.id != 0} ?
+                                    #{settings.system.transactions.editPage.pageName} :
+                                    #{settings.system.transactions.editPage.pageName.edit}"></h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">

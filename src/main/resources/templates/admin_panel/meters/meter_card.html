@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta th:name="_csrf" th:content="${_csrf.token}"/>
   <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
-  <title>МойДом24</title>
+  <title th:text="#{meters.editPage.card.readings}">МойДом24</title>
+  <link rel="icon" type="image/png" href="http://myhouse24.avada-media.ua/favicon.png">
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=fallback">
   <link rel="stylesheet" th:href="@{/plugins/fontawesome-free/css/all.min.css}">
@@ -84,7 +85,7 @@
                         <select class="selects"
                                 th:field="*{buildingID}"
                                 id="house_select">
-                          <option value="0" th:text="#{select.placeholder}">Выберите...</option>
+                          <option value="" th:text="#{select.placeholder}">Выберите...</option>
                           <option th:each="building : ${buildings}"
                                   th:value="${building.id}"
                                   th:text="${building.name}"></option>

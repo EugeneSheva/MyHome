@@ -4,7 +4,9 @@ import com.example.myhome.dto.ApartmentDTO;
 import com.example.myhome.exception.NotFoundException;
 import com.example.myhome.mapper.ApartmentDTOMapper;
 import com.example.myhome.model.Apartment;
+import com.example.myhome.model.ApartmentAccount;
 import com.example.myhome.model.filter.FilterForm;
+import com.example.myhome.repository.AccountRepository;
 import com.example.myhome.repository.ApartmentRepository;
 import com.example.myhome.service.ApartmentService;
 import com.example.myhome.service.BuildingService;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Log
 public class ApartmentServiceImpl implements ApartmentService {
+    private final AccountRepository accountRepository;
     @Value("${upload.path}")
     private String uploadPath;
     private final ApartmentRepository apartmentRepository;
@@ -43,10 +46,19 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     public Apartment save(Apartment apartment) {
-        return apartmentRepository.save(apartment);
+        Apartment savedApartment = apartmentRepository.save(apartment);
+        if(apartment.getAccount() != null) {
+            ApartmentAccount account = apartment.getAccount();
+            account.setApartment(savedApartment);
+            account.setBuilding(savedApartment.getBuilding());
+            account.setSection(savedApartment.getSection());
+            account.setOwner(savedApartment.getOwner());
+            accountRepository.save(account);
+        }
+        return savedApartment;
     }
     public Apartment save(ApartmentDTO dto) {
-        return apartmentRepository.save(mapper.fromDTOToApartment(dto));
+        return save(mapper.fromDTOToApartment(dto));
     }
 
     public void deleteById(Long id) {
@@ -129,6 +141,10 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     public Long getQuantity() {
         return apartmentRepository.count();
+    }
+
+    public boolean accountHasApartment(Long account_id) {
+        return (accountRepository.findById(account_id).orElseThrow().getApartment() != null);
     }
 
     public Page<ApartmentDTO> findBySpecificationAndPage(Integer page, Integer size, FilterForm filters) {

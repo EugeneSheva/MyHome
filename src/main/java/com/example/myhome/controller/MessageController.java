@@ -22,6 +22,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,11 +80,15 @@ public class MessageController {
 
     @PostMapping("/save")
     public String saveMessage(@Valid @ModelAttribute("message") Message message, BindingResult bindingResult, @RequestParam(name = "debt",
-            defaultValue = "false") Boolean debt, @RequestParam(name = "building", defaultValue = "0") Long buildingId,
+                                defaultValue = "false") Boolean debt, @RequestParam(name = "building", defaultValue = "0") Long buildingId,
                               @RequestParam(name = "section", defaultValue = "") String section, @RequestParam(name = "floor", defaultValue = "") String floor,
-                              @RequestParam(name = "apartmentId", defaultValue = "0") Long apartmentId, @RequestParam(name = "recipient", defaultValue = "0") Long recipient, Principal principal) throws IOException {
+                              @RequestParam(name = "apartmentId", defaultValue = "0") Long apartmentId,
+                              @RequestParam(name = "recipient", defaultValue = "0") Long recipient,
+                              Model model) throws IOException {
         messageValidator.validate(message, bindingResult);
         if (bindingResult.hasErrors()) {
+            List<BuildingDTO> buildingList = buildingService.findAllDTO();
+            model.addAttribute("buildings", buildingList);
             return "admin_panel/messages/message_edit";
         } else {
             List<Owner> recivers = new ArrayList<>();
@@ -149,7 +156,8 @@ public class MessageController {
                 recivers.add(owner);
                 message.setReceiversName(owner.getFullName());
             }
-            message.setSender(adminRepository.findByEmail(principal.getName()).orElseThrow());
+            Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            message.setSender(adminRepository.findByEmail(admin.getUsername()).orElseThrow());
             message.setReceivers(recivers);
             message.setUnreadReceivers(recivers);
             Long messageId = messageService.save(message).getId();
@@ -158,17 +166,15 @@ public class MessageController {
 //                 reciver.getUnreadMessages().add(messageId);
 //                ownerService.save(reciver);
 //            }
+            message.setDate(LocalDateTime.now());
+            messageService.save(message);
             websocketController.sendMessagesItem(message);
             return "redirect:/admin/messages/";
         }
     }
 
     @GetMapping("/delete/{id}")
-    public String dellete(@PathVariable("id") Long id, Principal principal) {
-//        for (Owner receiver : messageService.findById(id).getReceivers()) {
-//            receiver.getUnreadMessages().remove(id);
-//            ownerService.save(receiver);
-//        }
+    public String dellete(@PathVariable("id") Long id) {
         messageService.deleteById(id);
         return "redirect:/admin/messages/";
     }
@@ -179,7 +185,10 @@ public class MessageController {
                                             @RequestParam(name = "building_id", defaultValue = "0") Long buildingId,
                                             @RequestParam(name = "section", defaultValue = "") String section,
                                             @RequestParam(name = "floor", defaultValue = "") String floor) {
+        System.out.println("getApartments start");
+        System.out.println("b=" + buildingId + " s=" + section.length() + " f=" + floor.length() + " d=" + debt);
         List<ApartmentDTO> apartmentDTOList = new ArrayList<>();
+
         if (floor.length() == 0 && section.length() == 0 && buildingId == 0 && debt == false) {
             apartmentDTOList = apartmentService.findDtoApartments();
         } else if (floor.length() == 0 && section.length() == 0 && buildingId == 0 && debt == true) {
@@ -224,6 +233,11 @@ public class MessageController {
         FilterForm form = mapper.readValue(filters, FilterForm.class);
         System.out.println("controller " + form);
         return messageService.findAllBySpecification(form, page, size, null);
+    }
+
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        model.addAttribute("messagesPageActive", true);
     }
 }
 

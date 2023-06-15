@@ -213,10 +213,12 @@ public class MeterController {
                                               @RequestParam String service,
                                               @RequestParam String date) {
 
+        log.info(status);
         MeterData meterToSave = meterDataService.saveMeterDataAJAX(id, building, section,
                 apartment, currentReadings, status, service, date);
         MeterDataDTO dto = mapper.fromMeterToDTO(meterToSave);
         log.info(meterToSave.toString());
+        log.info(dto.toString());
         DataBinder binder = new DataBinder(dto);
         binder.setValidator(validator);
         binder.validate();
@@ -261,6 +263,7 @@ public class MeterController {
 
     @ModelAttribute
     public void addAttributes(Model model) {
+        model.addAttribute("metersPageActive", true);
     }
 
 

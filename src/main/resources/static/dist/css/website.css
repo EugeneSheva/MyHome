@@ -347,6 +347,11 @@ textarea {
     color: white;
 }
 
+.dark-mode textarea {
+    background-color: #2c2929;
+    border: 1px solid #544f4f;
+}
+
 .my_filters {
     caret-color: initial;
     transition: all 0.3s;
@@ -360,6 +365,44 @@ textarea {
     height: 40px;
 }
 
+.logo-mini {
+    display: none;
+}
+
+.logo-lg {
+    display: block;
+}
+
+.sidebar-collapse .logo-lg {
+    display: none;
+}
+
+.sidebar-collapse .logo-mini {
+    display: block;
+}
+
+/*.sidebar-open .logo-lg {
+    display: block;
+}
+
+.sidebar-open .logo-mini {
+    display: none;
+}*/
+
+.nav-link {
+    width: 100%;
+}
+
+.nav-link.selected {
+    background-color: rgba(0,255,0,0.2);
+    box-shadow: none;
+}
+
+.nav-link.selected:hover {
+    background-color: rgba(0,255,0,0.4);
+}
+
+.nav-item .nav-link {margin:0;}
 
 
 

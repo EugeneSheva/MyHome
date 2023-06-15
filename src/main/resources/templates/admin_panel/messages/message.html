@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:text="#{myHome24}">МойДом24</title>
+    <title th:text="#{message}">МойДом24</title>
+    <link rel="icon" type="image/png" href="http://myhouse24.avada-media.ua/favicon.png">
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=fallback">
     <link rel="stylesheet" th:href="@{/plugins/fontawesome-free/css/all.min.css}">
@@ -47,9 +48,11 @@
                     <div class="card-body p-0">
                         <div class="mailbox-read-info">
                             <h5 th:text="${message.subject}"></h5>
-                            <h6 th:text="#{sender}">отправитель
-<!--                                th:text="${message.sender.name}"-->
-                                <span class="mailbox-read-time float-right" th:text="${message.date}"><h6 th:text="${message.date}"></h6></span></h6>
+                            <h6>
+                                <span th:text="#{sender}">отправитель</span>
+                                <span th:text="' - ' + ${message.sender.fullName}"></span>
+                                <span class="mailbox-read-time float-right" th:text="' - ' + ${message.date}"></span>
+                            </h6>
                         </div>
                     </div>
                     <div class="mailbox-read-message" th:utext="${message.text}">

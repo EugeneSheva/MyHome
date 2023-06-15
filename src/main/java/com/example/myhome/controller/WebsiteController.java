@@ -33,6 +33,9 @@ public class WebsiteController {
     @GetMapping("/home")
     public String showEditHomePage(Model model) {
         model.addAttribute("mainPage", websiteService.getMainPage());
+
+        model.addAttribute("homeEditPageActive", true);
+
         log.info(Objects.requireNonNull(model.getAttribute("mainPage")).toString());
         return "admin_panel/website_settings/website_home";
     }
@@ -51,6 +54,9 @@ public class WebsiteController {
         model.addAttribute("photos", photos);
         model.addAttribute("add_photos", add_photos);
         model.addAttribute("documents", websiteService.getAllDocuments());
+
+        model.addAttribute("aboutEditPageActive", true);
+
         return "admin_panel/website_settings/website_about";
     }
 
@@ -58,6 +64,9 @@ public class WebsiteController {
     @GetMapping("/services")
     public String showEditServicesPage(Model model) {
         model.addAttribute("servicesPage", websiteService.getServicesPage());
+
+        model.addAttribute("servicesEditPageActive", true);
+
         return "admin_panel/website_settings/website_services";
     }
 
@@ -65,13 +74,15 @@ public class WebsiteController {
     @GetMapping("/contacts")
     public String showEditContactsPage(Model model) {
         model.addAttribute("contactsPage", websiteService.getContactsPage());
+
+        model.addAttribute("contactsEditPageActive", true);
+
         return "admin_panel/website_settings/website_contacts";
     }
 
     // =========================
 
     // Сохранение контента главной страницы
-    // Можно было сделать у страницы поля @Transient MultipartFile ... и убрать кучу лишних аргументов
     // ¯\_(ツ)_/¯
     @PostMapping("/home")
     public String editHomePage(@Valid @ModelAttribute MainPage mainPage,
@@ -87,7 +98,7 @@ public class WebsiteController {
                                @RequestPart(required = false) MultipartFile page_block_6_img,
                                Model model) throws IOException {
 
-        validator.validate(mainPage, bindingResult);
+        //validator.validate(mainPage, bindingResult);
 
         if(bindingResult.hasErrors()) {
             log.info("Errors found");
@@ -105,7 +116,6 @@ public class WebsiteController {
     }
 
     // Сохранение контента страницы "О нас"
-    // Можно было сделать у страницы поля @Transient MultipartFile ... и убрать кучу лишних аргументов
     // ¯\_(ツ)_/¯
     @PostMapping("/about")
     public String editAboutPage(@Valid @ModelAttribute AboutPage aboutPage,
@@ -200,6 +210,12 @@ public class WebsiteController {
     public String deleteDocument(@PathVariable long id) {
         websiteService.deleteDocument(id);
         return "redirect:/admin/website/about";
+    }
+
+
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        model.addAttribute("websiteEditPageActive", true);
     }
 
 

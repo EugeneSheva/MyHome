@@ -40,6 +40,8 @@ public class RequestValidator implements Validator {
 
         if(request.getDescription() == null || request.getDescription().equalsIgnoreCase("")) {
             e.rejectValue("description", "description.empty", messageSource.getMessage("requests.description.empty", null, locale));
+        } else if(request.getDescription().length() < 2 || request.getDescription().length() > 300) {
+            e.rejectValue("description", "description.wrong-length", messageSource.getMessage("requests.description.wrong-length", null, locale));
         }
 
         if(request.getMasterID() == null || request.getMasterID() < 0) {
@@ -53,6 +55,12 @@ public class RequestValidator implements Validator {
         if(request.getBest_time() != null) {
             LocalDateTime best_time_request = LocalDateTime.parse(request.getBest_time(), DateTimeFormatter.ofPattern("yyyy-MM-dd - HH:mm"));
             if(best_time_request.isBefore(LocalDateTime.now())) e.rejectValue("best_time", "best_time.incorrect", messageSource.getMessage("requests.best_time.incorrect", null, locale));
+        }
+
+        if(request.getComment() != null && !request.getComment().isEmpty()) {
+            if(request.getComment().length() < 2 || request.getComment().length() > 100) {
+                e.rejectValue("comment", "comment.wrong-length", messageSource.getMessage("requests.comment.wrong-length", null, locale));
+            }
         }
     }
 }

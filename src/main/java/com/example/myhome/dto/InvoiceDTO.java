@@ -24,6 +24,7 @@ public class InvoiceDTO {
     private Boolean completed;
     private String section;
     private InvoiceStatus status;
+    private String statusName;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateFrom;
     @DateTimeFormat(pattern = "yyyy-MM-dd")

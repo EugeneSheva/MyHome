@@ -75,6 +75,7 @@ public class ApartmentAccount implements Serializable {
     public void addToBalance(double amount) {
         this.balance += amount;
     }
+    public void removeFromBalance(double amount) {this.balance -= amount;}
 
     public Long getId() {
         return id;

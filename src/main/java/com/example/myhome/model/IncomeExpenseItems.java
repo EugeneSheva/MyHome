@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 // --- СТАТЬИ ПРИХОДОВ/РАСХОДОВ ---
@@ -20,6 +21,8 @@ public class IncomeExpenseItems {
     private Long id;
 
     @NotBlank(message = "Необходимо указать название статьи")
+    @Size(min=2, message="Название должно быть длиннее 2 символов!")
+    @Size(max=50, message="Название должно быть короче 50 символов!")
     private String name;
 
     @Enumerated(EnumType.STRING)

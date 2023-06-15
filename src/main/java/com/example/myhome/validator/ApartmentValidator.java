@@ -1,16 +1,26 @@
 package com.example.myhome.validator;
 
 import com.example.myhome.dto.ApartmentDTO;
+import com.example.myhome.mapper.AccountDTOMapper;
 import com.example.myhome.model.Apartment;
+import com.example.myhome.service.AccountService;
+import com.example.myhome.service.ApartmentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.util.Objects;
+
 @Component
+@RequiredArgsConstructor
 public class ApartmentValidator implements Validator {
 
+    private final AccountService accountService;
+    private final ApartmentService apartmentService;
+    private final AccountDTOMapper accountDTOMapper;
 
-        public boolean supports(Class clazz) {
+    public boolean supports(Class clazz) {
             return ApartmentDTO.class.equals(clazz);
         }
 
@@ -38,6 +48,10 @@ public class ApartmentValidator implements Validator {
 //        if(apartment.getAccount() == null || apartment.getAccount().getId() == null) {
 //            e.rejectValue("account", "account.empty", "Заполните поле");
 //        }
-
+        if(apartment.getAccount() != null && apartment.getAccount().getId() != null) {
+            if(apartmentService.accountHasApartment(apartment.getAccount().getId()) &&
+            !Objects.equals(accountService.findAccountById(apartment.getAccount().getId()).getApartment().getId(),apartment.getId()))
+                e.rejectValue("account", "account.taken", "К этому лицевому счёту уже привязана квартира!");
+        }
     }
 }

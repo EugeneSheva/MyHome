@@ -130,7 +130,9 @@ public class ApartmentController {
     Model model) throws IOException {
         apartmentValidator.validate(apartment, bindingResult);
         if (bindingResult.hasErrors()) {
-            model.addAttribute("apartment", apartment);
+            log.info(apartment.getSection());
+            log.info(apartment.getFloor());
+//            model.addAttribute("apartment", apartment);
             List<BuildingDTO> buildingList = buildingService.findAllDTO();
             model.addAttribute("buildings", buildingList);
             List<Tariff>tariffs = tariffService.findAllTariffs();
@@ -189,63 +191,30 @@ public class ApartmentController {
 
     @GetMapping("/incomesByApartmentAccount/{id}")
     public String incomesByApartmentAccount(Model model, @PathVariable("id") Long id) {
-        List<CashBox>cashBoxes=cashBoxService.findAllByApartmentAccountId(id);
-        model.addAttribute("cashBoxList", cashBoxes);
-        model.addAttribute("cashBoxSum", cashBoxService.getSumAmount());
-        model.addAttribute("accountBalance", accountService.getSumOfAccountBalances());
-        model.addAttribute("sumDebt", accountService.getSumOfAccountDebts());
-        return "admin_panel/cash_box/cashboxes";
+        return "redirect:/admin/cashbox/show-incomes?account_id="
+                +apartmentService.findById(id).getAccount().getId();
     }
 
     @GetMapping("/invoicesByApartment/{id}")
     public String invoicesByApartment(Model model, @PathVariable("id") Long id) {
-        List<Invoice>invoices=invoiceService.findAllByApartmentId(id);
-        model.addAttribute("invoices", invoices);
-        model.addAttribute("cashbox_balance", cashBoxService.calculateBalance());
-        model.addAttribute("account_balance", accountService.getSumOfAccountBalances());
-        model.addAttribute("account_debt", accountService.getSumOfAccountDebts());
-        model.addAttribute("filter_form", new FilterForm());
-        return "admin_panel/invoices/invoices";
+        return "redirect:/admin/invoices?apartment="+apartmentService.findById(id).getNumber();
     }
+
     @GetMapping("/metersDataByApartment/{id}")
-        public String metersDataByApartment(Model model, @PathVariable("id") Long id) {
-            List<MeterData>meterDataList = meterDataService.findAllByApartmentId(id);
-            model.addAttribute("meter_data_rows", meterDataList);
-        model.addAttribute("filter_form", new FilterForm());
-            return "admin_panel/meters/meters";
-        }
+    public String metersDataByApartment(Model model, @PathVariable("id") Long id) {
+        return "redirect:/admin/meters?apartment="+apartmentService.findById(id).getNumber();
+    }
 
-    @GetMapping("/NewIncomesByApartment/{id}")
+    @GetMapping("/NewIncomesByaApartment/{id}")
     public String NewIncomesByApartment(Model model, @PathVariable("id") Long id) {
-        Apartment apartment = apartmentService.findById(id);
-        List<IncomeExpenseItems>incomeItemsList=incomeExpenseItemService.findAllIncomeItems();
-        model.addAttribute("incomeItemsList", incomeItemsList);
-
-        List<AdminDTO>adminDTOList = adminService.findAllManagers();
-
-        model.addAttribute("admins", adminDTOList);
-
-        List<OwnerDTO> ownerDTOList = ownerService.findAllDTO();
-        model.addAttribute("owners", ownerDTOList);
-
-        List<ApartmentAccountDTO> apartmentAccountDTOS = accountService.findAllAccounts().stream().map(accountDTOMapper::fromAccountToDTO).collect(Collectors.toList());
-        model.addAttribute("accounts", apartmentAccountDTOS);
-
-        CashBox cashBox = new CashBox();
-        cashBox.setOwner(apartment.getOwner());
-        cashBox.setApartmentAccount(apartment.getAccount());
-        cashBox.setIncomeExpenseType(IncomeExpenseType.INCOME);
-        model.addAttribute("cashBoxItem", cashBox);
-        return "admin_panel/cash_box/cashbox_edit";
+        if(accountService.apartmentHasAccount(id))
+            return "redirect:/admin/cashbox/newIncome?account_id=" + apartmentService.findById(id).getAccount().getId();
+        else return "redirect:/admin/apartments/"+id;
     }
 
     @GetMapping("/NewInvoiceByApartment/{id}")
     public String NewInvoiceByApartment(Model model, @PathVariable("id") Long id) {
-        Invoice invoice = new Invoice();
-        invoice.setApartment(apartmentService.findById(id));
-        model.addAttribute("invoice", invoice);
-        model.addAttribute("meters",  meterDataService.findSingleMeterData(id, null));
-        return "admin_panel/invoices/invoice_card";
+        return "redirect:/admin/invoices/create?flat_id="+id;
     }
 
     @GetMapping("/getUsers")
@@ -290,5 +259,12 @@ public class ApartmentController {
     @GetMapping("/get-meters")
     public @ResponseBody List<MeterData> getMeters(@RequestParam long flat_id) {
         return apartmentService.findById(flat_id).getMeterDataList();
+    }
+
+
+
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        model.addAttribute("apartmentsPageActive", true);
     }
 }

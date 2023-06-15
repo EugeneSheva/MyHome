@@ -13,7 +13,7 @@ id="loading">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link" th:text="#{adminPanel}">Панель администратора</a>
+        <span th:text="#{adminPanel}">Панель администратора</span>
       </li>
     </ul>
     <!-- Right navbar links -->
@@ -42,6 +42,60 @@ id="loading">
           </div>
         </div>
       </div>
+      <li class="dropdown notifications-menu">
+        <a href="#" class="dropdown" id="dropdown-toggle" aria-expanded="false" style="margin-right: 20px; margin-left: 10px">
+          <i class="fa fa-child fa-lg" id="notifier" aria-hidden="true"></i>
+          <span class="label label-danger" id="new-user-count" th:if="${newUserCount > 0}" style="
+              position: absolute;
+              top: -5px;
+              width: 15px;
+              height: 15px;
+              font-size: 10px;
+              padding: 0;
+              margin: 0;
+              padding-left: 1px;
+              text-align:center;
+              left: 10px;
+          " th:text="${newUserCount}">60</span>
+        </a>
+        <ul class="dropdown-menu" id="dropdown-menu" style="left: inherit; right: 0px; padding:1px">
+
+          <li class="menu-header">Новых пользователей: <span th:text="${newUserCount}"></span></li>
+          <div class="loader" id="loader" style="display:none;"></div>
+          <li id="user-list">
+            <!-- inner menu: contains the actual data -->
+<!--            <ul class="menu">-->
+<!--              <li>-->
+<!--                <a href="/admin/user/109">-->
+<!--                  Вася &lt;!&ndash;<i class="fa fa-angle-right pull-right" aria-hidden="true"></i>&ndash;&gt;-->
+<!--                </a>-->
+<!--              </li>-->
+<!--              <li>-->
+<!--                <a href="/admin/user/108">-->
+<!--                  1petro@petrenko.com &lt;!&ndash;<i class="fa fa-angle-right pull-right" aria-hidden="true"></i>&ndash;&gt;-->
+<!--                </a>-->
+<!--              </li>-->
+<!--              <li>-->
+<!--                <a href="/admin/user/107">-->
+<!--                  123@123.com &lt;!&ndash;<i class="fa fa-angle-right pull-right" aria-hidden="true"></i>&ndash;&gt;-->
+<!--                </a>-->
+<!--              </li>-->
+<!--              <li>-->
+<!--                <a href="/admin/user/106">-->
+<!--                  Петро Петрович Петренко &lt;!&ndash;<i class="fa fa-angle-right pull-right" aria-hidden="true"></i>&ndash;&gt;-->
+<!--                </a>-->
+<!--              </li>-->
+<!--              <li>-->
+<!--                <a href="/admin/user/1">-->
+<!--                  Лисенко Павел Михайлович &lt;!&ndash;<i class="fa fa-angle-right pull-right" aria-hidden="true"></i>&ndash;&gt;-->
+<!--                </a>-->
+<!--              </li>-->
+<!--            </ul>-->
+          </li>
+          <li class="menu-footer"><a th:href="@{/admin/owners}">Перейти в раздел пользователей</a></li>
+
+        </ul>
+      </li>
       <li class="dropdown user user-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
           <i class="fa fa-user-circle text-purple"></i>
@@ -62,7 +116,7 @@ id="loading">
             <div class="pull-left" style="float: left;">
               <a th:href="@{/admin/admins/update/{id}(id=${auth_admin.id})}" class="btn btn-warning">Профиль</a>
             </div>
-            <div >
+            <div class="pull-right">
               <a th:href="@{/admin/logout}" class="btn btn-danger" th:text="#{exit}">Выйти</a>
             </div>
           </li>
@@ -149,165 +203,168 @@ id="loading">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500&family=Recursive:wght@300;500&display=swap" rel="stylesheet">
 
     <!-- Brand Logo -->
-    <a th:href="@{/}" class="brand-link" style="margin-bottom: 20px; padding: 3px;">
-      <img th:src="@{/images/namelogo.png}" alt="AdminLTE Logo"
-           class="img"
-           style="opacity: .8; width:75%; display: block; margin:auto;">
-      <span class="brand-text font-weight-light"></span>
+    <a th:href="@{/admin}" class="brand-link" style="margin-bottom: 20px; padding: 3px;">
+      <span class="logo-lg"><img th:src="@{/images/namelogo.png}" alt="AdminLTE Logo"
+                                 class="img"
+                                 style="opacity: .8; width:75%; margin-inline:15%;"></span>
+      <span class="logo-mini"><img th:src="@{/images/logo-mini.svg}" alt="AdminLTE Logo"
+                                   class="img"
+                                   style="opacity: .8; width:75%; margin-left:10px;
+                                          max-width:50px;max-height:50px;"></span>
     </a>
     <!-- Sidebar -->
     <form action="">
-      <div class="sidebar">
+      <div class="sidebar" style="padding: 0;">
         <!-- Sidebar Menu -->
-        <nav style="margin-top: 10px;">
+        <nav>
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
                  with font-awesome or any other icon font library -->
             <li class="nav-item" sec:authorize="hasAuthority('statistics.read')">
-              <a th:href="@{/admin/statistics/}" class="nav-link">
+              <a th:href="@{/admin/statistics/}" th:classappend="${statsPageActive} ? 'selected'" style="width:100%" class="nav-link">
                 <i class="fa-solid fa-chart-line" ></i>
                 <p class="pl-1" th:text="#{statistics}">
                 </p>
               </a>
             </li>
             <li class="nav-item" sec:authorize="hasAuthority('cashbox.read')">
-              <a th:href="@{/admin/cashbox/}"class="nav-link">
+              <a th:href="@{/admin/cashbox/}" th:classappend="${cashboxPageActive} ? 'selected'" style="width:100%" class="nav-link">
                 <i class="fa fa-usd" aria-hidden="true" style="width:16px"></i>
                 <p class="pl-1" th:text="#{cashBox}">
                 </p>
               </a>
             </li>
             <li class="nav-item" sec:authorize="hasAuthority('invoices.read')">
-              <a th:href="@{/admin/invoices}" class="nav-link">
+              <a th:href="@{/admin/invoices}" th:classappend="${invoicesPageActive} ? 'selected'" style="width:100%" class="nav-link">
                 <i class="fa fa-files-o" aria-hidden="true"></i>
                 <p class="pl-1" th:text="#{invoices}">
                 </p>
               </a>
             </li>
             <li class="nav-item" sec:authorize="hasAuthority('accounts.read')">
-              <a th:href="@{/admin/accounts}" class="nav-link">
+              <a th:href="@{/admin/accounts}" th:classappend="${accountsPageActive} ? 'selected'" style="width:100%" class="nav-link">
                 <i class="fa fa-credit-card" aria-hidden="true"></i>
                 <p class="pl-1" th:text="#{apartAccount}">
                 </p>
               </a>
             </li>
             <li class="nav-item" sec:authorize="hasAuthority('apartments.read')">
-              <a th:href="@{/admin/apartments/}" class="nav-link">
+              <a th:href="@{/admin/apartments/}" th:classappend="${apartmentsPageActive} ? 'selected'" style="width:100%" class="nav-link">
                 <i class="fa fa-key" aria-hidden="true"></i>
                 <p class="pl-1" th:text="#{apartments}">
                 </p>
               </a>
             </li>
             <li class="nav-item" sec:authorize="hasAuthority('owners.read')">
-              <a th:href="@{/admin/owners/}" class="nav-link">
+              <a th:href="@{/admin/owners/}" th:classappend="${ownersPageActive} ? 'selected'" style="width:100%" class="nav-link">
                 <i class="fa fa-users" aria-hidden="true" style="font-size: 14px"></i>
                 <p class="pl-1" th:text="#{apartmentsOwners}">
                 </p>
               </a>
             </li>
             <li class="nav-item" sec:authorize="hasAuthority('buildings.read')">
-              <a th:href="@{/admin/buildings/}" class="nav-link">
+              <a th:href="@{/admin/buildings/}" th:classappend="${buildingsPageActive} ? 'selected'" style="width:100%" class="nav-link">
                 <i class="fa fa-building" aria-hidden="true" style="width:16px"></i>
                 <p class="pl-1" th:text="#{buildings}">
                 </p>
               </a>
             </li>
             <li class="nav-item" sec:authorize="hasAuthority('messages.read')">
-              <a th:href="@{/admin/messages/}" class="nav-link">
+              <a th:href="@{/admin/messages/}" th:classappend="${messagesPageActive} ? 'selected'" style="width:100%" class="nav-link">
                 <i class="fa fa-envelope-o" aria-hidden="true"></i>
                 <p class="pl-1" th:text="#{messages}">
                 </p>
               </a>
             </li>
             <li class="nav-item" sec:authorize="hasAuthority('requests.read')">
-              <a th:href="@{/admin/requests}" class="nav-link">
+              <a th:href="@{/admin/requests}" style="width:100%" th:classappend="${requestsPageActive} ? 'selected'" class="nav-link">
                 <i class="fa fa-wrench" aria-hidden="true"></i>
                 <p class="pl-1" th:text="#{repairRequest}">
                 </p>
               </a>
             </li>
             <li class="nav-item" sec:authorize="hasAuthority('meters.read')">
-              <a th:href="@{/admin/meters}" class="nav-link">
+              <a th:href="@{/admin/meters}" th:classappend="${metersPageActive} ? 'selected'" style="width:100%" class="nav-link">
                 <i class="fa fa-tachometer" aria-hidden="true"></i>
                 <p class="pl-1" th:text="#{metersData}">
                 </p>
               </a>
             </li>
-            <li class="nav-item" sec:authorize="hasAuthority('website_settings.read')">
-              <a href="#" class="nav-link">
+            <li class="nav-item" th:classappend="${websiteEditPageActive} ? 'menu-open'"  sec:authorize="hasAuthority('website_settings.read')">
+              <a href="#" style="width:100%" class="nav-link">
                 <i class="fa fa-desktop" aria-hidden="true"></i>
                 <p class="pl-1" th:text="#{siteManagment}">
                   <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
-              <ul class="nav nav-treeview" style="font-weight: 400">
+              <ul class="nav nav-treeview" style="font-weight: 400" th:styleappend="${websiteEditPageActive} ? 'display:block'">
                 <li class="nav-item dropdown-items" >
-                  <a th:href="@{/admin/website/home}" class="nav-link dropdown-links" style="margin:0">
+                  <a th:href="@{/admin/website/home}" th:classappend="${homeEditPageActive} ? 'selected'" class="nav-link dropdown-links" style="margin:0; width:100%">
                     <i style="font-size: 12px;" class="far fa-circle fa-sm nav-icon"></i>
                     <p th:text="#{mainPage}"></p>
                   </a>
                 </li>
                 <li class="nav-item dropdown-items" >
-                  <a th:href="@{/admin/website/about}" class="nav-link dropdown-links" style="margin:0">
+                  <a th:href="@{/admin/website/about}" th:classappend="${aboutEditPageActive} ? 'selected'" class="nav-link dropdown-links" style="margin:0; width:100%">
                     <i style="font-size: 12px;" class="far fa-circle fa-sm nav-icon"></i>
                     <p th:text="#{aboutUs}"></p>
                   </a>
                 </li>
                 <li class="nav-item dropdown-items" >
-                  <a th:href="@{/admin/website/services}" class="nav-link dropdown-links" style="margin:0">
+                  <a th:href="@{/admin/website/services}" th:classappend="${servicesEditPageActive} ? 'selected'" class="nav-link dropdown-links" style="margin:0; width:100%">
                     <i style="font-size: 12px;" class="far fa-circle fa-sm nav-icon"></i>
                     <p th:text="#{services}"></p>
                   </a>
                 </li>
                 <li class="nav-item dropdown-items" >
-                  <a th:href="@{/admin/website/contacts}" class="nav-link dropdown-links" style="margin:0">
+                  <a th:href="@{/admin/website/contacts}" th:classappend="${contactsEditPageActive} ? 'selected'" class="nav-link dropdown-links" style="margin:0; width:100%">
                     <i style="font-size: 12px;" class="far fa-circle fa-sm nav-icon"></i>
                     <p th:text="#{contacts}"></p>
                   </a>
                 </li>
               </ul>
             </li>
-            <li class="nav-item" sec:authorize="hasAnyAuthority('services.read','tariffs.read','users.read',
+            <li class="nav-item" th:classappend="${settingsEditPageActive} ? 'menu-open'" sec:authorize="hasAnyAuthority('services.read','tariffs.read','users.read',
             'roles.read','payment_details.read','transaction_items.read')">
-              <a href="#" class="nav-link">
+              <a href="#" style="width:100%" class="nav-link">
                 <i class="fa fa-cogs" aria-hidden="true"></i>
                 <p class="pl-1" th:text="#{systemSetup}">
                   <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
-              <ul class="nav nav-treeview" style="font-weight: 400">
+              <ul class="nav nav-treeview" style="font-weight: 400" th:styleappend="${settingsEditPageActive} ? 'display:block'">
                 <li class="nav-item dropdown-items" sec:authorize="hasAuthority('services.read')">
-                  <a th:href="@{/admin/services}" class="nav-link dropdown-links" style="margin:0">
+                  <a th:href="@{/admin/services}" th:classappend="${servicesPageActive} ? 'selected'" class="nav-link dropdown-links" style="margin:0; width:100%">
                     <i style="font-size: 12px;" class="fa fa-briefcase nav-icon"></i>
                     <p th:text="#{services}">Услуги</p>
                   </a>
                 </li>
                 <li class="nav-item dropdown-items" sec:authorize="hasAuthority('tariffs.read')" >
-                  <a th:href="@{/admin/tariffs}" class="nav-link dropdown-links" style="margin:0">
+                  <a th:href="@{/admin/tariffs}" th:classappend="${tariffsPageActive} ? 'selected'" class="nav-link dropdown-links" style="margin:0; width:100%">
                     <i style="font-size: 12px;"  class="fa fa-money nav-icon"></i>
                     <p th:text="#{tariffs}">Тарифы</p>
                   </a>
                 </li>
                 <li class="nav-item dropdown-items" sec:authorize="hasAuthority('users.read')">
-                  <a th:href="@{/admin/admins}" class="nav-link dropdown-links" style="margin:0">
+                  <a th:href="@{/admin/admins}" th:classappend="${adminsPageActive} ? 'selected'" class="nav-link dropdown-links" style="margin:0; width:100%">
                     <i style="font-size: 12px;" class="fa fa-user-plus nav-icon"></i>
                     <p th:text="#{users}">Пользователи</p>
                   </a>
                 </li>
                 <li class="nav-item dropdown-items" sec:authorize="hasAuthority('roles.read')">
-                  <a th:href="@{/admin/roles}" class="nav-link dropdown-links" style="margin:0">
+                  <a th:href="@{/admin/roles}" th:classappend="${rolesPageActive} ? 'selected'" class="nav-link dropdown-links" style="margin:0; width:100%">
                     <i style="font-size: 12px;" class="fa fa-users nav-icon"></i>
                     <p th:text="#{roles}">Роли</p>
                   </a>
                 </li>
                 <li class="nav-item dropdown-items" sec:authorize="hasAuthority('payment_details.read')">
-                  <a th:href="@{/admin/payment-details}" class="nav-link dropdown-links" style="margin:0">
+                  <a th:href="@{/admin/payment-details}" th:classappend="${paymentDetailsPageActive} ? 'selected'" class="nav-link dropdown-links" style="margin:0; width:100%">
                     <i style="font-size: 12px;" class="fa fa-credit-card nav-icon"></i>
                     <p th:text="#{paymentDetails}">Платежные реквизиты</p>
                   </a>
                 </li>
                 <li class="nav-item dropdown-items" sec:authorize="hasAuthority('transaction_items.read')">
-                  <a th:href="@{/admin/income-expense}" class="nav-link dropdown-links" style="margin:0">
+                  <a th:href="@{/admin/income-expense}" th:classappend="${transactionsPageActive} ? 'selected'" class="nav-link dropdown-links" style="margin:0; width:100%">
                     <i style="font-size: 12px;" class="fa fa-list-ol nav-icon"></i>
                     <p th:text="#{paymentItens}">Статьи платежей</p>
                   </a>
@@ -339,6 +396,74 @@ id="loading">
         });
       });
 
+
+      //NOTIFICATION DROPDOWN
+      let dropdownToggle = document.getElementById('dropdown-toggle');
+      let dropdownMenu = document.getElementById('dropdown-menu');
+      let userNotifier = document.getElementById('notifier');
+      let menuOpened = false;
+      let usersLoaded = false;
+      console.log(dropdownToggle);
+      console.log(dropdownMenu);
+
+      window.addEventListener('click', (e) => {
+        if(e.target != dropdownMenu && e.target != userNotifier && menuOpened) {
+        console.log(e.target);
+        console.log('CLOSING MENU');
+         dropdownMenu.classList.remove('open');
+         menuOpened = false;
+         }
+      });
+
+      dropdownToggle.addEventListener('click',() => {
+        if(dropdownMenu.classList.contains('open')) {
+          dropdownMenu.classList.remove('open'); menuOpened = false;
+        }
+        else {
+          //open menu
+          dropdownMenu.classList.add('open');
+          menuOpened = true;
+
+          if([[${newUserCount}]] > 0 && !usersLoaded) {
+            document.getElementById('loader').style.display = 'block';
+
+          let userListContainer = document.getElementById('user-list');
+          userListContainer.innerHTML='';
+
+          //ajax call to load new users
+          const promise = new Promise((resolve, reject) => {
+            setTimeout(() => resolve(), 1000);
+          });
+          promise.then(() => {
+            $.get('/myhome/admin/owners/get-new-owners', function(data){
+              document.getElementById('loader').style.display = 'none';
+              console.log(data);
+
+              let userMenu = document.createElement('ul');
+              userMenu.classList.add('menu');
+              for(const user of data) {
+                let row = document.createElement('li');
+                let userLink = document.createElement('a');
+                userLink.href = '/myhome/admin/owners/' + user.id;
+                userLink.innerText = user.fullName;
+                row.appendChild(userLink);
+                userMenu.appendChild(row);
+              }
+              userListContainer.appendChild(userMenu);
+            });
+          }).then(() => {
+            $.get('/myhome/admin/admins/update-last-active', function(data){
+               console.log(data);
+               document.getElementById('new-user-count').style.display = 'none';
+               usersLoaded = true;
+            });
+          });
+          }
+        }
+      })
+
+
+
     </script>
 
     <script th:src="@{/dist/js/theme_switch.js}"></script>
@@ -347,15 +472,119 @@ id="loading">
       * {
         font-family: 'Source Sans Pro';
       }
+
+      @keyframes fadein {
+          from { opacity: 0; }
+          to { opacity: 1; }
+      }
+
+      #dropdown-menu {
+        left: inherit;
+        right: 0px;
+        padding: 1px;
+        font-size: 14px;
+        width: 200px;
+        color: black;
+        caret-color: transparent;
+      }
+
+      .dark-mode #dropdown-menu {
+        border: 1px solid black;
+        box-shadow: 0px 0px 5px black;
+      }
+
+      #dropdown-menu.open {
+        display:block;
+        animation: fadein 0.5s;
+      }
+
+      #dropdown-menu a {
+        text-decoration: none;
+        color: black;
+        display: block;
+        width: 100%;
+      }
+
+      .dark-mode #dropdown-menu a {
+        color: white;
+      }
+
+      #dropdown-menu a:hover {
+        font-weight:bold;
+      }
+
+      .menu-header {
+        padding-left: 5px;
+        text-align: center;
+        border-bottom: 1px solid silver;
+      }
+
+      .dark-mode .menu-header, .dark-mode .menu-footer {
+        color: white;
+      }
+
+      .menu-footer {
+        font-size: 11px;
+        border-top: 1px solid silver;
+      }
+
+      .menu {
+        list-style: none;
+        padding: 0;
+        font-size: 13px;
+      }
+
+      .menu li {
+        border-bottom: 1px solid silver;
+      }
+
+      .menu li:hover {
+        background-color: rgba(128,128,128,0.3);
+       }
+
+       .dropdown {
+        color: black;
+        transition: color 0.2s
+       }
+
+       .dropdown:hover {
+        color:blue;
+       }
+
+       .loader {
+          border: 16px solid #f3f3f3; /* Light grey */
+          border-top: 16px solid #3498db; /* Blue */
+          border-radius: 50%;
+          width: 120px;
+          height: 120px;
+          padding: 0;
+          margin:auto;
+          margin-block:15px;
+          animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        #notifier {
+          color: black;
+          transition: color 0.3s
+        }
+
+        .dark-mode #notifier {
+          color: white;
+        }
     </style>
   </aside>
 
 
   <!-- Main Footer -->
   <footer th:fragment="footer" class="main-footer">
-    <strong th:text="#{footerP1}">Разработано <a href="#" th:text="#{footerP2}">AVADA-MEDIA</a>.</strong>
-    <strong th:text="#{footerP3}">На базе системы управления <a href="#" th:text="#{footerP4}">"МойДом24"</a>.</strong>
-    <strong th:text="#{footerP5}">Документация API доступна по <a href="#" th:text="#{footerP6}">ссылке</a>.</strong>
+    <span th:text="#{footerP1}">Разработано </span> <a href="https://avada-media.ua" th:text="#{footerP2}"> AVADA-MEDIA</a>.
+    <span th:text="#{footerP3}">На базе системы управления </span> <a href="https://avada-media.ua/moydom24/" th:text="#{footerP4}"> "МойДом24"</a>.
+    <span th:text="#{footerP5}">Документация API доступна по </span> <a href="http://myhouse24.avada-media.ua/doc" th:text="#{footerP6}"> ссылке</a>.
     <div class="float-right d-none d-sm-inline-block">
       <b>Version</b> 1.0.0
     </div>

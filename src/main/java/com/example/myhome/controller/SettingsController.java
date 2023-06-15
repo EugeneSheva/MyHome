@@ -1,36 +1,74 @@
 package com.example.myhome.controller;
 
 
+import com.example.myhome.model.*;
 import com.example.myhome.service.SettingsService;
 import com.example.myhome.service.UserRoleService;
-import com.example.myhome.model.IncomeExpenseItems;
-import com.example.myhome.model.PageRoleDisplay;
-import com.example.myhome.model.PageRoleForm;
-import com.example.myhome.model.PaymentDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
 @Log
 public class SettingsController {
 
+    private final ApplicationContext ctx;
     private final SettingsService settingsService;
     private final UserRoleService userRoleService;
 
-    // Редирект на статистику
+    // Получить все эндпойнты
+    @GetMapping("/endpoints")
+    public @ResponseBody List<String> getEndpoints() {
+        List<String> list = new ArrayList<>();
+        ctx.getBean(RequestMappingHandlerMapping.class)
+                .getHandlerMethods()
+                .forEach((key, value) -> list.add(String.valueOf(key)));
+        return list;
+    }
+
+    // Редирект на начальную страницу
     @GetMapping("/admin")
     public String redirectToStatPage() {
+        Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Set<String> permissionsOfLoggedUser = userRoleService.getRole(admin.getRole().getId()).getPermissions();
+        if(permissionsOfLoggedUser.contains("statistics.read") || permissionsOfLoggedUser.contains("statistics.write"))
+            return "redirect:/admin/statistics";
+        else if(permissionsOfLoggedUser.contains("cashbox.read") || permissionsOfLoggedUser.contains("cashbox.write"))
+            return "redirect:/admin/cashbox";
+        else if(permissionsOfLoggedUser.contains("invoices.read") || permissionsOfLoggedUser.contains("invoices.write"))
+            return "redirect:/admin/invoices";
+        else if(permissionsOfLoggedUser.contains("accounts.read") || permissionsOfLoggedUser.contains("accounts.write"))
+            return "redirect:/admin/accounts";
+        else if(permissionsOfLoggedUser.contains("apartments.read") || permissionsOfLoggedUser.contains("apartments.write"))
+            return "redirect:/admin/apartments";
+        else if(permissionsOfLoggedUser.contains("owners.read") || permissionsOfLoggedUser.contains("owners.write"))
+            return "redirect:/admin/owners";
+        else if(permissionsOfLoggedUser.contains("buildings.read") || permissionsOfLoggedUser.contains("buildings.write"))
+            return "redirect:/admin/buildings";
+        else if(permissionsOfLoggedUser.contains("messages.read") || permissionsOfLoggedUser.contains("messages.write"))
+            return "redirect:/admin/messages";
+        else if(permissionsOfLoggedUser.contains("meters.read") || permissionsOfLoggedUser.contains("meters.write"))
+            return "redirect:/admin/meters";
+        else if(permissionsOfLoggedUser.contains("requests.read") || permissionsOfLoggedUser.contains("requests.write"))
+            return "redirect:/admin/requests";
+        else if(permissionsOfLoggedUser.contains("roles.read") || permissionsOfLoggedUser.contains("roles.write"))
+            return "redirect:/admin/roles";
+
         return "redirect:/admin/statistics";
     }
 
@@ -38,6 +76,9 @@ public class SettingsController {
     @GetMapping("/admin/payment-details")
     public String showPaymentDetailsPage(Model model) {
         model.addAttribute("paymentDetails", settingsService.getPaymentDetails());
+
+        model.addAttribute("paymentDetailsPageActive", true);
+
         return "admin_panel/system_settings/settings_payment";
     }
 
@@ -59,6 +100,9 @@ public class SettingsController {
             model.addAttribute("type", "exp");
         }
         model.addAttribute("transactions", transactions);
+
+        model.addAttribute("transactionsPageActive", true);
+
         return "admin_panel/system_settings/settings_inc_exp";
     }
 
@@ -66,6 +110,10 @@ public class SettingsController {
     @GetMapping("/admin/income-expense/create")
     public String showCreateTransactionPage(Model model) {
         model.addAttribute("incomeExpenseItems", new IncomeExpenseItems());
+
+        model.addAttribute("transactionsPageActive", true);
+
+
         return "admin_panel/system_settings/transaction_card";
     }
 
@@ -87,6 +135,10 @@ public class SettingsController {
     @GetMapping("/admin/income-expense/update/{id}")
     public String showUpdateTransactionPage(@PathVariable long id, Model model) {
         model.addAttribute("incomeExpenseItems", settingsService.getTransactionItem(id));
+
+        model.addAttribute("transactionsPageActive", true);
+
+
         return "admin_panel/system_settings/transaction_card";
     }
 
@@ -136,6 +188,9 @@ public class SettingsController {
         PageRoleForm pageForm = new PageRoleForm();
         pageForm.setPages(settingsService.getAllPagePermissions());
         model.addAttribute("pageForm", pageForm);
+
+        model.addAttribute("rolesPageActive", true);
+
         return "admin_panel/system_settings/roles";
     }
 
@@ -154,6 +209,12 @@ public class SettingsController {
         userRoleService.updateRoles(pages);
         redirectAttributes.addFlashAttribute("success", "Сохранено!");
         return "redirect:/admin/roles";
+    }
+
+
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        model.addAttribute("settingsEditPageActive", true);
     }
 
 }

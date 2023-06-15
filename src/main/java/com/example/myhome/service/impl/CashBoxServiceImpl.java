@@ -10,6 +10,7 @@ import com.example.myhome.service.CashBoxService;
 import com.example.myhome.model.CashBox;
 import com.example.myhome.model.IncomeExpenseType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +31,10 @@ public class CashBoxServiceImpl implements CashBoxService {
 
     @Override
     public CashBox findById(Long id) { return cashBoxRepository.findById(id).orElseThrow(NotFoundException::new);}
-
+    @Override
+    public CashBoxDTO findDTOById(Long id) {
+        return mapper.fromCashboxToDTO(cashBoxRepository.findById(id).orElseThrow(NotFoundException::new));
+    }
     @Override
     public List<CashBox> findAll() { return cashBoxRepository.findAll(); }
     @Override
@@ -100,9 +105,11 @@ public Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page
     public List<String> getListOfMonthName() {
         List<String>doubleList = new ArrayList<>();
         LocalDate now = LocalDate.now();
-        LocalDate begin = now.minusMonths(11);
+        LocalDate begin = now.withMonth(1);
         for (int i = 0; i < 12; i++) {
-            String tmp = begin.getMonth().name() + " " + begin.getYear();
+            String tmp = begin.getMonth().getDisplayName(
+                    TextStyle.FULL, LocaleContextHolder.getLocale()
+            ) + " " + begin.getYear();
             doubleList.add(tmp);
             begin = begin.plusMonths(1);
         }

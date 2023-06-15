@@ -13,14 +13,23 @@ public class AdminSpecifications {
 
     public static Specification<Admin> hasNameLike(String s) {
         if(s == null) return (root, query, criteriaBuilder) -> null;
-        return (root, query, cb) -> cb.like(root.get("first_name"), "%"+s+"%");
+        return (root, query, cb) -> cb.or(cb.like(root.get("first_name"), "%"+s+"%"),
+                                          cb.like(root.get("last_name"), "%"+s+"%"));
+    }
+
+    public static Specification<Admin> hasRole(Long role) {
+        if(role == null) return (root, query, criteriaBuilder) -> null;
+        return (root, query, cb) -> {
+            Join<Admin, UserRole> adminRoleJoin = root.join("role", JoinType.INNER);
+            return cb.equal(adminRoleJoin.get("id"), role);
+        };
     }
 
     public static Specification<Admin> hasRole(String role) {
         if(role == null) return (root, query, criteriaBuilder) -> null;
         return (root, query, cb) -> {
             Join<Admin, UserRole> adminRoleJoin = root.join("role", JoinType.INNER);
-            return cb.like(adminRoleJoin.get("name"), role);
+            return cb.equal(adminRoleJoin.get("name"), role);
         };
     }
 

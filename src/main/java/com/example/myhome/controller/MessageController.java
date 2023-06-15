@@ -4,6 +4,7 @@ import com.example.myhome.dto.ApartmentDTO;
 import com.example.myhome.controller.socket.WebsocketController;
 import com.example.myhome.dto.BuildingDTO;
 
+import com.example.myhome.model.Admin;
 import com.example.myhome.model.filter.FilterForm;
 import com.example.myhome.repository.AdminRepository;
 import com.example.myhome.repository.ApartmentRepository;
@@ -160,12 +161,6 @@ public class MessageController {
             message.setSender(adminRepository.findByEmail(admin.getUsername()).orElseThrow());
             message.setReceivers(recivers);
             message.setUnreadReceivers(recivers);
-            Long messageId = messageService.save(message).getId();
-//            for (Owner reciver : recivers) {
-//               if (!reciver.getUnreadMessages().contains(messageId))
-//                 reciver.getUnreadMessages().add(messageId);
-//                ownerService.save(reciver);
-//            }
             message.setDate(LocalDateTime.now());
             messageService.save(message);
             websocketController.sendMessagesItem(message);

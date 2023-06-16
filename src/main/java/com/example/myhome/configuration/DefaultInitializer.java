@@ -37,6 +37,7 @@ class DefaultInitializer implements CommandLineRunner {
     private final OwnerRepository ownerRepository;
     private final RepairRequestRepository repairRequestRepository;
     private final InvoiceRepository invoiceRepository;
+    private final InvoiceTemplateRepository invoiceTemplateRepository;
     private final AccountRepository accountRepository;
 
     @Override
@@ -58,6 +59,8 @@ class DefaultInitializer implements CommandLineRunner {
         checkForApartments();
         Thread.sleep(50);
         checkForAccounts();
+        Thread.sleep(50);
+        checkForInvoices();
         Thread.sleep(50);
         checkForPages();
         log.info("INITIAL CHECK COMPLETED");
@@ -134,6 +137,16 @@ class DefaultInitializer implements CommandLineRunner {
             account.setSection(apartment.getSection());
             account.setBuilding(apartment.getBuilding());
             accountRepository.save(account);
+        }
+    }
+    void checkForInvoices() throws InterruptedException {
+        invoiceTemplateRepository.deleteAll();
+        if(invoiceTemplateRepository.count() == 0 || invoiceTemplateRepository.findAll().size() == 0) {
+            InvoiceTemplate testTemplate = new InvoiceTemplate();
+            testTemplate.setName("TestTemplate");
+            testTemplate.setDefault(true);
+            testTemplate.setFile("testTemplate.xlsx");
+            invoiceTemplateRepository.save(testTemplate);
         }
     }
     void checkForRoles() throws InterruptedException {

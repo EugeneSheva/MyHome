@@ -34,8 +34,23 @@ public class AccountDTOMapper {
         account.setChangedState(dto.getChangedState());
         account.setSection(dto.getSection());
         account.setBalance(dto.getBalance());
-        if(dto.getApartment() != null && dto.getApartment().getId() != null)
-            account.setApartment(apartmentRepository.getReferenceById(dto.getApartment().getId()));
+        if(dto.getApartment() != null && dto.getApartment().getId() != null && dto.getApartment().getId() != 0) {
+            log.info("APART IS NOT NULL");
+            Apartment apartment = apartmentRepository.findById(dto.getApartment().getId()).orElse(null);
+            account.setApartment(apartment);
+            if(apartment != null) {
+                account.setBuilding(apartment.getBuilding());
+                account.setSection(apartment.getSection());
+            }
+            else if (dto.getSection() != null && !dto.getSection().equalsIgnoreCase("0")) account.setSection(dto.getSection());
+            else dto.setSection("ERROR SECTION");
+        }
+        else if(dto.getBuilding() != null && dto.getBuilding().getId() != null) {
+            log.info("APART IS NULL");
+            if(dto.getSection() != null && !dto.getSection().equalsIgnoreCase("0"))
+                account.setSection(dto.getSection());
+            account.setBuilding(buildingRepository.getReferenceById(dto.getBuilding().getId()));
+        }
         return account;
     }
     public ApartmentAccountDTO fromAccountToDTO(ApartmentAccount account) {
@@ -78,8 +93,8 @@ public class AccountDTOMapper {
             );
         }
 
-        log.info("Created dto: ");
-        log.info(dto.toString());
+//        log.info("Created dto: ");
+//        log.info(dto.toString());
 
         return dto;
     }

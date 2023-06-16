@@ -191,10 +191,14 @@
 
     function copy() {
 <!--        navigator.clipboard.writeText(JSON.stringify(cashbox));-->
-        hidden.select();
-        hidden.setSelectionRange(0,99999);
-        document.execCommand('copy');
+<!--        hidden.select();-->
+<!--        hidden.setSelectionRange(0,99999);-->
+<!--        document.execCommand('copy');-->
         alert('Cashbox copied');
+
+        if (navigator && navigator.clipboard && navigator.clipboard.writeText)
+        return navigator.clipboard.writeText(JSON.stringify(cashbox));
+        else alert('The Clipboard API is not available.');
 
     }
 </script>

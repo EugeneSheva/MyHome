@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -142,9 +144,16 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
         Boolean completed = filters.getCompleted();
 
         String month = filters.getMonth();
-        LocalDate m = (month != null && !month.isEmpty()) ? LocalDate.of(Integer.parseInt(month.split("-")[0]),
-                Integer.parseInt(month.split("-")[1]), 1) : null;
-        LocalDate m2 = (m != null) ? m.plusMonths(1).minusDays(1) : null;
+
+        log.info(month);
+
+        LocalDateTime monthTime = null;
+        LocalDate m = null, m2 = null;
+        if(month != null) {
+            monthTime = LocalDateTime.parse(month, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            m = monthTime.toLocalDate();
+            m2 = m.withMonth(m.getMonthValue()+1);
+        }
 
         String date = filters.getDatetime();
         LocalDate date_from = null;

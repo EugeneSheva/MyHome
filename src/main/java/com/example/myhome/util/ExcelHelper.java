@@ -9,6 +9,7 @@ import lombok.extern.java.Log;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -35,6 +36,9 @@ public class ExcelHelper {
 
      */
 
+    @Value("${upload.path}")
+    private String uploadPath;
+
     private static final String FILE_PATH = "C:\\Users\\OneSmiLe\\IdeaProjects\\MyHome\\src\\main\\resources\\static\\files\\";
 
     private static final List<String> templateCommandsList = List.of("%payCompany%",
@@ -51,7 +55,7 @@ public class ExcelHelper {
 
         log.info(invoice.toString());
         LocalDateTime now = LocalDateTime.now();
-        String finalFileName = "invoice-"+ now.getYear() + now.getMonth().getValue() + now.getDayOfMonth()
+        String finalFileName = "invoice-"+ now.getYear() + '-' + now.getMonth().getValue() + '-' + now.getDayOfMonth() + '-'
                 + now.getHour() + now.getMinute() +"."+template.getFile().split("\\.")[1];
 
         File originalFile = new File(FILE_PATH+template.getFile());

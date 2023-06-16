@@ -237,6 +237,8 @@ public class InvoiceController {
         InvoiceTemplate invoiceTemplate = invoiceService.findTemplateById(Long.parseLong(template));
         try {
             String fileName = invoiceService.turnInvoiceIntoExcel(invoice, invoiceTemplate);
+            log.info(fileName);
+            log.info("HELLOY");
             return "redirect:/admin/invoices/download/" + fileName;
         } catch (IOException e) {
             log.severe("Error while creating excel file");
@@ -245,10 +247,28 @@ public class InvoiceController {
         }
     }
 
-    @GetMapping("/email/{id}")
-    public String redirectToPrintPage(@PathVariable long id) {
-        return "redirect:/admin/invoices/print/" + id;
+    @PostMapping("/email/{id}")
+    public @ResponseBody String sendInvoiceToEmail(@PathVariable long id, @RequestParam String template) {
+        Invoice invoice = invoiceService.findInvoiceById(id);
+        InvoiceTemplate invoiceTemplate = invoiceService.findTemplateById(Long.parseLong(template));
+        try {
+            String fileName = invoiceService.turnInvoiceIntoExcel(invoice, invoiceTemplate);
+            log.info(fileName);
+            String emailForSending = invoice.getOwner().getEmail();
+            return fileDownloadUtil.sendFileToEmail(emailForSending, fileName);
+        } catch (IOException e) {
+            log.severe("Error while creating excel file");
+            return "Error";
+        }
     }
+
+    @GetMapping("/send-to-email/{fileName}")
+    public void sendFileToEmail(@PathVariable String fileName,
+                                HttpServletRequest request,
+                                HttpServletResponse response) throws IOException {
+
+    }
+
 
     @GetMapping("/download/{fileName}")
     public void downloadFile(@PathVariable String fileName,

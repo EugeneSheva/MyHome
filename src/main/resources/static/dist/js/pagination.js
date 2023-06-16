@@ -441,7 +441,7 @@ function drawAccountsTable(){
                                 '</td>' +
                                 '<td>' + apartName + '</td>' +
                                 '<td>' + buildingName + '</td>' +
-                                '<td>' + ((account.section !== null && account.section !== 0) ? account.section : '') + '</td>' +
+                                '<td>' + ((account.section !== null && account.section != '0') ? account.section : '') + '</td>' +
                                 '<td>' + ownerName + '</td>' +
 
                                 '<td style="color:' + ((account.balance > 0) ? 'green' : ((account.balance < 0) ? 'red' : 'black')) + '" >' + account.balance + '</td>' +

@@ -79,7 +79,6 @@
                     <div class="card-body mt-3" style="padding: 0">
                         <div id="1" th:object="${filterForm}"
                               enctype="multipart/form-data">
-                            <nav aria-label="Page navigation " class="pagination_container"></nav>
                             <table id="apartmentsTable" class="table table-bordered table-hover table-striped linkedRow"
                                    width="100%">
                                 <col style="width:5%">
@@ -169,15 +168,20 @@
 <script th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/dist/js/adminlte.js}"></script>
 <script src="../../plugins/select2/js/select2.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/ru.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/uk.js"></script>
 
 <!-- select2 filter script -->
 <script th:inline="javascript">
     var choise = [[#{choise}]];
+
+    let currentLanguage = [[${#locale.language}]];
     $(document).ready(function() {
 
-        $("#building, #debtSting").select2({placeholder:choise, minimumResultsForSearch:Infinity});
+        $("#building, #debtSting").select2({language: currentLanguage,placeholder:choise, minimumResultsForSearch:Infinity});
 
         $('#owner').select2({
+            language: currentLanguage,
             ajax: {
                 url: '/myhome/admin/apartments/getUsers',
                 // dataType: 'json',
@@ -265,9 +269,11 @@
             }
         });
         $('#section').select2({
+            language: currentLanguage,
             minimumResultsForSearch: Infinity
         });
         $('#floor').select2({
+            language: currentLanguage,
             minimumResultsForSearch: Infinity
         });
     })

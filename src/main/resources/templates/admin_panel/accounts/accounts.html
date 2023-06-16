@@ -121,7 +121,6 @@
               </div>
               <div class="box-body table-responsive">
                   <form action="" method="get" th:object="${filter_form}">
-                    <nav aria-label="Page navigation " class="pagination_container mt-3"></nav>
                     <table id="accountsTable" class="table table-bordered table-hover table-striped linkedRow">
                   <thead>
                       <tr>
@@ -226,6 +225,10 @@
 
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 <script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/ru.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/uk.js"></script>
+
+
 
 <script th:src="@{/dist/js/pagination.js}"></script>
 
@@ -250,11 +253,16 @@
 
 <script th:inline="javascript">
 
+    let currentLanguage = [[${#locale.language}]];
+
+    console.log('CURRENT LANG');
+    console.log(currentLanguage);
 
     // ФИЛЬТРЫ
     $(document).ready(function(){
-        $("#active, #debt, #section").select2({placeholder: placeholderText, minimumResultsForSearch:Infinity});
+        $("#active, #debt, #section").select2({language: currentLanguage,placeholder: placeholderText, minimumResultsForSearch:Infinity});
         $('#owner').select2({
+            language: currentLanguage,
             ajax: {
                 url: '/myhome/admin/owners/getUsers',
                 // dataType: 'json',
@@ -294,6 +302,7 @@
         });
 
         $("#building").select2({
+            language: currentLanguage,
             ajax: {
                 url: '/myhome/admin/buildings/get-buildings',
                 data: function(params){

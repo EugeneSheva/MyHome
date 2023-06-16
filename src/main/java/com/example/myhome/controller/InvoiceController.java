@@ -276,9 +276,14 @@ public class InvoiceController {
 
     @PostMapping("/template")
     public String saveTemplate(@RequestParam String name,
-                               @RequestParam MultipartFile file) throws IOException {
+                               @RequestParam MultipartFile file,
+                               RedirectAttributes redirectAttributes) throws IOException {
         InvoiceTemplate template = new InvoiceTemplate();
-        template.setName(name);
+        if(!name.isEmpty()) template.setName(name);
+        else {
+            redirectAttributes.addFlashAttribute("name_fail", "Missing name");
+            return "redirect:/admin/invoices/template";
+        }
         if(file.getSize() > 0) {
             String file_extension = FilenameUtils.getExtension(file.getOriginalFilename());
             log.info(file_extension);
@@ -287,6 +292,9 @@ public class InvoiceController {
                 fileUploadUtil.saveFile("/files/", file.getOriginalFilename(), file);
                 template.setFile(file.getOriginalFilename());
             }
+        } else {
+            redirectAttributes.addFlashAttribute("file_fail", "Missing file");
+            return "redirect:/admin/invoices/template";
         }
         invoiceService.saveTemplate(template);
         return "redirect:/admin/invoices/template";

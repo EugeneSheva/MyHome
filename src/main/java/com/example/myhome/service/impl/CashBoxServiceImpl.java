@@ -43,9 +43,12 @@ public class CashBoxServiceImpl implements CashBoxService {
     public CashBox save(CashBox cashBox) { return cashBoxRepository.save(cashBox); }
 
 @Override
-public Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page, Integer size) {
+public Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page, Integer size) throws IllegalAccessException {
     Pageable pageable = PageRequest.of(page-1, size);
     List<CashBoxDTO> listDTO = new ArrayList<>();
+
+    Page<CashBox> cashBoxList;
+
     System.out.println("filters" +filters);
     System.out.println("date" +filters.getDate());
     LocalDate startDate = null;
@@ -56,7 +59,8 @@ public Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page
         startDate = LocalDate.parse(dateArray[0], formatter);
         endDate = LocalDate.parse(dateArray[1], formatter);
     }
-    Page<CashBox> cashBoxList = cashBoxRepository.findByFilters(filters.getId(),startDate, endDate, getIsCompleteFromString(filters.getIsCompleted()), filters.getIncomeExpenseItem(), filters.getOwner(), filters.getAccountId(), getIncomeExpenseTypeFromString(filters.getIncomeExpenseType()), pageable);
+    if(!filters.filtersPresent()) cashBoxList = cashBoxRepository.findAll(pageable);
+    else cashBoxList = cashBoxRepository.findByFilters(filters.getId(),startDate, endDate, getIsCompleteFromString(filters.getIsCompleted()), filters.getIncomeExpenseItem(), filters.getOwner(), filters.getAccountId(), getIncomeExpenseTypeFromString(filters.getIncomeExpenseType()), pageable);
 
     cashBoxList.getContent().forEach(item -> listDTO.add(mapper.fromCashboxToDTO(item)));
     System.out.println(listDTO);
@@ -118,6 +122,9 @@ public Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page
 
     @Override
     public IncomeExpenseType getIncomeExpenseTypeFromString(String incomeExpenseTypeString) {
+
+        if(incomeExpenseTypeString == null)  return IncomeExpenseType.INCOME;
+
         IncomeExpenseType incomeExpenseType = null;
         if (incomeExpenseTypeString.equalsIgnoreCase("income")) {
             incomeExpenseType = IncomeExpenseType.INCOME;
@@ -129,13 +136,7 @@ public Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page
 
     @Override
     public Boolean getIsCompleteFromString(String isComplete) {
-        Boolean isCom = null;
-        if (isComplete.equalsIgnoreCase("сompleted")) {
-            isCom = true;
-        } else if (isComplete.equalsIgnoreCase("notComplete")) {
-            isCom = false;
-        }
-        return isCom;
+        return (isComplete != null && isComplete.equalsIgnoreCase("сompleted"));
     }
 
     @Override

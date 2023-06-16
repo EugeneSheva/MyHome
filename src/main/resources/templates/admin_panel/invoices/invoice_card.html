@@ -358,8 +358,11 @@
 <script th:src="@{/dist/js/invoice_card_functions.js}"></script>
 
 <script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/ru.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/uk.js"></script>
 
 <script th:inline="javascript">
+    let currentLanguage = [[${#locale.language}]];
     let add_service_btn = document.getElementById('add_service_btn');
     let component_row_template = document.getElementById('component_row_template');
     let components_body = document.getElementById("components_body");

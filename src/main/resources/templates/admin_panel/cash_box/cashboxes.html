@@ -15,6 +15,7 @@
     <link rel="stylesheet" th:href="@{/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css}">
     <link rel="stylesheet" th:href="@{/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css}">
     <link rel="stylesheet" th:href="@{/plugins/bs-stepper/css/bs-stepper.min.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" th:href="@{/dist/css/adminlte.min.css}">
     <link rel="stylesheet" th:href="@{/plugins/overlayScrollbars/css/OverlayScrollbars.min.css}">
 
@@ -139,7 +140,6 @@
                 <div class="card-body " style="padding: 0;">
                     <div  th:object="${filterForm}"
                           enctype="multipart/form-data">
-                        <nav aria-label="Page navigation " class="pagination_container mt-3"></nav>
                         <table id="cashboxTable" class="table table-bordered table-hover table-striped linkedRow"
                                width="100%">
                             <col style="width:10%">
@@ -155,11 +155,11 @@
                             <tr>
                                 <th>№</th>
                                 <th th:text="#{date}">Дата</th>
-                                <th th:text="#{status}">Статус</th>
-                                <th th:text="#{paymentType}">Тип платежа</th>
+                                <th style="min-width:160px" th:text="#{status}">Статус</th>
+                                <th style="min-width:160px" th:text="#{paymentType}">Тип платежа</th>
                                 <th th:text="#{owner}">Владелец</th>
                                 <th th:text="#{apartmentAccount}">Лицевой счет</th>
-                                <th style="min-width:100px" th:text="#{incomeAndExpense}">Приход/расход</th>
+                                <th style="min-width:150px" th:text="#{incomeAndExpense}">Приход/расход</th>
                                 <th th:text="#{sum}">Сумма(грн)</th>
                                 <th></th>
                             </tr>
@@ -167,34 +167,35 @@
                                 <td style="padding: 10px">
                                     <input style="width: 100%; padding-block: 10px; border: 0.5px solid silver;" autocomplete="off" th:field="*{id}" class="my_filters" id="id" type="text">
                                 </td>
-                                <th style="border-bottom:none">
-                                    <div class="form-group" style="margin: 0; margin-top: -50px; margin-bottom: 12px">
-                                        <div class="input-group" style="height: 42px">
-                                            <div class="input-group-prepend">
-                                              <span class="input-group-text">
-                                                <i class="far fa-calendar-alt"></i>
-                                              </span>
-                                            </div>
-                                            <input type="text" style="height: 42px" autocomplete="off" class="form-control float-right my_filters" id="date"
-                                                   name="date">
-                                        </div>
+                                <th style="border-bottom:none; display: flex;">
+                                    <div class="input-group" id="date_picker" data-td-target-input="nearest" data-td-target-toggle="nearest">
+                                        <input id="datetime" autocomplete="off" style="padding-block: 21px" type="text" data-name="date" th:field="*{date}" value="2023-01-01" class="form-control datetime_filter" data-td-target="#datetimepicker1">
+                                        <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">
+                                        <i class="fa fa-calendar"></i>
+                                      </span>
                                     </div>
                                 </th>
-                                <th style="border-bottom:none"><select autocomplete="off" th:field="*{isCompleted}" class="form-select my_filters" id="isCompleted" name="isCompleted">
-                                    <option th:selected="${filterForm.isCompleted == null}" value="-"></option>
-                                    <option value="сompleted"
-                                            th:selected="${#strings.containsIgnoreCase(('сompleted'),((filterForm.isCompleted != null) ? (filterForm.isCompleted ): ('emp') ))}"
-                                            th:text="#{complete}" >Проведен
-                                    </option>
-                                    <option value="notComplete"
-                                            th:selected="${#strings.containsIgnoreCase(('notComplete'),((filterForm.isCompleted != null) ? (filterForm.isCompleted ): ('emp') ))}"
-                                            th:text="#{notComplete}" >Не проведен
-                                    </option>
-                                </select></th>
-
+                                <th style="border-bottom:none">
+                                    <select autocomplete="off" th:field="*{isCompleted}" class="my_filters" id="isCompleted" name="isCompleted">
+                                        <option selected value=""></option>
+                                        <option th:value="сompleted"
+                                                th:text="#{complete}" >Проведен
+                                        </option>
+                                        <option th:value="notComplete"
+                                                th:text="#{notComplete}" >Не проведен
+                                        </option>
+                                    </select>
+                                </th>
+<!--                                <th style="padding: 10px">-->
+<!--                                    <select autocomplete="off" th:field="*{isCompleted}" data-name="status" class="my_filters" style="width: 100%; padding-block: 10px">-->
+<!--                                        <option value=""></option>-->
+<!--                                        <option th:each="stat : ${T(com.example.myhome.model.RepairStatus).values()}"-->
+<!--                                                th:value="${stat}"-->
+<!--                                                th:text="${stat.getName()}"></option>-->
+<!--                                    </select>-->
+<!--                                </th>-->
                                 <th style="border-bottom:none"><select autocomplete="off" class="form-select my_filters" id="incomeExpenseItem" name="incomeExpenseItem">
-                                    <option value="-"
-                                            th:selected="${filterForm.incomeExpenseItem == null}"></option>
+                                    <option value=""></option>
                                     <option th:each="incomeExpenseItem : ${incomeExpenseItems}"
                                             th:text="${incomeExpenseItem.name}"
                                             th:value="${incomeExpenseItem.name}"
@@ -212,7 +213,7 @@
                                 </td>
 
                                 <th style="border-bottom:none"><select autocomplete="off" class="form-select my_filters" id="incomeExpenseType" name="incomeExpenseType">
-                                    <option th:selected="${filterForm.incomeExpenseType == null}" value="-"></option>
+                                    <option value=""></option>
                                     <option value="income"
                                             th:selected="${#strings.containsIgnoreCase(('income'),((filterForm.incomeExpenseType != null) ? (filterForm.incomeExpenseType ): ('emp') ))}"
                                             th:text="#{income}" >Приход
@@ -255,13 +256,19 @@
 <script th:src="@{/dist/js/adminlte.min.js}"></script>
 <script th:src="@{https://kit.fontawesome.com/41663a8b50.js}" crossorigin="anonymous"></script>
 <script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/ru.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/uk.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+
+<script src="https://unpkg.com/imask"></script>
 
 <script th:src="@{/dist/js/pagination.js}"></script>
 
@@ -276,6 +283,8 @@
     let notFoundText = [[#{not-found}]];
     let tableData;
 
+    let currentLanguage = [[${#locale.language}]];
+
     $(document).ready(function(){
 
         drawTable();
@@ -286,21 +295,37 @@
 
 
 <script>
+
+    let idInput = document.getElementById('id');
+    let maskOptions = {
+        mask: '0000000000'
+    }
+    let mask = IMask(idInput, maskOptions);
+
+
+
     $(function () {
-        var start = moment().subtract(3, 'year');
-        var end = moment();
+        let start = moment();
+        let end = moment();
         //Datemask dd/mm/yyyy
         $('#datemask').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'})
         //Datemask2 mm/dd/yyyy
         $('#datemask2').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'})
         //Money Euro
-        $('[data-mask]').inputmask()
+        $('[data-mask]').inputmask();
 
-        $('input[name="date"]').daterangepicker({
-            startDate: start,
-            endDate: end,
-            opens: 'left'
-        });
+        let config = {
+            enableTime: false,
+            dateFormat: "Y-m-d",
+            minDate: "2020-01",
+            maxDate: new Date().fp_incr(1),
+            mode: "range"
+        };
+        flatpickr("#datetime", config);
+
+        $("#datetime").prop('readonly', false);
+        document.getElementById('datetime').style.cursor = 'pointer';
+        document.getElementById('datetime').style.caretColor = 'transparent';
 
         //Date picker
         $('#reservationdate').datetimepicker({
@@ -321,7 +346,11 @@
                 format: 'MM/DD/YYYY hh:mm A'
             }
         })
+
+
     })
+
+
 </script>
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 <script>
@@ -367,9 +396,12 @@
 <script>
     $(document).ready(function() {
 
-        $("#isCompleted, #incomeExpenseItem, #incomeExpenseType").select2({placeholder: placeholderText, minimumResultsForSearch: Infinity});
+        $("#isCompleted, #incomeExpenseItem, #incomeExpenseType").select2(
+        {language: currentLanguage, placeholder: placeholderText, minimumResultsForSearch: Infinity}
+        );
 
         $('#owner').select2({
+            language: currentLanguage,
             ajax: {
                 url: '/myhome/admin/cashbox/getUsers',
                 // dataType: 'json',

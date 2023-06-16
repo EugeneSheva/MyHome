@@ -182,8 +182,11 @@
 <!-- AdminLTE App -->
 <script th:src="@{/dist/js/adminlte.js}"></script>
 <script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/ru.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/uk.js"></script>
 
 <script th:inline="javascript">
+  let currentLanguage = [[${#locale.language}]];
 
   let apartmentID = [[${meterDataDTO.apartmentID}]];
 
@@ -210,6 +213,7 @@
   $(document).ready(function(){
 
     $("#house_select").select2({
+      language: currentLanguage,
             ajax: {
                 url: '/myhome/admin/buildings/get-buildings',
                 data: function(params){
@@ -223,7 +227,7 @@
         placeholder: 'Выберите...'
     });
 
-    $("#section_select, #apartment_select, #serviceID, #status").select2({placeholder: 'Выберите...', minimumResultsForSearch:Infinity});
+    $("#section_select, #apartment_select, #serviceID, #status").select2({language: currentLanguage,placeholder: 'Выберите...', minimumResultsForSearch:Infinity});
 
 <!--    let apartment_select = $("#apartment_select");-->
 <!--      $.ajax({-->

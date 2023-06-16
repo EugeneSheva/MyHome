@@ -126,7 +126,7 @@
         crossorigin="anonymous"></script>
 <script>
     $(document).ready(function(){
-        $("#status").select2({minimumResultsForSearch: Infinity });
+        $("#status").select2({language: currentLanguage,minimumResultsForSearch: Infinity });
         $("#date_picker").datepicker();
 
         let rows = document.getElementsByClassName("invoice_row");

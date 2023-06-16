@@ -32,6 +32,9 @@ public interface CashBoxRepository extends JpaRepository<CashBox, Long>, JpaSpec
         if (id != null ) {
             spec = spec.and(CashBoxSpecifications.idContains(id));
         }
+        if (isCompleted != null) {
+            spec = spec.and(CashBoxSpecifications.isCompletedContains(isCompleted));
+        }
         if (from != null && to != null) {
             spec = spec.and(CashBoxSpecifications.dateBetwenContains(from, to));
         }
@@ -40,9 +43,6 @@ public interface CashBoxRepository extends JpaRepository<CashBox, Long>, JpaSpec
         }
         if (from != null && to == null) {
             spec = spec.and(CashBoxSpecifications.dateAfterContains(from));
-        }
-        if (isCompleted != null) {
-            spec = spec.and(CashBoxSpecifications.isCompletedContains(isCompleted));
         }
         if (incomeExpenseItem != null && !incomeExpenseItem.isEmpty() && !incomeExpenseItem.equalsIgnoreCase("-")) {
             spec = spec.and(CashBoxSpecifications.incExpItemContains(incomeExpenseItem));

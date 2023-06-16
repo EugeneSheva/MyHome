@@ -68,7 +68,6 @@
                             </div>
                             <div class="box-body table-responsive">
                                 <form action="" autocomplete="off" method="get" th:object="${filter_form}">
-                                    <nav aria-label="Page navigation " class="pagination_container mt-3"></nav>
                                     <table id="requestsTable" class="table table-bordered table-hover table-striped linkedRow">
                                     <thead>
                                     <tr>
@@ -176,6 +175,8 @@
 
 <script th:src="@{/dist/js/filter.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/ru.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/uk.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -200,7 +201,8 @@
 
 <script th:inline="javascript">
 
-    let placeholderText = [[#{select.placeholder}]]
+    let placeholderText = [[#{select.placeholder}]];
+    let currentLanguage = [[${#locale.language}]];
 
     let config = {
         enableTime: true,
@@ -216,9 +218,10 @@
     document.getElementById('datetime').disabled = false;
 
     $(document).ready(function(){
-        $("#master_type, #status").select2({placeholder: placeholderText, minimumResultsForSearch:Infinity});
+        $("#master_type, #status").select2({language: currentLanguage,placeholder: placeholderText, minimumResultsForSearch:Infinity});
 
         $("#owner").select2({
+            language: currentLanguage,
             ajax: {
                 url: '/myhome/admin/owners/get-all-owners',
                 data: function(params){
@@ -235,6 +238,7 @@
         });
 
         $("#master").select2({
+            language: currentLanguage,
             ajax: {
                 url: '/myhome/admin/admins/get-all-masters',
                 data: function(params){

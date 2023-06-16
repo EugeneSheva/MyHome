@@ -118,7 +118,6 @@
               </div>
               <div class="box-body table-responsive">
                   <form action="" method="get" th:object="${filter_form}">
-                    <nav aria-label="Page navigation " class="pagination_container mt-3"></nav>
                     <table class="table table-bordered table-hover table-striped linkedRow" id="invoicesTable">
                       <thead>
                           <tr>
@@ -215,8 +214,14 @@
 <script th:src="@{/dist/js/adminlte.js}"></script>
 <script th:src="@{/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.7/plugins/monthSelect/monthSelect.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/ru.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/uk.js"></script>
+
+<script src="https://unpkg.com/imask"></script>
+
 
 <script th:src="@{/dist/js/pagination.js}"></script>
 <script th:src="@{/dist/js/invoices.js}"></script>
@@ -231,6 +236,8 @@
     let placeholderText = [[#{select.placeholder}]];
     let notFoundText = [[#{search.results.empty}]];
 
+    let currentLanguage = [[${#locale.language}]];
+
     $(document).ready(function(){
 
         drawTable();
@@ -238,7 +245,15 @@
     });
 </script>
 
+
+
 <script>
+
+    let idInput = document.getElementById('id');
+    let maskOptions = {
+        mask: '0000000000'
+    }
+    let mask = IMask(idInput, maskOptions);
 
     document.getElementById("check_all").addEventListener('click', function(){
         console.log(this.checked);
@@ -276,8 +291,9 @@
         flatpickr("#datetime", config);
         flatpickr("#month", config2);
 
-        $("#status, #completed").select2({placeholder:placeholderText,minimumResultsForSearch:Infinity});
+        $("#status, #completed").select2({language: currentLanguage, placeholder:placeholderText,minimumResultsForSearch:Infinity});
         $("#owner").select2({
+            language: currentLanguage,
             ajax: {
                 url: '/myhome/admin/owners/get-all-owners',
                 data: function(params){

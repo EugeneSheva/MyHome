@@ -36,6 +36,10 @@ h1,h2,h3,h4,h5,h6,p {
 
 .box-header {
     border-bottom: 1px solid rgb(228, 223, 223);
+    height:50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .box-title {
@@ -47,9 +51,9 @@ h1,h2,h3,h4,h5,h6,p {
 }
 
 .box-header>.box-tools {
-    position: absolute;
-    right: 10px;
-    top: 15px;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
 }
 
 .box {
@@ -363,6 +367,16 @@ textarea {
 
 .pagination_container {
     height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    margin-inline: 10px;
+}
+
+.pagination_container .pagination {
+    height: 100%;
+    margin: 0;
 }
 
 .logo-mini {

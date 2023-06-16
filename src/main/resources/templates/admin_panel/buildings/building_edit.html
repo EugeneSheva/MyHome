@@ -308,6 +308,7 @@
 </div>
 
 <script th:inline="javascript">
+    let currentLanguage = [[${#locale.language}]];
     var adminList = /*[[${adminList}]]*/ [];
     let fields = document.getElementById('multi-fields');
     // let fields = $("#multi-fields");

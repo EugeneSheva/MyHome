@@ -172,8 +172,11 @@
 <!-- AdminLTE App -->
 <script th:src="@{/dist/js/adminlte.js}"></script>
 <script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/ru.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/uk.js"></script>
 
 <script th:inline="javascript">
+  let currentLanguage = [[${#locale.language}]];
 
   let id = [[${apartmentAccountDTO.id}]];
   let buildingID = [[${apartmentAccountDTO.building.id}]];

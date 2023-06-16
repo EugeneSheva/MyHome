@@ -4,9 +4,10 @@ let apartment_selector = $("#apartment_select");
 
 $(document).ready(function(){
 
-    $("#isActive").select2({placeholder:placeholderText, minimumResultsForSearch:Infinity});
+    $("#isActive").select2({language: currentLanguage,placeholder:placeholderText, minimumResultsForSearch:Infinity});
 
     house_selector.select2({
+        language: currentLanguage,
         ajax: {
             url: '/myhome/admin/buildings/get-buildings',
             data: function(params){
@@ -21,8 +22,8 @@ $(document).ready(function(){
     });
 
 // селекторы секций и квартир сначала появляются нерабочими
-    section_selector.select2({placeholder:selectHouseText});
-    apartment_selector.select2({placeholder:selectSectionText});
+    section_selector.select2({language: currentLanguage,placeholder:selectHouseText});
+    apartment_selector.select2({language: currentLanguage,placeholder:selectSectionText});
 
 // изменение дома сбрасывает квартиры и перезагружает секции
     house_selector.change(function(){
@@ -31,8 +32,8 @@ $(document).ready(function(){
         console.log('house selector value is ' + this.value);
         buildingID = $(this).val();
 
-        section_selector.select2({placeholder:selectHouseText, minimumResultsForSearch:Infinity});
-        apartment_selector.select2({placeholder:selectSectionText, minimumResultsForSearch:Infinity});
+        section_selector.select2({language: currentLanguage,placeholder:selectHouseText, minimumResultsForSearch:Infinity});
+        apartment_selector.select2({language: currentLanguage,placeholder:selectSectionText, minimumResultsForSearch:Infinity});
         section_selector.html('');
         apartment_selector.html('');
         apartment_selector.prop('disabled', true);

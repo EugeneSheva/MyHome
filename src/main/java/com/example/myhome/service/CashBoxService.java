@@ -19,7 +19,7 @@ public interface CashBoxService {
 
     CashBox save(CashBox cashBox);
 
-    Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page, Integer size);
+    Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page, Integer size) throws IllegalAccessException;
 
     void deleteById(Long id);
 

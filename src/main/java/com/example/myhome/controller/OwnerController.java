@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -87,13 +88,24 @@ public class OwnerController {
     }
 
     @PostMapping("/save")
-    public String saveCoffee(@Valid @ModelAttribute("owner") OwnerDTO owner, BindingResult bindingResult, @RequestParam("img1") MultipartFile file) throws IOException {
-        ownerValidator.validate(owner, bindingResult);
+    public String saveCoffee(@Valid @ModelAttribute("owner") OwnerDTO owner, BindingResult bindingResult, @RequestParam("img1") MultipartFile file, @RequestParam("newPassword") String newPassword, @RequestParam("repassword") String repassword) throws IOException {
+        Owner newOwner = mapper.toEntityСabinetEditProfile(owner);
+        ownerValidator.validate(newOwner, bindingResult);
         if (bindingResult.hasErrors()) {
-            return "admin_panel/owners/owner_edit";
+            System.out.println("bindingResult " + bindingResult);
+            return "cabinet/user_edit";
+        } else if (!newPassword.equals(repassword) ){
+            return "cabinet/user_edit";
         } else {
-            owner.setProfile_picture(ownerService.saveOwnerImage(owner.getId(), file));
-            ownerService.save(owner);
+            Owner oldOwner = ownerService.findById(owner.getId());
+            newOwner.setProfile_picture(ownerService.saveOwnerImage(owner.getId(), file));
+            newOwner.setEnabled(oldOwner.getEnabled());
+            if (newPassword != null && newPassword.length() > 0 ) {
+                newOwner.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+            }else {
+                newOwner.setPassword(oldOwner.getPassword());
+            }
+            ownerService.save(newOwner);
         }
         return "redirect:/admin/owners/";
     }

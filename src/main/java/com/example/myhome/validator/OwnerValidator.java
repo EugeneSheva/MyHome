@@ -32,11 +32,11 @@ public class OwnerValidator implements Validator {
         } else if  (owner.getLast_name().length()<2) {
             e.rejectValue("last_name", "last_name.empty", "Поле должно быть минимум 2 символа");
         }
-        if (owner.getFathers_name() == null || owner.getFathers_name().isEmpty()) {
-            e.rejectValue("fathers_name", "fathers_name.empty", "Заполните поле");
-        } else if  (owner.getFathers_name().length()<2) {
-            e.rejectValue("fathers_name", "fathers_name.empty", "Поле должно быть минимум 2 символа");
-        }
+//        if (owner.getFathers_name() == null || owner.getFathers_name().isEmpty()) {
+//            e.rejectValue("fathers_name", "fathers_name.empty", "Заполните поле");
+//        } else if  (owner.getFathers_name().length()<2) {
+//            e.rejectValue("fathers_name", "fathers_name.empty", "Поле должно быть минимум 2 символа");
+//        }
         if (owner.getBirthdate() == null || owner.getBirthdate().isEmpty()) {
             e.rejectValue("birthdate", "birthdate.empty", "Заполните поле");
         } else {
@@ -49,7 +49,7 @@ public class OwnerValidator implements Validator {
         }
         if (owner.getPhone_number() == null ||  owner.getPhone_number().isEmpty()) {
             e.rejectValue("phone_number", "phone_number.empty", "Заполните поле");
-        } else if  (owner.getFathers_name().length()<2) {
+        } else if  (owner.getPhone_number().length() != 10) {
             e.rejectValue("phone_number", "phone_number.empty", "Размер поля 10 символов. Пример \"0630636363\".");
         }
         if (owner.getEmail() == null ||  owner.getEmail().isEmpty()) {

@@ -25,7 +25,7 @@ public class OwnerDTOMapper {
         owner.setLast_name(dto.getLast_name());
         owner.setFathers_name(dto.getFathers_name());
         owner.setEmail(dto.getEmail());
-        owner.setBirthdate(LocalDate.parse(dto.getBirthdate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        owner.setBirthdate(dto.getBirthdate());
         owner.setPhone_number(dto.getPhone_number());
         owner.setDescription(dto.getDescription());
         owner.setStatus(UserStatus.valueOf(dto.getStatus()));
@@ -49,10 +49,29 @@ public class OwnerDTOMapper {
             dto.setStatus(status);
             dto.setText(dto.getFullName() + "(ID:" + dto.getId() + ")");
             dto.setDate((owner.getAdded_at() != null) ? owner.getAdded_at().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) : "---");
-            dto.setBirthdate(owner.getBirthdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            dto.setBirthdate(owner.getBirthdate());
         }
 
         return dto;
+    }
+    public Owner toEntityСabinetEditProfile(OwnerDTO dto) {
+        Owner owner = new Owner();
+
+        if (dto != null) {
+            owner.setId(dto.getId());
+            owner.setProfile_picture(dto.getProfile_picture());
+            owner.setFirst_name(dto.getFirst_name());
+            owner.setLast_name(dto.getLast_name());
+            owner.setFathers_name(dto.getFathers_name());
+            owner.setEmail(dto.getEmail());
+            owner.setBirthdate(dto.getBirthdate());
+            owner.setPhone_number(dto.getPhone_number());
+            owner.setTelegram(dto.getTelegram());
+            owner.setViber(dto.getViber());
+            owner.setDescription(dto.getDescription());
+            owner.setAdded_at(dto.getAdded_at());
+        }
+        return owner;
     }
 
 }

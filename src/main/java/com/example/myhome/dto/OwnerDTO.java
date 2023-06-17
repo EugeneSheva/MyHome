@@ -5,7 +5,10 @@ import com.example.myhome.model.Message;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,13 +31,15 @@ public class OwnerDTO {
     private String apartmentNumbers = "";
     private String apartmentNames = "";
     private String date = "";
-    private String birthdate;
     private String status = "";
     private Boolean hasDebt = false;
     private String viber, telegram;
     private String description;
     private List<Message> messages;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthdate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime added_at;
     private String profile_picture;
     public OwnerDTO(Long id, String first_name, String last_name, String fathers_name, String fullName, List<ApartmentDTO> apartments, List<Message> messages, String phone_number, String email, String viber, String telegram, String description, String profile_picture) {
         this.id = id;

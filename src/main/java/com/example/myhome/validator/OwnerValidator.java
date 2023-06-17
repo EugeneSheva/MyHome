@@ -37,10 +37,10 @@ public class OwnerValidator implements Validator {
 //        } else if  (owner.getFathers_name().length()<2) {
 //            e.rejectValue("fathers_name", "fathers_name.empty", "Поле должно быть минимум 2 символа");
 //        }
-        if (owner.getBirthdate() == null || owner.getBirthdate().isEmpty()) {
+        if (owner.getBirthdate() == null) {
             e.rejectValue("birthdate", "birthdate.empty", "Заполните поле");
         } else {
-            LocalDate date = LocalDate.parse(owner.getBirthdate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDate date = owner.getBirthdate();
             if  (date.isAfter(LocalDate.now().minusYears(18L))) {
                 e.rejectValue("birthdate", "birthdate.empty", "Пользователь должен быть совершеннолетним");
             } else if  (date.isBefore(LocalDate.now().minusYears(120))) {

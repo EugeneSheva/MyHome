@@ -177,8 +177,12 @@ function getTableData(url, pageNumber, pageSize, pageFiltersString) {
                          tableData = data;
                          totalPagesCount = data.totalPages;
                      }
-    }).then(function(){console.log('table data is: ');console.log(tableData)});
+    }).then(function(){
+        console.log('table data is: ');
+        console.log(tableData);
+    });
     return tableData;
+
 }
 
 //Функции, рисующие таблицы в зависимости от выбранной страницы
@@ -218,7 +222,7 @@ function drawApartmentsTable() {
     }
     if(data.content.length === 0) {
         let newTableRow = document.createElement('tr');
-        newTableRow.innerHTML = '<td colspan=7>Ничего не найдено...</td>';
+        newTableRow.innerHTML = '<td style="text-align:center" colspan=7>Ничего не найдено...</td>';
         $apartmentsTable.append(newTableRow);
     }
 
@@ -275,7 +279,7 @@ function drawInvoicesTable(){
     }
     if(data.content.length === 0) {
         let newTableRow = document.createElement('tr');
-        newTableRow.innerHTML = '<td colspan=10>'+notFoundText+'</td>';
+        newTableRow.innerHTML = '<td style="text-align:center" colspan=10>'+notFoundText+'</td>';
         $invoicesTableBody.append(newTableRow);
     }
 
@@ -323,7 +327,7 @@ function drawMessagesTableCabinet(){
     }
     if(data.content.length === 0) {
         let newTableRow = document.createElement('tr');
-        newTableRow.innerHTML = '<td colspan=10>Ничего не найдено...</td>';
+        newTableRow.innerHTML = '<td style="text-align:center" colspan=10>Ничего не найдено...</td>';
         $invoicesTableBody.append(newTableRow);
     }
 
@@ -369,7 +373,7 @@ function drawMessagesTableAdmin() {
     }
     if (data.content.length === 0) {
         let newTableRow = document.createElement('tr');
-        newTableRow.innerHTML = '<td colspan=10>Ничего не найдено...</td>';
+        newTableRow.innerHTML = '<td style="text-align:center" colspan=10>Ничего не найдено...</td>';
         $invoicesTableBody.append(newTableRow);
     }
     drawPagination();
@@ -407,7 +411,7 @@ function drawInvoicesInCabinetTable(){
     }
     if(data.content.length === 0) {
         let newTableRow = document.createElement('tr');
-        newTableRow.innerHTML = '<td colspan=10>Ничего не найдено...</td>';
+        newTableRow.innerHTML = '<td style="text-align:center" colspan=10>Ничего не найдено...</td>';
         $invoicesTableBody.append(newTableRow);
     }
 
@@ -429,7 +433,7 @@ function drawAccountsTable(){
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
         newTableRow.classList.add = 'account_row';
-        newTableRow.innerHTML = '<td>' + account.id + '</td>' +
+        newTableRow.innerHTML = '<td>' + account.id.toString().padStart(10,'0') + '</td>' +
 
                                 '<td>' +
                                     '<small class="label ' + ((account.isActive) ? 'label-success' : 'label-danger') + '">' +
@@ -437,10 +441,10 @@ function drawAccountsTable(){
                                 '</td>' +
                                 '<td>' + apartName + '</td>' +
                                 '<td>' + buildingName + '</td>' +
-                                '<td>' + account.section + '</td>' +
+                                '<td>' + ((account.section !== null && account.section != '0') ? account.section : '') + '</td>' +
                                 '<td>' + ownerName + '</td>' +
 
-                                '<td style="color:' + ((account.balance > 0) ? 'green' : 'red') + '" >' + account.balance + '</td>' +
+                                '<td style="color:' + ((account.balance > 0) ? 'green' : ((account.balance < 0) ? 'red' : 'black')) + '" >' + account.balance + '</td>' +
                                 '<td>' +
                                     '<div class="btn-group pull-right">' +
                                         '<a class="btn btn-default btn-sm" href="/myhome/admin/accounts/update/' + account.id + '"><i class="fa fa-pencil"></i></a>' +
@@ -460,7 +464,7 @@ function drawAccountsTable(){
     }
     if(data.content.length === 0) {
         let newTableRow = document.createElement('tr');
-        newTableRow.innerHTML = '<td colspan=8>Ничего не найдено...</td>';
+        newTableRow.innerHTML = '<td style="text-align:center" colspan=8>Ничего не найдено...</td>';
         $accountsTableBody.append(newTableRow);
     }
 
@@ -498,7 +502,7 @@ function drawMetersTable(){
     }
     if(data.content.length === 0) {
         let newTableRow = document.createElement('tr');
-        newTableRow.innerHTML = '<td colspan=7>Ничего не найдено...</td>';
+        newTableRow.innerHTML = '<td style="text-align:center" colspan=7>Ничего не найдено...</td>';
         $metersTable.append(newTableRow);
     }
     drawPagination();
@@ -553,7 +557,7 @@ function drawMeterDataTable(){
     }
     if(data.content.length === 0) {
         let newTableRow = document.createElement('tr');
-        newTableRow.innerHTML = '<td colspan=11>' + notFoundText + '</td>';
+        newTableRow.innerHTML = '<td style="text-align:center" colspan=11>' + notFoundText + '</td>';
         $metersTable.append(newTableRow);
     }
 
@@ -595,7 +599,7 @@ function drawRequestsTable() {
     }
     if(data.content.length === 0) {
         let newTableRow = document.createElement('tr');
-        newTableRow.innerHTML = '<td colspan=10>'+notFoundText+'</td>';
+        newTableRow.innerHTML = '<td style="text-align:center" colspan=10>'+notFoundText+'</td>';
         $requestsTable.append(newTableRow);
     }
     drawPagination();
@@ -634,7 +638,7 @@ function drawRequestsTableCabinet() {
     }
     if(data.content.length === 0) {
         let newTableRow = document.createElement('tr');
-        newTableRow.innerHTML = '<td colspan=10>Ничего не найдено...</td>';
+        newTableRow.innerHTML = '<td style="text-align:center" colspan=10>Ничего не найдено...</td>';
         $requestsTable.append(newTableRow);
     }
     drawPagination();
@@ -687,7 +691,7 @@ function drawOwnersTable(){
     }
     if(data.content.length === 0) {
         let newTableRow = document.createElement('tr');
-        newTableRow.innerHTML = '<td colspan=10>Ничего не найдено...</td>';
+        newTableRow.innerHTML = '<td style="text-align:center" colspan=10>Ничего не найдено...</td>';
         $ownersTable.append(newTableRow);
     }
     drawPagination();
@@ -728,7 +732,7 @@ function drawAdminsTable(){
     }
     if(data.content.length === 0) {
         let newTableRow = document.createElement('tr');
-        newTableRow.innerHTML = '<td colspan=10>Ничего не найдено...</td>';
+        newTableRow.innerHTML = '<td style="text-align:center" colspan=10>Ничего не найдено...</td>';
         $adminsTable.append(newTableRow);
     }
     drawPagination();
@@ -764,7 +768,7 @@ function drawBuildingsTable() {
     }
     if(data.content.length === 0) {
         let newTableRow = document.createElement('tr');
-        newTableRow.innerHTML = '<td colspan=4>Ничего не найдено...</td>';
+        newTableRow.innerHTML = '<td style="text-align:center" colspan=4>Ничего не найдено...</td>';
         $buildingsTable.append(newTableRow);
     }
     drawPagination();
@@ -784,14 +788,14 @@ function drawTransactionsTable() {
         let incomeExpenseItem = (cashbox.incomeExpenseItems) ? cashbox.incomeExpenseItems : notFoundText;
         let ownerFullName = (cashbox.ownerFullName) ? cashbox.ownerFullName : notFoundText;
         let apartmentAccount = (cashbox.apartmentAccount) ? cashbox.apartmentAccount : notFoundText;
-        newTableRow.innerHTML =   '<td>' + cashbox.id + '</td>' +
+        newTableRow.innerHTML =   '<td>' + cashbox.id.toString().padStart(10,'0') + '</td>' +
                                   '<td>' + date.toISOString().split('T')[0] + '</td>' +
                                   '<td>' + ((cashbox.completed) ? 'Проведен' : 'Не проведен') + '</td>' +
                                   '<td>' + incomeExpenseItem + '</td>' +
                                   '<td>' + ownerFullName + '</td>' +
                                   '<td>' + apartmentAccount + '</td>' +
-                                  '<td style="color: ' + (cashbox.amount > 0 ? 'green' : 'red') + '">' + cashbox.incomeExpenseType + '</td>' +
-                                  '<td style="color: ' + (cashbox.amount > 0 ? 'green' : 'red') + '">' + cashbox.amount + '</td>' +
+                                  '<td style="color: ' + (cashbox.amount > 0 ? 'green' : (cashbox.amount < 0 ? 'red' : 'black')) + '">' + cashbox.incomeExpenseType + '</td>' +
+                                  '<td style="color: ' + (cashbox.amount > 0 ? 'green' : (cashbox.amount < 0 ? 'red' : 'black')) + '">' + cashbox.amount + '</td>' +
                                   '<td>' +
                                       '<div class="btn-group" role="group" aria-label="Basic outlined button group">' +
                                           '<a href="/myhome/admin/cashbox/edit/' + cashbox.id + '" class="btn btn-default btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
@@ -809,7 +813,7 @@ function drawTransactionsTable() {
     }
     if(data.content.length === 0) {
         let newTableRow = document.createElement('tr');
-        newTableRow.innerHTML = '<td colspan=9>Ничего не найдено...</td>';
+        newTableRow.innerHTML = '<td style="text-align:center" colspan=9>Ничего не найдено...</td>';
         $cashboxTable.append(newTableRow);
     }
     drawPagination();
@@ -891,9 +895,24 @@ function drawPagination() {
 
     let pageOffset = 2; // 1 ... 3 4 -5- 6 7 ... 10 -  current page 5 , offset 2
 
-
     let $pagination = $(".pagination_container");
     $pagination.html('');
+
+    if(tableData.totalElements === 0) return;
+
+    let totalElements = tableData.totalElements;
+    console.log(totalElements);
+
+    let totalElementsOnCurrentPage = ((currentPageSize*currentPageNumber) < totalElements) ? currentPageSize : (currentPageSize - ((currentPageSize*currentPageNumber)-totalElements))
+    console.log(totalElements);
+    console.log(totalElementsOnCurrentPage);
+
+    //ADD TEXT
+    let span = document.createElement('span');
+    span.innerText = `Показано ${currentPageSize*(currentPageNumber-1)+1} - ` +
+    `${currentPageSize*(currentPageNumber-1)+totalElementsOnCurrentPage} из ${totalElements} записей`;
+    $pagination.append(span);
+
     if(totalPagesCount <= 1) return;
 
     let ul = document.createElement('ul');

@@ -5,6 +5,8 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Data
@@ -41,6 +43,8 @@ public class CashBox {
     @JoinColumn(name = "manager_id")
     private Admin manager;
 
+    @Column(columnDefinition = "TEXT")
+    @Size(max=500, message="Comment too long")
     private String description;
 
     private Double amount;
@@ -51,8 +55,10 @@ public class CashBox {
 
     @PreRemove
     void clearTransactionFromAccount() {
-        this.apartmentAccount.getTransactions().remove(this);
-        this.apartmentAccount.removeFromBalance(this.amount);
+        if(this.apartmentAccount != null) {
+            this.apartmentAccount.getTransactions().remove(this);
+            this.apartmentAccount.removeFromBalance(this.amount);
+        }
     }
 
 }

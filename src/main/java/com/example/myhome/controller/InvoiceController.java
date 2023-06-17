@@ -237,6 +237,8 @@ public class InvoiceController {
         InvoiceTemplate invoiceTemplate = invoiceService.findTemplateById(Long.parseLong(template));
         try {
             String fileName = invoiceService.turnInvoiceIntoExcel(invoice, invoiceTemplate);
+            log.info(fileName);
+            log.info("HELLOY");
             return "redirect:/admin/invoices/download/" + fileName;
         } catch (IOException e) {
             log.severe("Error while creating excel file");
@@ -245,10 +247,28 @@ public class InvoiceController {
         }
     }
 
-    @GetMapping("/email/{id}")
-    public String redirectToPrintPage(@PathVariable long id) {
-        return "redirect:/admin/invoices/print/" + id;
+    @PostMapping("/email/{id}")
+    public @ResponseBody String sendInvoiceToEmail(@PathVariable long id, @RequestParam String template) {
+        Invoice invoice = invoiceService.findInvoiceById(id);
+        InvoiceTemplate invoiceTemplate = invoiceService.findTemplateById(Long.parseLong(template));
+        try {
+            String fileName = invoiceService.turnInvoiceIntoExcel(invoice, invoiceTemplate);
+            log.info(fileName);
+            String emailForSending = invoice.getOwner().getEmail();
+            return fileDownloadUtil.sendFileToEmail(emailForSending, fileName);
+        } catch (IOException e) {
+            log.severe("Error while creating excel file");
+            return "Error";
+        }
     }
+
+    @GetMapping("/send-to-email/{fileName}")
+    public void sendFileToEmail(@PathVariable String fileName,
+                                HttpServletRequest request,
+                                HttpServletResponse response) throws IOException {
+
+    }
+
 
     @GetMapping("/download/{fileName}")
     public void downloadFile(@PathVariable String fileName,
@@ -276,9 +296,14 @@ public class InvoiceController {
 
     @PostMapping("/template")
     public String saveTemplate(@RequestParam String name,
-                               @RequestParam MultipartFile file) throws IOException {
+                               @RequestParam MultipartFile file,
+                               RedirectAttributes redirectAttributes) throws IOException {
         InvoiceTemplate template = new InvoiceTemplate();
-        template.setName(name);
+        if(!name.isEmpty()) template.setName(name);
+        else {
+            redirectAttributes.addFlashAttribute("name_fail", "Missing name");
+            return "redirect:/admin/invoices/template";
+        }
         if(file.getSize() > 0) {
             String file_extension = FilenameUtils.getExtension(file.getOriginalFilename());
             log.info(file_extension);
@@ -287,6 +312,9 @@ public class InvoiceController {
                 fileUploadUtil.saveFile("/files/", file.getOriginalFilename(), file);
                 template.setFile(file.getOriginalFilename());
             }
+        } else {
+            redirectAttributes.addFlashAttribute("file_fail", "Missing file");
+            return "redirect:/admin/invoices/template";
         }
         invoiceService.saveTemplate(template);
         return "redirect:/admin/invoices/template";

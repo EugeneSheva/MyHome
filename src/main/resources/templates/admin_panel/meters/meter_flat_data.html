@@ -196,6 +196,7 @@
         crossorigin="anonymous"></script>
 
 <script th:inline="javascript">
+  let currentLanguage = [[${#locale.language}]];
 
   let placeholderText = [[#{select.placeholder}]];
   let notFoundText = [[#{search.results.empty}]];
@@ -203,7 +204,7 @@
 
   $(document).ready(function(){
 
-    $("#status").select2({placeholder: placeholderText});
+    $("#status").select2({language: currentLanguage,placeholder: placeholderText});
 
     let config = {
         enableTime: false,

@@ -114,13 +114,13 @@
 
                     <div class="col-xs-12">
                       <p style="margin-bottom: 5px;">
-                        <a th:href="@{/admin/meters/data?flat_id={flat_id}(flat_id=${account.apartment.id})}" th:text="#{accounts.infoPage.card.meters.list}">Посмотреть показания счётчиков</a>
+                        <a th:if="${account.apartment.id != null}" th:href="@{/admin/meters/data?flat_id={flat_id}(flat_id=${account.apartment.id})}" th:text="#{accounts.infoPage.card.meters.list}">Посмотреть показания счётчиков</a>
                       </p>
                       <p style="margin-bottom: 5px;">
                         <a th:href="@{/admin/cashbox/show-incomes?account_id={account_id}(account_id=${account.id})}" th:text="#{accounts.infoPage.card.transactions.list}">Посмотреть приходы</a>
                       </p>
                       <p style="margin-bottom: 5px;">
-                        <a th:href="@{/admin/invoices?apartment={flat_id}&page=1(flat_id=${account.apartment.id})}" th:text="#{accounts.infoPage.card.invoice.list}">Посмотреть квитанции</a>
+                        <a th:if="${account.apartment.id != null}" th:href="@{/admin/invoices?apartment={flat_id}&page=1(flat_id=${account.apartment.id})}" th:text="#{accounts.infoPage.card.invoice.list}">Посмотреть квитанции</a>
                       </p>
                     </div>
 

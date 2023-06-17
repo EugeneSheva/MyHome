@@ -5,16 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title th:text="#{invoices.editPage.breadcrumbMainTablePageName}">МойДом24</title>
     <link rel="icon" type="image/png" href="http://myhouse24.avada-media.ua/favicon.png">
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=fallback">
-  <link rel="stylesheet" th:href="@{/plugins/fontawesome-free/css/all.min.css}">
-  <link rel="stylesheet" th:href="@{/plugins/overlayScrollbars/css/OverlayScrollbars.min.css}">
-  <link rel="stylesheet" th:href="@{/plugins/bootstrap-datepicker/css/datepicker.css}">
-  <link rel="stylesheet" th:href="@{/dist/css/adminlte.min.css}">
-  <link rel="stylesheet" th:href="@{/dist/css/website.css}">
+    <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=fallback">
+    <link rel="stylesheet" th:href="@{/plugins/fontawesome-free/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/plugins/overlayScrollbars/css/OverlayScrollbars.min.css}">
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-datepicker/css/datepicker.css}">
+    <link rel="stylesheet" th:href="@{/dist/css/adminlte.min.css}">
+    <link rel="stylesheet" th:href="@{/dist/css/website.css}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.4.4/dist/css/tempus-dominus.min.css" crossorigin="anonymous">
+    <script src="https://jsuites.net/v4/jsuites.js"></script>
+    <link rel="stylesheet" href="https://jsuites.net/v4/jsuites.css" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.4.4/dist/js/tempus-dominus.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -118,7 +120,6 @@
               </div>
               <div class="box-body table-responsive">
                   <form action="" method="get" th:object="${filter_form}">
-                    <nav aria-label="Page navigation " class="pagination_container mt-3"></nav>
                     <table class="table table-bordered table-hover table-striped linkedRow" id="invoicesTable">
                       <thead>
                           <tr>
@@ -156,10 +157,10 @@
                               </td>
                               <td style="padding:10px">
                                   <div class="input-group" id="date_picker2" data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                      <input id="month" autocomplete="off" style="padding-block: 21px" type="text" data-name="month" th:field="*{month}" value="2023-01-01" class="form-control my_filters" data-td-target="#datetimepicker1">
-                                      <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">
-                                        <i class="fa fa-calendar"></i>
-                                      </span>
+                                      <input id="month" autocomplete="off" style="padding-block: 10px" th:field="*{month}" class="my_filters">
+<!--                                      <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">-->
+<!--                                        <i class="fa fa-calendar"></i>-->
+<!--                                      </span>-->
                                   </div>
                               </td>
                               <td style="padding:10px">
@@ -215,8 +216,14 @@
 <script th:src="@{/dist/js/adminlte.js}"></script>
 <script th:src="@{/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.7/plugins/monthSelect/monthSelect.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/ru.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/uk.js"></script>
+
+<script src="https://unpkg.com/imask"></script>
+
 
 <script th:src="@{/dist/js/pagination.js}"></script>
 <script th:src="@{/dist/js/invoices.js}"></script>
@@ -231,6 +238,8 @@
     let placeholderText = [[#{select.placeholder}]];
     let notFoundText = [[#{search.results.empty}]];
 
+    let currentLanguage = [[${#locale.language}]];
+
     $(document).ready(function(){
 
         drawTable();
@@ -238,7 +247,15 @@
     });
 </script>
 
+
+
 <script>
+
+    let idInput = document.getElementById('id');
+    let maskOptions = {
+        mask: '0000000000'
+    }
+    let mask = IMask(idInput, maskOptions);
 
     document.getElementById("check_all").addEventListener('click', function(){
         console.log(this.checked);
@@ -274,10 +291,21 @@
         };
 
         flatpickr("#datetime", config);
-        flatpickr("#month", config2);
+<!--        flatpickr("#month", config2);-->
+        jSuites.calendar(document.getElementById('month'), {
+            type: 'year-month-picker',
+            format: 'MMM-YYYY',
+            validRange: [ '2020-02-01', '2023-12-31' ],
+            onchange: function(instance, value) {
+                document.getElementById('month').value = value;
+                console.log('New value is: ' + value);
+                changeFilterData();
+            }
+        });
 
-        $("#status, #completed").select2({placeholder:placeholderText,minimumResultsForSearch:Infinity});
+        $("#status, #completed").select2({language: currentLanguage, placeholder:placeholderText,minimumResultsForSearch:Infinity});
         $("#owner").select2({
+            language: currentLanguage,
             ajax: {
                 url: '/myhome/admin/owners/get-all-owners',
                 data: function(params){
@@ -297,9 +325,9 @@
         document.getElementById('datetime').style.cursor = 'pointer';
         document.getElementById('datetime').style.caretColor = 'transparent';
 
-        $("#month").prop('readonly', false);
-        document.getElementById('month').style.cursor = 'pointer';
-        document.getElementById('month').style.caretColor = 'transparent';
+<!--        $("#month").prop('readonly', false);-->
+<!--        document.getElementById('month').style.cursor = 'pointer';-->
+<!--        document.getElementById('month').style.caretColor = 'transparent';-->
 
     });
 

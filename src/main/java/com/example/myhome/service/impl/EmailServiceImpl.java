@@ -8,11 +8,17 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.*;
+import javax.mail.internet.*;
 import java.util.Objects;
+import java.util.Properties;
 
 @Service
 @Log
@@ -24,6 +30,9 @@ public class EmailServiceImpl implements EmailService {
 
     @Value("${spring.mail.username}")
     private String EMAIL_SENDER;
+
+    @Value("${spring.mail.password}")
+    private String EMAIL_PASS;
 
     @Autowired
     private JavaMailSender mailSender;
@@ -42,6 +51,33 @@ public class EmailServiceImpl implements EmailService {
         } catch (MessagingException e) {
             log.severe("fail to send email, msg: ");
             log.severe(e.getMessage());
+        }
+    }
+
+    @Async
+    public void sendWithAttachment(String to, String fileName) {
+
+        try {
+            log.info("Trying to send email to " + to);
+            MimeMessage message = mailSender.createMimeMessage();
+            message.setFrom(new InternetAddress(EMAIL_SENDER));
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            message.setSubject("Invoice");
+            BodyPart messageBodyPartText = new MimeBodyPart();
+            messageBodyPartText.setText("Sent invoice");
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(messageBodyPartText);
+            BodyPart messageBodyPartFile = new MimeBodyPart();
+            DataSource source = new FileDataSource(fileName);
+            messageBodyPartFile.setDataHandler(new DataHandler(source));
+            messageBodyPartFile.setFileName(fileName);
+            multipart.addBodyPart(messageBodyPartFile);
+
+            message.setContent(multipart);
+            mailSender.send(message);
+
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
         }
     }
 }

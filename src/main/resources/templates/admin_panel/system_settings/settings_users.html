@@ -60,7 +60,6 @@
               </div>
               <div class="box-body table-responsive">
                 <form action="" method="get" th:object="${filter_form}">
-                  <nav aria-label="Page navigation " class="pagination_container"></nav>
                   <table class="table table-bordered table-hover table-striped linkedRow" id="adminsTable">
                     <thead>
                       <tr>
@@ -130,6 +129,8 @@
 <script th:src="@{/dist/js/pagination.js}"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/ru.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/uk.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -144,6 +145,8 @@
     let activeText = [[#{active}]];
     let inactiveText = [[#{inactive}]];
     let notFoundText = [[#{not-found}]];
+
+    let currentLanguage = [[${#locale.language}]]
 
     $(document).ready(function(){
 
@@ -174,6 +177,7 @@
     });
 
     $(".my_select").select2({
+      language: currentLanguage,
       placeholder: placeholderText,
       width: 'resolve'
     });

@@ -162,6 +162,8 @@
 
 <script th:inline="javascript">
 
+    let currentLanguage = [[${#locale.language}]];
+
     function selectBuilding() {
         var choise = [[#{choise}]];
         var list = /*[[${buildings}]]*/ [];
@@ -213,6 +215,8 @@
 
 <!-- Select2 -->
 <script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/ru.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/uk.js"></script>
 
 <script th:inline="javascript">
     var placeholderText = [[#{select.placeholder}]];

@@ -312,8 +312,8 @@ public class CashBoxController {
             model.addAttribute("nextId", cashBoxService.getMaxId()+1);
             return "admin_panel/cash_box/cashbox_edit";
         }
+        if(cashBox.getAmount() != null && cashBox.getIncomeExpenseType().equals(IncomeExpenseType.EXPENSE)) cashBox.setAmount(cashBox.getAmount()*-1);
         cashBoxService.save(cashBox);
-
         websocketController.sendCashboxItem(cashBox);
 
         return "redirect:/admin/cashbox";
@@ -343,7 +343,7 @@ public class CashBoxController {
     @GetMapping("/get-cashbox-page")
     public @ResponseBody Page<CashBoxDTO> getCashbox(@RequestParam Integer page,
                                                      @RequestParam Integer size,
-                                                     @RequestParam String filters) throws JsonProcessingException {
+                                                     @RequestParam String filters) throws JsonProcessingException, IllegalAccessException {
         ObjectMapper mapper = new ObjectMapper();
         FilterForm form = mapper.readValue(filters, FilterForm.class);
         return cashBoxService.findAllBySpecification2(form, page, size);

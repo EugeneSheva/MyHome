@@ -26,6 +26,7 @@
     <aside th:insert="~{main-template :: sidebar}"></aside>
 
     <div class="content-wrapper">
+        <textarea style="display:none" id="box" th:text="${cashBox}"></textarea>
         <div class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
@@ -120,7 +121,7 @@
                                         </tr>
                                         <tr>
                                             <td><b th:text="#{coment}">Комментарий</b></td>
-                                            <td th:text="${cashBox.description}"></td>
+                                            <td style="max-width: 100px; word-wrap: break-word; text-wrap: initial;" th:text="${cashBox.description}"></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -155,7 +156,7 @@
 <script>
     $(function () {
         //Initialize Select2 Elements
-        $('.select2').select2()
+        $('.select2').select2({language: currentLanguage})
 
         //Initialize Select2 Elements
         $('.select2bs4').select2({
@@ -167,8 +168,12 @@
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 
 <script th:inline="javascript">
+
+    let currentLanguage = [[${#locale.language}]];
     let cashbox = [[${cashBox}]];
     console.log(JSON.stringify(cashbox));
+    const hidden = document.getElementById('box');
+    hidden.value = JSON.stringify(cashbox);
 
     function downloadExcelTable() {
         console.log(1)
@@ -185,8 +190,16 @@
     }
 
     function copy() {
-        navigator.clipboard.writeText(JSON.stringify(cashbox));
+<!--        navigator.clipboard.writeText(JSON.stringify(cashbox));-->
+<!--        hidden.select();-->
+<!--        hidden.setSelectionRange(0,99999);-->
+<!--        document.execCommand('copy');-->
         alert('Cashbox copied');
+
+        if (navigator && navigator.clipboard && navigator.clipboard.writeText)
+        return navigator.clipboard.writeText(JSON.stringify(cashbox));
+        else alert('The Clipboard API is not available.');
+
     }
 </script>
 

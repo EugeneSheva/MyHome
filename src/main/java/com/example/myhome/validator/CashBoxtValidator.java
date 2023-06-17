@@ -28,9 +28,9 @@ public class CashBoxtValidator implements Validator {
         if (cashBox.getAmount() == null) {
             e.rejectValue("amount", "amount.empty", "Заполните поле");
         } else if (cashBox.getAmount() > 1000000.0) {
-            e.rejectValue("amount", "amount.too-big", "Сумма не может быть больше 1.000.000");
+            e.rejectValue("amount", "amount.too-big", "Значение не может быть больше 1.000.000");
         } else if (cashBox.getAmount() < 0.0) {
-            e.rejectValue("amount", "amount.too-small", "Сумма не может быть меньше 0");
+            e.rejectValue("amount", "amount.too-small", "Поле не может хранить отрицательные значения");
         }
         if (cashBox.getManager() == null) {
             e.rejectValue("manager", "manager.empty", "Заполните поле");

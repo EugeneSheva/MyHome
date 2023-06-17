@@ -46,6 +46,7 @@ $(document).ready(function(){
     owner_input.addEventListener('change', () => loadApartments(owner_input));
 
     $("#ownerID").select2({
+        language: currentLanguage,
         ajax: {
             url: '/myhome/admin/owners/get-all-owners',
             data: function(params){
@@ -61,7 +62,7 @@ $(document).ready(function(){
         minimumResultsForSearch: 2
     });
 
-    $("#apartmentID, #masterTypeID, #status, #masters").select2({placeholder:placeholderText, minimumResultsForSearch:Infinity});
+    $("#apartmentID, #masterTypeID, #status, #masters").select2({language: currentLanguage,placeholder:placeholderText, minimumResultsForSearch:Infinity});
 
     $("#ownerID").change(function(){
       let owner_id = $("#ownerID").val();

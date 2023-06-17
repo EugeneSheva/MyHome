@@ -73,13 +73,13 @@
                       <div class="col-xs-12 col-sm-6">
                         <div class="form-group field-invoicetemplateform-file">
                           <label class="control-label" th:text="#{invoices.templatesPage.card.uploadNewTemplate}">Загрузить пользовательский шаблон</label>
-                          <input type="file" name="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-
+                          <input type="file" name="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                          <span th:if="${file_fail}" th:text="${file_fail}" style="color: red;"></span>
                           <div class="help-block"></div>
                         </div>                    <div class="form-group field-invoicetemplateform-title required">
                         <label class="control-label" th:text="#{invoices.templatesPage.card.newTemplateName}">Название</label>
                         <input type="text" name="name" class="form-control">
-
+                        <h4 th:if="${name_fail}" th:text="${name_fail}" style="color: red;"></h4>
                         <div class="help-block"></div>
                       </div>                </div>
 

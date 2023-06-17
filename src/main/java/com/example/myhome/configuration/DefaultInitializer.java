@@ -102,7 +102,7 @@ class DefaultInitializer implements CommandLineRunner {
         }
     }
     void checkForOwners() throws InterruptedException {
-        if(ownerRepository.count() == 0 || ownerRepository.findAll().size() == 0) {
+//        if(ownerRepository.count() == 0 || ownerRepository.findAll().size() == 0) {
             log.info("NO OWNERS FOUND, ADDING");
             Owner owner = new Owner();
             owner.setFirst_name("Owner");
@@ -110,8 +110,8 @@ class DefaultInitializer implements CommandLineRunner {
             owner.setLast_name("Testing");
             owner.setPhone_number("0501111111");
             owner.setDescription("description");
-            owner.setEmail("testemail@gmail.com");
-            owner.setPassword("password");
+            owner.setEmail("user1@gmail.com");
+            owner.setPassword("$2a$12$EnkCMqhGxG9LYts3mHCMvua/xno8CKNC2Ao.Ss3M4BYgXENSqUGWq");
             owner.setAdded_at(LocalDateTime.now());
             owner.setEnabled(true);
             owner.setStatus(UserStatus.ACTIVE);
@@ -122,7 +122,7 @@ class DefaultInitializer implements CommandLineRunner {
 
             ownerRepository.save(owner);
 
-        }
+//        }
     }
     void checkForAccounts() throws InterruptedException {
         if(accountRepository.count() == 0 || accountRepository.findAll().size() == 0) {

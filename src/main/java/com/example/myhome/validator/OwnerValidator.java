@@ -57,6 +57,11 @@ public class OwnerValidator implements Validator {
         } else if  (!isValidEmailAddress(owner.getEmail()) ) {
             e.rejectValue("email", "email.empty", "Неверный формат Email.");
         }
+        if(owner.getId() != null && owner.getId() > 0) {
+            if (owner.getPassword() == null || owner.getPassword().isEmpty()) {
+                e.rejectValue("password", "password.no-match", "Заполните пароль!");
+            }
+        }
         if(owner.getPassword() != null && !owner.getPassword().isEmpty()) {
             if(owner.getConfirm_password() != null && !owner.getConfirm_password().isEmpty()) {
                 if(owner.getPassword().equalsIgnoreCase(owner.getConfirm_password())) {

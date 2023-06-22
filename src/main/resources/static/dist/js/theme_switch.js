@@ -65,6 +65,7 @@ let footer = document.querySelector('#page-footer');
 let boxes = document.getElementsByClassName('box');
 console.log(boxes);
 themeToggler.addEventListener('click', ()=>{
+
     toggleDark();
     if(theme === 'light') {
     // change toggler
@@ -126,4 +127,10 @@ themeToggler.addEventListener('click', ()=>{
 
         theme = 'light';
     }
+    var currentPagePath = window.location.pathname;
+    if (currentPagePath.includes('statistics')) {
+        drawChart()
+        drawChart2()
+    }
+
 });

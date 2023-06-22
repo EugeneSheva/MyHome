@@ -109,7 +109,7 @@ public Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page
     public List<String> getListOfMonthName() {
         List<String>doubleList = new ArrayList<>();
         LocalDate now = LocalDate.now();
-        LocalDate begin = now.withMonth(1);
+        LocalDate begin = now.minusMonths(11);
         for (int i = 0; i < 12; i++) {
             String tmp = begin.getMonth().getDisplayName(
                     TextStyle.FULL, LocaleContextHolder.getLocale()

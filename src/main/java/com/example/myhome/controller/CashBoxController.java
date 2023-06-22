@@ -54,7 +54,6 @@ public class CashBoxController {
 
     private final AccountDTOMapper accountDTOMapper;
 
-
     @GetMapping
     public String getCashBox(Model model, @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC, size = 10) Pageable pageable) {
         Page<CashBox> cashBoxList = cashBoxService.findAll(pageable);

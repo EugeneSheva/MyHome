@@ -780,8 +780,10 @@ function drawTransactionsTable() {
     let data = getTableData('/myhome/admin/cashbox/get-cashbox-page', currentPageNumber, currentPageSize, pageFiltersString);
     let $cashboxTable = $("#cashboxTable tbody");
     $cashboxTable.html('');
-    console.log('data ' + data)
-    console.log('data.content ' + data.content)
+    console.log('data ')
+    console.log(data)
+    console.log('data.content ')
+  console.log(data.content)
     for(const cashbox of data.content) {
         let date = new Date(cashbox.date);
         let newTableRow = document.createElement('tr');

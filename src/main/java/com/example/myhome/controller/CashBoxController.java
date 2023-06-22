@@ -340,6 +340,7 @@ public class CashBoxController {
         return ownerPage;
     }
 
+
     @GetMapping("/get-cashbox-page")
     public @ResponseBody Page<CashBoxDTO> getCashbox(@RequestParam Integer page,
                                                      @RequestParam Integer size,

@@ -13,6 +13,7 @@ import com.example.myhome.repository.OwnerRepository;
 import com.example.myhome.service.AdminService;
 import com.example.myhome.service.CashBoxService;
 import com.example.myhome.service.OwnerService;
+import com.example.myhome.service.impl.CashBoxServiceImpl;
 import com.example.myhome.service.impl.IncomeExpenseItemServiceImpl;
 import com.example.myhome.validator.CashBoxtValidator;
 import com.example.myhome.model.*;
@@ -194,34 +195,41 @@ public class CashBoxController {
         return "admin_panel/cash_box/cashbox_edit";
     }
 
-//    @GetMapping("/copy/{id}")
-//    public String copyCashBox(@PathVariable("id") Long id, Model model) {
-//        CashBox cashBox = cashBoxService.findById(id);
-//        if(cashBox.getIncomeExpenseType().equals(IncomeExpenseType.INCOME)) {
-//
-//            List<IncomeExpenseItems> incomeItemsList = incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.INCOME);
-//            model.addAttribute("incomeItemsList", incomeItemsList);
-//
-//            List<OwnerDTO> ownerDTOList = ownerService.findAllDTO();
-//            model.addAttribute("owners", ownerDTOList);
-//
-//            List<ApartmentAccountDTO> apartmentAccountDTOS = accountService.findAllAccounts().stream().map(accountDTOMapper::fromAccountToDTO).collect(Collectors.toList());
-//            model.addAttribute("accounts", apartmentAccountDTOS);
-//
-//        } else if (cashBox.getIncomeExpenseType().equals(IncomeExpenseType.EXPENSE)){
-//            List<IncomeExpenseItems>incomeItemsList=incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.EXPENSE);
-//            model.addAttribute("incomeItemsList", incomeItemsList);
-//        }
-//
-//
-//        List<AdminDTO>adminDTOList = adminService.findAllManagers();
-//
-//        model.addAttribute("admins", adminDTOList);
-//
-//        cashBox.setId(null);
-//        model.addAttribute("cashBox", cashBox);
-//        return "admin_panel/cash_box/cashbox_edit";
-//    }
+    @GetMapping("/copy/{id}")
+    public String copyCashBox(@PathVariable("id") Long id, Model model) {
+        CashBox cashBox = cashBoxService.findById(id);
+        CashBox newCashBox = new CashBox();
+        if(cashBox.getIncomeExpenseType().equals(IncomeExpenseType.INCOME)) {
+
+            List<IncomeExpenseItems> incomeItemsList = incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.INCOME);
+            model.addAttribute("incomeItemsList", incomeItemsList);
+
+            List<OwnerDTO> ownerDTOList = ownerService.findAllDTO();
+            model.addAttribute("owners", ownerDTOList);
+
+            List<ApartmentAccountDTO> apartmentAccountDTOS = accountService.findAllAccounts().stream().map(accountDTOMapper::fromAccountToDTO).collect(Collectors.toList());
+            model.addAttribute("accounts", apartmentAccountDTOS);
+
+            newCashBox.setOwner(cashBox.getOwner());
+            newCashBox.setApartmentAccount(cashBox.getApartmentAccount());
+
+        } else if (cashBox.getIncomeExpenseType().equals(IncomeExpenseType.EXPENSE)){
+            List<IncomeExpenseItems>incomeItemsList=incomeExpenseRepository.findAllByIncomeExpenseType(IncomeExpenseType.EXPENSE);
+            model.addAttribute("incomeItemsList", incomeItemsList);
+        }
+        newCashBox.setAmount(cashBox.getAmount());
+        newCashBox.setCompleted(cashBox.getCompleted());
+        newCashBox.setDescription(cashBox.getDescription());
+        newCashBox.setIncomeExpenseType(cashBox.getIncomeExpenseType());
+        newCashBox.setIncomeExpenseItems(cashBox.getIncomeExpenseItems());
+        newCashBox.setManager(cashBox.getManager());
+
+        List<AdminDTO>adminDTOList = adminService.findAllManagers();
+        model.addAttribute("admins", adminDTOList);
+
+        model.addAttribute("cashBox", newCashBox);
+        return "admin_panel/cash_box/cashbox_edit";
+    }
 
     @PostMapping("/save")
     public String saveCashBox(@Valid @ModelAttribute("cashBox") CashBox cashBox, BindingResult bindingResult, @RequestParam(name = "id", defaultValue = "0") Long id, @RequestParam(name = "owner", defaultValue = "0") Long ownerId,
@@ -346,6 +354,9 @@ public class CashBoxController {
                                                      @RequestParam String filters) throws JsonProcessingException, IllegalAccessException {
         ObjectMapper mapper = new ObjectMapper();
         FilterForm form = mapper.readValue(filters, FilterForm.class);
+        System.out.println(form);
+        System.out.println(page);
+        System.out.println(size);
         return cashBoxService.findAllBySpecification2(form, page, size);
     }
 

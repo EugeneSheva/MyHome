@@ -76,9 +76,9 @@
                         <div class="box-header with-border">
                             <h3 class="box-title" th:text="${#strings.contains(cashBox.incomeExpenseType,'INCOME')} ?
                                    #{incomeStatement}  : #{expenseStatement} "></h3>
-                            <div class="box-tools" style="top: 00.; top: 10px;">
-<!--                                <a  class="btn btn-default btn-sm" th:href="@{/admin/cashbox/copy/{id}(id=${cashBox.id})}"  style="margin-left: 2px" th:text="#{copy}">Копировать</a>-->
-                                <a  class="btn btn-default btn-sm" href="#" onclick="copy()" style="margin-left: 2px" th:text="#{copy}">Копировать</a>
+                            <div class="box-tools" style="top: 00; top: 10px;">
+                                <a  class="btn btn-default btn-sm" th:href="@{/admin/cashbox/copy/{id}(id=${cashBox.id})}"  style="margin-left: 2px" th:text="#{copy}">Копировать</a>
+<!--                                <a  class="btn btn-default btn-sm" href="#" onclick="copy()" style="margin-left: 2px" th:text="#{copy}">Копировать</a>-->
                                 <a  class="btn btn-default btn-sm" th:href="@{/admin/cashbox/delete/{id}(id=${cashBox.id})}" style="margin-left: 2px" th:text="#{delete}">Удалить</a>
                                 <a  class="btn btn-primary btn-sm" th:href="@{/admin/cashbox/edit/{id}(id=${cashBox.id})}" style="margin-left: 2px"><h7 th:text="#{editStatement}"></h7> <i class="fa fa-pencil visible-xs" aria-hidden="true"></i></a>
                                 <a  class="btn btn-default btn-sm" href="#"  style="margin-left: 2px" onclick="downloadExcelTable()" th:text="#{uploadToExele}">Выгрузить в Excel</a>
@@ -184,24 +184,27 @@
         let year = date.getFullYear();
 
         let table = document.getElementById("table_to_excel");
+
+        table.deleteRow(1);
+
         let excel_file = XLSX.utils.table_to_book(table);
         XLSX.writeFile(excel_file, "Касса " + `${day}-${month}-${year}` + ".xlsx");
         console.log(2)
     }
-
-    function copy() {
-<!--        navigator.clipboard.writeText(JSON.stringify(cashbox));-->
-<!--        hidden.select();-->
-<!--        hidden.setSelectionRange(0,99999);-->
-<!--        document.execCommand('copy');-->
-        alert('Cashbox copied');
-
-        if (navigator && navigator.clipboard && navigator.clipboard.writeText)
-        return navigator.clipboard.writeText(JSON.stringify(cashbox));
-        else alert('The Clipboard API is not available.');
-
-    }
 </script>
+<!--    function copy() {-->
+<!--&lt;!&ndash;        navigator.clipboard.writeText(JSON.stringify(cashbox));&ndash;&gt;-->
+<!--&lt;!&ndash;        hidden.select();&ndash;&gt;-->
+<!--&lt;!&ndash;        hidden.setSelectionRange(0,99999);&ndash;&gt;-->
+<!--&lt;!&ndash;        document.execCommand('copy');&ndash;&gt;-->
+<!--        alert('Cashbox copied');-->
+
+<!--        if (navigator && navigator.clipboard && navigator.clipboard.writeText)-->
+<!--        return navigator.clipboard.writeText(JSON.stringify(cashbox));-->
+<!--        else alert('The Clipboard API is not available.');-->
+
+<!--    }-->
+
 
 </body>
 </html>

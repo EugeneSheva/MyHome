@@ -28,7 +28,7 @@ public interface CashBoxRepository extends JpaRepository<CashBox, Long>, JpaSpec
     List<CashBox>findAllByApartmentAccountId(Long id);
     default Page<CashBox> findByFilters(Long id, LocalDate from, LocalDate to, Boolean isCompleted, String incomeExpenseItem, Long ownerId, Long accountNumber, IncomeExpenseType incomeExpenseType, Pageable pageable) {
         Specification<CashBox> spec = Specification.where(null);
-
+        System.out.println("repo id " + id+ ", from " + from+ ", to " + to+ ", isCompleted " + isCompleted+ ", incomeExpenseItem " + incomeExpenseItem+ ", ownerId " + ownerId+ ", accountNumber " + accountNumber+ ", incomeExpenseType " + incomeExpenseType+ ", pageable " + pageable);
         if (id != null ) {
             spec = spec.and(CashBoxSpecifications.idContains(id));
         }
@@ -56,7 +56,6 @@ public interface CashBoxRepository extends JpaRepository<CashBox, Long>, JpaSpec
         if (incomeExpenseType != null) {
             spec = spec.and(CashBoxSpecifications.incomeExpenseTypeContains(incomeExpenseType));
         }
-
         return findAll(spec, pageable);
     }
     Page<CashBox> findAll(Pageable pageable);

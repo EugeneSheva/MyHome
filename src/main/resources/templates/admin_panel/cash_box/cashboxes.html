@@ -170,30 +170,23 @@
                                 <th style="border-bottom:none; display: flex;">
                                     <div class="input-group" id="date_picker" data-td-target-input="nearest" data-td-target-toggle="nearest">
                                         <input id="datetime" autocomplete="off" style="padding-block: 21px" type="text" data-name="date" th:field="*{date}" value="2023-01-01" class="form-control datetime_filter" data-td-target="#datetimepicker1">
-                                        <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">
-                                        <i class="fa fa-calendar"></i>
+<!--                                        <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">-->
+<!--                                        <i class="fa fa-calendar"></i>-->
                                       </span>
                                     </div>
                                 </th>
-                                <th style="border-bottom:none">
-                                    <select autocomplete="off" th:field="*{isCompleted}" class="my_filters" id="isCompleted" name="isCompleted">
-                                        <option selected value=""></option>
-                                        <option th:value="сompleted"
-                                                th:text="#{complete}" >Проведен
-                                        </option>
-                                        <option th:value="notComplete"
-                                                th:text="#{notComplete}" >Не проведен
-                                        </option>
-                                    </select>
-                                </th>
-<!--                                <th style="padding: 10px">-->
-<!--                                    <select autocomplete="off" th:field="*{isCompleted}" data-name="status" class="my_filters" style="width: 100%; padding-block: 10px">-->
-<!--                                        <option value=""></option>-->
-<!--                                        <option th:each="stat : ${T(com.example.myhome.model.RepairStatus).values()}"-->
-<!--                                                th:value="${stat}"-->
-<!--                                                th:text="${stat.getName()}"></option>-->
-<!--                                    </select>-->
-<!--                                </th>-->
+                                <th style="border-bottom:none"><select autocomplete="off" th:field="*{isCompleted}" class="form-select my_filters" id="isCompleted" name="isCompleted">
+                                    <option th:selected="${filterForm.isCompleted == null}" value="-"></option>
+                                    <option value="сompleted"
+                                            th:selected="${#strings.containsIgnoreCase(('сompleted'),((filterForm.isCompleted != null) ? (filterForm.isCompleted ): ('emp') ))}"
+                                            th:text="#{complete}" >Проведен
+                                    </option>
+                                    <option value="notComplete"
+                                            th:selected="${#strings.containsIgnoreCase(('notComplete'),((filterForm.isCompleted != null) ? (filterForm.isCompleted ): ('emp') ))}"
+                                            th:text="#{notComplete}" >Не проведен
+                                    </option>
+                                </select></th>
+
                                 <th style="border-bottom:none"><select autocomplete="off" class="form-select my_filters" id="incomeExpenseItem" name="incomeExpenseItem">
                                     <option value=""></option>
                                     <option th:each="incomeExpenseItem : ${incomeExpenseItems}"

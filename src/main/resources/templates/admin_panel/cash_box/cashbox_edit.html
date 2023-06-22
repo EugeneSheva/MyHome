@@ -139,7 +139,7 @@
                                             </div>
 
                                             <label th:text="#{sum}">Сумма</label>
-                                            <input type="number" id="amount" class="form-control" th:value="*{amount < 0 ? amount*-1 : amount}" name="amount">
+                                            <input type="number" id="amount" class="form-control" th:value="*{amount}" name="amount">
                                             <div style="color: #d80450" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></div>
                                         </div>
                                         <div class="col-md-6">

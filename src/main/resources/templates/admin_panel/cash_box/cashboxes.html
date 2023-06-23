@@ -177,12 +177,12 @@
                                 </th>
                                 <th style="border-bottom:none">
                                     <select autocomplete="off" th:field="*{isCompleted}" class="my_filters" id="isCompleted" name="isCompleted">
-                                        <option selected value=""></option>
-                                        <option th:value="сompleted"
-                                                th:text="#{complete}" >Проведен
+                                        <option value=""></option>
+                                        <option value="true"
+                                                >Проведен
                                         </option>
-                                        <option th:value="notComplete"
-                                                th:text="#{notComplete}" >Не проведен
+                                        <option value="false"
+                                                >Не проведен
                                         </option>
                                     </select>
                                 </th>
@@ -203,7 +203,7 @@
                                 </select></th>
 
                                 <th style="border-bottom:none">
-                                    <select autocomplete="off" id="owner" class="my_filters" name="owner">
+                                    <select autocomplete="off" id="owner" class="my_filters" name="owner" style="color: black;">
                                         <option th:if="${filterForm.owner == null}" value="" selected="selected" th:text="#{choise}">Выберите пользователя</option>
                                         <option th:if="${filterForm.owner != null}" th:value="${filterForm.ownerEntity.id}" th:text="${filterForm.ownerEntity.getFullName()}"></option>
                                     </select>
@@ -431,7 +431,7 @@
                 cache: true
             },
             placeholder: '',
-            minimumInputLength: 0,
+            minimumInputLength: 2,
             allowClear: true,
             templateSelection: function(selection) {
                     return selection.text;

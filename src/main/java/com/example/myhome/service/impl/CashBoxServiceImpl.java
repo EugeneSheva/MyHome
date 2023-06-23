@@ -59,8 +59,16 @@ public Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page
         startDate = LocalDate.parse(dateArray[0], formatter);
         endDate = LocalDate.parse(dateArray[1], formatter);
     }
+
+    System.out.println(Boolean.valueOf(filters.getIsCompleted()));
+    System.out.println(Boolean.valueOf(filters.getIsCompleted()));
+    System.out.println(Boolean.valueOf(filters.getIsCompleted()));
+    System.out.println(Boolean.valueOf(filters.getIsCompleted()));
+    System.out.println(Boolean.valueOf(filters.getIsCompleted()));
+    System.out.println(Boolean.valueOf(filters.getIsCompleted()));
+
     if(!filters.filtersPresent()) cashBoxList = cashBoxRepository.findAll(pageable);
-    else cashBoxList = cashBoxRepository.findByFilters(filters.getId(),startDate, endDate, getIsCompleteFromString(filters.getIsCompleted()), filters.getIncomeExpenseItem(), filters.getOwner(), filters.getAccountId(), getIncomeExpenseTypeFromString(filters.getIncomeExpenseType()), pageable);
+    else cashBoxList = cashBoxRepository.findByFilters(filters.getId(),startDate, endDate, Boolean.valueOf(filters.getIsCompleted()), filters.getIncomeExpenseItem(), filters.getOwner(), filters.getAccountId(), getIncomeExpenseTypeFromString(filters.getIncomeExpenseType()), pageable);
 
     cashBoxList.getContent().forEach(item -> listDTO.add(mapper.fromCashboxToDTO(item)));
     System.out.println(listDTO);

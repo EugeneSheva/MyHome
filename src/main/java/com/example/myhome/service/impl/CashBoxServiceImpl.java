@@ -53,22 +53,16 @@ public Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page
     System.out.println("date" +filters.getDate());
     LocalDate startDate = null;
     LocalDate endDate = null;
-    if (filters.getDate() != null) {
-        String[] dateArray = filters.getDate().split(" - ");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+    System.out.println("filters.getDatetime() " + filters.getDatetime());
+    if (filters.getDatetime() != null) {
+        String[] dateArray = filters.getDatetime().split(" to ");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         startDate = LocalDate.parse(dateArray[0], formatter);
         endDate = LocalDate.parse(dateArray[1], formatter);
     }
 
-    System.out.println(Boolean.valueOf(filters.getIsCompleted()));
-    System.out.println(Boolean.valueOf(filters.getIsCompleted()));
-    System.out.println(Boolean.valueOf(filters.getIsCompleted()));
-    System.out.println(Boolean.valueOf(filters.getIsCompleted()));
-    System.out.println(Boolean.valueOf(filters.getIsCompleted()));
-    System.out.println(Boolean.valueOf(filters.getIsCompleted()));
-
     if(!filters.filtersPresent()) cashBoxList = cashBoxRepository.findAll(pageable);
-    else cashBoxList = cashBoxRepository.findByFilters(filters.getId(),startDate, endDate, Boolean.valueOf(filters.getIsCompleted()), filters.getIncomeExpenseItem(), filters.getOwner(), filters.getAccountId(), getIncomeExpenseTypeFromString(filters.getIncomeExpenseType()), pageable);
+    else cashBoxList = cashBoxRepository.findByFilters(filters.getId(),startDate, endDate, getIsCompleteFromString(filters.getIsCompleted()), filters.getIncomeExpenseItem(), filters.getOwner(), filters.getAccountId(), getIncomeExpenseTypeFromString(filters.getIncomeExpenseType()), pageable);
 
     cashBoxList.getContent().forEach(item -> listDTO.add(mapper.fromCashboxToDTO(item)));
     System.out.println(listDTO);
@@ -117,7 +111,7 @@ public Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page
     public List<String> getListOfMonthName() {
         List<String>doubleList = new ArrayList<>();
         LocalDate now = LocalDate.now();
-        LocalDate begin = now.withMonth(1);
+        LocalDate begin = now.minusMonths(11);
         for (int i = 0; i < 12; i++) {
             String tmp = begin.getMonth().getDisplayName(
                     TextStyle.FULL, LocaleContextHolder.getLocale()
@@ -130,26 +124,26 @@ public Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page
 
     @Override
     public IncomeExpenseType getIncomeExpenseTypeFromString(String incomeExpenseTypeString) {
-
-        if(incomeExpenseTypeString == null)  return IncomeExpenseType.INCOME;
-
-        IncomeExpenseType incomeExpenseType = null;
-        if (incomeExpenseTypeString.equalsIgnoreCase("income")) {
-            incomeExpenseType = IncomeExpenseType.INCOME;
-        } else if (incomeExpenseTypeString.equalsIgnoreCase("expense")) {
-            incomeExpenseType = IncomeExpenseType.EXPENSE;
+        if (incomeExpenseTypeString != null) {
+            IncomeExpenseType incomeExpenseType = null;
+            if (incomeExpenseTypeString.equalsIgnoreCase("income")) {
+                incomeExpenseType = IncomeExpenseType.INCOME;
+            } else if (incomeExpenseTypeString.equalsIgnoreCase("expense")) {
+                incomeExpenseType = IncomeExpenseType.EXPENSE;
+            }
+            return incomeExpenseType;
         }
-        return incomeExpenseType;
+        return null;
     }
 
-    @Override
-    public Boolean getIsCompleteFromString(String isComplete) {
-        return (isComplete != null && isComplete.equalsIgnoreCase("сompleted"));
-    }
-
-    @Override
-    public List<CashBox> findAllByApartmentAccountId(Long id) {
-        return cashBoxRepository.findAllByApartmentAccountId(id);
+    public Boolean getIsCompleteFromString(String isCopmlete) {
+        Boolean isCom = null;
+        if (isCopmlete.equalsIgnoreCase("сompleted")) {
+            isCom = true;
+        } else if (isCopmlete.equalsIgnoreCase("notComplete")) {
+            isCom = false;
+        }
+        return isCom;
     }
 
     @Override

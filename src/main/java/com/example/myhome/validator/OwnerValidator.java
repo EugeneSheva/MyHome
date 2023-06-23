@@ -32,15 +32,15 @@ public class OwnerValidator implements Validator {
         } else if  (owner.getLast_name().length()<2) {
             e.rejectValue("last_name", "last_name.empty", "Поле должно быть минимум 2 символа");
         }
-        if (owner.getFathers_name() == null || owner.getFathers_name().isEmpty()) {
-            e.rejectValue("fathers_name", "fathers_name.empty", "Заполните поле");
-        } else if  (owner.getFathers_name().length()<2) {
-            e.rejectValue("fathers_name", "fathers_name.empty", "Поле должно быть минимум 2 символа");
-        }
-        if (owner.getBirthdate() == null || owner.getBirthdate().isEmpty()) {
+//        if (owner.getFathers_name() == null || owner.getFathers_name().isEmpty()) {
+//            e.rejectValue("fathers_name", "fathers_name.empty", "Заполните поле");
+//        } else if  (owner.getFathers_name().length()<2) {
+//            e.rejectValue("fathers_name", "fathers_name.empty", "Поле должно быть минимум 2 символа");
+//        }
+        if (owner.getBirthdate() == null) {
             e.rejectValue("birthdate", "birthdate.empty", "Заполните поле");
         } else {
-            LocalDate date = LocalDate.parse(owner.getBirthdate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDate date = owner.getBirthdate();
             if  (date.isAfter(LocalDate.now().minusYears(18L))) {
                 e.rejectValue("birthdate", "birthdate.empty", "Пользователь должен быть совершеннолетним");
             } else if  (date.isBefore(LocalDate.now().minusYears(120))) {
@@ -49,13 +49,18 @@ public class OwnerValidator implements Validator {
         }
         if (owner.getPhone_number() == null ||  owner.getPhone_number().isEmpty()) {
             e.rejectValue("phone_number", "phone_number.empty", "Заполните поле");
-        } else if  (owner.getFathers_name().length()<2) {
+        } else if  (owner.getPhone_number().length() != 10) {
             e.rejectValue("phone_number", "phone_number.empty", "Размер поля 10 символов. Пример \"0630636363\".");
         }
         if (owner.getEmail() == null ||  owner.getEmail().isEmpty()) {
             e.rejectValue("email", "email.empty", "Заполните поле");
         } else if  (!isValidEmailAddress(owner.getEmail()) ) {
             e.rejectValue("email", "email.empty", "Неверный формат Email.");
+        }
+        if(owner.getId() != null && owner.getId() > 0) {
+            if (owner.getPassword() == null || owner.getPassword().isEmpty()) {
+                e.rejectValue("password", "password.no-match", "Заполните пароль!");
+            }
         }
         if(owner.getPassword() != null && !owner.getPassword().isEmpty()) {
             if(owner.getConfirm_password() != null && !owner.getConfirm_password().isEmpty()) {

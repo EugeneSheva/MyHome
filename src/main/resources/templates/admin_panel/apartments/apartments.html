@@ -102,11 +102,11 @@
                                     <th style="border-bottom:none; display: flex; align-items: flex-start;"><input style="height: 44px" type="text" autocomplete="off" class="form-control my_filters" th:field="*{number}"
                                              ></th>
 
-                                    <th style="border-bottom:none; "><select autocomplete="off" class="form-select my_filters" th:field="*{building}">
+                                    <th style="border-bottom:none; "><select autocomplete="off" class="form-select my_filters" th:field="*{buildingName}">
                                         <option value=""></option>
                                         <option th:each="building : ${buildings}"
                                                 th:text="${building.name}"
-                                                th:value="${building.id}"
+                                                th:value="${building.name}"
                                                 ></option>
                                     </select></th>
 
@@ -178,7 +178,7 @@
     let currentLanguage = [[${#locale.language}]];
     $(document).ready(function() {
 
-        $("#building, #debtSting").select2({language: currentLanguage,placeholder:choise, minimumResultsForSearch:Infinity});
+        $("#buildingName, #debtSting").select2({language: currentLanguage,placeholder:choise, minimumResultsForSearch:Infinity});
 
         $('#owner').select2({
             language: currentLanguage,

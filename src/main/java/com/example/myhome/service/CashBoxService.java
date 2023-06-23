@@ -37,7 +37,7 @@ public interface CashBoxService {
 
     Boolean getIsCompleteFromString(String isCopmlete);
 
-    List<CashBox> findAllByApartmentAccountId(Long id);
+//    List<CashBox> findAllByApartmentAccountId(Long id);
 
     Double getSumAmount();
 }

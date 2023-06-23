@@ -113,8 +113,8 @@ class DefaultInitializer implements CommandLineRunner {
             owner.setLast_name("Testing");
             owner.setPhone_number("0501111111");
             owner.setDescription("description");
-            owner.setEmail("testemail@gmail.com");
-            owner.setPassword("password");
+            owner.setEmail("user1@gmail.com");
+            owner.setPassword("$2a$12$EnkCMqhGxG9LYts3mHCMvua/xno8CKNC2Ao.Ss3M4BYgXENSqUGWq");
             owner.setAdded_at(LocalDateTime.now());
             owner.setEnabled(true);
             owner.setStatus(UserStatus.ACTIVE);

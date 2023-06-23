@@ -12,37 +12,9 @@
     <link rel="stylesheet" th:href="@{/plugins/overlayScrollbars/css/OverlayScrollbars.min.css}">
     <link rel="stylesheet" th:href="@{/dist/css/adminlte.min.css}">
     <link rel="stylesheet" th:href="@{/dist/css/website.css}">
-<!--    <style>-->
-<!--        .theme-light {-->
-<!--            color: #000; /* Черный цвет текста */-->
-<!--        }-->
-
-<!--        /* Темная тема */-->
-<!--        .theme-dark {-->
-<!--            color: #fff; /* Белый цвет текста */-->
-<!--        }-->
-<!--        .theme-light .grid {-->
-<!--            border-color: #000; /* Черный цвет сетки */-->
-<!--        }-->
-
-<!--        .theme-light .scale {-->
-<!--            background-color: #000; /* Черный цвет шкалы */-->
-<!--        }-->
-
-<!--        /* Темная тема */-->
-<!--        .theme-dark .grid {-->
-<!--            border-color: #fff; /* Белый цвет сетки */-->
-<!--        }-->
-
-<!--        .theme-dark .scale {-->
-<!--            background-color: #fff; /* Белый цвет шкалы */-->
-<!--        }-->
-<!--    </style>-->
 </head>
 <body class="hold-transition light-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
-
-
 
     <!-- navbar header/sidebar -->
     <div th:insert="~{main-template :: loading}"></div>
@@ -184,7 +156,7 @@
                 </div>
                 <div class="card card-success">
                     <div class="card-body">
-                        <div class="chart" >
+                        <div class="chart">
                             <canvas id="barChart2" style=" min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                         </div>
                     </div>
@@ -214,8 +186,9 @@
 <!-- ChartJS -->
 <!--<script th:src="@{/plugins/chart.js/Chart.min.js}"></script>-->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
-<script th:inline="javascript">
 
+
+<script th:inline="javascript">
     /*<![CDATA[*/
     var months = /*[[${diagramMonths}]]*/ [];
     var dataInv = /*[[${diagramAllInvoices}]]*/ [];
@@ -225,32 +198,36 @@
     var expenseName = [[#{expense}]];
     var repaidDebtName = [[#{repaidDebt}]];
     var debtName = [[#{debt}]];
-    var barChart;
-    function drawChart() {
+
+    console.log(months);
+    console.log(dataInv);
+    console.log(dataPaidInv);
+
+    $(function () {
         var areaChartData = {
             labels: months,
             datasets: [
                 {
-                    label               : debtName,
-                    backgroundColor     : 'rgb(236,0,0)',
-                    borderColor         : 'rgba(60,141,188,0.8)',
-                    pointRadius          : false,
-                    pointColor          : '#3b8bba',
-                    pointStrokeColor    : 'rgba(60,141,188,1)',
-                    pointHighlightFill  : '#fff',
+                    label: debtName,
+                    backgroundColor: 'rgb(236,0,0)',
+                    borderColor: 'rgba(60,141,188,0.8)',
+                    pointRadius: false,
+                    pointColor: '#3b8bba',
+                    pointStrokeColor: 'rgba(60,141,188,1)',
+                    pointHighlightFill: '#fff',
                     pointHighlightStroke: 'rgba(60,141,188,1)',
-                    data                : dataInv
+                    data: dataInv
                 },
                 {
-                    label               : repaidDebtName,
-                    backgroundColor     : 'rgb(0,139,2)',
-                    borderColor         : 'rgba(210, 214, 222, 1)',
-                    pointRadius         : false,
-                    pointColor          : 'rgba(210, 214, 222, 1)',
-                    pointStrokeColor    : '#c1c7d1',
-                    pointHighlightFill  : '#fff',
+                    label: repaidDebtName,
+                    backgroundColor: 'rgb(0,139,2)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
                     pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data                : dataPaidInv
+                    data: dataPaidInv
                 },
             ]
         }
@@ -261,95 +238,68 @@
         var temp1 = areaChartData.datasets[1]
         barChartData.datasets[0] = temp1
         barChartData.datasets[1] = temp0
-        var barChartOptions;
-        if (JSON.parse(localStorage.getItem("jamesonDarkMode"))) {
-            barChartOptions = {
-                scales: {
-                    x: {
-                        ticks: {
-                            color: 'white'
-                        },
-                        grid: {
-                            color: 'rgba(255,255,255,0.1)'
-                        }
+
+        var barChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    ticks: {
+                        color: 'white'
                     },
-                    y: {
-                        ticks: {
-                            color: 'white'
-                        },
-                        grid: {
-                            color: 'rgba(255,255,255,0.1)'
-                        }
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)'
                     }
                 },
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: 'white'
-                        }
-                    }
-                },
-                responsive              : true,
-                scaleFontColor          : "#FFFFFF",
-                maintainAspectRatio     : false,
-                datasetFill             : false
-            }
-        } else if (!JSON.parse(localStorage.getItem("jamesonDarkMode"))){
-            barChartOptions = {
-                scales: {
-                    x: {
-                        ticks: {
-                            color: 'black'
-                        },
-                        grid: {
-                            color: 'rgb(0,0,0)'
-                        }
+                y: {
+                    ticks: {
+                        color: 'white'
                     },
-                    y: {
-                        ticks: {
-                            color: 'black'
-                        },
-                        grid: {
-                            color: 'rgb(0,0,0)'
-                        }
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)'
                     }
-                },
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: 'black'
-                        }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'white'
                     }
-                },
-                responsive              : true,
-                scaleFontColor          : "#000000",
-                maintainAspectRatio     : false,
-                datasetFill             : false
+                }
             }
         }
-        if (barChart) {
-            barChart.destroy();
-        }
-        barChart = new Chart(barChartCanvas, {
+
+        new Chart(barChartCanvas, {
             type: 'bar',
             data: barChartData,
             options: barChartOptions
         })
-    }
-    window.addEventListener('load', drawChart);
+    })
 </script>
 <script th:inline="javascript">
     /*<![CDATA[*/
     var months = /*[[${diagramMonths}]]*/ [];
     var dataIn = /*[[${diagramIncomeCashBox}]]*/ [];
     var dataEx = /*[[${diagramExpenceCashBox}]]*/ [];
-    var barChart2;
+
     console.log(months)
     console.log(dataIn)
     console.log(dataEx)
-    function drawChart2() {
+    $(function () {
         var areaChartData = {
             labels: months,
+            scales: {
+              x: {
+                ticks: {
+                  color: "red"
+                }
+              },
+              y: {
+                ticks: {
+                  color: "green"
+                }
+              }
+            },
             datasets: [
                 {
                     label               : incomeName,
@@ -382,82 +332,21 @@
         var temp1 = areaChartData.datasets[1]
         barChartData.datasets[0] = temp1
         barChartData.datasets[1] = temp0
-        var barChartOptions;
-        if (JSON.parse(localStorage.getItem("jamesonDarkMode"))) {
-            barChartOptions = {
-                scales: {
-                    x: {
-                        ticks: {
-                            color: 'white'
-                        },
-                        grid: {
-                            color: 'rgba(255,255,255,0.1)'
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            color: 'white'
-                        },
-                        grid: {
-                            color: 'rgba(255,255,255,0.1)'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: 'white'
-                        }
-                    }
-                },
-                responsive              : true,
-                scaleFontColor          : "#FFFFFF",
-                maintainAspectRatio     : false,
-                datasetFill             : false
-            }
-        } else if (!JSON.parse(localStorage.getItem("jamesonDarkMode"))){
-            barChartOptions = {
-                scales: {
-                    x: {
-                        ticks: {
-                            color: 'black'
-                        },
-                        grid: {
-                            color: 'rgb(0,0,0)'
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            color: 'black'
-                        },
-                        grid: {
-                            color: 'rgb(0,0,0)'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: 'black'
-                        }
-                    }
-                },
-                responsive              : true,
-                scaleFontColor          : "#000000",
-                maintainAspectRatio     : false,
-                datasetFill             : false
-            }
+
+        var barChartOptions = {
+            responsive              : true,
+            maintainAspectRatio     : false,
+            datasetFill             : false
         }
-        if (barChart2) {
-            barChart2.destroy();
-        }
-        barChart2 = new Chart(barChartCanvas, {
+
+        new Chart(barChartCanvas, {
             type: 'bar',
             data: barChartData,
             options: barChartOptions
         })
-    }
-    window.addEventListener('load', drawChart2);
+    })
 </script>
+
+
 </body>
 </html>

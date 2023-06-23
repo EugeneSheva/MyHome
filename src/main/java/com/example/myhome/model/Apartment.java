@@ -33,6 +33,7 @@ public class Apartment {
 
     //В примере за каждой квартирой ставится только один лицевой счет
     @OneToOne(mappedBy = "apartment", cascade = CascadeType.MERGE)
+    @JsonIgnore
     private ApartmentAccount account;
 
     @ManyToOne

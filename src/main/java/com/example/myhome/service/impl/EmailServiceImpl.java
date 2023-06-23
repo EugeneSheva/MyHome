@@ -37,13 +37,14 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void send(String to, String email) {
+    @Async
+    public void send(String recipientAddress, String emailContent) {
         try {
-            log.info("Trying to send email to " + to);
+            log.info("Trying to send email to " + recipientAddress);
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message);
-            helper.setText(email, true);
-            helper.setTo(to);
+            helper.setText(emailContent, true);
+            helper.setTo(recipientAddress);
             helper.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
             log.info("Message created, sending...");
             mailSender.send(message);
@@ -55,13 +56,13 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Async
-    public void sendWithAttachment(String to, String fileName) {
+    public void sendWithAttachment(String recipientAddress, String fileName) {
 
         try {
-            log.info("Trying to send email to " + to);
+            log.info("Trying to send email to " + recipientAddress);
             MimeMessage message = mailSender.createMimeMessage();
             message.setFrom(new InternetAddress(EMAIL_SENDER));
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipientAddress));
             message.setSubject("Invoice");
             BodyPart messageBodyPartText = new MimeBodyPart();
             messageBodyPartText.setText("Sent invoice");

@@ -27,12 +27,12 @@ public class ApartmentAccount implements Serializable {
     private Boolean changedState;
 
     @ToString.Exclude
-    @JsonIgnore
     @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name="apartment_id")
     private Apartment apartment;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name="building_id")
     private Building building;
 

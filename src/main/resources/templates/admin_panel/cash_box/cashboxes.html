@@ -355,10 +355,34 @@
         let month = date.getMonth() + 1;
         let year = date.getFullYear();
 
-        let table = document.getElementById("cashboxTable");
-        let excel_file = XLSX.utils.table_to_book(table);
-        XLSX.writeFile(excel_file, "Касса " + `${day}-${month}-${year}` + ".xlsx");
-        console.log(2)
+        const rows = tableData.content.map(row => ({
+          ID: row.id,
+          Date: row.date[2] + '.' + row.date[1].toString().padStart(2,'0') + '.' + row.date[0],
+          Completed: row.completed,
+          Item: row.incomeExpenseItems,
+          Owner: row.ownerFullName,
+          AccountID: row.apartmentAccount,
+          Type: row.incomeExpenseType,
+          Amount: row.amount
+        }));
+
+        const column_widths = rows.map(row => {
+            let max_width = 0;
+            for(const prop in row) {
+
+            }
+        })
+
+        const worksheet = XLSX.utils.json_to_sheet(rows);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "TableData");
+
+        worksheet["!cols"] = [ { wch: 5 }, { wch: 10 }, { wch: 10 }, { wch: 30 }, { wch: 30 }, { wch: 10 }, { wch: 10 }, { wch: 10 } ];
+
+<!--        let table = document.getElementById("cashboxTable");-->
+<!--        let excel_file = XLSX.utils.table_to_book(table);-->
+
+        XLSX.writeFile(workbook, "Касса " + `${day}-${month}-${year}` + ".xlsx");
     }
 </script>
 <!--<script>-->

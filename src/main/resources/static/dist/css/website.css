@@ -249,6 +249,7 @@ textarea {
 .select2-container {
     width: 100% !important;
     margin-bottom: 10px !important;
+    color: black;
 }
 .select2-container .select2-selection--single {
     height: 45px !important;
@@ -274,6 +275,14 @@ textarea {
 
 .select2-results__options {
     max-height: 120px !important;
+}
+
+.select2-results__options > * {
+    color: black;
+}
+
+.select2-results__options li {
+    color: black;
 }
 
 #return_button {

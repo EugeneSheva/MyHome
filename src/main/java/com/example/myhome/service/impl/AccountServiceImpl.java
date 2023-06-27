@@ -78,6 +78,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public Boolean existsById(Long account_id) {
+        return accountRepository.existsById(account_id);
+    }
+
+    @Override
     public ApartmentAccount findAccountById(Long account_id) {
         log.info("Searching for account with ID: " + account_id);
         ApartmentAccount account = accountRepository.findById(account_id).orElseThrow();
@@ -189,6 +194,8 @@ public class AccountServiceImpl implements AccountService {
                 .filter(balance -> balance < 0)
                 .reduce(Double::sum).orElse(0.0);
     }
+
+
 
 
     public ApartmentAccount getAccountWithBiggestId() {return accountRepository.findFirstByOrderByIdDesc().orElseThrow();}

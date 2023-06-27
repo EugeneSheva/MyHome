@@ -24,6 +24,7 @@ public interface AccountService {
     Double getSumOfAccountBalances();
     Double getSumOfAccountDebts();
 
+    Boolean existsById(Long account_id);
     ApartmentAccount findAccountById(Long account_id);
     ApartmentAccount getAccountNumberFromFlat(Long flat_id);
     ApartmentAccountDTO findAccountDTOById(Long account_id);

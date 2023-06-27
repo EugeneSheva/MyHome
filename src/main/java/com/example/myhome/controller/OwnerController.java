@@ -33,6 +33,7 @@ import org.springframework.web.servlet.LocaleContextResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -56,6 +57,7 @@ public class OwnerController {
     private final BuildingService buildingService;
     private final AccountService accountService;
     private final ApartmentService apartmentService;
+    private final EmailService emailService;
     private final OwnerDTOMapper mapper;
 
     private final MessageSource messageSource;
@@ -86,6 +88,32 @@ public class OwnerController {
         OwnerDTO owner = ownerService.findByIdDTO(id);
         model.addAttribute("owner", owner);
         return "admin_panel/owners/owner_edit";
+    }
+
+    @GetMapping("/invite")
+    public String showInvitePage() {
+        return "admin_panel/owners/invite";
+    }
+
+    @PostMapping("/invite")
+    public String inviteOwner(@RequestParam String phone,
+                              @RequestParam String email,
+                              Model model) {
+
+        List<String> errors = new ArrayList<>();
+        if(phone.isEmpty()) errors.add("Phone is empty");
+        else if(!phone.matches("\\+380[0-9]{9}")) errors.add("Wrong phone format");
+        if(email.isEmpty()) errors.add("Email is empty");
+        else if(!email.matches("[A-z]+@[a-z]+\\.[a-z]{2,4}")) errors.add("Wrong email format");
+
+        if(errors.size() > 0) {
+            model.addAttribute("errors", errors);
+            return "admin_panel/owners/invite";
+        } else {
+            emailService.send(email, "Invite");
+            model.addAttribute("invited", messageSource.getMessage("message.invite.sent", null, LocaleContextHolder.getLocale()));
+            return "admin_panel/owners/invite";
+        }
     }
 
     @PostMapping("/save")

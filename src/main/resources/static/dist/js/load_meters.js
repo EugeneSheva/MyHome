@@ -2,7 +2,6 @@ let house_selector = $("#house_select");
 let section_selector = $("#section_select");
 let apartment_selector = $("#apartment_select");
 let account = $("#account");
-let accountDisplay = $("#account_display");
 
 $(document).ready(function(){
 
@@ -40,7 +39,6 @@ $(document).ready(function(){
         apartment_selector.html('');
         apartment_selector.prop('disabled', true);
 
-        accountDisplay.val('----------');
 
         if(this.value === 0) {
           section_selector.prop('disabled', true);
@@ -75,7 +73,6 @@ $(document).ready(function(){
 // изменение секции перезагружает квартиры
     section_selector.change(function(){
 
-        accountDisplay.val('----------');
 
        if(section_selector.val() != 0) {
             apartment_selector.html('');
@@ -132,9 +129,7 @@ $(document).ready(function(){
                 $.get('/myhome/admin/accounts/get-flat-account',{flat_id:apartment_selector.val()}, function(data){
                     console.log(data);
                     account.val(data.toString());
-                    accountDisplay.val(data.toString().padStart(10,'0'));
                 })
-                .fail(function(){accountDisplay.val('----------');});
 
                 // Получение счетчиков для выбранной квартиры
                 $.get('/myhome/admin/apartments/get-meters', {flat_id:apartment_selector.val()}, function(data){
@@ -177,6 +172,64 @@ $(document).ready(function(){
 
 
     });
+
+ // изменение лицевого счёта
+ account.change(function(){
+    $.get('/myhome/admin/accounts/get-account-info', {account_id: $(this).val()}
+    ).then(function(data) {
+        console.log(data);
+
+        let owner = data.owner;
+        let apartment = data.apartment;
+        let building = data.apartment.building;
+        let section = data.apartment.section;
+
+        console.log(owner);
+        console.log(apartment);
+
+        $("#owner_name").html('<b>'+ownerText+': </b>');
+        $("#owner_phone").html('<b>'+ownerPhoneText+': </b>');
+
+        if(owner != null) {
+            let name = document.createElement("a");
+            name.href = (data != null) ? '/myhome/admin/owners/'+owner.id : '#';
+            name.text = (data != null) ? owner.fullName : notFoundText;
+
+            let phone = document.createElement("a");
+            phone.href = (data.phone_number != null) ? 'tel:' + owner.phone_number : '#';
+            phone.text = (data.phone_number != null) ? owner.phone_number : notFoundText;
+
+            $("#owner_name").append(name);
+            $("#owner_phone").append(phone);
+        }
+
+        if(apartment != null) {
+            house_selector.val(building.id).trigger('change');
+
+            setTimeout(() => {
+                section_selector.val(section).trigger('change');
+            }, 100)
+
+            setTimeout(() => {
+                apartment_selector.val(apartment.id).trigger('change');
+            }, 200)
+        }
+
+
+
+        console.log(building.id);
+        console.log(section);
+        console.log(apartment.id);
+
+
+    }
+    ).fail(function(){
+        $("#owner_name").html('<b>'+ownerText+': </b>');
+        $("#owner_phone").html('<b>'+ownerPhoneText+': </b>');
+        house_selector.val(0);
+        house_selector.trigger('change');
+    });
+ });
 
 
 // получение дома
@@ -227,11 +280,7 @@ $(document).ready(function(){
 $.get('/myhome/admin/accounts/get-flat-account',{flat_id:apartment_selector.val()}, function(data){
     console.log(data);
     account.val(data);
-    accountDisplay.val(data.toString().padStart(10,'0'));
 })
-.fail(function(){
-accountDisplay.val('----------');
-});
 
 
 });

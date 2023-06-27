@@ -108,6 +108,8 @@ public class AdminPanelSecurityConfig {
                 .antMatchers(HttpMethod.POST, "/**/requests/**").hasAuthority("requests.write")
                 .antMatchers(HttpMethod.GET,"/**/roles").hasAuthority("roles.read")
                 .antMatchers(HttpMethod.POST,"/**/roles").hasAuthority("roles.write")
+                .antMatchers(HttpMethod.GET, "/**/website/**").hasAuthority("website_settings.read")
+                .antMatchers(HttpMethod.POST, "/**/website/**").hasAuthority("website_settings.write")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler())

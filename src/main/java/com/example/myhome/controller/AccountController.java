@@ -18,6 +18,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -163,6 +164,21 @@ public class AccountController {
         }
         return "redirect:/admin/accounts";
     }
+
+    // Получение информации про лицевой счёт по его ID
+    @GetMapping("/get-account-info")
+    public @ResponseBody ResponseEntity<ApartmentAccount> getAccountFromID(@RequestParam long account_id) {
+        try {
+            if(!accountService.existsById(account_id)) return ResponseEntity.status(404).build();
+            else {
+                ApartmentAccount account = accountService.findAccountById(account_id);
+                return ResponseEntity.ok(account);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
 
     // Получить лицевой счёт конкретной квартиры через её ID
     @GetMapping("/get-flat-account")

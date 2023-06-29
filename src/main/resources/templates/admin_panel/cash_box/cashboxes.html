@@ -21,6 +21,10 @@
 
     <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}">
     <link rel="stylesheet" th:href="@{/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css}">
+
+<!--    EXCEL JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js" integrity="sha512-UnrKxsCMN9hFk7M56t4I4ckB4N/2HHi0w/7+B/1JsXIX3DmyBcsGpT3/BsuZMZf+6mAr0vP81syWtfynHJ69JA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
 /*<!--        .select2-container .select2-selection&#45;&#45;single {-->*/
 /*<!--            height: 38px;-->*/
@@ -347,7 +351,21 @@
 </script>
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 <script>
+
+// EXCEL FORMAT SCRIPT
+
     function downloadExcelTable() {
+
+        const workbook = new ExcelJS.Workbook();
+
+        workbook.creator = 'Me';
+        workbook.lastModifiedBy = 'Her';
+        workbook.created = new Date(1985, 8, 30);
+        workbook.modified = new Date();
+        workbook.lastPrinted = new Date(2016, 9, 27);
+
+        const worksheet = workbook.addWorksheet('My Sheet',{views: [{showGridLines: false}]});
+
         console.log(1)
         const date = new Date();
 
@@ -366,23 +384,65 @@
           Amount: row.amount
         }));
 
-        const column_widths = rows.map(row => {
-            let max_width = 0;
+        const headerRow = worksheet.getRow(1);
+        let index = 1;
+        for(const prop in rows[0]) {
+            const cell = headerRow.getCell(index++);
+            cell.value = prop;
+            cell.font = {bold: true};
+            cell.alignment = {vertical: 'middle', horizontal: 'center'};
+            cell.border = {top: {style: 'thin'},left: {style: 'thin'},bottom: {style: 'thin'},right: {style: 'thin'}}
+        }
+
+        let rowIndex = 2;
+        for(const row of rows) {
+            console.log(row);
+            const worksheetRow = worksheet.getRow(rowIndex++);
+            let columnIndex = 1;
             for(const prop in row) {
-
+                console.log(row[prop]);
+                const cell = worksheetRow.getCell(columnIndex++);
+                cell.value = row[prop];
+                cell.alignment = {vertical: 'middle', horizontal: 'center'};
+                cell.border = {top: {style: 'thin'},left: {style: 'thin'},bottom: {style: 'thin'},right: {style: 'thin'}}
             }
+        }
+
+        for(let i = 1; i < worksheet.actualColumnCount; i++) {
+            const column = worksheet.getColumn(i);
+            const columnValues = column.values;
+
+            for(let j = 0; j < columnValues.length; j++) {
+                columnValues[j] = (j in columnValues && columnValues[j] != null && columnValues[j] != undefined) ? columnValues[j].toString().length : 0;
+            }
+
+            console.log(columnValues);
+            let maxWidth = Math.max(...columnValues);
+            column.width = maxWidth + 5;
+        }
+
+        workbook.xlsx.writeBuffer( {
+            base64: true
         })
+        .then( function (xls64) {
+            // build anchor tag and attach file (works in chrome)
+            var a = document.createElement("a");
+            var data = new Blob([xls64], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
 
-        const worksheet = XLSX.utils.json_to_sheet(rows);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "TableData");
-
-        worksheet["!cols"] = [ { wch: 5 }, { wch: 10 }, { wch: 10 }, { wch: 30 }, { wch: 30 }, { wch: 10 }, { wch: 10 }, { wch: 10 } ];
-
-<!--        let table = document.getElementById("cashboxTable");-->
-<!--        let excel_file = XLSX.utils.table_to_book(table);-->
-
-        XLSX.writeFile(workbook, "Касса " + `${day}-${month}-${year}` + ".xlsx");
+            var url = URL.createObjectURL(data);
+            a.href = url;
+            a.download = "Касса " + `${day}-${month}-${year}` + ".xlsx";
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function() {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                },
+                0);
+        })
+        .catch(function(error) {
+            console.log(error.message);
+        });
     }
 </script>
 <!--<script>-->

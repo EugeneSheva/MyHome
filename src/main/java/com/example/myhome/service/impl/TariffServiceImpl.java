@@ -66,8 +66,8 @@ public class TariffServiceImpl implements TariffService {
 
         for(int i = 0; i < service_names.length; i++) {
             if(service_names[i].isEmpty() || prices[i].isEmpty()) continue;
-            Optional<com.example.myhome.model.Service> s = serviceRepository.findByName(service_names[i]);
-            if(s.isEmpty()) {log.info("Service not found from name: " + service_names[i] + ", skip"); continue;}
+            Optional<com.example.myhome.model.Service> s = serviceRepository.findById(Long.parseLong(service_names[i]));
+            if(s.isEmpty()) {log.info("Service not found from id: " + service_names[i] + ", skip"); continue;}
             try {
                 Double price = Double.parseDouble(prices[i]);
                 map.put(s.get(), price);

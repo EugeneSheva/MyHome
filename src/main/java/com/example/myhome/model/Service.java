@@ -21,7 +21,6 @@ public class Service implements Iterable<Service> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Имя услуги не может быть пустым!")
     @Size(min=2,message="Название должно быть длиннее двух символов!")
     @Size(max=50,message="Название должно быть больше 50 символов!")
     private String name;

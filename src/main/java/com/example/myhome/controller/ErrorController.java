@@ -18,10 +18,7 @@ public class ErrorController {
 
     @GetMapping("/error")
     public String error(HttpServletRequest req) {
-        String message = (String) req.getSession().getAttribute("error.message");
-        System.out.println(LocalDateTime.now().toString() + " --- ERROR");
-        System.out.println(message);
-        return message;
+        return (String) req.getSession().getAttribute("error.message");
     }
 
     @GetMapping("/admin/400")
@@ -34,9 +31,6 @@ public class ErrorController {
 
     @GetMapping("/admin/404")
     public String notFoundPage(HttpServletRequest req) {
-        String message = (String) req.getSession().getAttribute("error.message");
-        System.out.println(LocalDateTime.now().toString() + " --- ERROR");
-        System.out.println(message);
         return "error/404";
     }
 

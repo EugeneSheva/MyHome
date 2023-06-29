@@ -168,7 +168,11 @@
                                     </div>
                                   </div>
                                 </div>
+                                  <div style="padding-left: 7.5px; margin-bottom: 10px; color: red; width:100%; display:block;"
+                                       th:if="${#fields.hasErrors('*{unitList[__${iter.index}__].name}')}"
+                                       th:errors="*{unitList[__${iter.index}__].name}"></div>
                               </div>
+
 
                               <div id="service_unit_template" style="display:none;" class="row form-serviceunit">
                                 <div class="col-xs-12">
@@ -235,6 +239,7 @@
 <script th:inline="javascript">
 
     let serviceCount = [[${totalServiceCount}]];
+    let unitCount = [[${totalUnitCount}]];
 
     document.getElementById("service_tab").addEventListener('click', () => {
       document.getElementById("service_tab").classList.add('active');
@@ -281,6 +286,12 @@
 
         let new_slot = service_unit_template.cloneNode(true);
         new_slot.style = '';
+
+        let name_input = new_slot.firstElementChild.lastElementChild.firstElementChild;
+        name_input.setAttribute('name','unitList[' + unitCount + '].name');
+        name_input.id = 'unitList' + unitCount + '.name';
+
+        unitCount++;
 
         console.log(new_slot);
 

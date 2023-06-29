@@ -39,6 +39,7 @@ public class ServiceController {
         model.addAttribute("serviceForm", serviceForm);
         model.addAttribute("units", serviceService.findAllUnits());
         model.addAttribute("totalServiceCount",serviceForm.getServiceList().size());
+        model.addAttribute("totalUnitCount",serviceForm.getUnitList().size());
 
         model.addAttribute("servicesPageActive", true);
         model.addAttribute("settingsEditPageActive", true);
@@ -60,7 +61,7 @@ public class ServiceController {
                                  Model model) {
 
         List<Service> serviceList = serviceForm.getServiceList();
-        List<Unit> unitList = serviceForm.getUnitList().stream().filter((unit) -> unit.getId() != null).collect(Collectors.toList());
+        List<Unit> unitList = serviceForm.getUnitList();
         log.info(serviceList.toString());
         log.info(unitList.toString());
 

@@ -121,6 +121,10 @@ public class TariffController {
                                RedirectAttributes redirectAttributes,
                                Model model) {
 
+        log.info(tariff.toString());
+        log.info(Arrays.toString(service_names));
+        log.info(Arrays.toString(prices));
+
         tariff.setId(id);
         tariff.setDate(LocalDateTime.now());
         tariff.setComponents(tariffService.buildComponentsMap(service_names, prices));

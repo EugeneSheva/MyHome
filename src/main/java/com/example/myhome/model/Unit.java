@@ -15,7 +15,6 @@ public class Unit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message="Название не может быть пустым!")
     @Size(min=2,max=30, message = "Название должно быть размером от 2 до 30 символов!")
     private String name;
 

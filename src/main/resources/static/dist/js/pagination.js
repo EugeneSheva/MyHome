@@ -664,9 +664,9 @@ function drawOwnersTable(){
         newTableRow.style.cursor = 'pointer';
         newTableRow.classList.add('owner_row');
         newTableRow.innerHTML =   '<td>' + owner.id + '</td>' +
-                                  '<td>' + owner.fullName + '</td>' +
-                                  '<td>' + owner.phone_number + '</td>' +
-                                  '<td>' + owner.email + '</td>' +
+                                  '<td>' + ((owner.fullName) ? owner.fullName : '') + '</td>' +
+                                  '<td>' + ((owner.phone_number) ? owner.phone_number : '') + '</td>' +
+                                  '<td>' + ((owner.email) ? owner.email : '') + '</td>' +
                                   '<td>' + finalBuildingString + '</td>' +
                                   '<td>' + finalApartmentString + '</td>' +
                                   '<td>' + owner.date + '</td>' +

@@ -194,7 +194,6 @@
                     };
                 },
                 processResults: function(data, params) {
-                    console.log(data)
                     params.page = params.page || 0;
                     var results = $.map(data.content, function(owner) {
                         return {id: owner.id,
@@ -222,7 +221,6 @@
 
         $('#building').on('change', function() {
             var buildingID = this.value;
-            console.log(buildingID);
             if (buildingID == null || buildingID == 0) {
             $('#section').empty();
             $('#floor').empty();
@@ -231,8 +229,6 @@
                 $.ajax({
                     url: '/myhome/admin/buildings/get-sections/' + buildingID,
                     success: function (data) {
-                        console.log('success ' + data);
-                        console.log(data);
                         // Очистка второго селектора
                         $('#section').empty();
                         // Добавление первой пустой опции
@@ -252,7 +248,6 @@
                 $.ajax({
                     url: '/myhome/admin/buildings/get-floors/' + buildingID,
                     success: function (data) {
-                        console.log('success ' + data)
                         $('#floor').empty();
                         $('#floor').prepend($('<option>', {
                             value: '',
@@ -296,6 +291,8 @@
 <!-- general pagination script -->
 <script th:src="@{/dist/js/pagination.js}"></script>
 
+<script src="https://unpkg.com/imask"></script>
+
 <!-- page-specific pagination script -->
 <script>
 
@@ -305,13 +302,19 @@
 
     let globalTableName = 'apartments';
 
-    console.log('total page count for apartments is ' + totalPagesCount);
 
     $(document).ready(function(){
 
         drawTable();
 
     });
+
+    let idInput = document.getElementById('number');
+      let maskOptions = {
+          mask: '0000000000'
+      }
+      let mask1 = IMask(idInput, maskOptions);
+
 
 </script>
 

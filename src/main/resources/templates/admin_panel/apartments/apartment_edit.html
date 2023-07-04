@@ -223,8 +223,6 @@
     var apartmentID = [[*{id}]];
     var apartmentSection = [[${apartment.section}]];
     var apartmentFloor = [[${apartment.floor}]];
-    console.log(apartmentSection);
-    console.log(apartmentFloor);
     $(function () {
 
         if(apartmentSection != null) {
@@ -250,7 +248,6 @@
                     };
                 },
                 processResults: function(data, params) {
-                    console.log(data)
                     params.page = params.page || 0;
                     var results = $.map(data.content, function(owner) {
                         return {id: owner.id,

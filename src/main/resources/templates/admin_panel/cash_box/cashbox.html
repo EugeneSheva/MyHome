@@ -171,12 +171,10 @@
 
     let currentLanguage = [[${#locale.language}]];
     let cashbox = [[${cashBox}]];
-    console.log(JSON.stringify(cashbox));
     const hidden = document.getElementById('box');
     hidden.value = JSON.stringify(cashbox);
 
     function downloadExcelTable() {
-        console.log(1)
         const date = new Date();
 
         let day = date.getDate();
@@ -189,7 +187,6 @@
 
         let excel_file = XLSX.utils.table_to_book(table);
         XLSX.writeFile(excel_file, "Касса " + `${day}-${month}-${year}` + ".xlsx");
-        console.log(2)
     }
 </script>
 <!--    function copy() {-->

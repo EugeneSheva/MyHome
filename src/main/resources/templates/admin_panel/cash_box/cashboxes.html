@@ -260,6 +260,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
+<script src="https://unpkg.com/imask"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -276,7 +277,6 @@
     let globalTableName = 'transactions';
     let totalPagesCount = [[${totalPagesCount}]];
     let placeholderText = [[#{select.placeholder}]];
-    console.log(placeholderText);
     let notFoundText = [[#{not-found}]];
     let tableData;
 
@@ -287,6 +287,18 @@
         drawTable();
 
     });
+
+    let idInput = document.getElementById('id');
+      let maskOptions = {
+          mask: '0000000000'
+      }
+      let mask1 = IMask(idInput, maskOptions);
+
+      let apInput = document.getElementById('accountId');
+      let maskOptions3 = {
+          mask: '0000000000'
+      }
+      let mask3 = IMask(apInput, maskOptions3);
 
 </script>
 
@@ -366,7 +378,6 @@
 
         const worksheet = workbook.addWorksheet('My Sheet',{views: [{showGridLines: false}]});
 
-        console.log(1)
         const date = new Date();
 
         let day = date.getDate();
@@ -396,11 +407,9 @@
 
         let rowIndex = 2;
         for(const row of rows) {
-            console.log(row);
             const worksheetRow = worksheet.getRow(rowIndex++);
             let columnIndex = 1;
             for(const prop in row) {
-                console.log(row[prop]);
                 const cell = worksheetRow.getCell(columnIndex++);
                 cell.value = row[prop];
                 cell.alignment = {vertical: 'middle', horizontal: 'center'};
@@ -416,7 +425,6 @@
                 columnValues[j] = (j in columnValues && columnValues[j] != null && columnValues[j] != undefined) ? columnValues[j].toString().length : 0;
             }
 
-            console.log(columnValues);
             let maxWidth = Math.max(...columnValues);
             column.width = maxWidth + 5;
         }
@@ -441,7 +449,6 @@
                 0);
         })
         .catch(function(error) {
-            console.log(error.message);
         });
     }
 </script>
@@ -491,7 +498,6 @@
                     };
                 },
                 processResults: function(data, params) {
-                    console.log(data)
                     params.page = params.page || 0;
                     var results = $.map(data.content, function(owner) {
                         return {id: owner.id,

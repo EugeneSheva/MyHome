@@ -196,6 +196,8 @@
 
 <script th:src="@{/dist/js/pagination.js}"></script>
 
+<script src="https://unpkg.com/imask"></script>
+
 <script th:inline="javascript">
 
     let globalTableName = 'owners';
@@ -213,6 +215,36 @@
 
     });
 
+    let idInput = document.getElementById('id');
+      let maskOptions = {
+          mask: '0000000000'
+      }
+      let mask1 = IMask(idInput, maskOptions);
+
+    let descInput = document.getElementById('ownerName');
+      let maskOptions2 = {
+          mask: /^\D{1,100}$/
+      }
+      let mask2 = IMask(descInput, maskOptions2);
+
+      let apInput = document.getElementById('email');
+      let maskOptions3 = {
+          mask: /^\D{1,100}$/
+      }
+      let mask3 = IMask(apInput, maskOptions3);
+
+      let apartmentInput = document.getElementById('apartment');
+      let maskOptions5 = {
+          mask: '0000000000'
+      }
+      let mask5 = IMask(apartmentInput, maskOptions5);
+
+      let phoneInput = document.getElementById('phone');
+      let maskOptions4 = {
+          mask: '0000000000'
+      }
+      let mask4 = IMask(phoneInput, maskOptions4);
+
 </script>
 
 <script>
@@ -223,7 +255,6 @@
             ajax: {
                 url: '/myhome/admin/buildings/get-buildings',
                 data: function(params){
-                    console.log(params.page);
                     return {
                         search: params.term || "",
                         page: params.page || 1

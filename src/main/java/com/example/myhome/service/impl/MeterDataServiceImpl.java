@@ -28,6 +28,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,8 +67,8 @@ public class MeterDataServiceImpl implements MeterDataService {
         LocalDate date_from = null;
         LocalDate date_to = null;
         if(date != null && !date.isEmpty()) {
-            date_from = LocalDate.parse(date.split(" to ")[0]);
-            date_to = LocalDate.parse(date.split(" to ")[1]);
+            date_from = LocalDate.parse(date.split(" to ")[0], DateTimeFormatter.ofPattern("yyyy-dd-MM"));
+            date_to = LocalDate.parse(date.split(" to ")[1], DateTimeFormatter.ofPattern("yyyy-dd-MM"));
         }
         Specification<MeterData> spec = Specification.where(MeterSpecifications.hasApartment(apartmentRepository.getReferenceById(form.getApartment()))
                                                     .and(MeterSpecifications.hasService((form.getService() != null) ? serviceRepository.getReferenceById(form.getService()) : null))

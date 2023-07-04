@@ -128,7 +128,6 @@ input[type="radio"]{
     let templateList = document.getElementsByName('template');
 
     for(const template of templateList) {
-      console.log(template);
       if(template.checked) chosenTemplateValue = template.value;
     }
 
@@ -141,11 +140,9 @@ input[type="radio"]{
           xhr.setRequestHeader(header, token)
         },
         success: function(data) {
-          console.log(data);
           alert('Invoice sent to email: ' + data);
         },
         error: function(error) {
-          console.log(error);
           alert('Invoice not sent: ' + error);
         }
       });

@@ -312,10 +312,7 @@
     var adminList = /*[[${adminList}]]*/ [];
     let fields = document.getElementById('multi-fields');
     // let fields = $("#multi-fields");
-    console.log(fields)
     let elementsQuantity = fields.childElementCount;
-    console.log('elementsQuantity '+ elementsQuantity)
-    console.log('elementsQuantity+1 '+ parseInt(elementsQuantity) + 1)
 
     $(".multi-field-wrapper").each(function () {
         var $wrapper = $(".multi-fields", this);
@@ -325,7 +322,6 @@
             if ($clone.find("select").length > 0) {
                 // Найдем нужный элемент option и удалим у него атрибут selected
                 $clone.find("select option[value='value-to-be-unselected']").removeAttr("selected");
-                console.log(elementsQuantity)
                 $clone.find("select").attr("onchange", "selectAdmin(" + (+elementsQuantity + 1) + ")");
             }
             // Добавляем атрибуты id в select и input
@@ -356,7 +352,6 @@
     }
 
     $('input[type="file"]').change(function() {
-      console.log(this);
       let photo = this.files[0];
       let inputName = this.getAttribute('name');
       let image = document.querySelector('img[data-name="' + inputName + '"]');

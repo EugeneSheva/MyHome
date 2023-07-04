@@ -115,7 +115,6 @@
 <!--    function handleFormSubmit() {-->
 <!--        const form = document.getElementById('1');-->
 <!--        form.submit();-->
-<!--        console.log("Форма отправлена!");-->
 <!--    }-->
 
 <!--    function handleInputChange() {-->
@@ -144,6 +143,8 @@
 <script th:src="@{/dist/js/adminlte.js}"></script>
 <script th:src="@{/dist/js/pagination.js}"></script>
 
+<script src="https://unpkg.com/imask"></script>
+
 <script th:inline="javascript">
 
     let globalTableName = 'buildings';
@@ -155,6 +156,18 @@
         drawTable();
 
     });
+
+    let descInput = document.getElementById('name');
+      let maskOptions2 = {
+          mask: /^\D{1,100}$/
+      }
+      let mask2 = IMask(descInput, maskOptions2);
+
+      let apInput = document.getElementById('address');
+      let maskOptions3 = {
+          mask: /^\D{1,100}$/
+      }
+      let mask3 = IMask(apInput, maskOptions3);
 
 </script>
 

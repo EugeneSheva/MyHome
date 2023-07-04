@@ -53,10 +53,6 @@ public class ServiceController {
     // Затем в этот список добавляются и сохраняются новые услуги/единицы через соотв.массивы
     @PostMapping
     public String updateServices(@Valid @ModelAttribute ServiceForm serviceForm, BindingResult bindingResult,
-                                 @RequestParam String[] new_service_names,
-                                 @RequestParam String[] new_service_unit_names,
-                                 @RequestParam(required = false) String[] new_service_show_in_meters,
-                                 @RequestParam(required = false) String[] new_unit_names,
                                  RedirectAttributes redirectAttributes,
                                  Model model) {
 
@@ -70,12 +66,11 @@ public class ServiceController {
             log.info(bindingResult.getAllErrors().toString());
             model.addAttribute("validation", "failed");
             model.addAttribute("totalServiceCount",serviceForm.getServiceList().size());
+            model.addAttribute("totalUnitCount",serviceForm.getUnitList().size());
             return "admin_panel/system_settings/settings_services";
         }
 
         try {
-//            serviceService.addNewUnits(unitList, new_unit_names);
-//            serviceService.addNewServices(serviceList, new_service_names, new_service_unit_names, new_service_show_in_meters);
             serviceService.saveUnits(unitList);
             serviceService.saveServices(serviceList);
         } catch (ConstraintViolationException e) {

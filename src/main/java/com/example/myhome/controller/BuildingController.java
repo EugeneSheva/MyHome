@@ -1,7 +1,9 @@
 package com.example.myhome.controller;
 
 import com.example.myhome.dto.AdminDTO;
+import com.example.myhome.dto.ApartmentDTO;
 import com.example.myhome.dto.BuildingDTO;
+import com.example.myhome.mapper.ApartmentDTOMapper;
 import com.example.myhome.mapper.BuildingDTOMapper;
 import com.example.myhome.model.Building;
 import com.example.myhome.model.filter.FilterForm;
@@ -53,6 +55,7 @@ public class BuildingController {
     private final AdminService adminService;
     private final BuildingValidator buildingValidator;
     private final BuildingDTOMapper mapper;
+    private final ApartmentDTOMapper apartmentDTOMapper;
     private final MessageSource messageSource;
 
     @GetMapping
@@ -187,6 +190,12 @@ public class BuildingController {
         ObjectMapper mapper = new ObjectMapper();
         FilterForm form = mapper.readValue(filters, FilterForm.class);
         return buildingService.findAllBySpecification(form, page, size);
+    }
+
+    @GetMapping("/get-apartments/{id}")
+    public @ResponseBody List<ApartmentDTO> getApartments(@PathVariable long id) {
+        Building building = buildingService.findById(id);
+        return building.getApartments().stream().map(apartmentDTOMapper::fromApartmentToDTO).collect(Collectors.toList());
     }
 
 

@@ -6,7 +6,9 @@ import com.example.myhome.model.pages.MainPage;
 import com.example.myhome.model.pages.ServicesPage;
 import com.example.myhome.service.WebsiteService;
 
+import com.example.myhome.validator.AboutPageValidator;
 import com.example.myhome.validator.MainPageValidator;
+import com.example.myhome.validator.ServicesPageValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,8 @@ public class WebsiteController {
 
     private final WebsiteService websiteService;
     private final MainPageValidator validator;
+    private final AboutPageValidator aboutPageValidator;
+    private final ServicesPageValidator servicesPageValidator;
 
     // Открыть страничку редактирования контента главной страницы
     @GetMapping("/home")
@@ -98,7 +102,16 @@ public class WebsiteController {
                                @RequestPart(required = false) MultipartFile page_block_6_img,
                                Model model) throws IOException {
 
-        //validator.validate(mainPage, bindingResult);
+        // валидация расширения всех файлов
+        // т.к я изначально сделал все косо-криво с заливом и сохранением файлов , приходится пилить вот так
+        validator.validateMainPage(mainPage, bindingResult,page_slide1,page_slide2,
+                                                                        page_slide3,
+                                                                        page_block_1_img,
+                                                                        page_block_2_img,
+                                                                        page_block_3_img,
+                                                                        page_block_4_img,
+                                                                        page_block_5_img,
+                                                                        page_block_6_img);
 
         if(bindingResult.hasErrors()) {
             log.info("Errors found");
@@ -127,6 +140,9 @@ public class WebsiteController {
                                 @RequestParam(required = false) MultipartFile[] document_files,
                                 Model model) throws IOException {
 
+        aboutPageValidator.validateAboutPage(aboutPage, bindingResult, page_director_photo, page_photos,
+                page_add_photos, document_names, document_files);
+
         if(bindingResult.hasErrors()) {
             log.info("Errors found");
             log.info(bindingResult.getAllErrors().toString());
@@ -149,6 +165,8 @@ public class WebsiteController {
                                    @RequestParam String[] descriptions,
                                    @RequestParam MultipartFile[] service_images,
                                    Model model) {
+
+        servicesPageValidator.validateServicesPage(servicesPage, bindingResult, service_images);
 
         if(bindingResult.hasErrors()) {
             log.info("Errors found");

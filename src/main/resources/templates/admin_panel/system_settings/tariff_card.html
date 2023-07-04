@@ -187,7 +187,7 @@
 <script>
   function deleteService(button) {
     let service_row = $(button).closest(".row");
-    console.log(service_row);
+
     if(confirm('Удалить?')) {
       service_row.remove();
     }
@@ -196,12 +196,12 @@
   function setUnit(select) {
     console.log(select.value);
     let service_id = $(select).val();
-    console.log(service_id);
+
     let unit = $(select).closest('.service-row').find('.unit-select');
-    console.log(unit);
+
 
     $.get('/myhome/admin/services/get-unit', {id:select.value}, function(data){
-        console.log(data);
+
         $(unit).val(data.id);
     });
   }
@@ -210,11 +210,11 @@
 
     let services_container = document.getElementById("services");
     let service_template = document.getElementById("form-tariffservice-rows-template");
-    console.log(services_container);
-    console.log(service_template);
+
+
     $("#add_service_btn").click(function() {
       let new_slot = service_template.cloneNode(true);
-      console.log(new_slot);
+
       new_slot.id = "form-tariffservice-rows";
       new_slot.style.display = 'block';
       services_container.insertBefore(new_slot, service_template);
@@ -236,7 +236,7 @@
         let service_id = this.value;
 
         $.get("/myhome/admin/services/get-unit/",{id:service_id}, function(data){
-            console.log(data);
+
 
             let unit_select = document.getElementById('unit-'+select_index);
 

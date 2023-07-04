@@ -35,10 +35,12 @@ public class MeterValidator implements Validator {
         if(meter.getBuildingID() == null || meter.getBuildingID() == 0) {
             System.out.println("Error found(building)");
             e.rejectValue("buildingID", "building.empty", messageSource.getMessage("meters.building.empty", null, locale));
-        } else if(meter.getSection() == null || meter.getSection().equals("")) {
-            System.out.println("Error found(section)");
-            e.rejectValue("section", "section.empty", messageSource.getMessage("meters.section.empty", null, locale));
-        } else if(meter.getApartmentID() == null || meter.getApartmentID() == 0) {
+        }
+//        else if(meter.getSection() == null || meter.getSection().equals("")) {
+//            System.out.println("Error found(section)");
+//            e.rejectValue("section", "section.empty", messageSource.getMessage("meters.section.empty", null, locale));
+//        }
+        else if(meter.getApartmentID() == null || meter.getApartmentID() == 0) {
             System.out.println("Error found(apartment)");
             e.rejectValue("apartmentID", "apartment.empty", messageSource.getMessage("meters.apartment.empty", null, locale));
         }

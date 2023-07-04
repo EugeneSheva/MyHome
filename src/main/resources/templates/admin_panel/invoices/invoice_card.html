@@ -379,10 +379,6 @@
     let apartmentID = [[${invoiceDTO.apartment.id}]];
     let apartmentSection = [[${invoiceDTO.section}]];
 
-    console.log('invoice building ID ' + buildingID);
-    console.log('invoice apartment ID ' + apartmentID);
-    console.log('invoice apartment section ' + apartmentSection);
-
     add_service_btn.addEventListener('click',function(){
         let new_row = component_row_template.cloneNode(true);
         new_row.id = '';
@@ -394,7 +390,6 @@
     set_services_from_tariff_btn.addEventListener('click', function(){
 
         let rows = components_body.querySelectorAll("tr");
-        console.log(rows);
         for(let i = 1; i < rows.length-1; i++) {
           rows[i].remove();
         }
@@ -402,19 +397,14 @@
         let tariff_id = $("#tariff").val();
 
         $.get('/myhome/admin/tariffs/get-components', {tariff_id:tariff_id}, function(data){
-            console.log(data);
-            console.log(typeof data);
 
             let map = new Map(Object.entries(data));
 
-            console.log(map);
 
             let total_price = 0.0;
 
             for (const [key, value] of map.entries()) {
               let service = JSON.parse(key);
-              console.log(service);
-              console.log(value);
 
               let new_row = component_row_template.cloneNode(true);
               new_row.id = '';

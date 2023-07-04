@@ -166,11 +166,9 @@
 <script th:inline="javascript">
     let currentLanguage = [[${#locale.language}]];
 
-    console.log([[${owner}]]);
 
     let fileInput = document.getElementById('img1');
     fileInput.addEventListener('change', function(){
-      console.log(this);
       let photo = this.files[0];
       let image = document.getElementById('avatar');
       let imagePath = URL.createObjectURL(photo);
@@ -211,7 +209,6 @@
                 password.type = 'password';
                 repeat_password.type = 'password';
             }
-            console.log(document.getElementById('password'));
         });
 
         document.getElementById('generate').addEventListener('click', () => {

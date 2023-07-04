@@ -45,9 +45,6 @@ public class AdminController {
         Page<AdminDTO> adminPage;
         Pageable pageable = PageRequest.of((form.getPage() == null) ? 0 : form.getPage()-1 ,15);
 
-//        adminPage = adminService.findAllByFiltersAndPage(form, pageable);
-//        model.addAttribute("totalPagesCount", adminPage.getTotalPages());
-//        model.addAttribute("admins", adminPage);
         model.addAttribute("roles",adminService.getAllRoles());
         model.addAttribute("filter_form", form);
 

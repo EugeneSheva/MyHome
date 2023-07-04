@@ -163,6 +163,8 @@
 
 <script th:src="@{/dist/js/pagination.js}"></script>
 
+<script src="https://unpkg.com/imask"></script>
+
 <script th:inline="javascript">
 
     let globalTableName = 'meters';
@@ -180,6 +182,14 @@
 
 </script>
 
+<script>
+    let idInput = document.getElementById('apartment');
+    let maskOptions = {
+        mask: '0000000000'
+    }
+    let mask = IMask(idInput, maskOptions);
+</script>
+
 <script th:inline="javascript">
 
     // ФИЛЬТРЫ
@@ -192,7 +202,6 @@
             ajax: {
                 url: '/myhome/admin/buildings/get-buildings',
                 data: function(params){
-                    console.log(params.page);
                     return {
                         search: params.term || "",
                         page: params.page || 1
@@ -212,7 +221,6 @@
                 $.ajax({
                     url: '/myhome/admin/buildings/get-sections/'+buildingID,
                     success: function (data) {
-                        console.log('success ' + data)
                         // Очистка второго селектора
                         $('#section').empty();
                         // Добавление первой пустой опции
@@ -232,7 +240,6 @@
                 $.ajax({
                     url: '/myhome/admin/buildings/get-floors/'+buildingID,
                     success: function (data) {
-                        console.log('success ' + data)
                         $('#floor').empty();
                         $('#floor').prepend($('<option>', {
                             value: '',

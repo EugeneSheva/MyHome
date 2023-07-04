@@ -475,6 +475,9 @@ function drawMetersTable(){
     let data = getTableData('/myhome/admin/meters/get-meters', currentPageNumber, currentPageSize, pageFiltersString);
     let $metersTable = $("#metersTable tbody");
     $metersTable.html('');
+
+
+
     for(const meter of data.content) {
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
@@ -487,7 +490,7 @@ function drawMetersTable(){
                                   '<td style="background-color: #DFD5; font-weight:bold; text-decoration:underline">' + meter.serviceUnitName + '</td>' +
                                   '<td>' +
                                       '<div class="btn-group pull-right">' +
-                                          '<a class="btn btn-default btn-sm" href="/myhome/admin/meters/create-add?flat_id=' + meter.apartmentID + '&service_id=' + meter.serviceID + '" title="Снять новое показание счетчика" target="_blank" data-toggle="tooltip"><i class="fa fa-dashboard"></i></a>' +
+                                          '<a class="btn btn-default btn-sm" href="/myhome/admin/meters/create-add?flat_id=' + meter.apartmentID + '&service_id=' + meter.serviceID + '" title="Снять новое показание счетчика" data-toggle="tooltip"><i class="fa fa-dashboard"></i></a>' +
                                           '<a class="btn btn-default btn-sm" href="/myhome/admin/meters/data?flat_id=' + meter.apartmentID + '&service_id=' + meter.serviceID + '" title="Открыть историю показаний для счетчика" data-toggle="tooltip"><i class="fa fa-eye"></i></a>' +
                                       '</div>' +
                                   '</td>';
@@ -524,26 +527,34 @@ function drawMeterDataTable(){
 
     let $metersTable = $("#metersTable tbody");
     $metersTable.html('');
+
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+                  "July", "August", "September", "October", "November", "December"
+                ];
+
     for(const meter of data.content) {
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
         newTableRow.classList.add = 'meter_row';
         let meter_date = new Date(meter.date);
-        let meter_month = '' + (meter_date.getMonth()+1) + '-' + meter_date.getFullYear();
+        meter_date.setDate(meter_date.getDate() + 1);
+        let date_part = meter_date.toISOString().split('T')[0];
+        let formattedDate = date_part.split('-')[0] + '-' + date_part.split('-')[2] + '-' + date_part.split('-')[1];
+        let meter_month = monthNames[meter_date.getMonth()] + ' ' + meter_date.getFullYear();
         newTableRow.innerHTML =   '<td>' + meter.id + '</td>' +
                                   '<td>' + meter.status + '</td>' +
-                                  '<td>' + meter_date.toISOString().split('T')[0] + '</td>' +
+                                  '<td>' + formattedDate + '</td>' +
                                   '<td>' + meter_month + '</td>' +
                                   '<td>' + meter.buildingName + '</td>' +
-                                  '<td>' + meter.section + '</td>' +
+                                  '<td>' + ((meter.section != null && meter.section != 0) ? meter.section : '') + '</td>' +
                                   '<td>' + meter.apartmentNumber + '</td>' +
                                   '<td>' + meter.serviceName + '</td>' +
                                   '<td style="background-color: #DFD5; font-weight:bold; text-decoration:underline">' + meter.readings + '</td>' +
                                   '<td style="background-color: #DFD5; font-weight:bold; text-decoration:underline">' + meter.serviceUnitName + '</td>' +
                                   '<td>' +
                                       '<div class="btn-group pull-right">' +
-                                          '<a class="btn btn-default btn-sm" href="/myhome/admin/meters/create-add?flat_id=' + meter.apartmentID + '&service_id=' + meter.serviceID + '" title="Снять новое показание счетчика" target="_blank" data-toggle="tooltip"><i class="fa fa-dashboard"></i></a>' +
-                                          '<a class="btn btn-default btn-sm" href="/myhome/admin/meters/data?flat_id=' + meter.apartmentID + '&service_id=' + meter.serviceID + '" title="Открыть историю показаний для счетчика" data-toggle="tooltip"><i class="fa fa-eye"></i></a>' +
+                                          '<a class="btn btn-default btn-sm" href="/myhome/admin/meters/update/' + meter.id + '" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>' +
+                                          '<a class="btn btn-default btn-sm" href="/myhome/admin/meters/delete/' + meter.id + '" title="Удалить" data-toggle="tooltip"><i class="fa fa-trash"></i></a>' +
                                       '</div>' +
                                   '</td>';
         let row_children = newTableRow.children;
@@ -923,15 +934,17 @@ function drawPagination() {
     ul.classList.add('pagination', 'justify-content-center', 'font-weight-medium');
 
     //backward navigation buttons (to first page)
-    let li = document.createElement('li');
-    li.classList.add('page-item');
-    if(currentPageNumber === 1) li.classList.add('disabled');
-    li.innerHTML = '<a class="page-link" href="#" onclick="changePageNumber(1)" aria-label="Previous"> <span aria-hidden="true">«</span></a>';
-    ul.appendChild(li);
+    //temporarily removed
+//    let li = document.createElement('li');
+//    li.classList.add('page-item');
+//    if(currentPageNumber === 1) li.classList.add('disabled');
+//    li.innerHTML = '<a class="page-link" href="#" onclick="changePageNumber(1)" aria-label="Previous"> <span aria-hidden="true">«</span></a>';
+//    ul.appendChild(li);
 
     //backward navigation buttons (-1)
     li = document.createElement('li');
     li.classList.add('page-item');
+    li.classList.add('arrow');
     if(currentPageNumber === 1) li.classList.add('disabled');
     li.innerHTML = '<a class="page-link" href="#" onclick="decreasePageByOne()" aria-label="Previous"> <span aria-hidden="true">‹</span></a>';
     ul.appendChild(li);
@@ -996,22 +1009,24 @@ function drawPagination() {
     //forward navigation buttons (+1)
     li = document.createElement('li');
     li.classList.add('page-item');
+    li.classList.add('arrow');
     if(currentPageNumber === totalPagesCount || totalPagesCount === 0) li.classList.add('disabled');
     li.innerHTML = '<a class="page-link" href="#" onclick="increasePageByOne()" aria-label="Previous"> <span aria-hidden="true">›</span></a>';
     ul.appendChild(li);
 
     //forward navigation buttons (to last page)
-    li = document.createElement('li');
-    li.classList.add('page-item');
-    if(currentPageNumber === totalPagesCount || totalPagesCount === 0) li.classList.add('disabled');
-    li.innerHTML = '<a class="page-link" href="#" onclick="changePageNumber(totalPagesCount)" aria-label="Previous"> <span aria-hidden="true">››</span></a>';
-    ul.appendChild(li);
+    // temporarily removed
+//    li = document.createElement('li');
+//    li.classList.add('page-item');
+//    if(currentPageNumber === totalPagesCount || totalPagesCount === 0) li.classList.add('disabled');
+//    li.innerHTML = '<a class="page-link" href="#" onclick="changePageNumber(totalPagesCount)" aria-label="Previous"> <span aria-hidden="true">››</span></a>';
+//    ul.appendChild(li);
 
     //page size changer
     let sizeChanger = document.createElement('div');
     sizeChanger.classList.add('btn-group');
     sizeChanger.innerHTML = '<button type="button"' +
-                                    'class="btn btn-primary btn-sm dropdown-toggle page-size-display" data-bs-toggle="dropdown"' +
+                                    'class="btn btn-primary btn-sm dropdown-toggle page-size-display my-dropdown-menu" data-bs-toggle="dropdown"' +
                                     'aria-expanded="false">' + currentPageSize +
                             '</button>' +
                             '<ul class="dropdown-menu dropdown-menu-end">' +

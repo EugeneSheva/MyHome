@@ -217,7 +217,6 @@
             ajax: {
                 url: '/myhome/admin/buildings/get-buildings',
                 data: function(params){
-                    console.log(params.page);
                     return {
                         search: params.term || "",
                         page: params.page || 1
@@ -229,26 +228,9 @@
 
     $("#section_select, #apartment_select, #serviceID, #status").select2({language: currentLanguage,placeholder: 'Выберите...', minimumResultsForSearch:Infinity});
 
-<!--    let apartment_select = $("#apartment_select");-->
-<!--      $.ajax({-->
-<!--        type:'GET',-->
-<!--        url: '/admin/apartments/get-apartment/',-->
-<!--        data: {id: apartmentID}-->
-<!--      }).then(function(data){-->
-<!--        let option = new Option('кв. ' + data.number, data.id, true, true);-->
-<!--        apartment_select.append(option).trigger('change');-->
-
-<!--        apartment_select.trigger({-->
-<!--          type:'select2:select',-->
-<!--          params: {-->
-<!--            data: data-->
-<!--          }-->
-<!--        });-->
 <!--      });-->
 
     $("#house_select").change(function(){
-        console.log(this);
-        console.log(this.value);
 
         let section_select = document.getElementById("section_select");
         section_select.innerHTML = '';
@@ -257,8 +239,6 @@
         apartment_select.innerHTML = '';
 
         if(this.value === '0') {
-
-          console.log("IF");
 
           section_select.disabled = true;
           let o = document.createElement("option");
@@ -271,16 +251,14 @@
           apartment_select.disabled = true;
           o = document.createElement("option");
           o.value = 0;
-          o.text = 'Сначала выберите секцию';
+          o.text = 'Сначала выберите дом';
           o.selected = true;
 
           apartment_select.appendChild(o);
         } else {
 
-          console.log("ELSE");
-
           section_select.disabled = false;
-          apartment_select.disabled = true;
+          apartment_select.disabled = false;
 
           let option = document.createElement("option");
           option.value = 0;
@@ -289,16 +267,9 @@
 
           section_select.appendChild(option);
 
-          option = document.createElement("option");
-          option.value = 0;
-          option.text = 'Сначала выберите секцию';
-          option.selected = true;
-
-          apartment_select.appendChild(option);
 
           $.get('/myhome/admin/buildings/get-sections/'+this.value, function(data){
 
-            console.log(data);
 
             for(let i = 0; i < data.length; i++) {
               option = document.createElement("option");
@@ -307,15 +278,35 @@
               section_select.appendChild(option);
             }
           });
+
+          $.get('/myhome/admin/buildings/get-sections/'+this.value, function(data){
+
+
+            for(let i = 0; i < data.length; i++) {
+              option = document.createElement("option");
+              option.value = data[i];
+              option.text = data[i];
+              section_select.appendChild(option);
+            }
+          });
+
+          $.get('/myhome/admin/buildings/get-apartments/'+this.value, function(data) {
+
+              console.log(data);
+
+              for(const apartment of data) {
+                option = document.createElement("option");
+                option.value = apartment.id;
+                option.text = 'кв. ' + apartment.number;
+                apartment_select.appendChild(option);
+              }
+          });
         };
     });
 
     $("#section_select").change(function(){
-        console.log(this);
-        console.log(this.value);
 
         let house_select = document.getElementById("house_select");
-        console.log(house_select.value);
 
         let apartment_select = document.getElementById("apartment_select");
         apartment_select.innerHTML = '';
@@ -330,7 +321,6 @@
 
         $.get('/myhome/admin/buildings/get-section-apartments/'+house_select.value, {section_name:this.value}, function(data){
 
-          console.log(data);
 
           for(let i = 0; i < data.length; i++) {
             let option = document.createElement("option");
@@ -363,7 +353,6 @@
         'date': date
       }
 
-      console.log(meter);
 
       var token = $("meta[name='_csrf']").attr("content");
       var header = $("meta[name='_csrf_header']").attr("content");
@@ -377,10 +366,7 @@
         },
         success: function(data){
           let errors = [];
-          console.log(data.length);
           for(const msg of data) {
-            console.log(msg);
-            console.log(typeof msg);
             errors.push(msg.toString());
           }
           if(data == null || data.length === 0) {

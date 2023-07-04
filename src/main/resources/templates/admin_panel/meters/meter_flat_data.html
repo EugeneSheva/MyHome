@@ -78,7 +78,7 @@
                   <tr>
                     <th style="width: 125px; min-width: 125px">№</th>
                     <th th:text="#{meters.meterDataPage.table.status}">Статус</th>
-                    <th style="width: 125px; min-width: 125px" th:text="#{meters.meterDataPage.table.date}">
+                    <th style="width: 125px; min-width: 255px" th:text="#{meters.meterDataPage.table.date}">
                         Дата
                     </th>
                     <th style="width: 125px; min-width: 125px" th:text="#{meters.meterDataPage.table.month}">
@@ -208,7 +208,7 @@
 
     let config = {
         enableTime: false,
-        dateFormat: "Y-m-d",
+        dateFormat: "Y-d-m",
         minDate: "2020-01",
         maxDate: new Date().fp_incr(1),
         mode: "range"
@@ -225,7 +225,15 @@
 
 <script th:src="@{/dist/js/pagination.js}"></script>
 
+<script src="https://unpkg.com/imask"></script>
+
 <script>
+
+  let idInput = document.getElementById('id');
+  let maskOptions = {
+      mask: '0000000000'
+  }
+  let mask = IMask(idInput, maskOptions);
 
   $(document).ready(function(){
     currentPageNumber = 1;

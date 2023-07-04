@@ -76,8 +76,10 @@
                       <div class="form-group mb-30">
                         <label for="websitehomeslide-1-imagefile" class="control-label" th:text="#{settings.website.about.card.info.photo.size}">Рекомендуемый размер: (1920х800)</label>
                         <input type="hidden" name="WebsiteHomeSlide[1][imageFile]" id="">
-                        <input type="file" name="page_director_photo" id="director_photo" accept="image/*">
+                        <input type="file" name="page_director_photo" id="director_photo" accept="image/jpg, image/jpeg, image/png">
                       </div>
+
+                      <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('director_photo')}" th:errors="*{director_photo}"></h4>
                     </div>
                   </div>
                   <div class="row">
@@ -96,7 +98,7 @@
 
                       <label for="websitehomeslide-1-imagefile" class="control-label" th:text="#{settings.website.about.card.gallery.photo.size}">Рекомендуемый размер: (1200x1200)</label>
                       <br>
-                      <input type="file" name="page_photos" id="photos" accept="image/*" multiple>
+                      <input type="file" name="page_photos" id="photos" accept="image/jpg, image/jpeg, image/png" multiple>
 
                     </div>
                   </div>
@@ -134,7 +136,7 @@
                       <label for="" class="control-label" th:text="#{settings.website.about.card.additional.gallery.photo.size}">Рекомендуемый размер: (1200x1200)</label>
                       <br>
                       <input type="hidden" name="WebsiteHomeSlide[1][imageFile]" id="">
-                      <input type="file" name="page_add_photos" id="add_photos" multiple accept="image/*">
+                      <input type="file" name="page_add_photos" id="add_photos" multiple accept="image/jpg, image/jpeg, image/png">
 
                     </div>
                   </div>
@@ -155,7 +157,7 @@
                                  th:src="@{/images/placeholder.jpg}"
                                  alt="">
                             <label th:text="#{settings.website.about.card.documents.size}"> PDF, JPG (макс. размер 20 Mb)</label>
-                            <input type="file" name="document_files" accept="application/pdf, image/jpeg">
+                            <input type="file" name="document_files" accept="application/pdf, image/png, image/png image/jpeg">
                           </div>
 
                           <div class="form-group">
@@ -176,7 +178,7 @@
                                  @{/images/placeholder.jpg}"
                                  alt="">
                             <label th:text="#{settings.website.about.card.documents.size}"> PDF, JPG (макс. размер 20 Mb)</label>
-                            <input type="file" name="document_files" accept="application/pdf, image/jpeg">
+                            <input type="file" name="document_files" accept="application/pdf, image/png, image/png image/jpeg">
                           </div>
 
                           <div class="form-group">
@@ -198,20 +200,23 @@
                       <h3 class="page-header" th:text="#{settings.website.seo.header}">Настройки SEO</h3>
                       <div class="form-group field-websitehomeform-homemetatitle">
 
-                        <label class="control-label" for="websitehomeform-homemetatitle" th:text="#{settings.website.seo.title}">Title</label>
-                        <input th:field="*{seo_title}" type="text" id="websitehomeform-homemetatitle" class="form-control">
+                        <label class="control-label" for="seo_title" th:text="#{settings.website.seo.title}">Title</label>
+                        <input type="text" id="seo_title" class="form-control" th:field="*{seo_title}" placeholder="Текст">
+                        <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('seo_title')}" th:errors="*{seo_title}"></h4>
 
                       </div>
                       <div class="form-group field-websitehomeform-homemetadescription">
 
-                        <label class="control-label" for="websitehomeform-homemetadescription" th:text="#{settings.website.seo.description}">Description</label>
-                        <textarea th:field="*{seo_description}" id="websitehomeform-homemetadescription" class="form-control" name="WebsiteHomeForm[homeMetaDescription]" rows="6"></textarea>
+                        <label class="control-label" for="seo_description" th:text="#{settings.website.seo.description}">Description</label>
+                        <textarea id="seo_description" class="form-control" th:field="*{seo_description}" rows="6"></textarea>
+                        <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('seo_description')}" th:errors="*{seo_description}"></h4>
 
                       </div>
                       <div class="form-group field-websitehomeform-homemetakeywords">
 
-                        <label class="control-label" for="websitehomeform-homemetakeywords" th:text="#{settings.website.seo.keywords}">Keywords</label>
-                        <textarea th:field="*{seo_keywords}" id="websitehomeform-homemetakeywords" class="form-control" name="WebsiteHomeForm[homeMetaKeywords]" rows="6"></textarea>
+                        <label class="control-label" for="seo_keywords" th:text="#{settings.website.seo.keywords}">Keywords</label>
+                        <textarea id="seo_keywords" class="form-control" th:field="*{seo_keywords}" rows="6"></textarea>
+                        <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('seo_keywords')}" th:errors="*{seo_keywords}"></h4>
 
                       </div>
                     </div>
@@ -263,7 +268,7 @@
 
 
     $('#director_photo').change(function() {
-      console.log(this);
+
       let photo = this.files[0];
       let image = this.parentElement.previousElementSibling;
       let imagePath = URL.createObjectURL(photo);
@@ -272,7 +277,7 @@
     });
 
     $('#photos, #add_photos').change(function() {
-      console.log(this);
+
       let input_div = this.parentElement;
 
       for(let i = 0; i < this.files.length; i++) {

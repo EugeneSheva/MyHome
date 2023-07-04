@@ -92,10 +92,13 @@
                                     </div>
                                   </div>
                                 </div>
-                                  <div style="padding-left: 7.5px; margin-bottom: 10px; color: red"
+                                  <div style="padding-left: 7.5px; margin-bottom: 10px; color: red; width: 100%;"
                                        th:if="${#fields.hasErrors('*{serviceList[__${iter.index}__].name}')}"
                                        th:errors="*{serviceList[__${iter.index}__].name}"></div>
-                                  <div style="padding-left: 7.5px; margin-bottom: 10px; color: red"
+                                  <div style="padding-left: 7.5px; margin-bottom: 10px; color: red; width: 100%;"
+                                       th:if="${#fields.hasErrors('*{serviceList[__${iter.index}__].ok}')}"
+                                       th:errors="*{serviceList[__${iter.index}__].ok}"></div>
+                                  <div style="padding-left: 7.5px; margin-bottom: 10px; color: red; width: 100%;"
                                        th:if="${#fields.hasErrors('*{serviceList[__${iter.index}__].unit}')}"
                                        th:errors="*{serviceList[__${iter.index}__].unit}"></div>
                                 <div class="col-xs-12 col-sm-12">
@@ -171,6 +174,9 @@
                                   <div style="padding-left: 7.5px; margin-bottom: 10px; color: red; width:100%; display:block;"
                                        th:if="${#fields.hasErrors('*{unitList[__${iter.index}__].name}')}"
                                        th:errors="*{unitList[__${iter.index}__].name}"></div>
+                                  <div style="padding-left: 7.5px; margin-bottom: 10px; color: red; width:100%; display:block;"
+                                       th:if="${#fields.hasErrors('*{unitList[__${iter.index}__].ok}')}"
+                                       th:errors="*{unitList[__${iter.index}__].ok}"></div>
                               </div>
 
 
@@ -255,8 +261,8 @@
     let service_template = document.getElementById("service_template");
     add_service_btn.addEventListener('click', function() {
 
-        console.log(this);
-        console.log(service_template);
+
+
 
         let new_slot = service_template.cloneNode(true);
         new_slot.style = '';
@@ -273,7 +279,7 @@
 
         serviceCount++;
 
-        console.log(new_slot);
+
 
         document.getElementById("service_rows").insertBefore(new_slot, service_template);
     } );
@@ -281,8 +287,8 @@
     let add_service_unit_button = document.getElementById("add_service_unit_button");
     let service_unit_template = document.getElementById("service_unit_template");
     add_service_unit_button.addEventListener('click', function() {
-        console.log(this);
-        console.log(service_unit_template);
+
+
 
         let new_slot = service_unit_template.cloneNode(true);
         new_slot.style = '';
@@ -293,7 +299,7 @@
 
         unitCount++;
 
-        console.log(new_slot);
+
 
         document.getElementById("service_unit_rows").insertBefore(new_slot, service_unit_template);
     } );

@@ -427,6 +427,55 @@ textarea {
 
 .nav-item .nav-link {margin:0;}
 
+li.page-item {
+    margin-inline: 3px;
+    display: flex;
+    transition: all 0.2s;
+}
+
+.page-item:not(.arrow) .page-link {
+    border-radius: 5px;
+    padding-block: 7px;
+    padding-inline: 10px;
+    align-self: center;
+}
+
+.page-item.arrow .page-link {
+    border-radius: 5px;
+}
+
+.page-item .page-link, .page-item.disabled .page-link {
+    background-color: #f0efef;
+    color: black;
+}
+
+.page-item.active .page-link {
+    background-color: #a754e4;
+    border: none;
+}
+
+button.my-dropdown-menu {
+    background-color: #a754e4;
+    border: none;
+}
+
+.page-item.active .page-link:focus {
+    border:none;
+}
+
+.page-item:not(.active) .page-link:hover {
+    background-color: white;
+}
+
+.page-item .page-link:active {
+    background-color: gray;
+    color: white;
+}
+
+.page-item.disabled .page-link {
+    opacity: 0.4
+}
+
 
 
 

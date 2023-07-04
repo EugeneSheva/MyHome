@@ -3,6 +3,7 @@ package com.example.myhome.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -15,8 +16,10 @@ public class Unit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min=2,max=30, message = "Название должно быть размером от 2 до 30 символов!")
     private String name;
+
+    @Transient
+    private boolean ok;
 
     public Unit() {
     }
@@ -28,5 +31,10 @@ public class Unit {
     public Unit(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    @AssertTrue(message="Название должно быть размером 2-50 символов!")
+    private boolean isOk() {
+        return !this.name.isBlank() && this.name.length() >= 2 && this.name.length() <= 50;
     }
 }

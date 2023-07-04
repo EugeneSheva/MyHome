@@ -43,8 +43,8 @@ public class TariffValidator implements Validator {
         tariff.getComponents().values().forEach(price -> {
             if(price > 10000.0)
                 e.rejectValue("components", "components.empty", "Цена услуги в тарифе не может быть больше 10000.0");
-            else if(price < 0.0)
-                e.rejectValue("components", "components.empty", "Цена услуги в тарифе не может быть меньше 0");
+            else if(price <= 0.0)
+                e.rejectValue("components", "components.empty", "Цена услуги в тарифе должна быть больше 0.0");
         });
     }
 }

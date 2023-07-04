@@ -234,6 +234,8 @@
 
 <script th:src="@{/dist/js/websocket.js}"></script>
 
+<script src="https://unpkg.com/imask"></script>
+
 <script th:inline="javascript">
 
     let globalTableName = 'accounts';
@@ -249,14 +251,24 @@
 
     });
 
+    let idInput = document.getElementById('id');
+      let maskOptions = {
+          mask: '0000000000'
+      }
+      let mask1 = IMask(idInput, maskOptions);
+
+      let apInput = document.getElementById('apartment');
+      let maskOptions3 = {
+          mask: '0000000000'
+      }
+      let mask3 = IMask(apInput, maskOptions3);
+
 </script>
 
 <script th:inline="javascript">
 
     let currentLanguage = [[${#locale.language}]];
 
-    console.log('CURRENT LANG');
-    console.log(currentLanguage);
 
     // ФИЛЬТРЫ
     $(document).ready(function(){
@@ -275,7 +287,6 @@
                     };
                 },
                 processResults: function(data, params) {
-                    console.log(data)
                     params.page = params.page || 0;
                     var results = $.map(data.content, function(owner) {
                         return {id: owner.id,
@@ -306,7 +317,6 @@
             ajax: {
                 url: '/myhome/admin/buildings/get-buildings',
                 data: function(params){
-                    console.log(params.page);
                     return {
                         search: params.term || "",
                         page: params.page || 1
@@ -326,7 +336,6 @@
                 $.ajax({
                     url: '/myhome/admin/buildings/get-sections/'+buildingID,
                     success: function (data) {
-                        console.log('success ' + data)
                         // Очистка второго селектора
                         $('#section').empty();
                         // Добавление первой пустой опции
@@ -346,7 +355,6 @@
                 $.ajax({
                     url: '/myhome/admin/buildings/get-floors/'+buildingID,
                     success: function (data) {
-                        console.log('success ' + data)
                         $('#floor').empty();
                         $('#floor').prepend($('<option>', {
                             value: '',

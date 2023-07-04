@@ -137,20 +137,23 @@
                       <h3 class="page-header" th:text="#{settings.website.seo.header}">Настройки SEO</h3>
                       <div class="form-group field-websitehomeform-homemetatitle">
 
-                        <label class="control-label" for="websitehomeform-homemetatitle" th:text="#{settings.website.seo.title}">Title</label>
-                        <input type="text" id="websitehomeform-homemetatitle" class="form-control" th:field="*{seo_title}">
+                        <label class="control-label" for="seo_title" th:text="#{settings.website.seo.title}">Title</label>
+                        <input type="text" id="seo_title" class="form-control" th:field="*{seo_title}" placeholder="Текст">
+                        <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('seo_title')}" th:errors="*{seo_title}"></h4>
 
                       </div>
                       <div class="form-group field-websitehomeform-homemetadescription">
 
-                        <label class="control-label" for="websitehomeform-homemetadescription" th:text="#{settings.website.seo.description}">Description</label>
-                        <textarea id="websitehomeform-homemetadescription" class="form-control" th:field="*{seo_description}" rows="6"></textarea>
+                        <label class="control-label" for="seo_description" th:text="#{settings.website.seo.description}">Description</label>
+                        <textarea id="seo_description" class="form-control" th:field="*{seo_description}" rows="6"></textarea>
+                        <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('seo_description')}" th:errors="*{seo_description}"></h4>
 
                       </div>
                       <div class="form-group field-websitehomeform-homemetakeywords">
 
-                        <label class="control-label" for="websitehomeform-homemetakeywords" th:text="#{settings.website.seo.keywords}">Keywords</label>
-                        <textarea id="websitehomeform-homemetakeywords" class="form-control" th:field="*{seo_keywords}" rows="6"></textarea>
+                        <label class="control-label" for="seo_keywords" th:text="#{settings.website.seo.keywords}">Keywords</label>
+                        <textarea id="seo_keywords" class="form-control" th:field="*{seo_keywords}" rows="6"></textarea>
+                        <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('seo_keywords')}" th:errors="*{seo_keywords}"></h4>
 
                       </div>
                     </div>

@@ -198,7 +198,6 @@
     let currentLanguage = [[${#locale.language}]];
     var placeholderText = [[#{select.placeholder}]];
 <!--    var cashbox = [[${cashBox}]];-->
-<!--    console.log(cashbox);-->
     $(function () {
 <!--        if(cashbox.owner != null && cashbox.owner.id != null) {-->
 <!--            $("#owner").append(new Option(cashbox.owner.first_name, cashbox.owner.id, null, null));-->
@@ -216,25 +215,18 @@
 <!--        }-->
 
         let cashbox = [[${cashBox}]];
-        console.log(cashbox);
-        console.log(cashbox.owner);
-        console.log(cashbox.apartmentAccount);
-        console.log(cashbox.manager);
 
         if(cashbox.owner != null && cashbox.owner.id != null) {
-            console.log('if block');
             $("#owner_select").append(new Option(cashbox.owner.fullName, cashbox.owner.id, null, null));
             $("#owner_select").val(cashbox.owner.id);
         }
 
         if(cashbox.apartmentAccount != null && cashbox.apartmentAccount.id != null) {
-            console.log('if block');
             $("#account_select").append(new Option(cashbox.apartmentAccount.id.toString().padStart(10,'0'), cashbox.apartmentAccount.id, null, null));
             $("#account_select").val(cashbox.apartmentAccount.id);
         }
 
         if(cashbox.manager != null && cashbox.manager.id != null) {
-            console.log('if block');
             $("#admin").append(new Option(cashbox.manager.fullName, cashbox.manager.id, null, null));
             $("#admin").val(cashbox.manager.id);
         }
@@ -249,7 +241,6 @@
             ajax: {
                 url: '/myhome/admin/admins/get-managers',
                 data: function(params) {
-                    console.log(params.page);
                     return {
                         search: params.term || "",
                         page: params.page || 1
@@ -265,7 +256,6 @@
             ajax: {
                 url: '/myhome/admin/owners/get-all-owners',
                 data: function(params){
-                    console.log(params.page);
                     return {
                         search: params.term || "",
                         page: params.page || 1
@@ -278,7 +268,6 @@
 
         let urlParams = new URL(window.location.href).searchParams;
         let account_id = urlParams.get('account_id');
-        console.log(account_id);
 
         if(account_id != null && !isNaN(account_id) && account_id != '') {
             $.ajax({
@@ -307,7 +296,6 @@
         $("#owner_select").change(function(){
             let owner_id = $(this).val();
             $.get("/myhome/admin/owners/get-apartment-accounts", {owner_id:owner_id}, function(data){
-                console.log(data);
 
                 let $account_select = $("#account_select");
                 $account_select.html('');
@@ -349,7 +337,6 @@
 <!--    set_services_from_tariff_btn.addEventListener('click', function(){-->
 
 <!--        let rows = components_body.querySelectorAll("tr");-->
-<!--        console.log(rows);-->
 <!--        for(let i = 1; i < rows.length-1; i++) {-->
 <!--          rows[i].remove();-->
 <!--        }-->
@@ -358,19 +345,19 @@
 
 <!--        $.get('/admin/tariffs/get-components', {tariff_id:tariff_id}, function(data){-->
 <!--            alert('получил услуги из тарифа');-->
-<!--            console.log(data);-->
+<!--            -->
 <!--            console.log(typeof data);-->
 
 <!--            let map = new Map(Object.entries(data));-->
 
-<!--            console.log(map);-->
+<!--            -->
 
 <!--            let total_price = 0.0;-->
 
 <!--            for (const [key, value] of map.entries()) {-->
 <!--              let service = JSON.parse(key);-->
-<!--              console.log(service);-->
-<!--              console.log(value);-->
+<!--              -->
+<!--              -->
 
 <!--              let new_row = component_row_template.cloneNode(true);-->
 <!--              new_row.id = '';-->
@@ -393,10 +380,10 @@
 
 <!--    function countTotalPrice(){-->
 <!--      let total_price = 0;-->
-<!--      console.log(total_price);-->
+<!--      -->
 <!--      for(let i = 1; i < document.getElementsByClassName("total_price").length; i++){-->
 <!--        let total_price_element = document.getElementsByClassName("total_price")[i];-->
-<!--        console.log(total_price_element);-->
+<!--        -->
 <!--        console.log(total_price_element.value);-->
 <!--        if(total_price_element.value == NaN) continue;-->
 <!--        console.log(parseFloat(total_price_element.value));-->
@@ -406,15 +393,15 @@
 <!--    };-->
 
 <!--    function count(element) {-->
-<!--       console.log(element);-->
+<!--       -->
 <!--       let unit_price = element.parentElement.parentElement.querySelector(".unit_prices").value;-->
 <!--       let unit_amount = element.parentElement.parentElement.querySelector(".unit_amounts").value;-->
 <!--       let total_price = unit_price*unit_amount;-->
 
 
-<!--       console.log(unit_price);-->
-<!--       console.log(unit_amount);-->
-<!--       console.log(total_price);-->
+<!--       -->
+<!--       -->
+<!--       -->
 
 <!--       element.parentElement.parentElement.querySelector(".total_price").value = total_price;-->
 
@@ -424,9 +411,9 @@
 <!--    function setUnit(select) {-->
 <!--        console.log(select.value);-->
 <!--        let service_id = $(select).val();-->
-<!--        console.log(service_id);-->
+<!--        -->
 <!--        let unit = $(select).closest('tr').find('.unit');-->
-<!--        console.log(unit);-->
+<!--        -->
 
 <!--        $.get('/admin/services/get-unit', {id:service_id}, function(data){-->
 <!--            $(unit).val(data.name);-->

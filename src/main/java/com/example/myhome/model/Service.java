@@ -4,10 +4,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.Iterator;
 
 // --- УСЛУГИ ---
@@ -21,14 +18,16 @@ public class Service implements Iterable<Service> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min=2,message="Название должно быть длиннее двух символов!")
-    @Size(max=50,message="Название должно быть больше 50 символов!")
+
     private String name;
 
     //флажок "показывать в счётчиках"
     private boolean show_in_meters;
 
-    @NotNull
+    @Transient
+    private boolean ok;
+
+    @NotNull(message="Выберите единицу измерения!")
     @ManyToOne
     @JoinColumn(name = "unit_ID")
     private Unit unit;
@@ -45,6 +44,11 @@ public class Service implements Iterable<Service> {
     @Override
     public Iterator<Service> iterator() {
         return null;
+    }
+
+    @AssertTrue(message="Название должно быть размером 2-50 символов!")
+    private boolean isOk() {
+        return !this.name.isBlank() && this.name.length() >= 2 && this.name.length() <= 50;
     }
 
 

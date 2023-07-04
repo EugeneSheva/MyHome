@@ -475,7 +475,33 @@ button.my-dropdown-menu {
 .page-item.disabled .page-link {
     opacity: 0.4
 }
+.circular-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.circular-image::before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+}
+
+.circular-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
 
 
 

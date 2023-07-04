@@ -312,22 +312,22 @@
     var adminList = /*[[${adminList}]]*/ [];
     let fields = document.getElementById('multi-fields');
     // let fields = $("#multi-fields");
+    console.log(fields)
     let elementsQuantity = fields.childElementCount;
+    console.log('elementsQuantity '+ elementsQuantity)
+    console.log('elementsQuantity+1 '+ parseInt(elementsQuantity) + 1)
 
     $(".multi-field-wrapper").each(function () {
         var $wrapper = $(".multi-fields", this);
         $(".add-field", $(this)).click(function (e) {
             var $clone = $(".multi-field:first-child", $wrapper).clone(true);
-            // Проверяем, является ли клонированный элемент полем типа select
             if ($clone.find("select").length > 0) {
-                // Найдем нужный элемент option и удалим у него атрибут selected
                 $clone.find("select option[value='value-to-be-unselected']").removeAttr("selected");
+
                 $clone.find("select").attr("onchange", "selectAdmin(" + (+elementsQuantity + 1) + ")");
             }
-            // Добавляем атрибуты id в select и input
             $clone.find("select").attr("id", "admin-"+ (+(elementsQuantity) + 1));
             $clone.find("input").attr("id", "adminrole-"+(+elementsQuantity + 1));
-            // Добавляем клонированный элемент в конец списка полей ввода внутри "multi-fields"
             $clone.appendTo($wrapper).find("input, select").val("").focus();
             elementsQuantity++;
         });

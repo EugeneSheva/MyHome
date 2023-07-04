@@ -100,6 +100,7 @@
                       <br>
                       <input type="file" name="page_photos" id="photos" accept="image/jpg, image/jpeg, image/png" multiple>
 
+                      <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('photos')}" th:errors="*{photos}"></h4>
                     </div>
                   </div>
 
@@ -138,6 +139,7 @@
                       <input type="hidden" name="WebsiteHomeSlide[1][imageFile]" id="">
                       <input type="file" name="page_add_photos" id="add_photos" multiple accept="image/jpg, image/jpeg, image/png">
 
+                      <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('add_photos')}" th:errors="*{add_photos}"></h4>
                     </div>
                   </div>
 

@@ -22,9 +22,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/websocket");
         registry.addEndpoint("/websocket")
-                .setAllowedOrigins("http://localhost:8890")
+//                .setAllowedOrigins("http://localhost:8890")
 //                .setAllowedOrigins("http://slj.avada-media-dev1.od.ua:9003/myhomecab")
-//                .setAllowedOrigins("http://slj.avada-media-dev1.od.ua:9003")
+                .setAllowedOrigins("http://slj.avada-media-dev1.od.ua:9003")
                 .withSockJS();
     }
 

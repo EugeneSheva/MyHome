@@ -53,8 +53,9 @@
                     <div class="card">
                         <div class="card-body p-0">
                             <div style="height: 200px; padding: 10px;" >
-                                <img  data-name="img1" th:src="${owner.profile_picture != null && !owner.profile_picture.isEmpty()} ?
-                                @{${owner.profile_picture}} :  @{/images/placeholder.jpg}" alt="user-avatar" class="img-fluid">
+                                 <img th:src="${owner.profile_picture != null && !owner.profile_picture.isEmpty()} ?
+                                 @{${owner.profile_picture}} :  @{/images/placeholder.jpg}" alt="user-avatar"
+                                      style="height: 100%"         class="img-circle img-fluid">
                             </div>
                             <table class="table table-bordered table-striped" width="100%">
                                 <col style="width:50%">

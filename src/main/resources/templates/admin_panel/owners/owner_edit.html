@@ -58,8 +58,8 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-3" style="margin-bottom: 10px;height:150px;width:150px;overflow:hidden;border-radius:50%;padding:0">
-                                        <img  data-name="img1" th:src="${owner.profile_picture != null && !owner.profile_picture.isEmpty()} ?
-                                            @{${owner.profile_picture}} :  @{/images/placeholder.jpg}" alt="user-avatar" class="img-fluid">
+                                        <img th:src="*{profile_picture != null} ? @{/images/{url}(url=*{profile_picture})} : @{/images/placeholder.jpg}" alt="user-avatar" id="avatar"
+                                             class="img-circle img-fluid" style="max-width:1000px; max-height:1000px; aspect-ratio:1.0; width:150px">
                                     </div>
                                     <div class="col-md-9 d-flex flex-column align-items-start justify-content-center" style="margin-bottom: 10px">
                                         <label class="control-label" for="img1" th:text="#{changeImg}">Сменить изображение</label>

@@ -84,14 +84,14 @@ public class AboutPageValidator implements Validator {
 
         for(MultipartFile photo : page_photos) {
             if(photo != null && photo.getSize() > 0 && !contentTypes.contains(photo.getContentType())) {
-                e.rejectValue("page_photos", ".", "Неправильное расширение файлов!");
+                e.rejectValue("photos", ".", "Неправильное расширение файлов!");
                 break;
             }
         }
 
         for(MultipartFile photo : page_add_photos) {
             if(photo != null && photo.getSize() > 0 && !contentTypes.contains(photo.getContentType())) {
-                e.rejectValue("page_add_photos", ".", "Неправильное расширение файлов!");
+                e.rejectValue("add_photos", ".", "Неправильное расширение файлов!");
                 break;
             }
         }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Page<Message> findAllBySpecification(FilterForm form, Integer page, Integer size, Long ownerId) {
         System.out.println("service");
-        Pageable pageable = PageRequest.of(page-1, size);
+        Pageable pageable = PageRequest.of(page-1, size).withSort(Sort.by(Sort.Direction.DESC, "date"));
         Page<Message>messageList = messageRepository.findByFilters(form.getDescription(), ownerId, pageable);
         System.out.println("messageList" +messageList);
         return messageList;

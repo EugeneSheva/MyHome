@@ -57,19 +57,25 @@ public class OwnerValidator implements Validator {
         } else if  (!isValidEmailAddress(owner.getEmail()) ) {
             e.rejectValue("email", "email.empty", "Неверный формат Email.");
         }
-        if(owner.getId() != null && owner.getId() > 0) {
+        if(owner.getId() == null || owner.getId() == 0) {
             if (owner.getPassword() == null || owner.getPassword().isEmpty()) {
                 e.rejectValue("password", "password.no-match", "Заполните пароль!");
             }
         }
         if(owner.getPassword() != null && !owner.getPassword().isEmpty()) {
-            if(owner.getConfirm_password() != null && !owner.getConfirm_password().isEmpty()) {
-                if(owner.getPassword().equalsIgnoreCase(owner.getConfirm_password())) {
-                    e.rejectValue("password", "password.no-match", "Пароли не совпадают!");
-                    e.rejectValue("confirm_password", "password.no-match", "Пароли не совпадают!");
+            if (owner.getPassword().length() < 8) {
+                e.rejectValue("password", "password.no-match", "Пароль должен быть не менее 8 символов.");
+            } else if (owner.getPassword().length() > 25) {
+                e.rejectValue("password", "password.no-match", "Пароль должен быть не более 25 символов.");
+            } else {
+                if (owner.getConfirm_password() != null && !owner.getConfirm_password().isEmpty()) {
+                    if (!owner.getPassword().equals(owner.getConfirm_password())) {
+                        e.rejectValue("confirm_password", "password.no-match", "Пароли не совпадают!");
+                    }
+                } else {
+                    e.rejectValue("confirm_password", "password.no-confirm", "Подтвердите пароль!");
                 }
             }
-            else e.rejectValue("confirm_password", "password.no-confirm", "Подтвердите пароль!");
         }
     }
 

@@ -1,7 +1,7 @@
 package com.example.myhome.service.impl;
 
 import com.example.myhome.model.pages.*;
-import com.example.myhome.repository.DocumentRepository;
+//import com.example.myhome.repository.DocumentRepository;
 import com.example.myhome.repository.PageRepository;
 import com.example.myhome.service.WebsiteService;
 import com.example.myhome.util.FileUploadUtil;
@@ -23,8 +23,8 @@ public class WebsiteServiceImpl implements WebsiteService {
     @Autowired
     private PageRepository pageRepository;
 
-    @Autowired
-    private DocumentRepository documentRepository;
+//    @Autowired
+//    private DocumentRepository documentRepository;
 
     @Autowired
     private FileUploadUtil fileUploadUtil;
@@ -38,7 +38,7 @@ public class WebsiteServiceImpl implements WebsiteService {
 
     public Page savePage(Page page) {return pageRepository.save(page);}
 
-    public List<AboutPage.Document> getAllDocuments() {return documentRepository.findAll();}
+//    public List<AboutPage.Document> getAllDocuments() {return documentRepository.findAll();}
 
     public AboutPage deleteImageAndGetPage(AboutPage page, int index) {
         String photos = page.getPhotos();
@@ -50,7 +50,7 @@ public class WebsiteServiceImpl implements WebsiteService {
         return page;
     }
 
-    public void deleteDocument(Long document_id) {documentRepository.deleteById(document_id);}
+//    public void deleteDocument(Long document_id) {documentRepository.deleteById(document_id);}
 
     public MainPage saveMainPageImages(MainPage page,
                                        MultipartFile page_slide1,
@@ -109,9 +109,7 @@ public class WebsiteServiceImpl implements WebsiteService {
     public AboutPage saveAboutPageInfo(AboutPage page,
                                        MultipartFile page_director_photo,
                                        MultipartFile[] page_photos,
-                                       MultipartFile[] page_add_photos,
-                                       String[] document_names,
-                                       MultipartFile[] document_files) throws IOException {
+                                       MultipartFile[] page_add_photos) throws IOException {
         page.setId(1);
         AboutPage originalPage = getAboutPage();
 
@@ -186,55 +184,32 @@ public class WebsiteServiceImpl implements WebsiteService {
         log.info(page.getAdd_photos());
 
         //Сохранение документов
-        log.info("Saving documents...");
-        for (int i = 1; i < document_names.length; i++) {
-            if(document_names[i].isEmpty()) continue;
-            AboutPage.Document document = new AboutPage.Document();
-            document.setPage(originalPage);
-            document.setName(document_names[i]);
-            MultipartFile fileToSave = document_files[i];
-            if(fileToSave.getSize() > 0) {
-                fileUploadUtil.saveFile("/documents/", fileToSave.getOriginalFilename(), fileToSave);
-                document.setFile(fileToSave.getOriginalFilename());
-            } else continue;
-            documentRepository.save(document);
+        for(AboutPage.Document document : page.getDocuments()) {
+            if((document.getFileName() == null || document.getFileName().isEmpty()) &&
+                    (document.getFile() != null && document.getFile().getSize() > 0)) {
+                log.info(document.getFile().toString());
+                log.info(document.getFile().getContentType());
+                log.info(document.getFile().getOriginalFilename());
+                fileUploadUtil.saveFile("/documents", document.getFile().getOriginalFilename(), document.getFile());
+                document.setFileName(document.getFile().getOriginalFilename());
+            }
         }
 
         log.info("Final page info to save: " + page);
         return page;
     }
 
-    public ServicesPage saveServicesPageInfo(ServicesPage page,
-                                             String[] titles,
-                                             String[] descriptions,
-                                             MultipartFile[] service_images){
+    public ServicesPage saveServicesPageInfo(ServicesPage page) throws IOException {
         page.setId(1);
 
-        List<ServicesPage.ServiceDescription> originalList = pageRepository.getServicesPage().orElseGet(ServicesPage::new).getServiceDescriptions();
-        page.setServiceDescriptions(new ArrayList<>());
-        for (int i = 1; i < titles.length; i++) {
-            if(titles[i].isEmpty() || descriptions[i].isEmpty()) continue;
-            ServicesPage.ServiceDescription service = new ServicesPage.ServiceDescription();
-            service.setTitle(titles[i]);
-            service.setDescription(descriptions[i]);
-            if(service_images.length > 0) {
-                if(service_images[i].getSize() > 0) {
-                    try {
-                        fileUploadUtil.saveFile(imageSaveDir + "/services/",
-                                service_images[i].getOriginalFilename(),
-                                service_images[i]);
-                        service.setPhoto(service_images[i].getOriginalFilename());
-                    } catch(Exception e) {
-                        log.info(e.getMessage());
-                        log.info(Arrays.toString(e.getStackTrace()));
-                        log.info("Can't save image");
-                    }
-                } else if (i <= originalList.size()) service.setPhoto(originalList.get(i-1).getPhoto());
+        for(ServicesPage.ServiceDescription service : page.getServiceDescriptions()) {
+            if(service.getPhoto() == null || service.getPhoto().isEmpty()) {
+                fileUploadUtil.saveFile("/pages/services", service.getFile().getOriginalFilename(), service.getFile());
+                service.setPhoto(service.getFile().getOriginalFilename());
             }
-            page.getServiceDescriptions().add(service);
         }
 
-        return page;
+        return pageRepository.save(page);
     }
 
 

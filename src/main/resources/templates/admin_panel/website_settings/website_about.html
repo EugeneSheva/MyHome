@@ -159,7 +159,7 @@
                                  th:src="@{/images/placeholder.jpg}"
                                  alt="">
                             <label th:text="#{settings.website.about.card.documents.size}"> PDF, JPG (макс. размер 20 Mb)</label>
-                            <input type="file" name="document_files" accept="application/pdf, image/png, image/png image/jpeg">
+                            <input type="file" name="document_files" accept="application/pdf, .png, .jpg, .jpeg">
                           </div>
 
                           <div class="form-group">
@@ -167,26 +167,31 @@
                             <input type="text" class="form-control" placeholder="Введите название" name="document_names">
                           </div>
                         </div>
-                        <div th:each="document : ${documents}" class="form-websitedocument">
+                        <div th:each="document, iter : *{documents}" class="form-websitedocument">
                           <div class="form-group">
                             <a onclick="if(confirm('Удалить?')) window.location.href=this.dataset.url"
                                style="cursor:pointer;"
-                               th:attr="data-url='/myhome/admin/website/delete-document/'+${document.id}"
+                               th:attr="data-url='/myhome/admin/website/delete-document/'+${iter.index}"
                                class="pull-right text-red" data-confirm="Удалить?"><i class="fa fa-trash"></i></a>
                             <img style="width: 30px; height: 40px; margin-right: 10px;"
                                  class="fa fa-3x pull-left"
                                  th:src="${document.file != null} ?
-                                 @{/images/documents/{url}(url=${document.file})} :
+                                 @{/images/documents/{url}(url=${document.fileName})} :
                                  @{/images/placeholder.jpg}"
                                  alt="">
                             <label th:text="#{settings.website.about.card.documents.size}"> PDF, JPG (макс. размер 20 Mb)</label>
-                            <input type="file" name="document_files" accept="application/pdf, image/png, image/png image/jpeg">
+<!--                            <input type="file" name="document_files" accept="application/pdf, .png,.jpg,.jpeg">-->
+                            <input type="file" th:field="*{documents[__${iter.index}__].file}" accept="application/pdf, .png,.jpg,.jpeg">
+                            <input type="hidden" th:field="*{documents[__${iter.index}__].fileName}">
                           </div>
 
                           <div class="form-group">
                             <label th:text="#{settings.website.about.card.documents.name}">Название документа</label>
-                            <input type="text" class="form-control" th:value="${document.name}" name="document_names">
+<!--                            <input type="text" class="form-control" th:value="${document.name}" name="document_names">-->
+                            <input type="text" class="form-control" th:field="*{documents[__${iter.index}__].documentName}">
                           </div>
+
+                          <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('documents[__${iter.index}__]')}" th:errors="*{documents[__${iter.index}__]}"></h4>
                         </div>
                       </div>
                       <div class="btn-group">
@@ -257,7 +262,9 @@
 <script th:src="@{/dist/js/adminlte.js}"></script>
 <script th:src="@{/summernote/summernote.min.js}"></script>
 
-<script>
+<script th:inline="javascript">
+
+  let totalDocumentCount = [[${totalDocumentCount}]];
 
   $(document).ready(function() {
 
@@ -296,10 +303,25 @@
       let document_container = document.getElementById("documents");
       let document_template = document.getElementById("document_template");
       let new_slot = document_template.cloneNode(true);
+
       new_slot.id = '';
       new_slot.style = '';
 
+      let nameInput = new_slot.lastElementChild.lastElementChild;
+      let fileInput = new_slot.firstElementChild.lastElementChild;
+
+      console.log(nameInput);
+      console.log(fileInput);
+
+      nameInput.id = 'documents[' + totalDocumentCount + '].documentName';
+      nameInput.setAttribute('name', 'documents[' + totalDocumentCount + '].documentName');
+
+      fileInput.id = 'documents[' + totalDocumentCount + '].file';
+      fileInput.setAttribute('name', 'documents[' + totalDocumentCount + '].file');
+
       document_container.appendChild(new_slot);
+
+      totalDocumentCount++;
     });
 
     $('#description').summernote({height: 250});

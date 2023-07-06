@@ -85,16 +85,18 @@
                     <div class="col-md-8">
                       <div class="form-group">
 
-                        <label for="websitehomeform-hometitle" class="control-label" th:text="#{settings.website.services.card.services.name}">Название услуги</label>
-                        <input type="text" class="form-control" th:value="${service.title}" name="titles" id="websitehomeform-hometitle">
-
+                        <label class="control-label" th:text="#{settings.website.services.card.services.name}">Название услуги</label>
+                        <input type="text" class="form-control" th:field="*{serviceDescriptions[__${iter.index}__].title}">
+                        <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('serviceDescriptions[__${iter.index}__].title')}" th:errors="*{serviceDescriptions[__${iter.index}__].title}"></h4>
                       </div>
                       <div class="form-group field-websitehomeform-homedescription">
                         <label class="control-label" th:text="#{settings.website.services.card.services.description}">Описание услуги</label>
-                        <textarea th:text="${service.description}" name="descriptions" class="service_descriptions" id="websitemain-description"></textarea>
+                        <textarea th:field="*{serviceDescriptions[__${iter.index}__].description}" class="service_descriptions"></textarea>
+                        <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('serviceDescriptions[__${iter.index}__].description')}" th:errors="*{serviceDescriptions[__${iter.index}__].description}"></h4>
                         <button onclick="if(confirm('Удалить услугу?')) this.parentElement.parentElement.parentElement.remove()"
                                 class="btn btn-danger mt-4"
                                 style="font-size: 20px; width: 100%;"><b th:text="#{settings.website.services.card.services.delete}">- Удалить услугу</b></button>
+
                       </div>
                     </div>
                     <div class="col-md-4">
@@ -103,12 +105,11 @@
                        @{/images/pages/services/{url}(url=${service.photo})} :
                        @{/images/placeholder.jpg}" alt="">
                       <div class="form-group mb-30">
-                        <label for="websitehomeslide-1-imagefile" class="control-label" th:text="#{settings.website.about.card.info.photo.size}">Рекомендуемый размер: (1920х800)</label>
-                        <input type="hidden" name="WebsiteHomeSlide[1][imageFile]" id="">
-                        <input type="file" name="service_images" onchange="showPhoto(this)" accept=".jpg,.jpeg,.png">
+                        <label class="control-label" th:text="#{settings.website.about.card.info.photo.size}">Рекомендуемый размер: (1920х800)</label>
+                        <input type="hidden" th:field="*{serviceDescriptions[__${iter.index}__].photo}">
+                        <input type="file" th:field="*{serviceDescriptions[__${iter.index}__].file}" onchange="showPhoto(this)" accept=".jpg,.jpeg,.png">
+                        <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('serviceDescriptions[__${iter.index}__].file')}" th:errors="*{serviceDescriptions[__${iter.index}__].file}"></h4>
                       </div>
-
-                      <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('serviceDescriptions[__${iter.index}__]')}" th:errors="*{serviceDescriptions[__${iter.index}__]}"></h4>
                     </div>
                   </div>
                   <br>
@@ -177,7 +178,9 @@
 <script th:src="@{/dist/js/adminlte.js}"></script>
 <script th:src="@{/summernote/summernote.min.js}"></script>
 
-<script>
+<script th:inline="javascript">
+
+  let totalServiceCount = [[${totalServiceCount}]];
 
   function showPhoto(input) {
 
@@ -192,6 +195,26 @@
       let new_service_div = document.getElementById('template').cloneNode(true);
       new_service_div.id = '';
       new_service_div.style = '';
+
+      let titleInput = new_service_div.firstElementChild.firstElementChild.lastElementChild;
+      let descInput = new_service_div.firstElementChild.lastElementChild.firstElementChild.nextElementSibling;
+      let fileInput = new_service_div.lastElementChild.lastElementChild.lastElementChild;
+
+      console.log(titleInput);
+      console.log(descInput);
+      console.log(fileInput);
+
+      titleInput.id = 'serviceDescriptions['+totalServiceCount+'].title';
+      titleInput.setAttribute('name','serviceDescriptions['+totalServiceCount+'].title');
+
+      descInput.id = 'serviceDescriptions['+totalServiceCount+'].description';
+      descInput.setAttribute('name','serviceDescriptions['+totalServiceCount+'].description');
+
+      fileInput.id = 'serviceDescriptions['+totalServiceCount+'].file';
+      fileInput.setAttribute('name','serviceDescriptions['+totalServiceCount+'].file');
+
+      totalServiceCount++;
+
       document.getElementById('service_container').insertBefore(new_service_div, document.getElementById('btn_container'));
     });
 

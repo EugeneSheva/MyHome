@@ -18,6 +18,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" crossorigin="anonymous"></script>
     <!-- Tempus Dominus JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.4.4/dist/js/tempus-dominus.min.js" crossorigin="anonymous"></script>
+
+<!--    clipboard js -->
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
 </head>
 <body class="hold-transition light-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
@@ -96,6 +99,9 @@
         $("#my_select").select2({language: currentLanguage,width: '100%'});
         $("#date_picker").datepicker();
     });
+
+    console.log('is clipboard supported?');
+    console.log(ClipboardJS.isSupported());
 </script>
 
 </body>

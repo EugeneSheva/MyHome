@@ -25,7 +25,7 @@ class DefaultInitializer implements CommandLineRunner {
     private final AdminRepository adminRepository;
     private final UserRoleRepository userRoleRepository;
     private final PageRepository pageRepository;
-    private final DocumentRepository documentRepository;
+//    private final DocumentRepository documentRepository;
     private final ServiceRepository serviceRepository;
     private final UnitRepository unitRepository;
     private final IncomeExpenseRepository incomeExpenseRepository;
@@ -536,10 +536,10 @@ class DefaultInitializer implements CommandLineRunner {
             AboutPage savedPage = pageRepository.save(page);
             List<AboutPage.Document> documents = new ArrayList<>();
             AboutPage.Document document = new AboutPage.Document();
-            document.setName("test");
-            document.setFile("6.jpg");
-            document.setPage(savedPage);
-            documentRepository.save(document);
+            document.setDocumentName("test");
+            document.setFileName("6.jpg");
+//            document.setPage(savedPage);
+//            documentRepository.save(document);
             savedPage.setDocuments(documents);
             pageRepository.save(savedPage);
         }

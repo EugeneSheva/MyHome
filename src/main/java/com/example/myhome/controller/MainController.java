@@ -38,11 +38,11 @@ public class MainController {
         AboutPage page = websiteService.getAboutPage();
         List<String> photos = Arrays.stream(page.getPhotos().split(",")).filter((photo) -> !photo.equals("")).collect(Collectors.toList());
         List<String> add_photos = Arrays.stream(page.getAdd_photos().split(",")).filter((photo) -> !photo.equals("")).collect(Collectors.toList());
-        List<AboutPage.Document> documents = websiteService.getAllDocuments();
+//        List<AboutPage.Document> documents = websiteService.getAllDocuments();
         model.addAttribute("page", page);
         model.addAttribute("photos", photos);
         model.addAttribute("add_photos", add_photos);
-        model.addAttribute("documents", documents);
+//        model.addAttribute("documents", documents);
         return "main_website/about";
     }
 

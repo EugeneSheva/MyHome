@@ -33,6 +33,9 @@ public class FileUploadUtil {
 
         log.info(this.uploadPath);
 
+        log.info("File name!");
+        log.info(fileName);
+
         Path path = Paths.get(uploadPath + uploadDir);
 
         if (!Files.exists(path)) {

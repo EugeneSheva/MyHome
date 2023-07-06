@@ -73,9 +73,7 @@ public class AboutPageValidator implements Validator {
 
     public void validateAboutPage(Object target, Errors e,MultipartFile page_director_photo,
                                   MultipartFile[] page_photos,
-                                  MultipartFile[] page_add_photos,
-                                  String[] document_names,
-                                  MultipartFile[] document_files) {
+                                  MultipartFile[] page_add_photos) {
         AboutPage page = (AboutPage) target;
 
         if(page_director_photo != null && page_director_photo.getSize() > 0 && !contentTypes.contains(page_director_photo.getContentType())) {
@@ -87,6 +85,10 @@ public class AboutPageValidator implements Validator {
                 e.rejectValue("photos", ".", "Неправильное расширение файлов!");
                 break;
             }
+            if(photo != null && photo.getSize() > 19_999_999) {
+                e.rejectValue("photos", ".", "Максимальный размер файлов - 20 МБ!");
+                break;
+            }
         }
 
         for(MultipartFile photo : page_add_photos) {
@@ -94,6 +96,28 @@ public class AboutPageValidator implements Validator {
                 e.rejectValue("add_photos", ".", "Неправильное расширение файлов!");
                 break;
             }
+            if(photo != null && photo.getSize() > 19_999_999) {
+                e.rejectValue("add_photos", ".", "Максимальный размер файлов - 20 МБ!");
+                break;
+            }
+        }
+
+        for (int i = 0; i < page.getDocuments().size(); i++) {
+            AboutPage.Document currentDocument = page.getDocuments().get(i);
+            if(currentDocument.getDocumentName().length() < 2 || currentDocument.getDocumentName().length() > 200) {
+                e.rejectValue("documents["+i+"]", "document.length", "Length of document name: 2-200");
+            } else if(currentDocument.getDocumentName().isEmpty()) {
+                e.rejectValue("documents["+i+"]", "document.length", "Document name can't be empty");
+            }
+
+            if(currentDocument.getFile() != null && currentDocument.getFile().getSize() > 0) {
+                if(!contentTypes.contains(currentDocument.getFile().getContentType())) {
+                    e.rejectValue("documents["+i+"]", "document.file", "Wrong file format (.jpg, .jpeg, .png)");
+                } else if (currentDocument.getFile().getSize() > 19_999_999) {
+                    e.rejectValue("documents["+i+"]", "document.file", "Max file size = 20 MB");
+                }
+            }
+
         }
 
         validate(page, e);

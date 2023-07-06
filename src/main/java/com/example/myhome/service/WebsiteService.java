@@ -15,8 +15,8 @@ public interface WebsiteService {
 
     public Page savePage(Page page);
 
-    public List<AboutPage.Document> getAllDocuments();
-    public void deleteDocument(Long index);
+//    public List<AboutPage.Document> getAllDocuments();
+//    public void deleteDocument(Long index);
 
     public MainPage saveMainPageImages(MainPage page, MultipartFile page_slide1,
                                        MultipartFile page_slide2,
@@ -28,9 +28,8 @@ public interface WebsiteService {
                                        MultipartFile page_block_5_img,
                                        MultipartFile page_block_6_img) throws IOException;
     public AboutPage saveAboutPageInfo(AboutPage page,MultipartFile page_director_photo,MultipartFile[] page_photos,
-                                       MultipartFile[] page_add_photos,String[] document_names,MultipartFile[] document_files) throws IOException;
-    public ServicesPage saveServicesPageInfo(ServicesPage page, String[] titles,String[] descriptions,
-                                             MultipartFile[] service_images);
+                                       MultipartFile[] page_add_photos) throws IOException;
+    public ServicesPage saveServicesPageInfo(ServicesPage page) throws IOException;
     public AboutPage deleteImageAndGetPage(AboutPage page, int index);
 
 

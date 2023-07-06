@@ -92,30 +92,59 @@ public class MainPageValidator implements Validator {
         if(page_slide1 != null && page_slide1.getSize() > 0 && !contentTypes.contains(page_slide1.getContentType())) {
             e.rejectValue("slide1", ".", "Неправильное расширение файла!");
         }
+        if(page_slide1 != null && page_slide1.getSize() > 19_999_999) {
+            e.rejectValue("slide1", ".", "Максимальный размер файла - 20 МБ!");
+        }
         if(page_slide2 != null && page_slide2.getSize() > 0 && !contentTypes.contains(page_slide2.getContentType())) {
             e.rejectValue("slide2", ".", "Неправильное расширение файла!");
+        }
+        if(page_slide2 != null && page_slide2.getSize() > 19_999_999) {
+            e.rejectValue("slide2", ".", "Максимальный размер файла - 20 МБ!");
         }
         if(page_slide3 != null && page_slide3.getSize() > 0 && !contentTypes.contains(page_slide3.getContentType())) {
             e.rejectValue("slide3", ".", "Неправильное расширение файла!");
         }
+        if(page_slide3 != null && page_slide3.getSize() > 19_999_999) {
+            e.rejectValue("slide3", ".", "Максимальный размер файла - 20 МБ!");
+        }
         if(page_block_1_img != null && page_block_1_img.getSize() > 0 && !contentTypes.contains(page_block_1_img.getContentType())) {
             e.rejectValue("block_1_img", ".", "Неправильное расширение файла!");
+        }
+        if(page_block_1_img != null && page_block_1_img.getSize() > 19_999_999) {
+            e.rejectValue("block_1_img", ".", "Максимальный размер файла - 20 МБ!");
         }
         if(page_block_2_img != null && page_block_2_img.getSize() > 0 && !contentTypes.contains(page_block_2_img.getContentType())) {
             e.rejectValue("block_2_img", ".", "Неправильное расширение файла!");
         }
+        if(page_block_2_img != null && page_block_2_img.getSize() > 19_999_999) {
+            e.rejectValue("block_2_img", ".", "Максимальный размер файла - 20 МБ!");
+        }
         if(page_block_3_img != null && page_block_3_img.getSize() > 0 && !contentTypes.contains(page_block_3_img.getContentType())) {
             e.rejectValue("block_3_img", ".", "Неправильное расширение файла!");
+        }
+        if(page_block_3_img != null && page_block_3_img.getSize() > 19_999_999) {
+            e.rejectValue("block_3_img", ".", "Максимальный размер файла - 20 МБ!");
         }
         if(page_block_4_img != null && page_block_4_img.getSize() > 0 && !contentTypes.contains(page_block_4_img.getContentType())) {
             e.rejectValue("block_4_img", ".", "Неправильное расширение файла!");
         }
+        if(page_block_4_img != null && page_block_4_img.getSize() > 19_999_999) {
+            e.rejectValue("block_4_img", ".", "Максимальный размер файла - 20 МБ!");
+        }
         if(page_block_5_img != null && page_block_5_img.getSize() > 0 && !contentTypes.contains(page_block_5_img.getContentType())) {
             e.rejectValue("block_5_img", ".", "Неправильное расширение файла!");
+        }
+        if(page_block_5_img != null && page_block_5_img.getSize() > 19_999_999) {
+            e.rejectValue("block_5_img", ".", "Максимальный размер файла - 20 МБ!");
         }
         if(page_block_6_img != null && page_block_6_img.getSize() > 0 && !contentTypes.contains(page_block_6_img.getContentType())) {
             e.rejectValue("block_6_img", ".", "Неправильное расширение файла!");
         }
+        if(page_block_6_img != null && page_block_6_img.getSize() > 19_999_999) {
+            e.rejectValue("block_6_img", ".", "Максимальный размер файла - 20 МБ!");
+        }
+
+
 
         validate(page, e);
     }

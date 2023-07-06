@@ -57,7 +57,8 @@ public class WebsiteController {
         model.addAttribute("aboutPage", page);
         model.addAttribute("photos", photos);
         model.addAttribute("add_photos", add_photos);
-        model.addAttribute("documents", websiteService.getAllDocuments());
+        model.addAttribute("totalDocumentCount", page.getDocuments().size());
+//        model.addAttribute("documents", websiteService.getAllDocuments());
 
         model.addAttribute("aboutEditPageActive", true);
 
@@ -68,7 +69,7 @@ public class WebsiteController {
     @GetMapping("/services")
     public String showEditServicesPage(Model model) {
         model.addAttribute("servicesPage", websiteService.getServicesPage());
-
+        model.addAttribute("totalServiceCount", websiteService.getServicesPage().getServiceDescriptions().size());
         model.addAttribute("servicesEditPageActive", true);
 
         return "admin_panel/website_settings/website_services";
@@ -136,12 +137,10 @@ public class WebsiteController {
                                 @RequestPart(required = false) MultipartFile page_director_photo,
                                 @RequestPart(required = false) MultipartFile[] page_photos,
                                 @RequestPart(required = false) MultipartFile[] page_add_photos,
-                                @RequestParam(required = false) String[] document_names,
-                                @RequestParam(required = false) MultipartFile[] document_files,
                                 Model model) throws IOException {
 
         aboutPageValidator.validateAboutPage(aboutPage, bindingResult, page_director_photo, page_photos,
-                page_add_photos, document_names, document_files);
+                page_add_photos);
 
         if(bindingResult.hasErrors()) {
             log.info("Errors found");
@@ -151,7 +150,8 @@ public class WebsiteController {
         }
 
         aboutPage.setId(1);
-        aboutPage = websiteService.saveAboutPageInfo(aboutPage, page_director_photo, page_photos, page_add_photos, document_names, document_files);
+        aboutPage = websiteService.saveAboutPageInfo(aboutPage, page_director_photo, page_photos, page_add_photos);
+        log.info(aboutPage.toString());
         websiteService.savePage(aboutPage);
 
         return "redirect:/admin/website/about";
@@ -159,14 +159,12 @@ public class WebsiteController {
 
     // Сохранение контента страницы "Услуги"
     @PostMapping("/services")
-    public String editServicesPage(@Valid @ModelAttribute ServicesPage servicesPage,
+    public String editServicesPage(@ModelAttribute ServicesPage servicesPage,
                                    BindingResult bindingResult,
-                                   @RequestParam String[] titles,
-                                   @RequestParam String[] descriptions,
-                                   @RequestParam MultipartFile[] service_images,
-                                   Model model) {
+                                   Model model) throws IOException {
 
-        servicesPageValidator.validateServicesPage(servicesPage, bindingResult, service_images);
+        if(servicesPage.getServiceDescriptions() == null) servicesPage.setServiceDescriptions(new ArrayList<>());
+        servicesPageValidator.validateServicesPage(servicesPage, bindingResult);
 
         if(bindingResult.hasErrors()) {
             log.info("Errors found");
@@ -174,10 +172,7 @@ public class WebsiteController {
             model.addAttribute("validation", "failed");
             return "admin_panel/website_settings/website_services";
         }
-
-        servicesPage = websiteService.saveServicesPageInfo(servicesPage, titles, descriptions, service_images);
-        websiteService.savePage(servicesPage);
-
+        websiteService.saveServicesPageInfo(servicesPage);
         return "redirect:/admin/website/services";
     }
 
@@ -224,9 +219,11 @@ public class WebsiteController {
     }
 
     // Удаление документа из контента страницы "О нас" по ID
-    @GetMapping("/delete-document/{id}")
-    public String deleteDocument(@PathVariable long id) {
-        websiteService.deleteDocument(id);
+    @GetMapping("/delete-document/{index}")
+    public String deleteDocument(@PathVariable long index) {
+        AboutPage page = websiteService.getAboutPage();
+        page.getDocuments().remove((int) index);
+        websiteService.savePage(page);
         return "redirect:/admin/website/about";
     }
 

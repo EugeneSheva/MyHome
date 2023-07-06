@@ -1,6 +1,7 @@
 package com.example.myhome.model.pages;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -36,22 +37,35 @@ public class AboutPage extends Page {
     private String add_photos = "";
 
     //Документы
-    @OneToMany
+//    @OneToMany
+//    private List<Document> documents;
+//
+//    @Data
+//    @Entity
+//    @Table(name="documents")
+//    public static class Document {
+//        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+//        private long id;
+//        @NotBlank
+//        @Size(min=2,max=50,message = "Название должно быть длиной 2-50 символов!")
+//        private String name;
+//        @NotBlank
+//        private String file;
+//        @ManyToOne
+//        private AboutPage page;
+//    }
+
+    @ElementCollection
     private List<Document> documents;
 
     @Data
-    @Entity
-    @Table(name="documents")
+    @Embeddable
     public static class Document {
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private long id;
-        @NotBlank
-        @Size(min=2,max=50,message = "Название должно быть длиной 2-50 символов!")
-        private String name;
-        @NotBlank
-        private String file;
-        @ManyToOne
-        private AboutPage page;
+        private String documentName;
+        private String fileName;
+
+        @Transient
+        private MultipartFile file;
     }
 
 

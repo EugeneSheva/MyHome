@@ -1,6 +1,7 @@
 package com.example.myhome.model.pages;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -19,12 +20,13 @@ public class ServicesPage extends Page {
     @Data
     @Embeddable
     public static class ServiceDescription {
-        @NotBlank
-        @Size(min=2,max=100,message = "Поле должно быть размером 2-100 символов")
+
         private String title;
-        @NotBlank
-        @Size(min=2,max=100,message = "Поле должно быть размером 2-100 символов")
+        @Column(columnDefinition = "TEXT")
         private String description;
         private String photo;
+
+        @Transient
+        private MultipartFile file;
     }
 }

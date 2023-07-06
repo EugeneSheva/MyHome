@@ -105,7 +105,6 @@ $(document).ready(function(){
             $.get("/myhome/admin/apartments/get-owner", {flat_id:apartment_selector.val()}, function(data){
               owner = data;
               console.log(data);
-              console.log(owner);
 
               $("#owner_name").html('<b>'+ownerText+': </b>');
               $("#owner_phone").html('<b>'+ownerPhoneText+': </b>');

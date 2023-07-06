@@ -33,9 +33,7 @@ public class RequestValidator implements Validator {
 
         Locale locale = LocaleContextHolder.getLocale();
 
-        if(request.getRequest_date() == null || request.getRequest_date().isBefore(LocalDate.now())) {
-            e.rejectValue("request_date", "request_date.before_now", "Date is in the past");
-        }
+
 
         if(request.getOwnerID() == null) {
             e.rejectValue("ownerID", "ownerId.empty", messageSource.getMessage("requests.owner.id.empty", null, locale));
@@ -57,9 +55,16 @@ public class RequestValidator implements Validator {
             e.rejectValue("status", "status.empty", messageSource.getMessage("requests.status.empty", null, locale));
         }
 
-        if(request.getBest_time() != null) {
-            LocalDateTime best_time_request = LocalDateTime.parse(request.getBest_time(), DateTimeFormatter.ofPattern("yyyy-MM-dd - HH:mm"));
-            if(best_time_request.isBefore(LocalDateTime.now())) e.rejectValue("best_time", "best_time.incorrect", messageSource.getMessage("requests.best_time.incorrect", null, locale));
+        // if request ID is null, you check request date and best time for first time submit
+        // if request ID is not null, you don't check them during edit
+        if(request.getId() == null) {
+            if(request.getRequest_date() == null || request.getRequest_date().isBefore(LocalDate.now())) {
+                e.rejectValue("request_date", "request_date.before_now", "Date is in the past");
+            }
+            if(request.getBest_time() != null) {
+                LocalDateTime best_time_request = LocalDateTime.parse(request.getBest_time(), DateTimeFormatter.ofPattern("yyyy-MM-dd - HH:mm"));
+                if(best_time_request.isBefore(LocalDateTime.now())) e.rejectValue("best_time", "best_time.incorrect", messageSource.getMessage("requests.best_time.incorrect", null, locale));
+            }
         }
 
         if(request.getComment() != null && !request.getComment().isEmpty()) {

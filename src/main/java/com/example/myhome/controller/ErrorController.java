@@ -41,8 +41,9 @@ public class ErrorController {
     public void addLoggedInAdmin(Model model) {
         {
             Admin admin = new Admin();
-            admin.setFull_name("error");
-            admin.setId(0L);
+            admin.setFirst_name("error");
+            admin.setLast_name("page");
+            admin.setId(null);
             model.addAttribute("auth_admin", admin);
         }
     }

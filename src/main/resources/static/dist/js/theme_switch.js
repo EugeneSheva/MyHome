@@ -41,8 +41,6 @@ function loadDark() {
         nav.classList.remove('navbar-white');
 
         for(const box of boxes) {
-            console.log('box');
-            console.log(box);
             box.classList.add('dark-box')
         }
 
@@ -92,8 +90,6 @@ themeToggler.addEventListener('click', ()=>{
         nav.classList.remove('navbar-white');
 
         for(const box of boxes) {
-            console.log('box');
-            console.log(box);
             box.classList.add('dark-box')
         }
 

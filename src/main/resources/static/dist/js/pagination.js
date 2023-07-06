@@ -714,7 +714,6 @@ function drawAdminsTable(){
     $adminsTable.html('');
     console.log(data);
     for(const admin of data.content) {
-        console.log(admin);
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
         newTableRow.classList.add('user-row');
@@ -916,11 +915,8 @@ function drawPagination() {
     if(tableData.totalElements === 0) return;
 
     let totalElements = tableData.totalElements;
-    console.log(totalElements);
 
     let totalElementsOnCurrentPage = ((currentPageSize*currentPageNumber) < totalElements) ? currentPageSize : (currentPageSize - ((currentPageSize*currentPageNumber)-totalElements))
-    console.log(totalElements);
-    console.log(totalElementsOnCurrentPage);
 
     //ADD TEXT
     let span = document.createElement('span');
@@ -1067,9 +1063,7 @@ $(document).ready(function(){
 
     $(".my_filters").change(() => changeFilterData());
     $(".datetime_filter").change(function(){
-        console.log('date changed');
         let datetime = this.value;
-        console.log(datetime);
         changeFilterData();
     });
 

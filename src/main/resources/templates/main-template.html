@@ -63,34 +63,6 @@ id="loading">
           <li class="menu-header">Новых пользователей: <span th:text="${newUserCount}"></span></li>
           <div class="loader" id="loader" style="display:none;"></div>
           <li id="user-list">
-            <!-- inner menu: contains the actual data -->
-<!--            <ul class="menu">-->
-<!--              <li>-->
-<!--                <a href="/admin/user/109">-->
-<!--                  Вася &lt;!&ndash;<i class="fa fa-angle-right pull-right" aria-hidden="true"></i>&ndash;&gt;-->
-<!--                </a>-->
-<!--              </li>-->
-<!--              <li>-->
-<!--                <a href="/admin/user/108">-->
-<!--                  1petro@petrenko.com &lt;!&ndash;<i class="fa fa-angle-right pull-right" aria-hidden="true"></i>&ndash;&gt;-->
-<!--                </a>-->
-<!--              </li>-->
-<!--              <li>-->
-<!--                <a href="/admin/user/107">-->
-<!--                  123@123.com &lt;!&ndash;<i class="fa fa-angle-right pull-right" aria-hidden="true"></i>&ndash;&gt;-->
-<!--                </a>-->
-<!--              </li>-->
-<!--              <li>-->
-<!--                <a href="/admin/user/106">-->
-<!--                  Петро Петрович Петренко &lt;!&ndash;<i class="fa fa-angle-right pull-right" aria-hidden="true"></i>&ndash;&gt;-->
-<!--                </a>-->
-<!--              </li>-->
-<!--              <li>-->
-<!--                <a href="/admin/user/1">-->
-<!--                  Лисенко Павел Михайлович &lt;!&ndash;<i class="fa fa-angle-right pull-right" aria-hidden="true"></i>&ndash;&gt;-->
-<!--                </a>-->
-<!--              </li>-->
-<!--            </ul>-->
           </li>
           <li class="menu-footer"><a th:href="@{/admin/owners}">Перейти в раздел пользователей</a></li>
 
@@ -114,7 +86,7 @@ id="loading">
           </li>
           <li class="user-footer">
             <div class="pull-left" style="float: left;">
-              <a th:href="@{/admin/admins/update/{id}(id=${auth_admin.id})}" class="btn btn-warning">Профиль</a>
+              <a th:if="${auth_admin.id != null}" th:href="@{/admin/admins/update/{id}(id=${auth_admin.id})}" class="btn btn-warning">Профиль</a>
             </div>
             <div class="pull-right">
               <a th:href="@{/admin/logout}" class="btn btn-danger" th:text="#{exit}">Выйти</a>
@@ -403,8 +375,6 @@ id="loading">
       let userNotifier = document.getElementById('notifier');
       let menuOpened = false;
       let usersLoaded = false;
-      console.log(dropdownToggle);
-      console.log(dropdownMenu);
 
       window.addEventListener('click', (e) => {
         if(e.target != dropdownMenu && e.target != userNotifier && menuOpened) {

@@ -14,7 +14,6 @@ $(document).ready(function() {
 
 
     document.getElementById('showPass').addEventListener('click', () => {
-        console.log(this);
         show_password = (show_password) ? false : true;
         if(show_password) {
             document.getElementById('password').type='text';

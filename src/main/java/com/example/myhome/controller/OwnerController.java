@@ -1,8 +1,10 @@
 package com.example.myhome.controller;
 
 import com.example.myhome.dto.AdminDTO;
+import com.example.myhome.dto.ApartmentDTO;
 import com.example.myhome.dto.BuildingDTO;
 import com.example.myhome.dto.OwnerDTO;
+import com.example.myhome.mapper.ApartmentDTOMapper;
 import com.example.myhome.mapper.OwnerDTOMapper;
 import com.example.myhome.model.*;
 import com.example.myhome.model.filter.FilterForm;
@@ -41,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -59,6 +62,7 @@ public class OwnerController {
     private final ApartmentService apartmentService;
     private final EmailService emailService;
     private final OwnerDTOMapper mapper;
+    private final ApartmentDTOMapper apartmentDTOMapper;
 
     private final MessageSource messageSource;
 
@@ -172,8 +176,8 @@ public class OwnerController {
 
     //Получить квартиры какого-то владельца
     @GetMapping("/get-apartments/{id}")
-    public @ResponseBody List<Apartment> getOwnerApartments(@PathVariable long id) {
-        return ownerService.findById(id).getApartments();
+    public @ResponseBody List<ApartmentDTO> getOwnerApartments(@PathVariable long id) {
+        return ownerService.findById(id).getApartments().stream().map(apartmentDTOMapper::fromApartmentToDTO).collect(Collectors.toList());
     }
 
     @GetMapping("/get-apartment-accounts")

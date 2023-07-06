@@ -140,7 +140,6 @@ $(document).ready(function(){
                   $table_body.html('');
 
                   for(const meter of data) {
-                      console.log(meter);
 
                       let table_row = document.createElement("tr");
                       table_row.classList.add("meter_data_row");
@@ -184,8 +183,6 @@ $(document).ready(function(){
         let building = data.apartment.building;
         let section = data.apartment.section;
 
-        console.log(owner);
-        console.log(apartment);
 
         $("#owner_name").html('<b>'+ownerText+': </b>');
         $("#owner_phone").html('<b>'+ownerPhoneText+': </b>');

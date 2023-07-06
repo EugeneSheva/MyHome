@@ -1,7 +1,6 @@
 function deleteChosen(){
         if(confirm('Удалить выбранные квитанции?')) {
             for(const row of document.querySelectorAll(".invoice_row")) {
-                console.log(row);
                 console.log(row.querySelector("input[type=checkbox]"));
                 if(row.querySelector("input[type=checkbox]").checked == true) {
                     let invoice_id = row.children[0].value;

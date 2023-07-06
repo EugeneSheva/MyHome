@@ -1,7 +1,6 @@
 $(document).ready(function(){
 
     $("#house_select").change(function(){
-        console.log(this);
         console.log(this.value);
 
         let section_select = document.getElementById("section_select");
@@ -65,8 +64,6 @@ $(document).ready(function(){
     });
 
     $("#section_select").change(function(){
-        console.log(this);
-        console.log(this.value);
 
         let house_select = document.getElementById("house_select");
         console.log(house_select.value);

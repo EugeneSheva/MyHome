@@ -60,7 +60,6 @@ $(document).ready(function(){
 
     $("#ownerID").change(function(){
       let owner_id = $("#ownerID").val();
-      console.log(owner_id);
 
       $("#apartmentID").prop("disabled", (owner_id != '0') ? false : true);
 
@@ -103,9 +102,7 @@ $(document).ready(function(){
       })
     });
 
-    if(requestApartID != null) {
-        $("#apartmentID").val(requestApartID);
-    }
+
 
     if(requestApartOwner != null) {
         $.get("/myhome/admin/owners/get-owner?id="+requestApartOwner, function(data){
@@ -113,7 +110,23 @@ $(document).ready(function(){
             let option = new Option(data.text, data.id, null, null);
             $("#ownerID").append(option);
             $("#ownerID").val(data.id);
+        }).then(function(){
+            // add apartments to list
+            $.get("/myhome/admin/owners/get-apartments/"+requestApartOwner, function(data){
+                console.log(data);
+                for(const apartment of data) {
+                    let option = new Option(apartment.fullName, apartment.id, null, null);
+                    $("#apartmentID").append(option);
+                }
+
+                // select previous apartment
+                if(requestApartID != null) {
+                    $("#apartmentID").val(requestApartID);
+                }
+            })
         });
+
+
     }
 
     $("#comment").summernote({height:150});

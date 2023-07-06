@@ -88,7 +88,6 @@ public class RepairRequestServiceImpl implements RepairRequestService {
         UserRole masterType = (filters.getMaster_type() != null && filters.getMaster_type() > 0) ? userRoleRepository.getReferenceById(filters.getMaster_type()) : null;
         String phone = filters.getPhone();
         RepairStatus status = (filters.getStatus() != null) ? RepairStatus.valueOf(filters.getStatus()) : null;
-//        Apartment apartment = (filters.getApartment() != null) ? apartmentService.findByNumber(filters.getApartment()) : null;
         Long apartment = filters.getApartment();
         Owner owner = (filters.getOwner() != null) ? ownerService.findById(filters.getOwner()) : null;
         Admin master = (filters.getMaster() != null) ? adminService.findAdminById(filters.getMaster()) : null;
@@ -100,11 +99,13 @@ public class RepairRequestServiceImpl implements RepairRequestService {
             String datetime_from = datetime.split(" to ")[0];
             from =
                     LocalDateTime.of(LocalDate.parse(datetime_from.split(" ")[0]),
-                            LocalTime.parse(datetime_from.split(" ")[1]));
-            String datetime_to = datetime.split(" to ")[1];
-            to =
-                    LocalDateTime.of(LocalDate.parse(datetime_to.split(" ")[0]),
-                            LocalTime.parse(datetime_to.split(" ")[1]));
+                                     LocalTime.parse(datetime_from.split(" ")[1]));
+            if(datetime.split(" to ").length == 2) {
+                String datetime_to = datetime.split(" to ")[1];
+                to =
+                        LocalDateTime.of(LocalDate.parse(datetime_to.split(" ")[0]),
+                                         LocalTime.parse(datetime_to.split(" ")[1]));
+            }
         }
 
         return Specification.where(RequestSpecifications.hasId(id)
@@ -115,7 +116,7 @@ public class RepairRequestServiceImpl implements RepairRequestService {
                 .and(RequestSpecifications.hasPhoneLike(phone))
                 .and(RequestSpecifications.hasMaster(master))
                 .and(RequestSpecifications.hasStatus(status))
-                .and(RequestSpecifications.datesBetween(from, to)));
+                .and(RequestSpecifications.datesBetween(from, (to != null) ? to : from)));
     }
 
     @Override

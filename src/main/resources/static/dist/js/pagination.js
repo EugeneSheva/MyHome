@@ -537,7 +537,7 @@ function drawMeterDataTable(){
         newTableRow.style.cursor = 'pointer';
         newTableRow.classList.add = 'meter_row';
         let meter_date = new Date(meter.date);
-        meter_date.setDate(meter_date.getDate() + 1);
+//        meter_date.setDate(meter_date.getDate() + 1);
         let date_part = meter_date.toISOString().split('T')[0];
         let formattedDate = date_part.split('-')[0] + '-' + date_part.split('-')[2] + '-' + date_part.split('-')[1];
         let meter_month = monthNames[meter_date.getMonth()] + ' ' + meter_date.getFullYear();
@@ -1070,7 +1070,7 @@ $(document).ready(function(){
         console.log('date changed');
         let datetime = this.value;
         console.log(datetime);
-        if(datetime.split(' to ').length > 1) changeFilterData();
+        changeFilterData();
     });
 
 });

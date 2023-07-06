@@ -68,13 +68,13 @@ public class MeterDataServiceImpl implements MeterDataService {
         LocalDate date_to = null;
         if(date != null && !date.isEmpty()) {
             date_from = LocalDate.parse(date.split(" to ")[0], DateTimeFormatter.ofPattern("yyyy-dd-MM"));
-            date_to = LocalDate.parse(date.split(" to ")[1], DateTimeFormatter.ofPattern("yyyy-dd-MM"));
+            if(date.split(" to ").length == 2) date_to = LocalDate.parse(date.split(" to ")[1], DateTimeFormatter.ofPattern("yyyy-dd-MM"));
         }
         Specification<MeterData> spec = Specification.where(MeterSpecifications.hasApartment(apartmentRepository.getReferenceById(form.getApartment()))
                                                     .and(MeterSpecifications.hasService((form.getService() != null) ? serviceRepository.getReferenceById(form.getService()) : null))
                                                     .and(MeterSpecifications.hasId(form.getId()))
                                                     .and(MeterSpecifications.hasStatus(status))
-                                                    .and(MeterSpecifications.datesBetween(date_from, date_to)));
+                                                    .and(MeterSpecifications.datesBetween(date_from, (date_to != null) ? date_to : date_from)));
 
         Page<MeterData> initialPage = meterDataRepository.findAll(spec, pageable);
         log.info("Found " + initialPage.getContent().size() + " elements(page " + pageable.getPageNumber() + "/ " + initialPage.getTotalPages() + ")");

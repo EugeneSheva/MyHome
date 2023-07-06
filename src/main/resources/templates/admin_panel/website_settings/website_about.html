@@ -76,7 +76,7 @@
                       <div class="form-group mb-30">
                         <label for="websitehomeslide-1-imagefile" class="control-label" th:text="#{settings.website.about.card.info.photo.size}">Рекомендуемый размер: (1920х800)</label>
                         <input type="hidden" name="WebsiteHomeSlide[1][imageFile]" id="">
-                        <input type="file" name="page_director_photo" id="director_photo" accept="image/jpg, image/jpeg, image/png">
+                        <input type="file" name="page_director_photo" id="director_photo" accept=".jpg,.jpeg,.png">
                       </div>
 
                       <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('director_photo')}" th:errors="*{director_photo}"></h4>
@@ -98,7 +98,7 @@
 
                       <label for="websitehomeslide-1-imagefile" class="control-label" th:text="#{settings.website.about.card.gallery.photo.size}">Рекомендуемый размер: (1200x1200)</label>
                       <br>
-                      <input type="file" name="page_photos" id="photos" accept="image/jpg, image/jpeg, image/png" multiple>
+                      <input type="file" name="page_photos" id="photos" accept=".jpg,.jpeg,.png" multiple>
 
                       <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('photos')}" th:errors="*{photos}"></h4>
                     </div>
@@ -137,7 +137,7 @@
                       <label for="" class="control-label" th:text="#{settings.website.about.card.additional.gallery.photo.size}">Рекомендуемый размер: (1200x1200)</label>
                       <br>
                       <input type="hidden" name="WebsiteHomeSlide[1][imageFile]" id="">
-                      <input type="file" name="page_add_photos" id="add_photos" multiple accept="image/jpg, image/jpeg, image/png">
+                      <input type="file" name="page_add_photos" id="add_photos" multiple accept=".jpg,.jpeg,.png">
 
                       <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('add_photos')}" th:errors="*{add_photos}"></h4>
                     </div>

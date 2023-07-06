@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -28,19 +29,23 @@ public class RequestValidator implements Validator {
         RepairRequestDTO request = (RepairRequestDTO) target;
 
         System.out.println("REQUEST FOR VALIDATION: ");
-        System.out.println(request.toString());
+        System.out.println(request);
 
         Locale locale = LocaleContextHolder.getLocale();
 
+        if(request.getRequest_date() == null || request.getRequest_date().isBefore(LocalDate.now())) {
+            e.rejectValue("request_date", "request_date.before_now", "Date is in the past");
+        }
+
         if(request.getOwnerID() == null) {
             e.rejectValue("ownerID", "ownerId.empty", messageSource.getMessage("requests.owner.id.empty", null, locale));
-        } else if(request.getApartmentID() == null) {
+        } else if(request.getApartmentID() == null || request.getApartmentID() == 0) {
             e.rejectValue("apartmentID", "apartmentId.empty", messageSource.getMessage("requests.apartment.id.empty", null, locale));
         }
 
         if(request.getDescription() == null || request.getDescription().equalsIgnoreCase("")) {
             e.rejectValue("description", "description.empty", messageSource.getMessage("requests.description.empty", null, locale));
-        } else if(request.getDescription().length() < 2 || request.getDescription().length() > 300) {
+        } else if(request.getDescription().length() < 2 || request.getDescription().length() > 1000) {
             e.rejectValue("description", "description.wrong-length", messageSource.getMessage("requests.description.wrong-length", null, locale));
         }
 
@@ -58,7 +63,7 @@ public class RequestValidator implements Validator {
         }
 
         if(request.getComment() != null && !request.getComment().isEmpty()) {
-            if(request.getComment().length() < 2 || request.getComment().length() > 100) {
+            if(request.getComment().length() < 2 || request.getComment().length() > 250) {
                 e.rejectValue("comment", "comment.wrong-length", messageSource.getMessage("requests.comment.wrong-length", null, locale));
             }
         }

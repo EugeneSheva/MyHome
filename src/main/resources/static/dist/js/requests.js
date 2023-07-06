@@ -20,23 +20,17 @@ function loadApartments(input) {
 
 $(document).ready(function(){
 
-    if(requestApartOwner != null) {
-        $.get("/myhome/admin/owners/get-owner?id="+requestApartOwner, function(data){
-            console.log(data);
-            let option = new Option(data.text, data.id, null, null);
-            $("#ownerID").append(option);
-            $("#ownerID").val(data.id);
-        });
-    }
 
-    if(requestApartID != null) {
-        $.get("/myhome/admin/apartments/get-apartment?id="+requestApartID,function(data) {
-            console.log(data);
-            let option = new Option(data.fullName, data.id, null, null);
-            $("#apartmentID").append(option);
-            $("#apartmentID").val(data.id);
-        })
-    }
+
+//    if(requestApartID != null) {
+//        $.get("/myhome/admin/apartments/get-apartment?id="+requestApartID,function(data) {
+//            console.log(data);
+//            let option = new Option(data.fullName, data.id, null, null);
+//            $("#apartmentID").append(option);
+//            $("#apartmentID").val(data.id);
+//        })
+//    }
+
 
     $("#date, #time").change(function(){
       console.log($(this).val());
@@ -108,6 +102,19 @@ $(document).ready(function(){
         }
       })
     });
+
+    if(requestApartID != null) {
+        $("#apartmentID").val(requestApartID);
+    }
+
+    if(requestApartOwner != null) {
+        $.get("/myhome/admin/owners/get-owner?id="+requestApartOwner, function(data){
+            console.log(data);
+            let option = new Option(data.text, data.id, null, null);
+            $("#ownerID").append(option);
+            $("#ownerID").val(data.id);
+        });
+    }
 
     $("#comment").summernote({height:150});
 

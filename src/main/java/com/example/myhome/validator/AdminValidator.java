@@ -21,8 +21,8 @@ public class AdminValidator implements Validator {
     @Autowired private AdminRepository adminRepository;
     @Autowired private MessageSource messageSource;
 
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("[A-z0-9_-]{3,}.@[a-z]{2,}.[a-z]{2,3}");
-    private static final Pattern PHONE_PATTERN = Pattern.compile("0(50|66|99)[0-9]{7}");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern PHONE_PATTERN = Pattern.compile("[+]?\\d{10,12}");
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -33,6 +33,15 @@ public class AdminValidator implements Validator {
     public void validate(Object target, Errors e) {
         AdminDTO dto = (AdminDTO) target;
         Locale locale = LocaleContextHolder.getLocale();
+
+        System.out.println("DTO INSIDE VALIDATOR: ");
+        System.out.println(dto.toString());
+
+        if(dto.getId() == null && (dto.getPassword().isEmpty() || dto.getConfirm_password().isEmpty())) {
+            e.rejectValue("password", "password.no-match", "Create password for the new admin");
+            e.rejectValue("confirm_password", "password.no-match", "Create password for the new admin");
+        }
+
         if(dto.getFirst_name() == null || dto.getFirst_name().isEmpty()) {
             e.rejectValue("first_name", "first_name.empty", messageSource.getMessage("users.first_name.empty", null, locale));
         }

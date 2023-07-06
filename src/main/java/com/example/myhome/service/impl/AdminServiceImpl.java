@@ -163,14 +163,15 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional
     public Admin saveAdmin(Admin admin) {
-        Optional<Admin> opt = adminRepository.findById(admin.getId());
-        if(opt.isPresent()) {
-            Admin originalAdmin = opt.get();
-            if(admin.getPassword() == null) admin.setPassword(originalAdmin.getPassword());
+        if(admin.getId() != null) {
+            Optional<Admin> opt = adminRepository.findById(admin.getId());
+            if(opt.isPresent()) {
+                Admin originalAdmin = opt.get();
+                if(admin.getPassword() == null) admin.setPassword(originalAdmin.getPassword());
+            }
         }
         log.info("Trying to save admin...");
         log.info(admin.toString());
-//        if(admin.getPassword() != null && !admin.getPassword().isEmpty()) admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         if(admin.getDateOfRegistry() == null) admin.setDateOfRegistry(LocalDate.now());
         log.info("Encoded admin password for saving");
         try {

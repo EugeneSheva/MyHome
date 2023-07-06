@@ -81,6 +81,8 @@ public class AdminController {
     public String createAdmin(@ModelAttribute AdminDTO dto, BindingResult bindingResult, Model model) {
         validator.validate(dto, bindingResult);
         if(bindingResult.hasErrors()) {
+            log.info("Errors found:");
+            log.info(bindingResult.getAllErrors().toString());
             model.addAttribute("roles", adminService.getAllRoles());
             model.addAttribute("validation", "failed");
             return "admin_panel/system_settings/admin_card";

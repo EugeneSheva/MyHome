@@ -94,13 +94,11 @@
                     <div class="col-md-6">
                       <h4 style="font-weight:bold" th:text="#{requests.editPage.card.apartment}">Квартира</h4>
                       <select th:if="*{ownerID != null}" class="selects mb-3" th:field="*{apartmentID}">
-                        <option value="0" th:text="#{select.placeholder}">Выберите(h)...</option>
                         <option th:each="(flat : ${owner_apartments})"
                                 th:value="${flat.id}"
                                 th:text="${flat.fullName}"></option>
                       </select>
                       <select th:if="*{ownerID == null}" disabled class="selects mb-3" th:field="*{apartmentID}">
-                        <option value="0" th:text="#{select.placeholder}">Выберите...</option>
                       </select>
                       <h4 style="color: red; font-weight: bold; margin-top: -10px" th:if="${#fields.hasErrors('apartmentID')}" th:errors="*{apartmentID}"></h4>
                       <h4 style="font-weight:bold" th:text="#{requests.editPage.card.master.type}">Тип мастера</h4>
@@ -136,6 +134,7 @@
                       <div class="form-group">
                         <textarea class="textareas" th:field="*{comment}" placeholder="Описание..." rows="5" style="width:100%"></textarea>
                       </div>
+                      <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></h4>
                     </div>
                   </div>
 

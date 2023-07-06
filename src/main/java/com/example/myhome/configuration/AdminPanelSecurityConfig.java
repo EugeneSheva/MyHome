@@ -76,6 +76,8 @@ public class AdminPanelSecurityConfig {
 
         log.info("setting up admin filter chain");
 
+        http.headers().httpStrictTransportSecurity().includeSubDomains(true).maxAgeInSeconds(31536000);
+
         http.antMatcher("/**")
                         .authorizeRequests()
                 .antMatchers("/home","/about","/services","/contacts","/error","/webjars/**").permitAll();

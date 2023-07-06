@@ -160,7 +160,7 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
         LocalDate date_to = null;
         if(date != null && !date.isEmpty()) {
             date_from = LocalDate.parse(date.split(" to ")[0]);
-            date_to = LocalDate.parse(date.split(" to ")[1]);
+            if(date.split(" to ").length == 2) date_to = LocalDate.parse(date.split(" to ")[1]);
         }
 
         Specification<Invoice> spec = Specification.where(InvoiceSpecifications.hasId(id)
@@ -168,7 +168,7 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
                                     .and(InvoiceSpecifications.hasApartmentNumber(apartment))
                                     .and(InvoiceSpecifications.hasOwner(owner))
                                     .and(InvoiceSpecifications.isCompleted(completed))
-                                    .and(InvoiceSpecifications.datesBetween(date_from, date_to))
+                                    .and(InvoiceSpecifications.datesBetween(date_from, (date_to != null) ? date_to : date_from))
                                     .and(InvoiceSpecifications.datesBetween(m, m2)));
 
         log.info("Specification ready! " + spec);

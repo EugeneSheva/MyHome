@@ -118,7 +118,9 @@ public class OwnerController {
 
     @PostMapping("/save")
     public String saveCoffee(@Valid @ModelAttribute("owner") OwnerDTO owner, BindingResult bindingResult, @RequestParam("img1") MultipartFile file, @RequestParam("newPassword") String newPassword, @RequestParam("repassword") String repassword) throws IOException {
-                ownerValidator.validate(owner, bindingResult);
+        owner.setPassword(newPassword);
+        owner.setConfirm_password(repassword);
+        ownerValidator.validate(owner, bindingResult);
         if (bindingResult.hasErrors()) {
             System.out.println("bindingResult " + bindingResult);
             return "admin_panel/owners/owner_edit";

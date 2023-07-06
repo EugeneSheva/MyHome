@@ -50,6 +50,7 @@ public class OwnerDTOMapper {
             dto.setText(dto.getFullName() + "(ID:" + dto.getId() + ")");
             dto.setDate((owner.getAdded_at() != null) ? owner.getAdded_at().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) : "---");
             dto.setBirthdate(owner.getBirthdate());
+            dto.setProfile_picture(owner.getProfile_picture());
         }
 
         return dto;

@@ -47,6 +47,7 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Value("${upload.path}")
     private String uploadPath;
+    private String localPath = "/img/ownerId/";
     private final OwnerRepository ownerRepository;
     private final BuildingService buildingService;
     private final ApartmentService apartmentService;
@@ -238,17 +239,16 @@ public class OwnerServiceImpl implements OwnerService {
 // file1
         if(file1.getSize() > 0) {
             String FileNameUuid = UUID.randomUUID() + "-" + file1.getOriginalFilename();
-            fileUploadUtil.saveFile(uploadPath, FileNameUuid, file1);
-            fileName = (FileNameUuid);
-            if(oldOwner.getProfile_picture() != null) {
-            Files.deleteIfExists(Paths.get(uploadPath + oldOwner.getProfile_picture()));
-
+            fileUploadUtil.saveFile(localPath, FileNameUuid, file1);
+            fileName = (localPath + FileNameUuid);
+            if(oldOwner.getProfile_picture() != null && oldOwner.getProfile_picture().length() >0) {
+                Files.deleteIfExists(Paths.get(uploadPath + oldOwner.getProfile_picture()));
             }
         } else if (oldOwner.getProfile_picture() != null) {
             fileName = oldOwner.getProfile_picture();
 
         }
-    return fileName;
+        return fileName;
     }
     @Override
     public Boolean isHaveDebt(String debt) {

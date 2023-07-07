@@ -36,13 +36,17 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0" th:text="${building.id != null} ? (${building.name} + ' - '+ #{editing}) : #{building.new}"></h1>
+                        <h1 class="m-0"
+                            th:text="${building.id != null} ? (${building.name} + ' - '+ #{editing}) : #{building.new}"></h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right" style="font-size:13px;">
-                            <li class="breadcrumb-item"><a th:href="@{/}" style="text-decoration:none;"><i class="fa fa-home"></i> <span th:text="#{homePage}"></span></a></li>
-                            <li class="breadcrumb-item"><a th:href="@{/admin/buildings/}" style="text-decoration:none;" th:text="#{buildings}">Дома</a></li>
-                            <li class="breadcrumb-item active" th:text="${building.id != null} ? (${building.name} + ' - '+ #{editing}) : #{building.new}"></li>
+                            <li class="breadcrumb-item"><a th:href="@{/}" style="text-decoration:none;"><i
+                                    class="fa fa-home"></i> <span th:text="#{homePage}"></span></a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/admin/buildings/}" style="text-decoration:none;"
+                                                           th:text="#{buildings}">Дома</a></li>
+                            <li class="breadcrumb-item active"
+                                th:text="${building.id != null} ? (${building.name} + ' - '+ #{editing}) : #{building.new}"></li>
                         </ol>
                     </div>
                 </div>
@@ -55,7 +59,7 @@
             <div class="container-fluid">
                 <form class="row g-3 needs-validation" novalidate th:method="POST"
                       th:action="@{/admin/buildings/save}" th:object="${building}" enctype="multipart/form-data">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     <div class="card" style="padding: 10px">
                         <div class="row">
                             <div class="col-md-4">
@@ -75,37 +79,57 @@
                                 <div style="color: #d80450" th:if="${#fields.hasErrors('address')}"
                                      th:errors="*{address}"></div>
 
-                                <label class="control-label" for="img1"th:text="#{img}+ ' #1. '+#{img}+': (522x350)'">Изображение #1. Размер: (522x350)</label>
+                                <label class="control-label" for="img1" th:text="#{img}+ ' #1. '+#{img}+': (522x350)'">Изображение
+                                    #1. Размер: (522x350)</label>
                                 <input type="file" id="img1" name="img01" accept="image/*">
+                                <div style="color: #d80450" th:if="${#fields.hasErrors('img1')}"  th:errors="*{img1}"></div>
 
-                                <label class="control-label" for="img2" th:text="#{img}+ ' #2. '+#{img}+': (248x160)'">Изображение #2. Размер: (248x160)</label>
+                                <label class="control-label" for="img2" th:text="#{img}+ ' #2. '+#{img}+': (248x160)'">Изображение
+                                    #2. Размер: (248x160)</label>
                                 <input type="file" id="img2" name="img02" accept="image/*">
+                                <div style="color: #d80450" th:if="${#fields.hasErrors('img2')}"  th:errors="*{img2}"></div>
 
-                                <label class="control-label" for="img3" th:text="#{img}+ ' #3. '+#{img}+': (248x160)'">Изображение #3. Размер: (248x160)</label>
+                                <label class="control-label" for="img3" th:text="#{img}+ ' #3. '+#{img}+': (248x160)'">Изображение
+                                    #3. Размер: (248x160)</label>
                                 <input type="file" id="img3" name="img03" accept="image/*">
+                                <div style="color: #d80450" th:if="${#fields.hasErrors('img3')}"  th:errors="*{img3}"></div>
 
-                                <label class="control-label" for="img4" th:text="#{img}+ ' #4. '+#{img}+': (248x160)'">Изображение #4. Размер: (248x160)</label>
+                                <label class="control-label" for="img4" th:text="#{img}+ ' #4. '+#{img}+': (248x160)'">Изображение
+                                    #4. Размер: (248x160)</label>
                                 <input type="file" id="img4" name="img04" accept="image/*">
+                                <div style="color: #d80450" th:if="${#fields.hasErrors('img4')}"  th:errors="*{img4}"></div>
 
-                                <label class="control-label" for="img5" th:text="#{img}+ ' #5. '+#{img}+': (248x160)'">Изображение #5. Размер: (248x160)</label>
+                                <label class="control-label" for="img5" th:text="#{img}+ ' #5. '+#{img}+': (248x160)'">Изображение
+                                    #5. Размер: (248x160)</label>
                                 <input type="file" id="img5" name="img05" accept="image/*">
+                                <div style="color: #d80450" th:if="${#fields.hasErrors('img5')}"  th:errors="*{img5}"></div>
 
                             </div>
                             <div class="col-md-8">
                                 <div class="post">
                                     <div class="row mb-3">
                                         <div class="col-sm-6">
-                                            <img class="img-fluid" data-name="img01" th:src="${building.img1 != null && !building.img1.isEmpty()} ? @{/img/{url}(url=${building.img1})} :  @{/images/placeholder.jpg}" alt="Photo">
+                                            <img class="img-fluid" data-name="img01"
+                                                 th:src="${building.img1 != null && !building.img1.isEmpty()} ? @{/img/{url}(url=${building.img1})} :  @{/images/placeholder.jpg}"
+                                                 alt="Photo">
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="row">
                                                 <div class="col-sm-6">
-                                                    <img class="img-fluid mb-3" data-name="img02" th:src="${building.img2 != null && !building.img2.isEmpty()} ? @{/img/{url}(url=${building.img2})} :  @{/images/placeholder.jpg}" alt="Photo">
-                                                    <img class="img-fluid" data-name="img03" th:src="${building.img3 != null && !building.img3.isEmpty()} ? @{/img/{url}(url=${building.img3})} :  @{/images/placeholder.jpg}" alt="Photo">
+                                                    <img class="img-fluid mb-3" data-name="img02"
+                                                         th:src="${building.img2 != null && !building.img2.isEmpty()} ? @{/img/{url}(url=${building.img2})} :  @{/images/placeholder.jpg}"
+                                                         alt="Photo">
+                                                    <img class="img-fluid" data-name="img03"
+                                                         th:src="${building.img3 != null && !building.img3.isEmpty()} ? @{/img/{url}(url=${building.img3})} :  @{/images/placeholder.jpg}"
+                                                         alt="Photo">
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <img class="img-fluid mb-3" data-name="img04" th:src="${building.img4 != null && !building.img4.isEmpty()} ? @{/img/{url}(url=${building.img4})} :  @{/images/placeholder.jpg}" alt="Photo">
-                                                    <img class="img-fluid" data-name="img05" th:src="${building.img5 != null && !building.img5.isEmpty()} ? @{/img/{url}(url=${building.img5})} :  @{/images/placeholder.jpg}" alt="Photo">
+                                                    <img class="img-fluid mb-3" data-name="img04"
+                                                         th:src="${building.img4 != null && !building.img4.isEmpty()} ? @{/img/{url}(url=${building.img4})} :  @{/images/placeholder.jpg}"
+                                                         alt="Photo">
+                                                    <img class="img-fluid" data-name="img05"
+                                                         th:src="${building.img5 != null && !building.img5.isEmpty()} ? @{/img/{url}(url=${building.img5})} :  @{/images/placeholder.jpg}"
+                                                         alt="Photo">
                                                 </div>
                                             </div>
                                         </div>
@@ -124,11 +148,13 @@
                                         </li>
                                         <li class="nav-item" role="presentation">
                                             <a class="nav-link" id="floars-tab" data-bs-toggle="tab" href="#floars"
-                                               role="tab" aria-controls="floars" aria-selected="false" th:text="#{floors}">Этажи</a>
+                                               role="tab" aria-controls="floars" aria-selected="false"
+                                               th:text="#{floors}">Этажи</a>
                                         </li>
                                         <li class="nav-item" role="presentation">
                                             <a class="nav-link" id="users-tab" data-bs-toggle="tab" href="#users"
-                                               role="tab" aria-controls="users" aria-selected="false" th:text="#{users}">Пользователи</a>
+                                               role="tab" aria-controls="users" aria-selected="false"
+                                               th:text="#{users}">Пользователи</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -172,7 +198,8 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <button type="button"
-                                                            class="add-field btn btn-success btn-sm float-right" th:text="#{add}">
+                                                            class="add-field btn btn-success btn-sm float-right"
+                                                            th:text="#{add}">
                                                         Добавить
                                                     </button>
                                                 </div>
@@ -216,7 +243,8 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <button type="button"
-                                                            class="add-field btn btn-success btn-sm float-right" th:text="#{add}">
+                                                            class="add-field btn btn-success btn-sm float-right"
+                                                            th:text="#{add}">
                                                         Добавить
                                                     </button>
                                                 </div>
@@ -228,12 +256,13 @@
                                              aria-labelledby="profile-tab">
 
                                             <div class="multi-field-wrapper">
-                                                <div  th:switch="${building.admins.size()}">
+                                                <div th:switch="${building.admins.size()}">
                                                     <div th:case="0" class="multi-fields" id="multi-fields">
                                                         <div class="multi-field input-group"
                                                              style="margin-top: 10px; margin-bottom: 10px;">
                                                             <label for="admin" class="form-label"> </label>
-                                                            <select class="form-select" id="admin-1" name="admins" th:onchange="'selectAdmin(1)'">
+                                                            <select class="form-select" id="admin-1" name="admins"
+                                                                    th:onchange="'selectAdmin(1)'">
                                                                 <option selected="" disabled="" value="">Choose...
                                                                 <option th:each="adminL : ${adminList}"
                                                                         th:text="${adminL.first_name}+ ' '+${adminL.last_name}"
@@ -248,44 +277,51 @@
                                                                     class="remove-field btn btn-danger btn-sm"><i
                                                                     class="fa fa-trash-o" aria-hidden="true"></i>
                                                             </button>
+                                                        </div>
+                                                        <div style="color: #d80450"
+                                                             th:if="${#fields.hasErrors('admins')}"
+                                                             th:errors="*{admins}"></div>
+                                                        <div th:case="*" class="multi-fields" id="multi-fields">
+                                                            <div class="multi-field input-group"
+                                                                 th:each="adminOfBuilding, item  : ${building.admins}"
+                                                                 th:with="selectedAdmin=${building.admins[__${item.index}__]}"
+                                                                 style="margin-top: 10px; margin-bottom: 10px;">
+                                                                <label for="admin" class="form-label"> </label>
+                                                                <select th:value="${building.admins[__${item.index}__].id}"
+                                                                        class="form-select"
+                                                                        th:id="'admin-'+${item.count}" name="admins"
+                                                                        th:onchange="'selectAdmin('+${item.count}+')'">
 
+                                                                    <option selected="" disabled="" value="">Choose...
+                                                                    <option th:each="adminL : ${adminList}"
+                                                                            th:text="${adminL.first_name}+ ' '+${adminL.last_name}"
+                                                                            th:value="${adminL.id}"
+                                                                            th:selected="${adminL.id == (adminOfBuilding != null ? adminOfBuilding.id:0)}"
+                                                                    ></option>
+                                                                </select>
+                                                                <label for="adminrole" class="form-label"> </label>
+                                                                <input type="text" readonly
+                                                                       th:id="'adminrole-'+${item.count}"
+                                                                       th:value="${selectedAdmin != null ? selectedAdmin.role.getName() : ''}"
+                                                                       class="form-control"
+                                                                       name="users" style="margin-left: 10px;">
+                                                                <button type="button"
+                                                                        class="remove-field btn btn-danger btn-sm"><i
+                                                                        class="fa fa-trash-o" aria-hidden="true"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div style="color: #d80450"
+                                                                 th:if="${#fields.hasErrors('admins')}"
+                                                                 th:errors="*{admins}"></div>
                                                         </div>
                                                     </div>
-                                                    <div th:case="*" class="multi-fields" id="multi-fields">
-                                                        <div class="multi-field input-group"
-                                                             th:each="adminOfBuilding, item  : ${building.admins}"
-                                                             th:with="selectedAdmin=${building.admins[__${item.index}__]}"
-                                                             style="margin-top: 10px; margin-bottom: 10px;">
-                                                            <label for="admin" class="form-label"> </label>
-                                                            <select th:value="${building.admins[__${item.index}__].id}"
-                                                                    class="form-select" th:id="'admin-'+${item.count}" name="admins"
-                                                                    th:onchange="'selectAdmin('+${item.count}+')'">
-
-                                                                <option selected="" disabled="" value="">Choose...
-                                                                <option th:each="adminL : ${adminList}"
-                                                                        th:text="${adminL.first_name}+ ' '+${adminL.last_name}"
-                                                                        th:value="${adminL.id}"
-                                                                        th:selected="${adminL.id == (adminOfBuilding != null ? adminOfBuilding.id:0)}"
-                                                                ></option>
-                                                            </select>
-                                                            <label for="adminrole" class="form-label"> </label>
-                                                            <input type="text" readonly th:id="'adminrole-'+${item.count}"
-                                                                   th:value="${selectedAdmin != null ? selectedAdmin.role.getName() : ''}"
-                                                                   class="form-control"
-                                                                   name="users" style="margin-left: 10px;">
-                                                            <button type="button"
-                                                                    class="remove-field btn btn-danger btn-sm"><i
-                                                                    class="fa fa-trash-o" aria-hidden="true"></i>
-                                                            </button>
-
-                                                        </div>
+                                                    <div class="form-group">
+                                                        <button type="button"
+                                                                class="add-field btn btn-success btn-sm float-right"
+                                                                th:text="#{add}">
+                                                            Добавить
+                                                        </button>
                                                     </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <button type="button"
-                                                            class="add-field btn btn-success btn-sm float-right" th:text="#{add}">
-                                                        Добавить
-                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -293,8 +329,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <button type="submit" class="btn btn-success"><b>Сохранить</b></button>
+                        <button type="submit" class="btn btn-success"><b>Сохранить</b></button>
                 </form>
             </div>
         </section>
@@ -314,8 +349,8 @@
     // let fields = $("#multi-fields");
     console.log(fields)
     let elementsQuantity = fields.childElementCount;
-    console.log('elementsQuantity '+ elementsQuantity)
-    console.log('elementsQuantity+1 '+ parseInt(elementsQuantity) + 1)
+    console.log('elementsQuantity ' + elementsQuantity)
+    console.log('elementsQuantity+1 ' + parseInt(elementsQuantity) + 1)
 
     $(".multi-field-wrapper").each(function () {
         var $wrapper = $(".multi-fields", this);
@@ -326,8 +361,8 @@
 
                 $clone.find("select").attr("onchange", "selectAdmin(" + (+elementsQuantity + 1) + ")");
             }
-            $clone.find("select").attr("id", "admin-"+ (+(elementsQuantity) + 1));
-            $clone.find("input").attr("id", "adminrole-"+(+elementsQuantity + 1));
+            $clone.find("select").attr("id", "admin-" + (+(elementsQuantity) + 1));
+            $clone.find("input").attr("id", "adminrole-" + (+elementsQuantity + 1));
             $clone.appendTo($wrapper).find("input, select").val("").focus();
             elementsQuantity++;
         });
@@ -351,13 +386,13 @@
         }
     }
 
-    $('input[type="file"]').change(function() {
-      let photo = this.files[0];
-      let inputName = this.getAttribute('name');
-      let image = document.querySelector('img[data-name="' + inputName + '"]');
-      let imagePath = URL.createObjectURL(photo);
+    $('input[type="file"]').change(function () {
+        let photo = this.files[0];
+        let inputName = this.getAttribute('name');
+        let image = document.querySelector('img[data-name="' + inputName + '"]');
+        let imagePath = URL.createObjectURL(photo);
 
-      image.src = imagePath;
+        image.src = imagePath;
     });
 
     let addressInput = document.getElementById('address');

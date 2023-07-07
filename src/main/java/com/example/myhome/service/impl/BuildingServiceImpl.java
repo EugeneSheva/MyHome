@@ -17,11 +17,14 @@ import com.example.myhome.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -29,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -42,7 +46,7 @@ public class BuildingServiceImpl implements BuildingService {
     private final BuildingDTOMapper mapper;
     private final ApartmentDTOMapper apartmentMapper;
     private final AdminDTOMapper adminMapper;
-
+    private final MessageSource messageSource;
     @Override
     public Building findById(Long id) {
         return buildingRepository.findById(id).orElseThrow(NotFoundException::new);
@@ -198,5 +202,19 @@ public class BuildingServiceImpl implements BuildingService {
     @Override
     public Building findByName(String buildingName) {
         return buildingRepository.findByName(buildingName);
+    }
+    @Override
+    public FieldError validateImg(MultipartFile file, String errName) {
+        Locale locale = LocaleContextHolder.getLocale();
+        if (file != null && !file.isEmpty()) {
+            if (!file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg") && !file.getContentType().equals("image/png")) {
+                FieldError fileError = new FieldError("building", errName, messageSource.getMessage("imgValid", null, locale));
+                return fileError;
+            } else if (file.getSize() > 20 * 1024 * 1024) {
+                FieldError fileError = new FieldError("building", errName, messageSource.getMessage("imgValidSize", null, locale));
+                return fileError;
+            }
+        }
+        return null;
     }
 }

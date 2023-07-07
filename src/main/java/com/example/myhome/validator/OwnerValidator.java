@@ -79,7 +79,7 @@ public class OwnerValidator implements Validator {
         }
     }
 
-    private boolean isValidEmailAddress(String email) {
+    public boolean isValidEmailAddress(String email) {
         Pattern USERNAME_PATTERN = Pattern.compile("^[A-Za-z0-9._-]+$");
         Pattern DOMAIN_PATTERN = Pattern.compile("^[A-Za-z0-9._-]+$");
 

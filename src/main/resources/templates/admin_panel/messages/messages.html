@@ -32,7 +32,8 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i> <span th:text="#{homePage}"></span></a></li>
+                            <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i> <span
+                                    th:text="#{homePage}"></span></a></li>
                             <li class="breadcrumb-item active" th:text="#{messages}">Сообщения</li>
                         </ol>
                     </div>
@@ -47,16 +48,18 @@
             <div class="container-fluid">
                 <div class="card" style="padding: 10px">
                     <div class="form-group">
-                        <a th:href="@{/admin/messages/new}" class="btn btn-success btn-sm float-right" th:text="#{sendMessage}">Отправить сообщение</a>
+                        <a th:href="@{/admin/messages/new}" class="btn btn-success btn-sm float-right"
+                           th:text="#{sendMessage}">Отправить сообщение</a>
                     </div>
                     <div class="card card-primary card-outline" style="border-top-color: #999999">
                         <div class="card-header">
                             <h3 class="card-title"></h3>
                             <div class="card-tools">
                                 <div class="input-group input-group-sm">
-                                        <input type="text" th:field="${filterForm.description}" id="description" class="form-control" placeholder="Поиск">
+                                    <input type="text" th:field="${filterForm.description}" id="description"
+                                           class="form-control" placeholder="Поиск">
                                     <div class="input-group-append">
-<!--                        поиск-->
+                                        <!--                        поиск-->
                                         <div class="btn btn-primary" onclick="changeFilterData()">
                                             <i class="fas fa-search"></i>
                                         </div>
@@ -70,8 +73,8 @@
                                         class="far fa-square"></i>
                                 </button>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-sm"
-                                            th:onclick="'deleteSelected()'">
+                                    <button type="button" class="btn btn-default btn-sm" id="deleteButton1"
+                                        disabled="" th:onclick="'deleteSelected()'">
                                         <i class="far fa-trash-alt"></i>
                                     </button>
                                 </div>
@@ -91,22 +94,22 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-<!--                                    <tr th:each="message : ${messages}" id="myList">-->
-<!--                                        <td>-->
-<!--                                            <div class="icheck-primary">-->
-<!--                                                <input type="checkbox" th:value="${message.id}" name="check1" value=""-->
-<!--                                                       id="check1">-->
-<!--                                                <label for="check1"></label>-->
-<!--                                            </div>-->
-<!--                                        </td>-->
-<!--                                        <td class="mailbox-name"><a style="display: block; color: black;" th:text="${message.receiversName}" th:href="@{{id}(id=${message.id})}"></a></td>-->
-<!--                                        &lt;!&ndash;                                            &ndash;&gt;-->
-<!--                                        <td class="mailbox-subject"><b th:text="${message.subject}+' - '"></b><a style="display: block; color: black;"-->
-<!--                                                th:utext="${message.text}" th:href="@{{id}(id=${message.id})}"></a>-->
-<!--                                        </td>-->
-<!--                                        <td class="mailbox-date" th:text="${message.date}"-->
-<!--                                            th:href="@{{id}(id=${message.id})}"></td>-->
-<!--                                    </tr>-->
+                                    <!--                                    <tr th:each="message : ${messages}" id="myList">-->
+                                    <!--                                        <td>-->
+                                    <!--                                            <div class="icheck-primary">-->
+                                    <!--                                                <input type="checkbox" th:value="${message.id}" name="check1" value=""-->
+                                    <!--                                                       id="check1">-->
+                                    <!--                                                <label for="check1"></label>-->
+                                    <!--                                            </div>-->
+                                    <!--                                        </td>-->
+                                    <!--                                        <td class="mailbox-name"><a style="display: block; color: black;" th:text="${message.receiversName}" th:href="@{{id}(id=${message.id})}"></a></td>-->
+                                    <!--                                        &lt;!&ndash;                                            &ndash;&gt;-->
+                                    <!--                                        <td class="mailbox-subject"><b th:text="${message.subject}+' - '"></b><a style="display: block; color: black;"-->
+                                    <!--                                                th:utext="${message.text}" th:href="@{{id}(id=${message.id})}"></a>-->
+                                    <!--                                        </td>-->
+                                    <!--                                        <td class="mailbox-date" th:text="${message.date}"-->
+                                    <!--                                            th:href="@{{id}(id=${message.id})}"></td>-->
+                                    <!--                                    </tr>-->
                                     </tbody>
                                 </table>
                             </div>
@@ -114,12 +117,12 @@
                         <div class="card-footer p-0">
                             <div class="mailbox-controls">
 
-                                <button type="button" class="btn btn-default btn-sm checkbox-toggle">
+                                <button type="button" class="btn btn-default btn-sm checkbox-toggle" >
                                     <i class="far fa-square"></i>
                                 </button>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-sm"
-                                            th:onclick="'deleteSelected()'">
+                                    <button type="button" class="btn btn-default btn-sm" id="deleteButton2"
+                                        disabled="" th:onclick="'deleteSelected()'">
                                         <i class="far fa-trash-alt"></i>
                                     </button>
                                 </div>
@@ -161,6 +164,29 @@
 <!--<script src="../../dist/js/demo.js"></script>-->
 <!--&lt;!&ndash; Page specific script &ndash;&gt;-->
 <script>
+    // disable delete button
+    const deleteButton1 = document.getElementById('deleteButton1');
+    const deleteButton2 = document.getElementById('deleteButton2');
+
+    function checkCheckboxes() {
+        const checkboxes = document.querySelectorAll('#messageTable input[type="checkbox"]');
+        const selectedCheckboxes = [];
+        checkboxes.forEach((checkbox) => {
+            if (checkbox.checked) {
+                selectedCheckboxes.push(checkbox);
+            }
+        });
+        console.log('selectedCheckboxes.length' + selectedCheckboxes.length);
+        if (selectedCheckboxes.length === 0) {
+            deleteButton1.disabled = true;
+            deleteButton2.disabled = true;
+        } else {
+            deleteButton1.disabled = false;
+            deleteButton2.disabled = false;
+        }
+    }
+</script>
+<script>
     $(function () {
         //Enable check and uncheck all functionality
         $('.checkbox-toggle').click(function () {
@@ -175,6 +201,7 @@
                 $('.checkbox-toggle .far.fa-square').removeClass('fa-square').addClass('fa-check-square')
             }
             $(this).data('clicks', !clicks)
+            checkCheckboxes();
         })
 
         //Handle starring for font awesome
@@ -190,36 +217,43 @@
                 $this.toggleClass('fa-star-o')
             }
         })
-    })
 
+    })
 
 
 </script>
 <script th:inline="javascript">
     function deleteSelected() {
-        var result = confirm("Подтвердите удаление");
-           if (result) {
-               var url = "/myhome/admin/messages/deleteSelected";
-               const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
-               var ids = [];
-               checkedBoxes.forEach((box) => {
-                   ids.push(box.value);
-               });
+        const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        if (checkedBoxes.length > 0) {
+            var result = confirm("Подтвердите удаление");
+            if (result) {
+                var url = "/myhome/admin/messages/deleteSelected";
 
-               $.ajax({
-                   url: url,
-                   method: 'GET',
-                   traditional: true,
-                   data: {checkboxList: ids},
-                   success: function () {
-                       drawTable();
-                   }
-               });
-           }
+                var ids = [];
+                checkedBoxes.forEach((box) => {
+                    ids.push(box.value);
+                });
+
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    traditional: true,
+                    data: {checkboxList: ids},
+                    success: function () {
+                        drawTable();
+                    }
+                });
+            }
+        }
     }
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"
+        integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"
+        integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script th:src="@{/dist/js/pagination.js}"></script>
 <script th:src="@{/dist/js/websocket.js}"></script>
 <script th:inline="javascript">
@@ -227,7 +261,7 @@
     let globalTableName = 'messagesAdmin';
     let totalPagesCount = [[${totalPagesCount}]];
     let tableData;
-    $(document).ready(function(){
+    $(document).ready(function () {
         drawTable();
 
     });

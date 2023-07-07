@@ -50,15 +50,16 @@ public Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page
     Page<CashBox> cashBoxList;
 
     System.out.println("filters" +filters);
-    System.out.println("date" +filters.getDate());
+    System.out.println("date" + filters.getDate());
     LocalDate startDate = null;
     LocalDate endDate = null;
-    System.out.println("filters.getDatetime() " + filters.getDatetime());
-    if (filters.getDatetime() != null) {
-        String[] dateArray = filters.getDatetime().split(" to ");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    if (filters.getDate() != null) {
+        String[] dateArray = filters.getDate().split(" - ");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         startDate = LocalDate.parse(dateArray[0], formatter);
         endDate = LocalDate.parse(dateArray[1], formatter);
+        System.out.println("startDate " + startDate);
+        System.out.println("endDate " + endDate);
     }
 
     if(!filters.filtersPresent()) cashBoxList = cashBoxRepository.findAll(pageable);

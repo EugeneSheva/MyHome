@@ -69,7 +69,7 @@ public class OwnerSpecifications {
         if(number == null) return (root, query, criteriaBuilder) -> null;
         return (root, query, builder) -> {
             Join<Owner, Apartment> apartmentJoin = root.join("apartments", JoinType.INNER);
-            return builder.equal(apartmentJoin.get("id"), number);
+            return builder.equal(apartmentJoin.get("number"), number);
         };
     }
     public static Specification<Owner> dateContains(LocalDate date) {

@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -352,11 +353,10 @@ public class CashBoxController {
     public @ResponseBody Page<CashBoxDTO> getCashbox(@RequestParam Integer page,
                                                      @RequestParam Integer size,
                                                      @RequestParam String filters) throws JsonProcessingException, IllegalAccessException {
+
         ObjectMapper mapper = new ObjectMapper();
         FilterForm form = mapper.readValue(filters, FilterForm.class);
-        System.out.println(form);
-        System.out.println(page);
-        System.out.println(size);
+        System.out.println("controller filter " + filters);
         return cashBoxService.findAllBySpecification2(form, page, size);
     }
 

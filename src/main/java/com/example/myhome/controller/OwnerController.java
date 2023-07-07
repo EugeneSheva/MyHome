@@ -3,6 +3,7 @@ package com.example.myhome.controller;
 import com.example.myhome.dto.AdminDTO;
 import com.example.myhome.dto.ApartmentDTO;
 import com.example.myhome.dto.BuildingDTO;
+import com.example.myhome.dto.InviteForm;
 import com.example.myhome.dto.OwnerDTO;
 import com.example.myhome.mapper.ApartmentDTOMapper;
 import com.example.myhome.mapper.OwnerDTOMapper;
@@ -29,6 +30,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.LocaleContextResolver;
@@ -95,7 +97,8 @@ public class OwnerController {
     }
 
     @GetMapping("/invite")
-    public String showInvitePage() {
+    public String showInvitePage(Model model) {
+        model.addAttribute("inviteForm", new InviteForm());
         return "admin_panel/owners/invite";
     }
 
@@ -104,14 +107,18 @@ public class OwnerController {
                               @RequestParam String email,
                               Model model) {
 
-        List<String> errors = new ArrayList<>();
-        if(phone.isEmpty()) errors.add("Phone is empty");
-        else if(!phone.matches("\\+380[0-9]{9}")) errors.add("Wrong phone format");
-        if(email.isEmpty()) errors.add("Email is empty");
-        else if(!email.matches("[A-z]+@[a-z]+\\.[a-z]{2,4}")) errors.add("Wrong email format");
 
-        if(errors.size() > 0) {
-            model.addAttribute("errors", errors);
+        List<FieldError> errors = new ArrayList<>();
+        if(phone.isEmpty()) errors.add(new FieldError("inviteForm", "phone", "Заповніть поле номер телефона"));
+        else if(!phone.matches("\\+380[0-9]{9}")) errors.add(new FieldError("inviteForm", "phone", "Невірний формат номера телефона"));
+        if(email.isEmpty()) errors.add(new FieldError("inviteForm", "email", "Заповніть E-mail"));
+        else if(!ownerValidator.isValidEmailAddress(email)) errors.add(new FieldError("inviteForm", "email", "Невірний формат E-mail"));
+
+        if(!errors.isEmpty()) {
+            for (FieldError error : errors) {
+                model.addAttribute(error.getField() + "Error", error.getDefaultMessage());
+            }
+            model.addAttribute("inviteForm", new InviteForm());
             return "admin_panel/owners/invite";
         } else {
             emailService.send(email, "Invite");

@@ -9,6 +9,7 @@ import com.example.myhome.specification.BuildingSpecifications;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -56,4 +57,6 @@ public interface BuildingService {
     BuildingDTO convertBuildingToBuildingDTO(Building building);
 
     Building findByName(String buildingName);
+
+    FieldError validateImg(MultipartFile file, String errName);
 }

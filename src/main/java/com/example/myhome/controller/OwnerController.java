@@ -119,6 +119,8 @@ public class OwnerController {
                 model.addAttribute(error.getField() + "Error", error.getDefaultMessage());
             }
             model.addAttribute("inviteForm", new InviteForm());
+            model.addAttribute("phone", phone);
+            model.addAttribute("email", email);
             return "admin_panel/owners/invite";
         } else {
             emailService.send(email, "Invite");

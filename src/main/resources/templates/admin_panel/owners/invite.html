@@ -59,13 +59,13 @@
                                 <div class="col-xs-12 col-sm-6">
                                     <div class="form-group field-phone">
                                         <label class="control-label">Телефон</label>
-                                        <input type="text" class="form-control" name="phone" id="phone" value="" placeholder="+380991234567">
+                                        <input type="text" th:value="${phone}" class="form-control" name="phone" id="phone" value="" placeholder="+380991234567">
                                         <span style="color: red;" th:if="${phoneError}" th:text="${phoneError}"></span>
                                     </div>
 
                                     <div class="form-group field-email">
                                         <label class="control-label">Email</label>
-                                        <input type="text" class="form-control" name="email" id="email" value="" placeholder="info@example.com">
+                                        <input type="text" th:value="${email}" class="form-control" name="email" id="email" value="" placeholder="info@example.com">
                                         <span style="color: red;" th:if="${emailError}" th:text="${emailError}"></span>
                                     </div>
                                 </div>

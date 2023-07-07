@@ -169,17 +169,17 @@
                             </tr>
                             <tr>
                                 <td style="padding: 10px">
-                                    <input style="width: 100%; padding-block: 10px; border: 0.5px solid silver;" autocomplete="off" th:field="*{id}" class="my_filters" id="id" type="text">
+                                    <input style="width: 100%; height: 45px; padding-block: 6px; border: 1px solid #aaa; margin-top: 3px;" autocomplete="off" th:field="*{id}" class="my_filters form-control" id="id" type="text">
                                 </td>
                                 <th style="border-bottom:none">
-                                    <div class="form-group" style="margin: 0; margin-top: -50px; margin-bottom: 12px">
-                                        <div class="input-group" style="height: 42px">
+                                    <div class="form-group" style="margin: 0; margin-bottom: 11px">
+                                        <div class="input-group" style="height: 45px">
                                             <div class="input-group-prepend">
                                               <span class="input-group-text" style="padding-right: 6px;padding-left: 6px;">
                                                 <i class="far fa-calendar-alt" aria-hidden="true"></i>
                                               </span>
                                             </div>
-                                            <input type="text" style="height: 42px; padding-left: 1px; padding-right: 1px;" autocomplete="off" class="form-control float-right my_filters" id="date"
+                                            <input type="text" style="height: 45px; padding-left: 1px; padding-right: 1px;" autocomplete="off" class="form-control float-right my_filters" id="date"
                                                    name="date">
                                         </div>
                                     </div>
@@ -211,7 +211,7 @@
                                     </select>
                                 </th>
                                 <td style="padding: 10px">
-                                    <input style="width: 100%; padding-block: 10px; border: 0.5px solid silver;" autocomplete="off" th:field="*{accountId}" class="my_filters" id="accountId" data-name="id" type="text">
+                                    <input style="width: 100%; height: 45px; padding-block: 6px; border: 1px solid #aaa; margin-top: 3px;" autocomplete="off" th:field="*{accountId}" class="my_filters form-control" id="accountId" data-name="id" type="text">
                                 </td>
 
                                 <th style="border-bottom:none"><select autocomplete="off" class="form-select my_filters" id="incomeExpenseType" name="incomeExpenseType">
@@ -299,9 +299,10 @@
 
 </script>
 
-
 <script>
+
     $(function () {
+        var userLocale = navigator.language;
         var start = moment().subtract(3, 'year');
         var end = moment();
         //Datemask dd/mm/yyyy
@@ -311,18 +312,62 @@
         //Money Euro
         $('[data-mask]').inputmask()
 
+        if ([[${#locale.language == 'ru'}]]) {
+            console.log(userLocale)
+            console.log('ru')
         $('input[name="date"]').daterangepicker({
             startDate: start,
             endDate: end,
-            opens: 'left',
+            // singleDatePicker: true,
+            showDropdowns: true,
             locale: {
-                format: 'DD/MM/YYYY'
-            }
+                format: 'DD/MM/YYYY',
+                "separator": " - ",
+                "applyLabel": "Применить",
+                "cancelLabel": "Отмена",
+                "fromLabel": "С",
+                "toLabel": "По",
+                "customRangeLabel": "Произвольный",
+                "weekLabel": "Н",
+                "daysOfWeek": ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+                "monthNames": [
+                    "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+                    "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+                ],
+                "firstDay": 1
+            },
+            drops: 'down'
         });
+        } else if ([[${#locale.language == 'uk'}]]) {
+            console.log(userLocale)
+            console.log('ua')
+            $('input[name="date"]').daterangepicker({
+                startDate: start,
+                endDate: end,
+                // singleDatePicker: true,
+                showDropdowns: true,
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    "separator": " - ",
+                    "applyLabel": "Застосувати",
+                    "cancelLabel": "Відміна",
+                    "fromLabel": "З",
+                    "toLabel": "По",
+                    "customRangeLabel": "Довільний",
+                    "weekLabel": "Н",
+                    "daysOfWeek": ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+                    "monthNames": [
+                        "Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень",
+                        "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"
+                    ],
+                    "firstDay": 1
+                },
+                drops: 'down'
+            });
+        }
 
         //Date picker
         $('#reservationdate').datetimepicker({
-
             format: 'L'
         });
 

@@ -127,10 +127,12 @@
                                     <label for="viber" th:text="#{viber}">Viber</label>
                                     <input type="number" id="viber" class="form-control" name="viber"
                                            th:field="*{viber}" placeholder="">
+                                    <div style="color: #d80450" th:if="${#fields.hasErrors('viber')}" th:errors="*{viber}"></div>
 
                                     <label for="telegram" th:text="#{telegram}">Telegram</label>
                                     <input type="number" id="telegram" class="form-control" name="telegram"
                                            th:field="*{telegram}" placeholder="">
+                                    <div style="color: #d80450" th:if="${#fields.hasErrors('telegram')}" th:errors="*{telegram}"></div>
 
                                     <label for="email" th:text="#{email}">Email</label>
                                     <input type="text" id="email" class="form-control" name="email"
@@ -154,6 +156,7 @@
 
                                     <label for="description" style="padding-top: 10px" th:text="#{aboutOwner}">О владельце (заметки)</label>
                                     <textarea class="form-control" th:field="*{description}" id="description"  rows="10"></textarea ><br>
+                                <div style="color: #d80450" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
 
                                     <h4 th:text="#{changePass}">Изменить пароль</h4>
 

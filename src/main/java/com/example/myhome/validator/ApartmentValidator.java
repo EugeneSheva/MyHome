@@ -29,10 +29,15 @@ public class ApartmentValidator implements Validator {
         ApartmentDTO apartment = (ApartmentDTO) obj;
         if (apartment.getNumber() == null) {
             e.rejectValue("number", "number.empty", "Заполните поле");
+        } else if (apartment.getNumber() > 100000) {
+            e.rejectValue("number", "number.empty", "Знаение слишком велико");
         }
         if (apartment.getSquare() == null) {
             e.rejectValue("square", "square.empty", "Заполните поле");
+        } else if (apartment.getSquare() > 10000) {
+            e.rejectValue("square", "square.empty", "Знаение слишком велико");
         }
+
         if (apartment.getBuilding() == null || apartment.getBuilding().getId() == null) {
             e.rejectValue("building", "building.empty", "Заполните поле");
         }

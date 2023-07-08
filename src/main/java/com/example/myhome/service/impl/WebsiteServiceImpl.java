@@ -203,7 +203,8 @@ public class WebsiteServiceImpl implements WebsiteService {
         page.setId(1);
 
         for(ServicesPage.ServiceDescription service : page.getServiceDescriptions()) {
-            if(service.getPhoto() == null || service.getPhoto().isEmpty()) {
+            log.info(service.toString());
+            if(service.getFile() != null && service.getFile().getSize() > 0) {
                 fileUploadUtil.saveFile("/pages/services", service.getFile().getOriginalFilename(), service.getFile());
                 service.setPhoto(service.getFile().getOriginalFilename());
             }

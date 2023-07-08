@@ -34,6 +34,27 @@ public class MainPageValidator implements Validator {
     public void validate(Object target, Errors errors) {
         MainPage page = (MainPage) target;
         MultipartFile img1 = page.getImg1();
+
+        String seo_title = page.getSeo_title();
+        if(seo_title == null || seo_title.isEmpty()) {
+            errors.rejectValue("seo_title", "seo_title.empty", "Title can't be empty");
+        } else if(seo_title.length() < 2 || seo_title.length() > 100) {
+            errors.rejectValue("seo_title", "seo_title.length", "Title length: 2-200");
+        }
+
+        String seo_desc = page.getSeo_description();
+        if(seo_desc == null || seo_desc.isEmpty()) {
+            errors.rejectValue("seo_description", "seo_desc.empty", "Desc can't be empty");
+        } else if(seo_desc.length() < 2 || seo_desc.length() > 250) {
+            errors.rejectValue("seo_description", "seo_desc.length", "Desc length: 2-250");
+        }
+
+        String seo_keywords = page.getSeo_keywords();
+        if(seo_keywords == null || seo_keywords.isEmpty()) {
+            errors.rejectValue("seo_keywords", "seo_keywords.empty", "Keywords can't be empty");
+        } else if(seo_keywords.length() < 2 || seo_keywords.length() > 200) {
+            errors.rejectValue("seo_keywords", "seo_keywords.length", "Keywords length: 2-200");
+        }
 //
 //        if(img1 != null && img1.getSize() > 0) {
 //            log.info("Checking img1...");

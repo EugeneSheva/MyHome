@@ -35,8 +35,7 @@ public class ErrorController {
     }
 
     @GetMapping("/admin/500")
-    public String showServerErrorPage(String message, Model model) {
-        model.addAttribute("errorText", message);
+    public String showServerErrorPage() {
         return "error/500";
     }
 

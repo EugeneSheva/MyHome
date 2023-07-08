@@ -69,7 +69,7 @@ public class GlobalControllerAdvice {
         log.severe("Captured exception of class: " + e.getClass().toString());
         log.severe(e.getMessage());
         e.printStackTrace();
-        return errorController.showServerErrorPage(e.getMessage(), model);
+        return "redirect:/admin/500";
     }
 
     @ModelAttribute

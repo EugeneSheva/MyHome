@@ -191,7 +191,7 @@
   }
 
   $(document).ready(function(){
-    $("#add_service_btn").click(() => {
+    $("#add_service_btn").click(async() => {
       let new_service_div = document.getElementById('template').cloneNode(true);
       new_service_div.id = '';
       new_service_div.style = '';
@@ -210,13 +210,21 @@
       fileInput.id = 'serviceDescriptions'+totalServiceCount+'.file';
       fileInput.setAttribute('name','serviceDescriptions['+totalServiceCount+'].file');
 
+
+
+
       totalServiceCount++;
 
-      document.getElementById('service_container').insertBefore(new_service_div, document.getElementById('btn_container'));
+      await document.getElementById('service_container').insertBefore(new_service_div, document.getElementById('btn_container'));
+
+      let newElement = $(descInput);
+      console.log(newElement);
+
+      newElement.summernote();
     });
 
-    $("#descriptions").summernote();
     $(".service_descriptions").summernote();
+
   })
 </script>
 

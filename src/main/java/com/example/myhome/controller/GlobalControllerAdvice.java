@@ -37,6 +37,9 @@ public class GlobalControllerAdvice {
     @Autowired
     private AdminDTOMapper mapper;
 
+    @Autowired
+    private ErrorController errorController;
+
     @InitBinder
     private void activateDirectFieldAccess(DataBinder dataBinder) {
         dataBinder.initDirectFieldAccess();
@@ -62,11 +65,11 @@ public class GlobalControllerAdvice {
 
     // ловит любой оставшийся эксепшн (?)
     @ExceptionHandler(Exception.class)
-    public String redirect(Exception e) {
+    public String redirect(Exception e, Model model) {
         log.severe("Captured exception of class: " + e.getClass().toString());
         log.severe(e.getMessage());
         e.printStackTrace();
-        return "redirect:/admin/500";
+        return errorController.showServerErrorPage(e.getMessage(), model);
     }
 
     @ModelAttribute

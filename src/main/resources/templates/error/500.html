@@ -31,6 +31,7 @@
                 <h1><b th:text="#{server.error}">Ошибка сервера</b></h1>
                 <h3 th:text="#{server.error.additional}">На стороне сервера произошла ошибка при выполнении запроса</h3>
                 <button class="btn btn-primary" style="width:540px;font-size:40px;font-weight:bold" id="return_button" onclick="history.back()" th:text="#{return.button.text}"><- Вернуться назад</button>
+                <p style="color: red" th:text="${errorText}"></p>
             </div>
 
         </section>

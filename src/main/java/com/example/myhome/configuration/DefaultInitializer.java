@@ -40,6 +40,7 @@ class DefaultInitializer implements CommandLineRunner {
     private final InvoiceTemplateRepository invoiceTemplateRepository;
     private final AccountRepository accountRepository;
 
+
     @Override
     public void run(String... args) throws Exception {
         checkForRoles();

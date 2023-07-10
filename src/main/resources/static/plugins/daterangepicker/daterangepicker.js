@@ -584,9 +584,6 @@
             }
         },
 
-
-
-
         updateCalendars: function() {
 
             if (this.timePicker) {

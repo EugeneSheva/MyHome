@@ -538,36 +538,54 @@
             this.updateFormInputs();
         },
 
+        // updateMonthsInView: function() {
+        //     if (this.endDate) {
+        //
+        //         //if both dates are visible already, do nothing
+        //         if (!this.singleDatePicker && this.leftCalendar.month && this.rightCalendar.month &&
+        //             (this.startDate.format('YYYY-MM') == this.leftCalendar.month.format('YYYY-MM') || this.startDate.format('YYYY-MM') == this.rightCalendar.month.format('YYYY-MM'))
+        //             &&
+        //             (this.endDate.format('YYYY-MM') == this.leftCalendar.month.format('YYYY-MM') || this.endDate.format('YYYY-MM') == this.rightCalendar.month.format('YYYY-MM'))
+        //         ) {
+        //             return;
+        //         }
+        //
+        //         this.leftCalendar.month = this.startDate.clone().date(2);
+        //         if (!this.linkedCalendars && (this.endDate.month() != this.startDate.month() || this.endDate.year() != this.startDate.year())) {
+        //             this.rightCalendar.month = this.endDate.clone().date(2);
+        //         } else {
+        //             this.rightCalendar.month = this.startDate.clone().date(2).add(1, 'month');
+        //         }
+        //
+        //     } else {
+        //         if (this.leftCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM') && this.rightCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM')) {
+        //             this.leftCalendar.month = this.startDate.clone().date(2);
+        //             this.rightCalendar.month = this.startDate.clone().date(2).add(1, 'month');
+        //         }
+        //     }
+        //     if (this.maxDate && this.linkedCalendars && !this.singleDatePicker && this.rightCalendar.month > this.maxDate) {
+        //         this.rightCalendar.month = this.maxDate.clone().date(2);
+        //         this.leftCalendar.month = this.maxDate.clone().date(2).subtract(1, 'month');
+        //     }
+        // },
+
         updateMonthsInView: function() {
             if (this.endDate) {
-
-                //if both dates are visible already, do nothing
-                if (!this.singleDatePicker && this.leftCalendar.month && this.rightCalendar.month &&
-                    (this.startDate.format('YYYY-MM') == this.leftCalendar.month.format('YYYY-MM') || this.startDate.format('YYYY-MM') == this.rightCalendar.month.format('YYYY-MM'))
-                    &&
-                    (this.endDate.format('YYYY-MM') == this.leftCalendar.month.format('YYYY-MM') || this.endDate.format('YYYY-MM') == this.rightCalendar.month.format('YYYY-MM'))
-                    ) {
-                    return;
-                }
-
-                this.leftCalendar.month = this.startDate.clone().date(2);
-                if (!this.linkedCalendars && (this.endDate.month() != this.startDate.month() || this.endDate.year() != this.startDate.year())) {
-                    this.rightCalendar.month = this.endDate.clone().date(2);
-                } else {
-                    this.rightCalendar.month = this.startDate.clone().date(2).add(1, 'month');
-                }
-
+                this.rightCalendar.month = this.endDate.clone().date(2);
+                this.leftCalendar.month = this.endDate.clone().date(2).subtract(1, 'month');
             } else {
-                if (this.leftCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM') && this.rightCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM')) {
-                    this.leftCalendar.month = this.startDate.clone().date(2);
-                    this.rightCalendar.month = this.startDate.clone().date(2).add(1, 'month');
-                }
+                this.rightCalendar.month = this.startDate.clone().date(2).add(1, 'month');
+                this.leftCalendar.month = this.startDate.clone().date(2);
             }
+
             if (this.maxDate && this.linkedCalendars && !this.singleDatePicker && this.rightCalendar.month > this.maxDate) {
-              this.rightCalendar.month = this.maxDate.clone().date(2);
-              this.leftCalendar.month = this.maxDate.clone().date(2).subtract(1, 'month');
+                this.rightCalendar.month = this.maxDate.clone().date(2);
+                this.leftCalendar.month = this.maxDate.clone().date(2).subtract(1, 'month');
             }
         },
+
+
+
 
         updateCalendars: function() {
 

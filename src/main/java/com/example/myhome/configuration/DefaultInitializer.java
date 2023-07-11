@@ -123,9 +123,7 @@ class DefaultInitializer implements CommandLineRunner {
             owner.setViber(owner.getPhone_number());
             owner.setTelegram(owner.getPhone_number());
             owner.setBirthdate(LocalDate.of(2000,11,11));
-
             ownerRepository.save(owner);
-
         }
     }
     void checkForAccounts() throws InterruptedException {

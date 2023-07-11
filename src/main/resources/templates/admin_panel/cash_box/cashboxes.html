@@ -305,46 +305,42 @@
         var userLocale = navigator.language;
         var start = moment().subtract(3, 'year');
         var end = moment();
-        //Datemask dd/mm/yyyy
-        $('#datemask').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'})
-        //Datemask2 mm/dd/yyyy
-        $('#datemask2').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'})
-        //Money Euro
-        $('[data-mask]').inputmask()
 
         if ([[${#locale.language == 'ru'}]]) {
             console.log(userLocale)
             console.log('ru')
-        $('input[name="date"]').daterangepicker({
-            startDate: start,
-            endDate: end,
-            // singleDatePicker: true,
-            showDropdowns: true,
-            locale: {
-                format: 'DD/MM/YYYY',
-                "separator": " - ",
-                "applyLabel": "Применить",
-                "cancelLabel": "Отмена",
-                "fromLabel": "С",
-                "toLabel": "По",
-                "customRangeLabel": "Произвольный",
-                "weekLabel": "Н",
-                "daysOfWeek": ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
-                "monthNames": [
-                    "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-                    "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
-                ],
-                "firstDay": 1
-            },
-            drops: 'down'
-        });
+            $('input[name="date"]').daterangepicker({
+                startDate: start,
+                endDate: end,
+                autoUpdateInput: true,
+                alwaysShowCalendars: false,
+                showDropdowns: true,
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    "separator": " - ",
+                    "applyLabel": "Применить",
+                    "cancelLabel": "Отмена",
+                    "fromLabel": "С",
+                    "toLabel": "По",
+                    "customRangeLabel": "Произвольный",
+                    "weekLabel": "Н",
+                    "daysOfWeek": ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+                    "monthNames": [
+                        "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+                        "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+                    ],
+                    "firstDay": 1
+                },
+                drops: 'down'
+            });
         } else if ([[${#locale.language == 'uk'}]]) {
             console.log(userLocale)
             console.log('ua')
             $('input[name="date"]').daterangepicker({
                 startDate: start,
                 endDate: end,
-                // singleDatePicker: true,
+                autoUpdateInput: true,
+                alwaysShowCalendars: false,
                 showDropdowns: true,
                 locale: {
                     format: 'DD/MM/YYYY',
@@ -365,26 +361,7 @@
                 drops: 'down'
             });
         }
-
-        //Date picker
-        $('#reservationdate').datetimepicker({
-            format: 'L'
-        });
-
-        //Date and time picker
-        $('#reservationdatetime').datetimepicker({icons: {time: 'far fa-clock'}});
-
-        //Date range picker
-        $('#reservation').daterangepicker()
-        //Date range picker with time picker
-        $('#reservationtime').daterangepicker({
-            timePicker: true,
-            timePickerIncrement: 30,
-            locale: {
-                format: 'MM/DD/YYYY hh:mm A'
-            }
-        })
-    })
+    });
 </script>
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 <script>

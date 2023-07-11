@@ -205,7 +205,7 @@ public class ApartmentController {
         return "redirect:/admin/meters?apartment="+apartmentService.findById(id).getNumber();
     }
 
-    @GetMapping("/NewIncomesByaApartment/{id}")
+    @GetMapping("/NewIncomesByApartment/{id}")
     public String NewIncomesByApartment(Model model, @PathVariable("id") Long id) {
         if(accountService.apartmentHasAccount(id))
             return "redirect:/admin/cashbox/newIncome?account_id=" + apartmentService.findById(id).getAccount().getId();

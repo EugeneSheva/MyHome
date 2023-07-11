@@ -184,12 +184,10 @@ public class WebsiteServiceImpl implements WebsiteService {
         log.info(page.getAdd_photos());
 
         //Сохранение документов
+        if(page.getDocuments() == null) page.setDocuments(new ArrayList<>());
         for(AboutPage.Document document : page.getDocuments()) {
             if((document.getFileName() == null || document.getFileName().isEmpty()) &&
                     (document.getFile() != null && document.getFile().getSize() > 0)) {
-                log.info(document.getFile().toString());
-                log.info(document.getFile().getContentType());
-                log.info(document.getFile().getOriginalFilename());
                 fileUploadUtil.saveFile("/documents", document.getFile().getOriginalFilename(), document.getFile());
                 document.setFileName(document.getFile().getOriginalFilename());
             }

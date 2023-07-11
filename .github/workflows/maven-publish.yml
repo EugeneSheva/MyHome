@@ -67,14 +67,14 @@ jobs:
             password: ${{ secrets.SERVER_PASSWORD }}
             script: sudo docker stop myhome
 
-#      - uses: appleboy/ssh-action@v0.1.10
-#        name: Delete old container
-#        if: ${{ success() || failure() }}
-#        with:
-#          host: ${{ secrets.SERVER_HOST }}
-#          username: ${{ secrets.SERVER_USERNAME }}
-#          password: ${{ secrets.SERVER_PASSWORD }}
-#          script: sudo docker rm myhome
+      - uses: appleboy/ssh-action@v0.1.10
+        name: Delete old container
+        if: ${{ success() || failure() }}
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: sudo docker rm myhome
 
       - uses: appleboy/ssh-action@v0.1.10
         name: Delete old image
@@ -102,5 +102,5 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
 #          script: sudo docker run -p 9002:8080 -P --name myhome -e SPRING_DATASOURCE_URL=jdbc:mysql://172.17.0.2:3306/myhome -d temporalparadox/myhome:latest
-          script: sudo docker run --rm -p 9002:8080 -P --name myhome -v /home/avada/web/slj.avada-media-dev1.od.ua/slj/MyHome24:/home/avada/web/slj.avada-media-dev1.od.ua/slj/MyHome24:rw -e SPRING_DATASOURCE_URL=jdbc:mysql://172.17.0.2:3306/myhome -d temporalparadox/myhome:latest
+          script: sudo docker run -p 9002:8080 -P --name myhome -v /home/avada/web/slj.avada-media-dev1.od.ua/slj/MyHome24:/home/avada/web/slj.avada-media-dev1.od.ua/slj/MyHome24:rw -e SPRING_DATASOURCE_URL=jdbc:mysql://172.17.0.2:3306/myhome -d temporalparadox/myhome:latest
 

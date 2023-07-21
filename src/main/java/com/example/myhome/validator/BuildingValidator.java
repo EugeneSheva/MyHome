@@ -35,7 +35,7 @@ public class BuildingValidator implements Validator {
         }
 
         if (building.getSections() == null || building.getSections().size() < 1) {
-            e.rejectValue("sections", "sections.empty", "Заполните поле");
+            e.rejectValue("sections", "sections.empty", "Заполните поле \'Секции\'");
         } else {
             for (String section : building.getSections()) {
                 if (section.length() > 50) {
@@ -45,7 +45,7 @@ public class BuildingValidator implements Validator {
         }
 
         if (building.getFloors() == null || building.getFloors().size() < 1) {
-            e.rejectValue("floors", "floors.empty", "Заполните поле");
+            e.rejectValue("floors", "floors.empty", "Заполните поле \'Этажи\'");
         } else {
             for (String floors : building.getFloors()) {
                 if (floors.length() > 50) {
@@ -56,7 +56,7 @@ public class BuildingValidator implements Validator {
         }
 
         if (building.getAdmins() == null ||  building.getAdmins().size()<1) {
-            e.rejectValue("admins", "admins.empty", "Заполните поле");
+            e.rejectValue("admins", "admins.empty", "Заполните поле \'Пользователи\'");
         }
     }
 }

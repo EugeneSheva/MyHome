@@ -88,6 +88,6 @@ public class Apartment {
 
     @PreRemove
     void clearAccount() {
-        this.account.setApartment(null);
+        if (this.account != null) this.account.setApartment(null);
     }
 }

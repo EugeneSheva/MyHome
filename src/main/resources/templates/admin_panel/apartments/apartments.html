@@ -225,8 +225,7 @@
             $('#section').empty();
             $('#floor').empty();
             } else {
-                // Запрос на сервер для получения списка элементов для секций
-                $.ajax({
+                   $.ajax({
                     url: '/myhome/admin/buildings/get-sections/' + buildingID,
                     success: function (data) {
                         // Очистка второго селектора

@@ -132,7 +132,7 @@ public class ApartmentController {
         if (bindingResult.hasErrors()) {
             log.info(apartment.getSection());
             log.info(apartment.getFloor());
-//            model.addAttribute("apartment", apartment);
+            model.addAttribute("apartment", apartment);
             List<BuildingDTO> buildingList = buildingService.findAllDTO();
             model.addAttribute("buildings", buildingList);
             List<Tariff>tariffs = tariffService.findAllTariffs();
@@ -144,6 +144,7 @@ public class ApartmentController {
             model.addAttribute("sections", sections);
             model.addAttribute("floors", floors);
             model.addAttribute("validation","failed");
+            apartment.setOwner(ownerService.findByIdDTO(apartment.getOwner().getId()));
             return "admin_panel/apartments/apartment_edit";
         } else {
             apartment.setBalance((apartment.getAccount() != null) ? apartment.getAccount().getBalance() : 0);
@@ -235,6 +236,17 @@ public class ApartmentController {
         ObjectMapper mapper = new ObjectMapper();
         FilterForm form = mapper.readValue(filters, FilterForm.class);
         return apartmentService.findBySpecificationAndPage(page, size, form);
+    }
+    @GetMapping("/create-apartment-account")
+    @ResponseBody
+    public Long createAapartmentAccount(@RequestParam String building,
+                                        @RequestParam String owner, @RequestParam String section) throws JsonProcessingException {
+        System.out.println("ajax");
+        System.out.println("building " +building);
+        System.out.println("owner "+ owner);
+        System.out.println("section "+ section);
+        ApartmentAccount apartmentAccount = accountService.saveAccount(new ApartmentAccount(true, buildingService.findById(Long.valueOf(building)), ownerService.findById(Long.valueOf(owner)), section, 0.0));
+        return apartmentAccount.getId();
     }
 
     @GetMapping("/get-section")

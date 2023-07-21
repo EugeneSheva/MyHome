@@ -21,6 +21,8 @@ public class ApartmentAccount implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+
     private Boolean isActive;
 
     @Transient
@@ -79,5 +81,12 @@ public class ApartmentAccount implements Serializable {
 
     public Long getId() {
         return id;
+    }
+    public ApartmentAccount(Boolean isActive, Building building, Owner owner, String section, Double balance) {
+        this.isActive = isActive;
+        this.building = building;
+        this.owner = owner;
+        this.section = section;
+        this.balance = balance;
     }
 }

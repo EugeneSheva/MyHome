@@ -109,14 +109,17 @@
                                 </select>
                                 <div style="color: #d80450" th:if="${#fields.hasErrors('floor')}" th:errors="*{floor}"></div>
 
+
                                 <div class="form-group">
                                     <label th:text="#{owner}">Владелец</label>
-                                    <select class="form-control" id="owner" th:field="*{owner.id}" style="width: 100%;">
+                                    <select th:field="*{owner}" class="form-control" id="owner"  style="width: 100%;">
                                         <option th:if="${apartment.owner == null}" value="" selected="selected" th:text="#{choise}">Выберите пользователя</option>
-                                        <option th:if="${apartment.owner != null}" th:value="${apartment.owner.id}" th:text="${apartment.owner.getFullName()}"></option>
+                                        <option th:if="${apartment.owner != null}" th:value="${apartment.owner.id}" th:text="${apartment.owner.getFullName()}" selected=""></option>
                                     </select>
                                     <div style="color: #d80450" th:if="${#fields.hasErrors('owner')}" th:errors="*{owner}"></div>
                                 </div>
+
+
                                 <label for="tariff" class="form-label" th:text="#{tariff}">Тариф</label>
                                 <select class="form-select" id="tariff" name="tariff">
                                     <option value="" th:text="#{choise}">Choose...</option>
@@ -130,9 +133,9 @@
                             <div class="col-md-6">
 
                                 <label for="account" class="form-label" th:text="#{apartmentAccount}">Лицевой счет</label>
-                                <input type="account" class="form-control"
+                                <input type="accountString" id="" class="form-control"
                                        placeholder="">
-                                <select class="form-select" th:field="*{account}">
+                                <select class="form-select" id="account" th:field="*{account}">
                                     <option value=""  th:text="#{choise}">Choose...</option>
                                     <option  th:each="account: ${accounts}"
                                              th:text="${T(java.lang.String).format('%010d',account.id)}"
@@ -140,7 +143,7 @@
                                              ></option>
                                 </select>
                                 <div style="color: #d80450" th:if="${#fields.hasErrors('account')}" th:errors="*{account}"></div>
-
+                                <button type="button" class="btn btn-secondary btn-sm" id="createAppAcc" th:if="${#fields.hasErrors('account')}" th:onclick="createApartmentAccount()">Создать</button>
                             </div>
                         </div>
                         <div class="form-group">
@@ -223,6 +226,37 @@
     var apartmentID = [[*{id}]];
     var apartmentSection = [[${apartment.section}]];
     var apartmentFloor = [[${apartment.floor}]];
+
+    function createApartmentAccount() {
+        var building = $("#building").val();
+        var owner = $("#owner").val();
+        var section = $("#section").val();
+
+        $.ajax({
+            url: '/myhome/admin/apartments/create-apartment-account',
+            async: true,
+            type: 'GET',
+            data: {
+                building: building,
+                owner: owner,
+                section: section
+            },
+            success: function (appId) {
+                var optionText = String(appId).padStart(10, '0');
+                var optionValue = appId;
+                var newOption = new Option(optionText, optionValue);
+                $("#account").append(newOption);
+                $("#account").val(optionValue);
+
+                $("#accountStringInput").val(optionText);
+
+                $("#createAppAcc").hide();
+            },
+        })
+    };
+
+
+
     $(function () {
 
         if(apartmentSection != null) {

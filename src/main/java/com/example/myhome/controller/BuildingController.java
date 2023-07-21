@@ -90,6 +90,7 @@ public class BuildingController {
         List<AdminDTO> adminList = adminService.findAllDTO();
         model.addAttribute("adminList", adminList);
 //        model.addAttribute("selectedAdmin", new Admin());
+        System.out.println("edit building.getAdmins() " + building.getAdmins());
         return "admin_panel/buildings/building_edit";
     }
 
@@ -98,7 +99,7 @@ public class BuildingController {
                               @RequestParam("sections") List<String> sections, @RequestParam(name = "id", defaultValue = "0") Long id, @RequestParam("floors") List<String> floors, @RequestParam(name = "admins", required = false) List<Admin> admins,
                               @RequestParam("img01") MultipartFile file1, @RequestParam("img02") MultipartFile file2, @RequestParam("img03") MultipartFile file3, @RequestParam("img04") MultipartFile file4,
                               @RequestParam("img05") MultipartFile file5, Model model) throws IOException {
-
+        System.out.println("save building.getAdmins() " + build.getAdmins());
         buildingValidator.validate(build, bindingResult);
 
         if (buildingService.validateImg(file1, "img1")!=null) bindingResult.addError(buildingService.validateImg(file1, "img1"));
@@ -155,6 +156,7 @@ public class BuildingController {
 //        }
 
         if (bindingResult.hasErrors()) {
+
             List<AdminDTO> adminList = adminService.findAllDTO();
             model.addAttribute("adminList", adminList);
             model.addAttribute("validation", "failed");

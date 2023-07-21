@@ -46,7 +46,7 @@ public class ApartmentAccount implements Serializable {
 
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "apartmentAccount")
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = true, mappedBy = "apartmentAccount")
     private List<CashBox> transactions = new ArrayList<>();
 
     @ToString.Exclude

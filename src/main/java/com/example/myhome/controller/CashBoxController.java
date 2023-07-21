@@ -269,6 +269,7 @@ public class CashBoxController {
                     account.setBalance(account.getAccountBalance());
                     cashBox.setApartmentAccount(account);
                 }
+
             }
             cashBox.setIncomeExpenseItems(incomeExpenseItemService.findById(incomeExpenseItemId));
             cashBox.setManager(adminService.findAdminById(adminId));

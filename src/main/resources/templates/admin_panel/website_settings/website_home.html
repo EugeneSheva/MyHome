@@ -100,7 +100,7 @@
                     </div>
                     <h4 th:if="${#fields.hasErrors('slide3')}" th:errors="*{slide3}" style="color:red"></h4>
                   </div>
-                  <div class="row">
+                  <div class="row" style="padding-inline:10px">
                     <div style="width: 100%; max-width: 80vw">
                       <h3 class="page-header" th:text="#{settings.website.main.card.info.header}">Краткая информация</h3>
                       <div class="form-group">
@@ -118,7 +118,7 @@
                         <label><input type="checkbox" id="websitehomeform-homeisshowapps" name="show_links" value="1" checked=""><span th:text="#{settings.website.main.card.info.links}"> Показать ссылки на приложения</span></label>
                       </div>
                   </div>
-                  <div class="row">
+                  <div class="row" style="padding-left:10px">
                     <div class="col-xs-12" style="width: 100%">
                       <h3 class="page-header" th:text="#{settings.website.main.card.adjacent.header}">Рядом с нами</h3>
                     </div>

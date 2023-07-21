@@ -48,18 +48,26 @@ public Page<CashBoxDTO> findAllBySpecification2(FilterForm filters, Integer page
     List<CashBoxDTO> listDTO = new ArrayList<>();
 
     Page<CashBox> cashBoxList;
-
+    System.out.println("date" + filters.getDate());
     System.out.println("filters" +filters);
     System.out.println("date" + filters.getDate());
     LocalDate startDate = null;
     LocalDate endDate = null;
     if (filters.getDate() != null) {
-        String[] dateArray = filters.getDate().split(" - ");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        startDate = LocalDate.parse(dateArray[0], formatter);
-        endDate = LocalDate.parse(dateArray[1], formatter);
-        System.out.println("startDate " + startDate);
-        System.out.println("endDate " + endDate);
+        String[] dateArray = filters.getDate().split(" to ");
+        if (dateArray.length == 2) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            startDate = LocalDate.parse(dateArray[0], formatter);
+            endDate = LocalDate.parse(dateArray[1], formatter);
+            System.out.println("startDate " + startDate);
+            System.out.println("endDate " + endDate);
+        } else if (dateArray.length == 1) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            startDate = LocalDate.parse(dateArray[0], formatter);
+            endDate = LocalDate.parse(dateArray[0], formatter);
+            System.out.println("startDate " + startDate);
+            System.out.println("endDate " + endDate);
+        }
     }
 
     if(!filters.filtersPresent()) cashBoxList = cashBoxRepository.findAll(pageable);

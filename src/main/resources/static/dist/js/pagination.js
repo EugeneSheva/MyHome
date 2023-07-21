@@ -1095,7 +1095,8 @@ $(document).ready(function () {
         console.log('date changed');
         let datetime = this.value;
         console.log(datetime);
-        if (datetime.split(' to ').length > 1) changeFilterData();
+        changeFilterData();
+        // if (datetime.split(' to ').length > 1) changeFilterData();
     });
 
 });

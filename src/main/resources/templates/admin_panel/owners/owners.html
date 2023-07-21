@@ -77,16 +77,16 @@
                               enctype="multipart/form-data">
                             <table id="ownersTable" class="table table-bordered table-hover table-striped linkedRow"
                                    width="100%">
-                                <col style="width:7%">
+                                <col style="width:4%">
                                 <col style="width:25%">
                                 <col style="width:10%">
                                 <col style="width:15%">
-                                <col style="width:10%">
+                                <col style="width:5%">
                                 <col style="width:9%">
-                                <col style="width:7%">
+                                <col style="width:18%">
                                 <col style="width:5%">
-                                <col style="width:5%">
-                                <col style="width:7%">
+                                <col style="width:4%">
+                                <col style="width:4%">
                                 <thead>
                                 <tr>
                                     <th th:text="#{id}">ID</th>
@@ -95,7 +95,7 @@
                                     <th th:text="#{email}">Email</th>
                                     <th th:text="#{building}">Дом</th>
                                     <th th:text="#{apartment}">Квартира</th>
-                                    <th th:text="#{added}">Добавлен</th>
+                                    <th th:text="#{added}" >Добавлен</th>
                                     <th th:text="#{status}">Статус</th>
                                     <th th:text="#{hasDebt}">Есть долг</th>
                                     <th></th>
@@ -122,12 +122,23 @@
                                                th:field="${filterForm.apartment}" id="apartment"></th>
 
                                     <th>
-                                        <div class="md-form md-outline input-with-post-icon datepicker"
-                                             style="padding: 0; margin-bottom: 0px">
-                                            <input autocomplete="off" placeholder="Select date" th:value="${localDate}" type="date"
-                                                   id="date" name="localDate" class="form-control my_filters" onchange="changeFilterData()">
+<!--                                        <div class="md-form md-outline input-with-post-icon datepicker"-->
+<!--                                             style="padding: 0; margin-bottom: 0px">-->
+<!--                                            <input autocomplete="off" placeholder="Select date" th:value="${localDate}" type="date"-->
+<!--                                                   id="date" name="localDate" class="form-control my_filters" onchange="changeFilterData()">-->
+<!--                                        </div>-->
+
+                                        <div class="input-group" id="date_picker" data-td-target-input="nearest" data-td-target-toggle="nearest">
+                                            <input id="date" autocomplete="off" style="padding-block: 21px; padding-right: 2px; padding-left: 2px;" type="text" data-name="date" name="localDate"  class="form-control datetime_filter" data-td-target="#datetimepicker1">
+                                            <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker" style=" padding-right: 6px; padding-left: 6px;">
+                                        <i class="fa fa-calendar"></i>
+                                      </span>
                                         </div>
+
                                     </th>
+
+
+
 
                                     <th><select autocomplete="off" class="form-select my_filters" th:field="*{status}">
                                         <option th:selected="${filterForm.debtSting == null}" value=""></option>
@@ -193,13 +204,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
-
 <script th:src="@{/dist/js/pagination.js}"></script>
-
 <script src="https://unpkg.com/imask"></script>
-
 <script th:inline="javascript">
-
     let globalTableName = 'owners';
     let totalPagesCount = [[${totalPagesCount}]];
     let tableData;
@@ -246,7 +253,50 @@
       let mask4 = IMask(phoneInput, maskOptions4);
 
 </script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script th:src="@{/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
+<script th:src="@{/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script th:src="@{/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js}"></script>
+<script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/uk.js"></script>
+<script th:inline="javascript">
+    var localeLang;
+    if ([[${#locale.language == 'ru'}]]) {
+        localeLang="ru";
+    }   else   if ([[${#locale.language == 'uk'}]]) {
+        localeLang="uk";
+    }
+    let config = {
 
+        enableTime: false,
+        dateFormat: "Y-m-d",
+        allowInput: true,
+        minDate: "2020-01",
+        maxDate: new Date().fp_incr(1),
+        showMonths : 1,
+        mode: "single",
+        locale: localeLang
+    };
+
+    flatpickr("#date", config);
+    jSuites.calendar(document.getElementById('month'), {
+        type: 'year-month-picker',
+        format: 'MMM-YYYY',
+        validRange: [ '2020-02-01', new Date().fp_incr(1) ],
+        onClose: function(instance, value) {
+            console.log('onClose');
+            document.getElementById('month').value = value;
+            changeFilterData();
+        },
+        onChange: function(instance, value) {
+            console.log('onchange');
+            document.getElementById('month').value = value;
+            changeFilterData();
+        }
+    });
+</script>
 <script>
     $(function(){
         $("#status, #debt").select2({language: currentLanguage,placeholder: placeholderText, minimumResultsForSearch:Infinity});

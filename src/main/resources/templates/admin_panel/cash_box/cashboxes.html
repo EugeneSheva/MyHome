@@ -15,12 +15,13 @@
     <link rel="stylesheet" th:href="@{/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css}">
     <link rel="stylesheet" th:href="@{/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css}">
     <link rel="stylesheet" th:href="@{/plugins/bs-stepper/css/bs-stepper.min.css}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     <link rel="stylesheet" th:href="@{/dist/css/adminlte.min.css}">
     <link rel="stylesheet" th:href="@{/plugins/overlayScrollbars/css/OverlayScrollbars.min.css}">
 
     <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}">
     <link rel="stylesheet" th:href="@{/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css}">
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-datepicker/css/datepicker.css}">
 
 <!--    EXCEL JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.js"></script>
@@ -158,7 +159,7 @@
                             <thead>
                             <tr>
                                 <th>№</th>
-                                <th style="min-width:220px" th:text="#{date}">Дата</th>
+                                <th style="min-width:190px" th:text="#{date}">Дата</th>
                                 <th style="min-width:160px" th:text="#{status}">Статус</th>
                                 <th style="min-width:160px" th:text="#{paymentType}">Тип платежа</th>
                                 <th th:text="#{owner}">Владелец</th>
@@ -171,19 +172,29 @@
                                 <td style="padding: 10px">
                                     <input style="width: 100%; height: 45px; padding-block: 6px; border: 1px solid #aaa; margin-top: 3px;" autocomplete="off" th:field="*{id}" class="my_filters form-control" id="id" type="text">
                                 </td>
-                                <th style="border-bottom:none">
-                                    <div class="form-group" style="margin: 0; margin-bottom: 11px">
-                                        <div class="input-group" style="height: 45px">
-                                            <div class="input-group-prepend">
-                                              <span class="input-group-text" style="padding-right: 6px;padding-left: 6px;">
-                                                <i class="far fa-calendar-alt" aria-hidden="true"></i>
-                                              </span>
-                                            </div>
-                                            <input type="text" style="height: 45px; padding-left: 1px; padding-right: 1px;" autocomplete="off" class="form-control float-right my_filters" id="date"
-                                                   name="date">
-                                        </div>
+                                <th style="border-bottom:none; display: flex;">
+                                    <div class="input-group" id="date_picker" data-td-target-input="nearest" data-td-target-toggle="nearest">
+                                        <input id="date" autocomplete="off" style="padding-block: 21px; padding-right: 2px; padding-left: 2px;" type="text" data-name="date" name="date"  class="form-control datetime_filter" data-td-target="#datetimepicker1">
+                                        <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">
+                                        <i class="fa fa-calendar"></i>
+                                      </span>
                                     </div>
                                 </th>
+
+<!--                                <th style="border-bottom:none">-->
+<!--                                    <div class="form-group" style="margin: 0; margin-bottom: 11px">-->
+<!--                                        <div class="input-group" style="height: 45px">-->
+<!--                                            <div class="input-group-prepend">-->
+<!--                                              <span class="input-group-text" style="padding-right: 6px;padding-left: 6px;">-->
+<!--                                                <i class="far fa-calendar-alt" aria-hidden="true"></i>-->
+<!--                                              </span>-->
+<!--                                            </div>-->
+<!--                                            <input type="text" style="height: 45px; padding-left: 1px; padding-right: 1px;" autocomplete="off" class="form-control float-right my_filters" id="date"-->
+<!--                                                   name="date">-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </th>-->
+
                                 <th style="border-bottom:none"><select autocomplete="off" th:field="*{isCompleted}" class="form-select my_filters" id="isCompleted" name="isCompleted">
                                     <option th:selected="${filterForm.isCompleted == null}" value="-"></option>
                                     <option value="сompleted"
@@ -251,7 +262,6 @@
 <script th:src="@{/plugins/moment/moment.min.js}"></script>
 <script th:src="@{/plugins/inputmask/jquery.inputmask.min.js}"></script>
 <script th:src="@{/plugins/daterangepicker/daterangepicker.js}"></script>
-<script th:src="@{/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js}"></script>
 <script th:src="@{/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js}"></script>
 <script th:src="@{/plugins/bootstrap-switch/js/bootstrap-switch.min.js}"></script>
 <script th:src="@{/plugins/bs-stepper/js/bs-stepper.min.js}"></script>
@@ -299,73 +309,120 @@
 
 </script>
 
-<script>
+<!--<script>-->
 
-    $(function () {
-        var userLocale = navigator.language;
-        var start = moment().subtract(3, 'year');
-        var end = moment();
+<!--    $(function () {-->
+<!--        var userLocale = navigator.language;-->
+<!--        var start = moment().subtract(3, 'year');-->
+<!--        var end = moment();-->
 
-        if ([[${#locale.language == 'ru'}]]) {
-            console.log(userLocale)
-            console.log('ru')
-            $('input[name="date"]').daterangepicker({
-                startDate: start,
-                endDate: end,
-                autoUpdateInput: true,
-                alwaysShowCalendars: false,
-                showDropdowns: true,
-                locale: {
-                    format: 'DD/MM/YYYY',
-                    "separator": " - ",
-                    "applyLabel": "Применить",
-                    "cancelLabel": "Отмена",
-                    "fromLabel": "С",
-                    "toLabel": "По",
-                    "customRangeLabel": "Произвольный",
-                    "weekLabel": "Н",
-                    "daysOfWeek": ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
-                    "monthNames": [
-                        "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-                        "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
-                    ],
-                    "firstDay": 1
-                },
-                drops: 'down'
-            });
-        } else if ([[${#locale.language == 'uk'}]]) {
-            console.log(userLocale)
-            console.log('ua')
-            $('input[name="date"]').daterangepicker({
-                startDate: start,
-                endDate: end,
-                autoUpdateInput: true,
-                alwaysShowCalendars: false,
-                showDropdowns: true,
-                locale: {
-                    format: 'DD/MM/YYYY',
-                    "separator": " - ",
-                    "applyLabel": "Застосувати",
-                    "cancelLabel": "Відміна",
-                    "fromLabel": "З",
-                    "toLabel": "По",
-                    "customRangeLabel": "Довільний",
-                    "weekLabel": "Н",
-                    "daysOfWeek": ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
-                    "monthNames": [
-                        "Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень",
-                        "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"
-                    ],
-                    "firstDay": 1
-                },
-                drops: 'down'
-            });
+<!--        if ([[${#locale.language == 'ru'}]]) {-->
+<!--            console.log(userLocale)-->
+<!--            console.log('ru')-->
+<!--            $('input[name="date"]').daterangepicker({-->
+<!--                startDate: start,-->
+<!--                endDate: end,-->
+<!--                autoUpdateInput: true,-->
+<!--                alwaysShowCalendars: false,-->
+<!--                showDropdowns: true,-->
+<!--                locale: {-->
+<!--                    format: 'DD/MM/YYYY',-->
+<!--                    "separator": " - ",-->
+<!--                    "applyLabel": "Применить",-->
+<!--                    "cancelLabel": "Отмена",-->
+<!--                    "fromLabel": "С",-->
+<!--                    "toLabel": "По",-->
+<!--                    "customRangeLabel": "Произвольный",-->
+<!--                    "weekLabel": "Н",-->
+<!--                    "daysOfWeek": ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],-->
+<!--                    "monthNames": [-->
+<!--                        "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",-->
+<!--                        "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"-->
+<!--                    ],-->
+<!--                    "firstDay": 1-->
+<!--                },-->
+<!--                drops: 'down'-->
+<!--            });-->
+<!--        } else if ([[${#locale.language == 'uk'}]]) {-->
+<!--            console.log(userLocale)-->
+<!--            console.log('ua')-->
+<!--            $('input[name="date"]').daterangepicker({-->
+<!--                startDate: start,-->
+<!--                endDate: end,-->
+<!--                autoUpdateInput: true,-->
+<!--                alwaysShowCalendars: false,-->
+<!--                showDropdowns: true,-->
+<!--                locale: {-->
+<!--                    format: 'DD/MM/YYYY',-->
+<!--                    "separator": " - ",-->
+<!--                    "applyLabel": "Застосувати",-->
+<!--                    "cancelLabel": "Відміна",-->
+<!--                    "fromLabel": "З",-->
+<!--                    "toLabel": "По",-->
+<!--                    "customRangeLabel": "Довільний",-->
+<!--                    "weekLabel": "Н",-->
+<!--                    "daysOfWeek": ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],-->
+<!--                    "monthNames": [-->
+<!--                        "Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень",-->
+<!--                        "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"-->
+<!--                    ],-->
+<!--                    "firstDay": 1-->
+<!--                },-->
+<!--                drops: 'down'-->
+<!--            });-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script th:src="@{/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
+<script th:src="@{/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script th:src="@{/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js}"></script>
+<script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/uk.js"></script>
+<script th:inline="javascript">
+    var localeLang;
+    if ([[${#locale.language == 'ru'}]]) {
+        localeLang="ru";
+    }   else   if ([[${#locale.language == 'uk'}]]) {
+        localeLang="uk";
+    }
+    let config = {
+
+        enableTime: false,
+        dateFormat: "d/m/Y",
+        allowInput: true,
+        minDate: "2020-01",
+        maxDate: new Date().fp_incr(1),
+        showMonths : 1,
+        mode: "range",
+        locale: localeLang
+    };
+
+    flatpickr("#date", config);
+    jSuites.calendar(document.getElementById('month'), {
+        type: 'year-month-picker',
+        format: 'MMM-YYYY',
+        validRange: [ '2020-02-01', new Date().fp_incr(1) ],
+        onClose: function(instance, value) {
+            console.log('onClose');
+            document.getElementById('month').value = value;
+            changeFilterData();
+        },
+        onChange: function(instance, value) {
+            console.log('onchange');
+            document.getElementById('month').value = value;
+            changeFilterData();
         }
     });
 </script>
+
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 <script>
-
 // EXCEL FORMAT SCRIPT
 
     function downloadExcelTable() {
@@ -453,23 +510,6 @@
         .catch(function(error) {
         });
     }
-</script>
-<script>
-    $(document).ready(function () {
-        $("input[name='datetimes']").daterangepicker(
-            {},
-            function (start, end, label) {
-                let startDate = start.format("YYYY-MM-DD").toString();
-                let endDate = end.format("YYYY-MM-DD").toString();
-
-                document.getElementById("startDate").innerHTML =
-                    "Start date: " + startDate;
-                document.getElementById("endDate").innerHTML = "End date: " + endDate;
-
-            }
-        );
-    });
-
 </script>
 <!--<script>-->
 <!--    let timeoutId;-->

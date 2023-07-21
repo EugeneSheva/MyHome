@@ -151,6 +151,7 @@ public class OwnerServiceImpl implements OwnerService {
     public Page<OwnerDTO> findAllBySpecification2(FilterForm filters, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page-1, size);
         List<OwnerDTO> listDTO = new ArrayList<>();
+        System.out.println("filters.getDate() " + filters.getDate());
         Page<Owner>ownerList = ownerRepository.findByFilters(
                 filters.getId(),filters.getOwnerName(),filters.getPhone(),
                 filters.getEmail(), filters.getBuildingName(),filters.getApartment(),

@@ -51,6 +51,8 @@ public interface InvoiceService {
 
     Long count();
 
+    Long countTemplates();
+
     @Transactional
     Invoice saveInvoice(Invoice invoice);
 

@@ -25,6 +25,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Value("${upload.path}")
     private String uploadPath;
+    @Value("${upload.path.file}")
+    private String uploadPathFile;
     @Value("${prefix}")
     private String prefix;
 
@@ -43,7 +45,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/static/");
         registry
                 .addResourceHandler("/files/**")
-                .addResourceLocations(prefix + uploadPath + "/", prefix + uploadPath + "/files/");
+                .addResourceLocations(prefix + uploadPathFile);
     }
 
     @Override

@@ -241,6 +241,11 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
     }
 
     @Override
+    public Long countTemplates() {
+        return invoiceTemplateRepository.count();
+    }
+
+    @Override
     @Transactional
     public Invoice saveInvoice(Invoice invoice) {
         log.info("Trying to save invoice...");

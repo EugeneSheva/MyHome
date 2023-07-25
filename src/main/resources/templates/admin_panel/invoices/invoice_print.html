@@ -142,7 +142,8 @@ input[type="radio"]{
           xhr.setRequestHeader(header, token)
         },
         success: function(data) {
-          alert('Sending invoice to email: ' + data);
+          console.log(data);
+          alert('Sending invoice to email');
         },
         error: function(error) {
           alert('Could not begin to send invoice: ' + error);

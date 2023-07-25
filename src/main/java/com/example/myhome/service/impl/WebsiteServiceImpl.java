@@ -188,7 +188,7 @@ public class WebsiteServiceImpl implements WebsiteService {
         for(AboutPage.Document document : page.getDocuments()) {
             if((document.getFileName() == null || document.getFileName().isEmpty()) &&
                     (document.getFile() != null && document.getFile().getSize() > 0)) {
-                fileUploadUtil.saveFile("/documents", document.getFile().getOriginalFilename(), document.getFile());
+                fileUploadUtil.saveFile2("/documents", document.getFile().getOriginalFilename(), document.getFile());
                 document.setFileName(document.getFile().getOriginalFilename());
             }
         }

@@ -5,6 +5,8 @@ import com.example.myhome.model.InvoiceComponents;
 import com.example.myhome.model.InvoiceTemplate;
 import com.example.myhome.model.PaymentDetails;
 import com.example.myhome.repository.PaymentDetailsRepository;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@Data
+@RequiredArgsConstructor
 @Log
 public class ExcelHelper {
 
@@ -36,10 +40,8 @@ public class ExcelHelper {
 
      */
 
-    @Value("${upload.path}")
+    @Value("${upload.path.file}")
     private String uploadPath;
-
-    private static final String FILE_PATH = "C:\\Users\\OneSmiLe\\IdeaProjects\\MyHome\\src\\main\\resources\\static\\files\\";
 
     private static final List<String> templateCommandsList = List.of("%payCompany%",
             "%accountNumber%", "%invoiceNumber%", "%invoiceDate%", "%invoiceAddress%",
@@ -58,8 +60,8 @@ public class ExcelHelper {
         String finalFileName = "invoice-"+ now.getYear() + '-' + now.getMonth().getValue() + '-' + now.getDayOfMonth() + '-'
                 + now.getHour() + now.getMinute() +"."+template.getFile().split("\\.")[1];
 
-        File originalFile = new File(FILE_PATH+template.getFile());
-        File clonedFile = new File(FILE_PATH+finalFileName);
+        File originalFile = new File(uploadPath+template.getFile());
+        File clonedFile = new File(uploadPath+finalFileName);
         Files.copy(originalFile.toPath(), clonedFile.toPath());
 
         try(InputStream in = new FileInputStream(clonedFile)){

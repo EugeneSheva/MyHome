@@ -270,8 +270,9 @@ public class InvoiceController {
             fileDownloadUtil.sendFileToEmail(emailForSending, fileName);
             return emailForSending;
         } catch (IOException e) {
+            log.severe(e.getMessage());
             log.severe("Error while creating excel file");
-            throw new RuntimeException(e);
+            return "ERROR: \n" + e.getMessage();
         }
     }
 
@@ -322,13 +323,14 @@ public class InvoiceController {
             log.info(file_extension);
             assert file_extension != null;
             if(file_extension.equalsIgnoreCase("xls") || file_extension.equalsIgnoreCase("xlsx")) {
-                fileUploadUtil.saveFile("/files/", file.getOriginalFilename(), file);
+                fileUploadUtil.saveFile2("", file.getOriginalFilename(), file);
                 template.setFile(file.getOriginalFilename());
             }
         } else {
             redirectAttributes.addFlashAttribute("file_fail", "Missing file");
             return "redirect:/admin/invoices/template";
         }
+        if(invoiceService.countTemplates() == 0) template.setDefault(true);
         invoiceService.saveTemplate(template);
         return "redirect:/admin/invoices/template";
     }

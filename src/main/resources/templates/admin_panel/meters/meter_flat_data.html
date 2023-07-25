@@ -205,6 +205,49 @@
 
     $("#status").select2({language: currentLanguage,placeholder: placeholderText});
 
+    $("#section, #service").select2({language: currentLanguage,placeholder: placeholderText, minimumResultsForSearch:Infinity});
+
+        $("#building").select2({
+            language: currentLanguage,
+            ajax: {
+                url: '/myhome/admin/buildings/get-buildings',
+                data: function(params){
+                    return {
+                        search: params.term || "",
+                        page: params.page || 1
+                    }
+                },
+            },
+            placeholder: placeholderText
+        });
+
+        $('#building').on('change', function() {
+            var buildingID = this.value;
+            if (buildingID == null || buildingID == 0) {
+            $('#section').empty();
+            } else {
+                // Запрос на сервер для получения списка элементов для секций
+                $.ajax({
+                    url: '/myhome/admin/buildings/get-sections/'+buildingID,
+                    success: function (data) {
+                        // Очистка второго селектора
+                        $('#section').empty();
+                        // Добавление первой пустой опции
+                        $('#section').prepend($('<option>', {
+                            value: '',
+                            text: placeholderText
+                        }));
+                        // Добавление новых опций второго селектора на основе полученных данных
+                        $.each(data, function (index, item) {
+                            var option = $('<option>').val(item).text(item);
+                            $('#section').append(option);
+                        });
+                        $('#section').trigger('change');
+                    }
+                });
+            }
+        });
+
     let config = {
         enableTime: false,
         dateFormat: "Y-d-m",

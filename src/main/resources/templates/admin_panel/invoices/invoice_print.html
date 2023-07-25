@@ -47,6 +47,8 @@
     <!-- Main content -->
     <section class="page_content">
       <div class="container-fluid">
+        <span th:if="${fail}" style="font-size: 14px; color: red; font-weight: bold;" th:text="${fail}"></span>
+        <span th:if="${error}" style="font-size: 12px; color: red;" th:text="${error}"></span>
         <form action="" method="post">
           <input type="hidden" id="csrf" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
           <div class="row">
@@ -79,7 +81,7 @@
                 <div class="row">
                   <div class="col-lg-12 text-right pull-right">
                     <div class="form-group">
-                      <button type="submit" class="btn btn-success" th:text="#{invoices.printPage.card.download}">Скачать</button>
+                      <button type="submit" th:if="${download_available}" class="btn btn-success" th:text="#{invoices.printPage.card.download}">Скачать</button>
                       <button type="button" onclick="sendToEmail()" class="btn btn-default" th:text="#{invoices.printPage.card.email}">Отправить на e-mail</button>
                     </div>
                   </div>
@@ -140,10 +142,10 @@ input[type="radio"]{
           xhr.setRequestHeader(header, token)
         },
         success: function(data) {
-          alert('Invoice sent to email: ' + data);
+          alert('Sending invoice to email: ' + data);
         },
         error: function(error) {
-          alert('Invoice not sent: ' + error);
+          alert('Could not begin to send invoice: ' + error);
         }
       });
     } else alert('Choose template!')

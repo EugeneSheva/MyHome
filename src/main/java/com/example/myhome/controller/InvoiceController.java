@@ -228,6 +228,7 @@ public class InvoiceController {
         model.addAttribute("invoice", invoice);
         model.addAttribute("default_template", invoiceService.findDefaultTemplate());
         model.addAttribute("templates", invoiceService.findAllTemplates());
+        model.addAttribute("download_available", true);
         return "admin_panel/invoices/invoice_print";
     }
 
@@ -243,8 +244,19 @@ public class InvoiceController {
         } catch (IOException e) {
             log.severe("Error while creating excel file");
             redirectAttributes.addFlashAttribute("fail", "Загрузка файла не удалась");
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/admin/invoices/print/" + id;
         }
+    }
+
+    @GetMapping("/email/{id}")
+    public String getSendToEmailPage(@PathVariable long id, Model model) {
+        Invoice invoice = invoiceService.findInvoiceById(id);
+        model.addAttribute("invoice", invoice);
+        model.addAttribute("default_template", invoiceService.findDefaultTemplate());
+        model.addAttribute("templates", invoiceService.findAllTemplates());
+        model.addAttribute("download_available", false);
+        return "admin_panel/invoices/invoice_print";
     }
 
     @PostMapping("/email/{id}")
@@ -255,10 +267,11 @@ public class InvoiceController {
             String fileName = invoiceService.turnInvoiceIntoExcel(invoice, invoiceTemplate);
             log.info(fileName);
             String emailForSending = invoice.getOwner().getEmail();
-            return fileDownloadUtil.sendFileToEmail(emailForSending, fileName);
+            fileDownloadUtil.sendFileToEmail(emailForSending, fileName);
+            return emailForSending;
         } catch (IOException e) {
             log.severe("Error while creating excel file");
-            return "Error";
+            throw new RuntimeException(e);
         }
     }
 

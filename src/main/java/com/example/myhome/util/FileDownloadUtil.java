@@ -1,19 +1,14 @@
 package com.example.myhome.util;
 
 import com.example.myhome.service.EmailService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.util.MimeTypeUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.URL;
 import java.net.URLConnection;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -29,11 +24,12 @@ public class FileDownloadUtil {
     -> файл загружается -> временный файл удаляется с места дислокации
 
      */
-    @Autowired private EmailService emailService;
+    private final EmailService emailService;
 
     private static final String FILE_PATH = "C:\\Users\\OneSmiLe\\IdeaProjects\\MyHome\\src\\main\\resources\\static\\files\\";
 
-    private FileDownloadUtil() {
+    public FileDownloadUtil(EmailService emailService) {
+        this.emailService = emailService;
     }
 
     public void downloadInvoice(HttpServletResponse response, String fileName) throws IOException {
@@ -74,6 +70,7 @@ public class FileDownloadUtil {
         }
     }
 
+    @Async
     public String sendFileToEmail(String recipientEmail, String fileName) throws FileNotFoundException {
         File file = new File(FILE_PATH + fileName);
         log.info(FILE_PATH + fileName);

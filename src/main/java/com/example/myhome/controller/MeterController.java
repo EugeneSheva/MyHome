@@ -87,6 +87,8 @@ public class MeterController {
         model.addAttribute("flat_id", flat_id);
         model.addAttribute("service_id", service_id);
 
+        model.addAttribute("services", serviceService.findAllServices());
+
         model.addAttribute("apart_number", apartmentService.getNumberById(flat_id));
 
         return "admin_panel/meters/meter_flat_data";

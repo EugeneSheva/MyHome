@@ -79,8 +79,15 @@
                     </div>
                     <div class="col-md-6">
                       <h5 th:text="#{requests.editPage.card.time}">Удобное время</h5>
-                      <input type="date" style="padding-block:10px" name="best_date" th:value="${best_date}" id="">
-                      <input type="time" style="padding-block:10px" name="best_time" th:value="${best_time}" id="">
+                        <div class="input-group" id="datetimepicker1" data-td-target-input="nearest" data-td-target-toggle="nearest">
+                            <input type="date" style="padding-block:10px; cursor:pointer;" name="best_date" th:value="${best_date}" id="best_date">
+                            <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                            <input type="time" style="padding-block:10px; margin-left: 20px; cursor:pointer;" name="best_time" th:value="${best_time}" id="">
+
+                        </div>
+<!--                      <input type="date" style="padding-block:10px" name="best_date" th:value="${best_date}" id="best_date">-->
                       <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('best_time')}" th:errors="*{best_time}"></h4>
                     </div>
                   </div>
@@ -175,6 +182,15 @@
 <script th:src="@{/summernote/summernote.min.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script th:src="@{/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
+<script th:src="@{/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script th:src="@{/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js}"></script>
+<script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/uk.js"></script>
+
 <script th:inline="javascript">
   let currentLanguage = [[${#locale.language}]];
   let placeholderText = [[#{select.placeholder}]];
@@ -182,6 +198,26 @@
 
   let requestApartOwner = [[${repairRequestDTO.ownerID}]];
   let requestApartID = [[${repairRequestDTO.apartmentID}]];
+
+  var localeLang;
+    if ([[${#locale.language == 'ru'}]]) {
+        localeLang="ru";
+    }   else   if ([[${#locale.language == 'uk'}]]) {
+        localeLang="uk";
+    }
+    let config = {
+
+        enableTime: false,
+        dateFormat: "Y-m-d",
+        allowInput: true,
+        minDate: "2020-01",
+        maxDate: new Date().fp_incr(1),
+        showMonths : 1,
+        mode: "single",
+        locale: localeLang
+    };
+
+    flatpickr('#best_date', config);
 
 </script>
 

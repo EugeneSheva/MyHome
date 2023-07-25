@@ -6,6 +6,7 @@ import com.example.myhome.controller.socket.WebsocketController;
 import com.example.myhome.dto.ApartmentAccountDTO;
 import com.example.myhome.dto.ApartmentDTO;
 import com.example.myhome.dto.BuildingDTO;
+import com.example.myhome.exception.NotFoundException;
 import com.example.myhome.mapper.AccountDTOMapper;
 import com.example.myhome.model.ApartmentAccount;
 import com.example.myhome.model.Building;
@@ -40,6 +41,7 @@ import java.util.Random;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -190,6 +192,19 @@ public class AccountControllerTest {
         MvcResult result = this.mockMvc.perform(get("/admin/accounts/delete/" + testAccount.getId()).with(csrf().asHeader()).flashAttr("auth_admin", testUser))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/accounts"))
+                .andReturn();
+
+        doThrow(new NotFoundException()).when(accountService).deleteAccountById(anyLong());
+        result = this.mockMvc.perform(get("/admin/accounts/delete/" + testAccount.getId()).with(csrf().asHeader()).flashAttr("auth_admin", testUser))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/accounts"))
+                .andReturn();
+    }
+
+    @Test
+    void getAccountInfoTest() throws Exception {
+        MvcResult result = this.mockMvc.perform(get("/admin/accounts/get-account-info?account_id="+testAccount.getId()).with(csrf().asHeader()).flashAttr("auth_admin",testUser))
+                .andExpect(status().isOk())
                 .andReturn();
     }
 

@@ -60,7 +60,7 @@
                 </div>
                 <div class="col-md-3">
                     <span style="display:inline;" th:text="#{from}">от </span>
-                    <input id="date" style="width: 90%; display:inline-block;" disabled type="date" th:value="${cashBox.date}"
+                    <input id="date" style="width: 90%; display:inline-block;" disabled type="text" th:value="${cashBox.date.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy'))}"
                            class="form-control">
                     <script th:if="${cashBox.id == null}">
                     document.getElementById('date').value = new Date().toISOString().substring(0, 10);

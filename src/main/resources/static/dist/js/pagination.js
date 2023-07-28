@@ -238,6 +238,7 @@ function drawInvoicesTable() {
     for (const invoice of data.content) {
         let date = new Date(invoice.date);
         date.setDate(date.getDate() + 1);
+        let date_string = date.getDate() + '/' + (date.getMonth()+1).toString().padStart(2,'0') + '/' + date.getFullYear();
         const monthNames = ["January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         ];
@@ -253,7 +254,7 @@ function drawInvoicesTable() {
             invoice.statusName +
             '</small>' +
             '</td>' +
-            '<td>' + date.toISOString().split('T')[0] + '</td>' +
+            '<td>' + date_string + '</td>' +
             '<td>' + month_string + '</td>' +
             '<td>' + invoice.apartment.fullName + '</td>' +
             '<td>' + invoice.owner.fullName + '</td>' +
@@ -547,7 +548,7 @@ function drawMeterDataTable() {
         let meter_date = new Date(meter.date);
         meter_date.setDate(meter_date.getDate() + 1);
         let date_part = meter_date.toISOString().split('T')[0];
-        let formattedDate = date_part.split('-')[0] + '-' + date_part.split('-')[2] + '-' + date_part.split('-')[1];
+        let formattedDate = date_part.split('-')[1] + '/' + date_part.split('-')[2] + '/' + date_part.split('-')[0];
         let meter_month = monthNames[meter_date.getMonth()] + ' ' + meter_date.getFullYear();
         newTableRow.innerHTML = '<td>' + meter.id + '</td>' +
             '<td>' + meter.status + '</td>' +
@@ -590,11 +591,16 @@ function drawRequestsTable() {
     let $requestsTable = $("#requestsTable tbody");
     $requestsTable.html('');
     for (const request of data.content) {
+        let dateTimeString = request.best_time;
+        let date = new Date(request.best_time.split(' - ')[0]);
+        let time = request.best_time.split(' - ')[1];
+        let formattedDateTimeString = date.getDate() + '/' + (date.getMonth()+1).toString().padStart(2,'0') + '/' + date.getFullYear() + ' ' + time;
+
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
         newTableRow.classList.add = 'request_row';
         newTableRow.innerHTML = '<td>' + request.id + '</td>' +
-            '<td>' + request.best_time + '</td>' +
+            '<td>' + formattedDateTimeString + '</td>' +
             '<td>' + request.masterTypeName + '</td>' +
             '<td style="max-width: 200px; text-overflow: ellipsis; white-space: nowrap; overflow:hidden">' + request.description + '</td>' +
             '<td><a href="/myhome/admin/apartments/' + request.apartmentID + '">кв. ' + request.apartmentNumber + ', ' + request.apartmentBuildingName + '</a></td>' +
@@ -686,6 +692,10 @@ function drawOwnersTable() {
         });
         const finalApartmentString = apartmentLinks.join('');
 
+        let ownerDateString = new Date(owner.date.split(' ')[0]);
+        let ownerTimeString = owner.date.split(' ')[1];
+        let finalDateTimeString = ownerDateString.getDate() + '/' + (ownerDateString.getMonth()+1).toString().padStart(2,'0') + '/' + ownerDateString.getFullYear() + ' ' + ownerTimeString;
+
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
         newTableRow.classList.add('owner_row');
@@ -695,7 +705,7 @@ function drawOwnersTable() {
             '<td>' + ((owner.email) ? owner.email : '') + '</td>' +
             '<td>' + finalBuildingString + '</td>' +
             '<td>' + finalApartmentString + '</td>' +
-            '<td>' + owner.date + '</td>' +
+            '<td>' + finalDateTimeString + '</td>' +
             '<td>' + owner.status + '</td>' +
             '<td>' + ((owner.hasDebt) ? hasDebtText : hasNoDebtText) + '</td>' +
             '<td>' +

@@ -111,7 +111,7 @@
                                 </tr>
                                 <tr>
                                     <td><b th:text="#{birthDate}">Дата рождения</b></td>
-                                    <td th:text="${owner.birthdate}">?</td>
+                                    <td th:text="${owner.birthdate.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy'))}">?</td>
                                 </tr>
                                 <tr>
                                     <td><b th:text="#{aboutOwner}">О владельце (заметки)</b></td>

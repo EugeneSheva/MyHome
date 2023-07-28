@@ -199,26 +199,6 @@
   let requestApartOwner = [[${repairRequestDTO.ownerID}]];
   let requestApartID = [[${repairRequestDTO.apartmentID}]];
 
-  var localeLang;
-    if ([[${#locale.language == 'ru'}]]) {
-        localeLang="ru";
-    }   else   if ([[${#locale.language == 'uk'}]]) {
-        localeLang="uk";
-    }
-    let config = {
-
-        enableTime: false,
-        dateFormat: "Y-m-d",
-        allowInput: true,
-        minDate: "2020-01",
-        maxDate: new Date().fp_incr(1),
-        showMonths : 1,
-        mode: "single",
-        locale: localeLang
-    };
-
-    flatpickr('#best_date', config);
-
 </script>
 
 

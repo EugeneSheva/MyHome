@@ -47,7 +47,7 @@
 
         <div class="row">
           <div class="col-md-3">
-            <input type="date" disabled style="width: 90%;" th:value="${request_date}" class="form-control">
+            <input type="text" disabled style="width: 90%;" th:value="${request_date.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy'))}" class="form-control">
           </div>
           <div class="col-md-3">
             <span style="display:inline;" th:text="#{requests.infoPage.datePrefix}">от </span>
@@ -105,7 +105,7 @@
                       </tr>
                       <tr>
                         <td style="font-weight:bold" th:text="#{requests.infoPage.card.added}">Добавлено</td>
-                        <td th:text="${#temporals.format(request.request_date, 'yyyy-MM-dd - HH:mm')}"></td>
+                        <td th:text="${#temporals.format(request.request_date, 'dd/MM/yyyy - HH:mm')}"></td>
                       </tr>
                       </tbody>
                     </table>

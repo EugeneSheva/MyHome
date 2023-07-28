@@ -92,7 +92,7 @@ public class RequestController {
         RepairRequestDTO request = repairRequestService.findRequestDTOById(id);
         model.addAttribute("request", request);
         model.addAttribute("request_date", request.getRequest_date());
-        model.addAttribute("request_time", request.getRequest_date());
+        model.addAttribute("request_time", request.getRequest_time());
         return "admin_panel/requests/request_profile";
     }
 

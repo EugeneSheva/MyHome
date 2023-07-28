@@ -63,7 +63,7 @@
                 <span class="input-group-addon kv-date-calendar" title="Выбрать дату">
                   <i class="glyphicon glyphicon-calendar"></i>
                 </span>
-              <h3 style="width: 90%; caret-color:transparent; display:inline-block" class="form-control" th:text="${meter.date}"></h3>
+              <h3 style="width: 90%; caret-color:transparent; display:inline-block" class="form-control" th:text="${meter.date.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy'))}"></h3>
             </div>
           </div>
           <div class="col-md-6"></div>

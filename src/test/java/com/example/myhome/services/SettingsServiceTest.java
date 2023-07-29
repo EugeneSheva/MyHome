@@ -42,6 +42,8 @@ public class SettingsServiceTest {
     static void setupObjects() {
         paymentDetails = new PaymentDetails();
         incomeExpenseItems = new IncomeExpenseItems();
+        incomeExpenseItems.setName("TestName");
+        incomeExpenseItems.setIncomeExpenseType(IncomeExpenseType.INCOME);
         incomeExpenseItemsList = List.of(incomeExpenseItems, incomeExpenseItems);
         roleDisplayList = List.of(new PageRoleDisplay());
     }

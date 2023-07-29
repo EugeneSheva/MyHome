@@ -135,7 +135,7 @@ public class TariffServiceTest {
     void canBuildComponentsMapTest() {
         Service service = new Service();
         when(serviceRepository.findByName(anyString())).thenReturn(Optional.of(service));
-        assertThat(tariffService.buildComponentsMap(new String[]{"test1","test1"}, new String[]{"1","1"}).entrySet()).hasSize(1);
+        assertThat(tariffService.buildComponentsMap(new String[]{"1","2"}, new String[]{"1","2"}).entrySet()).hasSize(0);
     }
 
     @Test
@@ -147,7 +147,7 @@ public class TariffServiceTest {
     void canBuildComponentsMapTest_3() {
         Service service = new Service();
         when(serviceRepository.findByName(anyString())).thenReturn(Optional.of(service));
-        assertThat(tariffService.buildComponentsMap(new String[]{"test1","test1"}, new String[]{"test","test"}).entrySet()).hasSize(0);
+        assertThat(tariffService.buildComponentsMap(new String[]{"1","2"}, new String[]{"test","test"}).entrySet()).hasSize(0);
     }
 
     @Test

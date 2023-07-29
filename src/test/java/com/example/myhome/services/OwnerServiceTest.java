@@ -112,6 +112,10 @@ public class OwnerServiceTest {
         when(ownerRepository.findByName(anyString(), any(Pageable.class))).thenReturn(ownerPage);
         when(ownerRepository.findByNameFragment(anyString(),any(Pageable.class))).thenReturn(ownerPage);
         when(ownerRepository.getReferenceById(anyLong())).thenReturn(testOwner);
+
+        when(ownerRepository.getNewOwners(any(LocalDateTime.class))).thenReturn(ownerList);
+        when(ownerRepository.countActive()).thenReturn((long) ownerList.size());
+        when(ownerRepository.countNewOwnersForAdmin(any(LocalDateTime.class)));
     }
 
     @Test
@@ -153,6 +157,11 @@ public class OwnerServiceTest {
     @Test
     void findAllDTOTest() {
         assertThat(ownerService.findAllDTO()).isEqualTo(ownerDTOList);
+    }
+
+    @Test
+    void getNewOwnerDTOForAdminTest() {
+        assertThat(ownerService.getNewOwnerDTOForAdmin(new Admin())).isEqualTo(ownerDTOList);
     }
 
     @Test
@@ -285,6 +294,16 @@ public class OwnerServiceTest {
     @Test
     void findOwnerDTOByEmailTest() {
         assertThat(ownerService.findOwnerDTObyEmail(testOwner.getEmail())).isInstanceOf(OwnerDTO.class);
+    }
+
+    @Test
+    void getActiveOwnersQuantTest() {
+        assertThat(ownerService.getActiveOwnersQuantity()).isEqualTo(ownerList.size());
+    }
+
+    @Test
+    void getNotificationOwnerCountForAdminTest() {
+        assertThat(ownerService.getNotificationOwnerCountForAdmin(new Admin())).isEqualTo(5L);
     }
 
     @Test

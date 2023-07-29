@@ -12,6 +12,7 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -40,5 +41,19 @@ public class EmailServiceTest {
         when(mailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
         doAnswer(invocation -> {throw new MessagingException();}).when(mailSender).send((MimeMessage) any());
         emailService.send("test", "test");
+    }
+
+    @Test
+    void sendWithAttachmentTest() {
+        when(mailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
+        emailService.sendWithAttachment("test", "test");
+    }
+
+    @Test
+    void failSendWithAttachmentTest() {
+        when(mailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
+        doAnswer(invocation -> {throw new MessagingException();}).when(mailSender).send((MimeMessage) any());
+        assertThrows(RuntimeException.class, () -> emailService.sendWithAttachment("test", "test"));
+
     }
 }

@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.parameters.P;
+import org.springframework.validation.FieldError;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -195,5 +196,16 @@ public class BuildingServiceTest {
     @Test
     void findByNameTest() {
         assertThat(buildingService.findByName(testBuilding.getName())).isEqualTo(testBuilding);
+    }
+
+    @Test
+    void validateImgTest() {
+        assertThat(buildingService.validateImg(null, "test")).isNull();
+
+        MockMultipartFile testFile = new MockMultipartFile("test", "test", "text/html", new byte[1024]);
+        assertThat(buildingService.validateImg(testFile, "test")).isInstanceOf(FieldError.class);
+
+        testFile = new MockMultipartFile("test","test","image/jpg", new byte[21*1024*1024]);
+        assertThat(buildingService.validateImg(testFile, "test")).isInstanceOf(FieldError.class);
     }
 }

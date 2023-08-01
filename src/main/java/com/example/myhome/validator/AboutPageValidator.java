@@ -16,7 +16,7 @@ import java.util.List;
 @Log
 public class AboutPageValidator implements Validator {
 
-    public static List<String> contentTypes = List.of("image/png", "image/jpeg", "image/jpg");
+    public static List<String> contentTypes = List.of("image/png", "image/jpeg", "image/jpg", "application/pdf");
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -134,7 +134,7 @@ public class AboutPageValidator implements Validator {
 
                 if(currentDocument.getFile() != null && currentDocument.getFile().getSize() > 0) {
                     if(!contentTypes.contains(currentDocument.getFile().getContentType())) {
-                        e.rejectValue("documents["+i+"]", "document.file", "Wrong file format (.jpg, .jpeg, .png)");
+                        e.rejectValue("documents["+i+"]", "document.file", "Wrong file format (.jpg, .jpeg, .png, .pdf)");
                     } else if (currentDocument.getFile().getSize() > 19_999_999) {
                         e.rejectValue("documents["+i+"]", "document.file", "Max file size = 20 MB");
                     }

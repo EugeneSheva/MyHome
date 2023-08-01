@@ -75,9 +75,9 @@
                       <td th:text="${#temporals.format(tariff.date, 'yyyy-MM-dd - HH:mm')}"></td>
                       <td>
                         <div class="btn-group pull-right">
-                          <button class="btn btn-default btn-sm copy-tariff" th:attr="data-clipboard-text=${tariff}" title="Копировать" data-toggle="tooltip">
+                          <a class="btn btn-default btn-sm" th:href="@{/admin/tariffs/copy/{id}(id=${tariff.id})}" title="Копировать" data-toggle="tooltip">
                             <i class="fa fa-clone"></i>
-                          </button>
+                          </a>
                           <a class="btn btn-default btn-sm" th:href="@{/admin/tariffs/update/{id}(id=${tariff.id})}" title="Редактировать" data-toggle="tooltip">
                             <i class="fa fa-pencil"></i>
                           </a>

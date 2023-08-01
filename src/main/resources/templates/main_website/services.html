@@ -56,7 +56,7 @@
             <hr>
             <div th:each="service : ${servicesPage.serviceDescriptions}" class="row align-items-center mb-3">
                 <div class="col-md-7">
-                    <img th:src="@{/images/services/{url}(url=${service.photo})}" class="img-fluid" alt="">
+                    <img th:src="@{/images/pages/services/{url}(url=${service.photo})}" class="img-fluid" alt="">
                 </div>
                 <div class="col-md-5">
                     <h3 th:utext="${service.title}"></h3>

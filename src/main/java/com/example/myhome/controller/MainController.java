@@ -42,7 +42,7 @@ public class MainController {
         model.addAttribute("page", page);
         model.addAttribute("photos", photos);
         model.addAttribute("add_photos", add_photos);
-//        model.addAttribute("documents", documents);
+        model.addAttribute("documents", page.getDocuments());
         return "main_website/about";
     }
 

@@ -76,6 +76,17 @@ public class TariffController {
         return "admin_panel/system_settings/tariff_card";
     }
 
+    @GetMapping("/copy/{id}")
+    public String showCopyTariffPage(@PathVariable long id, Model model) {
+        Tariff tariff = tariffService.findTariffById(id);
+        tariff.setId(null);
+        model.addAttribute("tariff", tariff);
+        model.addAttribute("components", tariff.getComponents().entrySet());
+        model.addAttribute("services", serviceService.findAllServices());
+        model.addAttribute("units", serviceService.findAllUnits());
+        return "admin_panel/system_settings/tariff_card";
+    }
+
     // Сохранить созданный тариф
     @PostMapping("/create")
     public String createTariff(@ModelAttribute Tariff tariff,
@@ -126,6 +137,44 @@ public class TariffController {
         log.info(Arrays.toString(prices));
 
         tariff.setId(id);
+        tariff.setDate(LocalDateTime.now());
+        tariff.setComponents(tariffService.buildComponentsMap(service_names, prices));
+
+        validator.validate(tariff, bindingResult);
+
+        if(bindingResult.hasErrors()) {
+            log.info("errors found");
+            log.info(bindingResult.getObjectName());
+            log.info(bindingResult.getAllErrors().toString());
+            model.addAttribute("validation", "failed");
+            model.addAttribute("services", serviceService.findAllServices());
+            model.addAttribute("units", serviceService.findAllUnits());
+            return "admin_panel/system_settings/tariff_card";
+        }
+
+        log.info(tariff.toString());
+
+        try {
+            tariffService.saveTariff(tariff);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("fail", e.getMessage());
+            return "redirect:/admin/tariffs/update/" +id;
+        }
+
+        return "redirect:/admin/tariffs";
+    }
+
+    // Сохранить скопированный тариф
+    @PostMapping("/copy/{id}")
+    public String saveCopiedTariff(@PathVariable long id,
+                               @ModelAttribute Tariff tariff,
+                               BindingResult bindingResult,
+                               @RequestParam(defaultValue = "0", required = false) String[] service_names,
+                               @RequestParam(defaultValue = "0", required = false) String[] prices,
+                               RedirectAttributes redirectAttributes,
+                               Model model) {
+
+        tariff.setId(null);
         tariff.setDate(LocalDateTime.now());
         tariff.setComponents(tariffService.buildComponentsMap(service_names, prices));
 

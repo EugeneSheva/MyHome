@@ -17,6 +17,7 @@ public class PageRoleDisplay {
     private Long id;
 
     private String page_name;
+    private String page_name_uk;
     private String code;
 
     private Boolean role_director = true;

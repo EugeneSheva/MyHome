@@ -57,42 +57,42 @@
                     <thead>
                       <tr>
                         <th th:text="#{settings.system.roles.mainPage.role}">Роль</th>
-                        <th th:each="page, iter : *{pages}" th:text="${page.page_name}"></th>
+                        <th th:each="page, iter : *{pages}" th:text="${#locale.language == 'uk' ? page.page_name_uk : page.page_name}"></th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td>Директор</td>
+                        <td th:text="${#locale.language == 'uk' ? 'Директор' : 'Директор'}">Директор</td>
                         <td th:each="page, iter : *{pages}">
                           <input type="checkbox" checked disabled>
                         </td>
                       </tr>
                       <tr>
-                        <td>Администратор</td>
+                        <td th:text="${#locale.language == 'uk' ? 'Адміністратор' : 'Администратор'}">Администратор</td>
                         <td th:each="page, iter : *{pages}">
                           <input type="checkbox" th:field="*{pages[__${iter.index}__].role_admin}">
                         </td>
                       </tr>
                       <tr>
-                        <td>Управляющий</td>
+                        <td th:text="${#locale.language == 'uk' ? 'Керівник' : 'Управляющий'}">Управляющий</td>
                         <td th:each="page, iter : *{pages}">
                           <input type="checkbox" th:field="*{pages[__${iter.index}__].role_manager}">
                         </td>
                       </tr>
                       <tr>
-                        <td>Бухгалтер</td>
+                        <td th:text="${#locale.language == 'uk' ? 'Бухгалтер' : 'Бухгалтер'}">Бухгалтер</td>
                         <td th:each="page, iter : *{pages}">
                           <input type="checkbox" th:field="*{pages[__${iter.index}__].role_accountant}">
                         </td>
                       </tr>
                       <tr>
-                        <td>Электрик</td>
+                        <td th:text="${#locale.language == 'uk' ? 'Електрик' : 'Электрик'}">Электрик</td>
                         <td th:each="page, iter : *{pages}">
                           <input type="checkbox" th:field="*{pages[__${iter.index}__].role_electrician}">
                         </td>
                       </tr>
                       <tr>
-                        <td>Сантехник</td>
+                        <td th:text="${#locale.language == 'uk' ? 'Сантехнік' : 'Сантехник'}">Сантехник</td>
                         <td th:each="page, iter : *{pages}">
                           <input type="checkbox" th:field="*{pages[__${iter.index}__].role_plumber}">
                         </td>

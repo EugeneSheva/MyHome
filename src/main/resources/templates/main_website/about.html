@@ -102,12 +102,12 @@
                 <div th:each="document : ${documents}" class="media">
                     <div class="media-left">
                         <div class="media-object">
-                            <img style="width: 50px; height: 75px;" th:src="@{/images/{url}(url=${document.file})}" alt="">
+                            <img style="width: 50px; height: 75px;" th:src="@{/images/{url}(url=${document.fileName})}" alt="">
                         </div>
                     </div>
                     <div class="media-body">
-                        <h4 th:utext="${document.name}" class="media-heading">grt</h4>
-                        <a th:href="@{/images/{url}(url=${document.file})}" download><i class="fa fa-download" aria-hidden="true"></i> Скачать</a>
+                        <h4 th:utext="${document.documentName}" class="media-heading">grt</h4>
+                        <a th:href="@{/images/{url}(url=${document.fileName})}" download><i class="fa fa-download" aria-hidden="true"></i> Скачать</a>
                     </div>
                 </div>
             </div>

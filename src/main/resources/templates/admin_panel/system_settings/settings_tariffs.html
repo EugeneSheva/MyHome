@@ -103,17 +103,17 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Удалить тариф?</h5>
+            <h5 class="modal-title" id="exampleModalLabel" th:text="#{modal.tariff.delete}">Удалить тариф?</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body" th:text="#{modal.tariff.confirm-delete}">
             Подтвердите удаление тарифа
           </div>
           <div class="modal-footer" style="justify-content: space-between">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
-            <button type="button" class="btn btn-danger" onclick="confirmDelete()">Удалить</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{modal.cancel}">Отменить</button>
+            <button type="button" class="btn btn-danger" onclick="confirmDelete()" th:text="#{modal.delete}">Удалить</button>
           </div>
         </div>
       </div>

@@ -189,6 +189,8 @@ class DefaultInitializer implements CommandLineRunner {
             UserRole userRole = new UserRole();
             userRole.setMaster(false);
             userRole.setName("Director");
+            userRole.setName_ru("Директор");
+            userRole.setName_uk("Директор");
             userRole.setPermissions(permissions);
             userRoleRepository.save(userRole);
 
@@ -228,6 +230,8 @@ class DefaultInitializer implements CommandLineRunner {
             UserRole userRole2 = new UserRole();
             userRole2.setMaster(false);
             userRole2.setName("Manager");
+            userRole2.setName_ru("Управляющий");
+            userRole2.setName_uk("Керівник");
             userRole2.setPermissions(permissions2);
             userRoleRepository.save(userRole2);
 
@@ -248,6 +252,8 @@ class DefaultInitializer implements CommandLineRunner {
             UserRole userRole3 = new UserRole();
             userRole3.setMaster(false);
             userRole3.setName("Accountant");
+            userRole3.setName_ru("Бухгалтер");
+            userRole3.setName_uk("Бухгалтер");
             userRole3.setPermissions(permissions3);
             userRoleRepository.save(userRole3);
 
@@ -262,6 +268,8 @@ class DefaultInitializer implements CommandLineRunner {
             UserRole userRole4 = new UserRole();
             userRole4.setMaster(true);
             userRole4.setName("Plumber");
+            userRole4.setName_ru("Сантехник");
+            userRole4.setName_uk("Сантехнік");
             userRole4.setPermissions(permissions4);
             userRoleRepository.save(userRole4);
 
@@ -276,6 +284,8 @@ class DefaultInitializer implements CommandLineRunner {
             UserRole userRole5 = new UserRole();
             userRole5.setMaster(true);
             userRole5.setName("Electrician");
+            userRole5.setName_ru("Электрик");
+            userRole5.setName_uk("Електрик");
             userRole5.setPermissions(permissions5);
             userRoleRepository.save(userRole5);
 
@@ -317,6 +327,8 @@ class DefaultInitializer implements CommandLineRunner {
             UserRole userRole6 = new UserRole();
             userRole6.setMaster(false);
             userRole6.setName("Admin");
+            userRole6.setName_ru("Администратор");
+            userRole6.setName_uk("Адміністратор");
             userRole6.setPermissions(permissions6);
             userRoleRepository.save(userRole6);
 

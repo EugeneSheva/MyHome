@@ -739,12 +739,15 @@ function drawAdminsTable() {
     console.log(data);
     for (const admin of data.content) {
         console.log(admin);
+
+        let translatedRole = translateRole(admin.role);
+
         let newTableRow = document.createElement('tr');
         newTableRow.style.cursor = 'pointer';
         newTableRow.classList.add('user-row');
         newTableRow.innerHTML = '<td>' + admin.id + '</td>' +
             '<td>' + ((admin.fullName) ? admin.fullName : notFoundText) + '</td>' +
-            '<td>' + ((admin.role) ? admin.role : notFoundText) + '</td>' +
+            '<td>' + ((translatedRole) ? translatedRole : notFoundText) + '</td>' +
             '<td>' + ((admin.phone_number) ? admin.phone_number : notFoundText) + '</td>' +
             '<td>' + ((admin.email) ? admin.email : notFoundText) + '</td>' +
             '<td>' + ((admin.active) ? activeText : inactiveText) + '</td>' +
@@ -874,6 +877,33 @@ function drawTable() {
     else if (tableType === 'messagesCabinet') drawMessagesTableCabinet();
     else if (tableType === 'messagesAdmin') drawMessagesTableAdmin();
     else if (tableType === 'admins') drawAdminsTable();
+}
+
+//Функция перевода роли на нужный язык с английского
+function translateRole(roleString) {
+
+       if(roleString == null) return null;
+
+       if(currentLanguage === 'uk') {
+            switch(roleString) {
+                case 'Director': return 'Директор';
+                case 'Manager': return 'Керівник';
+                case 'Accountant': return 'Бухгалтер';
+                case 'Plumber': return 'Сантехнік';
+                case 'Electrician': return 'Електрик';
+                case 'Admin': return 'Адміністратор';
+            }
+       }
+       else if(currentLanguage === 'ru') {
+            switch(roleString) {
+                case 'Director': return 'Директор';
+                case 'Manager': return 'Управляющий';
+                case 'Accountant': return 'Бухгалтер';
+                case 'Plumber': return 'Сантехник';
+                case 'Electrician': return 'Электрик';
+                case 'Admin': return 'Администратор';
+            }
+       }
 }
 
 //Функции, рисующие таблицы в зависимости от выбранной страницы

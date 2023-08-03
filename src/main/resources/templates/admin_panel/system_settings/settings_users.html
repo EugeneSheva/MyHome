@@ -84,7 +84,7 @@
                             <option value=""></option>
                             <option th:each="userRole : ${roles}"
                                     th:value="${userRole.id}"
-                                    th:text="${userRole.name}"></option>
+                                    th:text="${#locale.language == 'ru' ? userRole.name_ru : userRole.name_uk}"></option>
                           </select>
                         </td>
                         <td style="padding: 10px">
@@ -124,6 +124,10 @@
 </div>
 <!-- ./wrapper -->
 
+<script th:inline="javascript">
+      let currentLanguage = [[${#locale.language}]];
+</script>
+
 <script src="https://kit.fontawesome.com/41663a8b50.js" crossorigin="anonymous"></script>
 
 <script th:src="@{/plugins/jquery/jquery.min.js}"></script>
@@ -149,7 +153,6 @@
     let inactiveText = [[#{inactive}]];
     let notFoundText = [[#{not-found}]];
 
-    let currentLanguage = [[${#locale.language}]]
 
     $(document).ready(function(){
 

@@ -16,6 +16,8 @@ public class UserRole {
     private Long id;
 
     private String name;
+    private String name_ru;
+    private String name_uk;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> permissions = new HashSet<>();

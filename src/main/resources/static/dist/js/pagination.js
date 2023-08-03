@@ -164,8 +164,6 @@ function onlyUnique(value, index, array) {
 
 //AJAX-вызов и получение данных по url
 function getTableData(url, pageNumber, pageSize, pageFiltersString) {
-    let tp = /*[[${totalPagesCount}]]*/ 1
-    console.log('THYMELEAF ' + tp);
     $.ajax(url, {
         async: false,
         data: {page: pageNumber, size: pageSize, filters: pageFiltersString},
@@ -948,11 +946,8 @@ function drawPagination() {
     if (tableData.totalElements === 0) return;
 
     let totalElements = tableData.totalElements;
-    console.log(totalElements);
 
     let totalElementsOnCurrentPage = ((currentPageSize * currentPageNumber) < totalElements) ? currentPageSize : (currentPageSize - ((currentPageSize * currentPageNumber) - totalElements))
-    console.log(totalElements);
-    console.log(totalElementsOnCurrentPage);
 
     //ADD TEXT
     let span = document.createElement('span');

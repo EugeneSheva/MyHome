@@ -202,6 +202,7 @@ public class SettingsController {
         for(int i = 0; i < pages.size(); i++) {
             pages.get(i).setId((long) i+1);
             pages.get(i).setPage_name(originalList.get(i).getPage_name());
+            pages.get(i).setPage_name_uk(originalList.get(i).getPage_name_uk());
             pages.get(i).setRole_director(true);
             pages.get(i).setCode(originalList.get(i).getCode());
         }

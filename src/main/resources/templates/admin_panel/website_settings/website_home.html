@@ -70,8 +70,8 @@
                         <label class="control-label" th:text="#{settings.website.main.card.carousel.imageSize}">Рекомендуемый размер: (1920х800)</label>
                         <input type="hidden" name="WebsiteHomeSlide[0][imageFile]" id="">
                         <input type="file" name="page_slide1" id="page_slide1" accept=".jpg,.jpeg,.png">
+                        <h4 th:if="${#fields.hasErrors('slide1')}" th:errors="*{slide1}" style="color:red"></h4>
                       </div>
-                      <h4 th:if="${#fields.hasErrors('slide1')}" th:errors="*{slide1}" style="color:red"></h4>
                     </div>
                     <div class="col-md-4">
                       <h4><span th:text="#{settings.website.main.card.carousel.slide}">Слайд</span> 2</h4>
@@ -83,8 +83,8 @@
                         <label for="page_slide2" class="control-label" th:text="#{settings.website.main.card.carousel.imageSize}">Рекомендуемый размер: (1920х800)</label>
                         <input type="hidden" name="WebsiteHomeSlide[1][imageFile]" id="">
                         <input type="file" name="page_slide2" id="page_slide2" accept=".jpg,.jpeg,.png">
+                        <h4 th:if="${#fields.hasErrors('slide2')}" th:errors="*{slide2}" style="color:red"></h4>
                       </div>
-                      <h4 th:if="${#fields.hasErrors('slide2')}" th:errors="*{slide2}" style="color:red"></h4>
                     </div>
                     <div class="col-md-4">
                       <h4><span th:text="#{settings.website.main.card.carousel.slide}">Слайд</span> 3</h4>
@@ -96,9 +96,9 @@
                         <label for="page_slide3" class="control-label" th:text="#{settings.website.main.card.carousel.imageSize}">Рекомендуемый размер: (1920х800)</label>
                         <input type="hidden" name="WebsiteHomeSlide[2][imageFile]" id="">
                         <input type="file" name="page_slide3" id="page_slide3" accept=".jpg,.jpeg,.png">
+                        <h4 th:if="${#fields.hasErrors('slide3')}" th:errors="*{slide3}" style="color:red"></h4>
                       </div>
                     </div>
-                    <h4 th:if="${#fields.hasErrors('slide3')}" th:errors="*{slide3}" style="color:red"></h4>
                   </div>
                   <div class="row" style="padding-inline:10px">
                     <div style="width: 100%; max-width: 80vw">
@@ -133,6 +133,7 @@
                           <label for="page_block_1_img" class="control-label" th:text="#{settings.website.main.card.adjacent.imageSize}">Рекомендуемый размер: (1920х800)</label>
                           <input type="hidden" name="WebsiteHomeSlide[0][imageFile]" id="">
                           <input type="file" name="page_block_1_img" id="page_block_1_img" accept=".jpg,.jpeg,.png">
+                          <h4 th:if="${#fields.hasErrors('block_1_img')}" th:errors="*{block_1_img}" style="color:red"></h4>
                         </div>
                         <div class="form-group mb-30">
                           <label for="block_1_title" class="control-label" th:text="#{settings.website.main.card.adjacent.block.title}">Заголовок блока</label>
@@ -144,7 +145,6 @@
                           <textarea style="width: 100%;" rows="3" th:field="*{block_1_description}" id="block_1_description"></textarea>
                           <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('block_1_description')}" th:errors="*{block_1_description}"></h4>
                         </div>
-                        <h4 th:if="${#fields.hasErrors('block_1_img')}" th:errors="*{block_1_img}" style="color:red"></h4>
 
                       </div>
                       <div class="col-md-4">
@@ -157,6 +157,7 @@
                           <label for="page_block_2_img" class="control-label" th:text="#{settings.website.main.card.adjacent.imageSize}">Рекомендуемый размер: (1920х800)</label>
                           <input type="hidden" name="WebsiteHomeSlide[0][imageFile]" id="">
                           <input type="file" name="page_block_2_img" id="page_block_2_img" accept=".jpg,.jpeg,.png">
+                          <h4 th:if="${#fields.hasErrors('block_2_img')}" th:errors="*{block_2_img}" style="color:red"></h4>
                         </div>
                         <div class="form-group mb-30">
                           <label for="block_2_title" class="control-label" th:text="#{settings.website.main.card.adjacent.block.title}">Заголовок блока</label>
@@ -168,7 +169,6 @@
                           <textarea style="width: 100%;" rows="3" th:field="*{block_2_description}" id="block_2_description"></textarea>
                           <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('block_2_description')}" th:errors="*{block_2_description}"></h4>
                         </div>
-                        <h4 th:if="${#fields.hasErrors('block_2_img')}" th:errors="*{block_2_img}" style="color:red"></h4>
 
                       </div>
                       <div class="col-md-4">
@@ -181,6 +181,7 @@
                           <label for="page_block_3_img" class="control-label" th:text="#{settings.website.main.card.adjacent.imageSize}">Рекомендуемый размер: (1920х800)</label>
                           <input type="hidden" name="WebsiteHomeSlide[0][imageFile]" id="">
                           <input type="file" name="page_block_3_img" id="page_block_3_img" accept=".jpg,.jpeg,.png">
+                          <h4 th:if="${#fields.hasErrors('block_3_img')}" th:errors="*{block_3_img}" style="color:red"></h4>
                         </div>
                         <div class="form-group mb-30">
                           <label for="block_1_title" class="control-label" th:text="#{settings.website.main.card.adjacent.block.title}">Заголовок блока</label>
@@ -192,7 +193,6 @@
                           <textarea style="width: 100%;" rows="3" th:field="*{block_3_description}" id="block_3_description"></textarea>
                           <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('block_3_description')}" th:errors="*{block_3_description}"></h4>
                         </div>
-                        <h4 th:if="${#fields.hasErrors('block_3_img')}" th:errors="*{block_3_img}" style="color:red"></h4>
 
                       </div>
                       <div class="col-md-4">
@@ -205,6 +205,7 @@
                           <label for="page_block_4_img" class="control-label" th:text="#{settings.website.main.card.adjacent.imageSize}">Рекомендуемый размер: (1920х800)</label>
                           <input type="hidden" name="WebsiteHomeSlide[0][imageFile]" id="">
                           <input type="file" name="page_block_4_img" id="page_block_4_img" accept=".jpg,.jpeg,.png">
+                          <h4 th:if="${#fields.hasErrors('block_4_img')}" th:errors="*{block_4_img}" style="color:red"></h4>
                         </div>
                         <div class="form-group mb-30">
                           <label for="block_4_title" class="control-label" th:text="#{settings.website.main.card.adjacent.block.title}">Заголовок блока</label>
@@ -216,7 +217,6 @@
                           <textarea style="width: 100%;" rows="3" th:field="*{block_4_description}" id="block_4_description"></textarea>
                           <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('block_4_description')}" th:errors="*{block_4_description}"></h4>
                         </div>
-                        <h4 th:if="${#fields.hasErrors('block_4_img')}" th:errors="*{block_4_img}" style="color:red"></h4>
 
                       </div>
                       <div class="col-md-4">
@@ -229,6 +229,7 @@
                           <label for="page_block_5_img" class="control-label" th:text="#{settings.website.main.card.adjacent.imageSize}">Рекомендуемый размер: (1920х800)</label>
                           <input type="hidden" name="WebsiteHomeSlide[0][imageFile]" id="">
                           <input type="file" name="page_block_5_img" id="page_block_5_img" accept=".jpg,.jpeg,.png">
+                          <h4 th:if="${#fields.hasErrors('block_5_img')}" th:errors="*{block_5_img}" style="color:red"></h4>
                         </div>
                         <div class="form-group mb-30">
                           <label for="block_5_title" class="control-label" th:text="#{settings.website.main.card.adjacent.block.title}">Заголовок блока</label>
@@ -240,7 +241,6 @@
                           <textarea style="width: 100%;" rows="3" th:field="*{block_5_description}" id="block_5_description"></textarea>
                           <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('block_5_description')}" th:errors="*{block_5_description}"></h4>
                         </div>
-                        <h4 th:if="${#fields.hasErrors('block_5_img')}" th:errors="*{block_5_img}" style="color:red"></h4>
 
                       </div>
                       <div class="col-md-4">
@@ -253,6 +253,7 @@
                           <label for="page_block_6_img" class="control-label" th:text="#{settings.website.main.card.adjacent.imageSize}">Рекомендуемый размер: (1920х800)</label>
                           <input type="hidden" name="WebsiteHomeSlide[0][imageFile]" id="">
                           <input type="file" name="page_block_6_img" id="page_block_6_img" accept=".jpg,.jpeg,.png">
+                          <h4 th:if="${#fields.hasErrors('block_6_img')}" th:errors="*{block_6_img}" style="color:red"></h4>
                         </div>
                         <div class="form-group mb-30">
                           <label for="block_6_title" class="control-label" th:text="#{settings.website.main.card.adjacent.block.title}">Заголовок блока</label>
@@ -264,7 +265,6 @@
                           <textarea style="width: 100%;" rows="3" th:field="*{block_6_description}" id="block_6_description"></textarea>
                           <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('block_6_description')}" th:errors="*{block_6_description}"></h4>
                         </div>
-                        <h4 th:if="${#fields.hasErrors('block_6_img')}" th:errors="*{block_6_img}" style="color:red"></h4>
 
                       </div>
                     </div>

@@ -53,6 +53,7 @@
         </div>
       </div>
       <div class="container-fluid">
+        <h5 th:text="${fail}" style="color: red; font-weight: bold"></h5>
         <div class="row">
           <div class="col-md-12">
             <div class="box" style="padding:0;">
@@ -81,7 +82,7 @@
                           <a class="btn btn-default btn-sm" th:href="@{/admin/tariffs/update/{id}(id=${tariff.id})}" title="Редактировать" data-toggle="tooltip">
                             <i class="fa fa-pencil"></i>
                           </a>
-                          <a class="btn btn-default btn-sm" th:href="@{/admin/tariffs/delete/{id}(id=${tariff.id})}" title="Удалить" data-toggle="tooltip" data-pjax="0" data-method="post" data-confirm="Вы уверены, что хотите удалить этот элемент?"><i class="fa fa-trash"></i></a>
+                          <button type="button" onclick="deleteTariff(this)" class="btn btn-default btn-sm" th:attr="data-url='/myhome/admin/tariffs/delete/'+${tariff.id}" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-trash"></i></button>
                         </div>
                       </td>
                     </tr>
@@ -98,6 +99,26 @@
       </div>
     </section>
 
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Удалить тариф?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Подтвердите удаление тарифа
+          </div>
+          <div class="modal-footer" style="justify-content: space-between">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
+            <button type="button" class="btn btn-danger" onclick="confirmDelete()">Удалить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Main Footer -->
@@ -112,8 +133,20 @@
 
 <script>
 
+  let deleteUrl;
+
   console.log('is clipboard supported?');
   console.log(ClipboardJS.isSupported());
+
+  function confirmDelete() {
+    window.location.href = deleteUrl;
+  }
+
+  function deleteTariff(button) {
+    deleteUrl = button.dataset.url;
+    console.log(deleteUrl);
+    document.getElementsByClassName('modal')[0].classList.add = 'show';
+  }
 
   $(document).ready(function() {
 

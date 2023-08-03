@@ -76,7 +76,7 @@
                         <td>
                           <div class="btn-group pull-right">
                             <a class="btn btn-default btn-sm" th:href="@{/admin/income-expense/update/{id}(id=${transaction.id})}" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                            <a class="btn btn-default btn-sm" th:href="@{/admin/income-expense/delete/{id}(id=${transaction.id})}" title="Удалить" data-toggle="tooltip" data-pjax="0" data-method="post" data-confirm="Вы уверены, что хотите удалить этот элемент?"><i class="fa fa-trash"></i></a>
+                            <button type="button" class="btn btn-default btn-sm delete-transaction" onclick="deleteTransaction(this)" th:attr="data-url='/myhome/admin/income-expense/delete/'+${transaction.id}" title="Удалить" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-trash"></i></button>
                           </div>
                         </td>
                       </a>
@@ -94,6 +94,37 @@
       </div>
     </section>
 
+<!--  Modal -->
+<!--    <div class="my-modal">-->
+<!--        <div class="my-modal-bg"></div>-->
+<!--        <div class="my-modal-window">-->
+<!--          <p>Удалить услугу?</p>-->
+<!--          <button class="delete-button">Удалить</button>-->
+<!--          <button class="cancel-button" onclick="closeModal()">Отменить</button>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Удалить услугу?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Подтвердите удаление услуги
+          </div>
+          <div class="modal-footer" style="justify-content: space-between">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
+            <button type="button" class="btn btn-danger" onclick="confirmDelete()">Удалить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Main Footer -->
@@ -108,19 +139,52 @@
 
 
 <script>
+
+  let deleteUrl;
+
   $(document).ready(function() {
 
     let transaction_rows = document.getElementsByClassName("transaction-row");
 
     for(let i = 0; i < transaction_rows.length; i++) {
       console.log(transaction_rows[i]);
-      transaction_rows[i].addEventListener('click', () => {
-        let contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
 
-        window.location.href = contextPath + '/admin/income-expense/update/' + document.getElementById("input-" + i).value;
-      });
+      let row_children = transaction_rows[i].children;
+
+      for(let i = 0; i < row_children.length - 1; i++) {
+          row_children[i].addEventListener('click', () => {
+            let contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
+            window.location.href = contextPath + '/admin/income-expense/update/' + document.getElementById("input-" + i).value;
+          });
+      }
+
     }
   });
+
+  let closeListener = (e) => {
+    console.log(e.target);
+    console.log(document.getElementsByClassName('my-modal')[0].style.display);
+    if(e.target != document.getElementsByClassName('my-modal-window')[0]) {
+        document.getElementsByClassName('my-modal')[0].style.display = 'none';
+    }
+  }
+
+  function deleteTransaction(button) {
+    deleteUrl = button.dataset.url;
+    console.log(deleteUrl);
+    document.getElementsByClassName('modal')[0].classList.add = 'show';
+<!--    window.addEventListener('click', closeListener);-->
+  }
+
+  function confirmDelete() {
+    window.location.href = deleteUrl;
+  }
+
+  function closeModal() {
+    document.getElementsByClassName('modal')[0].classList.remove = 'show';
+<!--    window.removeEventListener('click', closeListener, false);-->
+  }
+
 </script>
 
 <!-- REQUIRED SCRIPTS -->

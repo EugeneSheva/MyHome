@@ -51,7 +51,7 @@
                 <form method="post" th:object="${tariff}">
                   <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                   <div class="row">
-                    <div class="col-xs-12 col-lg-7">
+                    <div class="col-xs-12 col-lg-8">
                       <h4 th:if="${fail}" th:text="#{settings.system.tariffs.error} + ': ' + ${fail}" style="color:red; font-weight:bold"></h4>
                       <div class="form-group">
                         <label class="control-label" th:text="#{settings.system.tariffs.editPage.name}">Название тарифа</label>
@@ -64,7 +64,7 @@
                         <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></h4>
                       </div>
                     </div>
-                    <div class="col-xs-12 col-lg-7" id="services">
+                    <div class="col-xs-12 col-lg-8" id="services">
                       <div class="service-row" id="service_row">
                         <div th:each="component, iter : *{components}" class="row form-tariffservice">
                           <input type="hidden" class="currentIndex" th:value="${iter.index}">
@@ -72,7 +72,7 @@
                             <div class="form-group">
                               <label th:text="#{settings.system.tariffs.editPage.service}">Услуга</label>
                               <input type="hidden" th:value="${component.key.id}">
-                              <select th:value="${component.key.id}" th:attr="data-index=${iter.index}" name="service_names" class="form-control service-select">
+                              <select th:value="${component.key.id}" onchange="setUnit(this)" th:attr="data-index=${iter.index}" name="service_names" class="form-control service-select">
                                 <option value="" th:text="#{select.placeholder}">Выберите...</option>
                                 <option th:each="service : ${services}" th:value="${service.id}" th:text="${service.name}"></option>
                               </select>
@@ -97,10 +97,10 @@
                               <div class="input-group">
                                 <select th:value="${component.key.unit.id}" th:attr="data-index=${iter.index}" th:id="'unit-'+${iter.index}" class="unit-select" disabled="">
                                   <option value="0" th:text="#{select.placeholder}">Выберите...</option>
-                                  <option th:each="unit : ${units}" th:value="${unit.name}" th:text="${unit.name}"></option>
+                                  <option th:each="unit : ${units}" th:value="${unit.id}" th:text="${unit.name}"></option>
                                 </select>
                                 <span class="input-group-btn">
-                                  <button type="button" class="btn btn-default form-row-remove-btn service-delete-button" onclick="deleteService(this)">
+                                  <button type="button" class="btn btn-default form-row-remove-btn service-delete-button" data-toggle="modal" data-target="#exampleModal" onclick="deleteService(this)">
                                     <i class="fa fa-trash"></i>
                                   </button>
                                 </span>
@@ -114,7 +114,7 @@
                           <div class="col-xs-6 col-md-4">
                             <div class="form-group">
                               <label th:text="#{settings.system.tariffs.editPage.service}">Услуга</label>
-                              <select name="service_names" onclick="setUnit(this)" class="form-control service-select">
+                              <select name="service_names" onchange="setUnit(this)" class="form-control service-select">
                                 <option value="" th:text="#{select.placeholder}">Выберите...</option>
                                 <option th:each="service : ${services}" th:value="${service.id}" th:text="${service.name}"></option>
                               </select>
@@ -141,7 +141,7 @@
                                   <option th:each="unit : ${units}" th:value="${unit.id}" th:text="${unit.name}"></option>
                                 </select>
                                 <span class="input-group-btn">
-                                  <button type="button" class="btn btn-default form-row-remove-btn service-delete-button" onclick="deleteService(this)">
+                                  <button type="button" class="btn btn-default form-row-remove-btn service-delete-button" data-toggle="modal" data-target="#exampleModal" onclick="deleteService(this)">
                                     <i class="fa fa-trash"></i>
                                   </button>
                                 </span>
@@ -150,11 +150,12 @@
                           </div>
                         </div>
                       </div>
+                      <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('components')}" th:errors="*{components}"></h4>
+
                       <button type="button" id="add_service_btn" class="btn btn-default btn-hover-change pull-left margin-bottom-15 form-row-add-tariffservice-btn"
                       th:text="#{settings.system.tariffs.editPage.add}">Добавить услугу</button>
                     </div>
                   </div>
-                  <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('components')}" th:errors="*{components}"></h4>
                   <div class="row">
                     <div class="col-md-12">
                       <div class="form-group">
@@ -172,6 +173,26 @@
       </div>
     </section>
 
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Удалить услугу?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Подтвердите удаление услуги
+          </div>
+          <div class="modal-footer" style="justify-content: space-between">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
+            <button type="button" class="btn btn-danger" onclick="confirmDelete()">Удалить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Main Footer -->
@@ -184,26 +205,40 @@
 <script th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/dist/js/adminlte.js}"></script>
 
-<script>
-  function deleteService(button) {
-    let service_row = $(button).closest(".row");
+<script th:inline="javascript">
 
-    if(confirm('Удалить?')) {
-      service_row.remove();
-    }
+  let deleteServiceButton;
+
+  let components = /*[[${components}]]*/ [];
+  console.log('components');
+  console.log(components);
+
+  let services_amount = (components) ? components.length : 0;
+  console.log('amount of services: ' + services_amount);
+
+  function deleteService(button) {
+    deleteServiceButton = button;
+  }
+
+  function confirmDelete() {
+    let service_row = $(deleteServiceButton).closest(".row");
+    service_row.remove();
+    $('#exampleModal').modal('hide')
   }
 
   function setUnit(select) {
-    console.log(select.value);
     let service_id = $(select).val();
+    console.log(service_id);
 
-    let unit = $(select).closest('.service-row').find('.unit-select');
-
+    let service_index = select.dataset.index;
+    console.log('service index is ' + service_index);
+    let unit_select = document.getElementById('unit-'+service_index);
+    console.log(unit_select);
 
     $.get('/myhome/admin/services/get-unit', {id:select.value}, function(data){
-
-        $(unit).val(data.id);
-    });
+       console.log(data);
+        unit_select.value = data.id;
+    }).catch(() => {unit_select.value=0; console.log('error during unit fetching, setting default value')});
   }
 
   $(document).ready(function() {
@@ -221,29 +256,43 @@
       console.log(document.getElementsByName("prices-t"));
       document.getElementsByName("prices-t")[0].value = '0';
       document.getElementsByName("prices-t")[0].name = 'prices';
+
+      //find select and give index to it
+      let new_service = new_slot.firstElementChild.firstElementChild.firstElementChild.lastElementChild;
+      new_service.dataset.index = services_amount;
+
+      //find unit and give id from index
+      let new_unit = new_slot.firstElementChild.lastElementChild.firstElementChild.lastElementChild.firstElementChild;
+      new_unit.id = 'unit-'+services_amount;
+
+      //increase services amount
+      services_amount++;
     });
 
     let services = document.getElementsByName("service_names");
     for(let i = 0; i < services.length; i++) {
       services[i].value = services[i].previousElementSibling.value;
-      let unit_element = document.getElementById("unit-"+i);
-      unit_element.value = document.getElementById("id-"+i).value;
+      setUnit(services[i]);
     }
 
-    $(".service-select").change(function(){
-        let select_index = this.dataset.index;
-        let service_select = this;
-        let service_id = this.value;
+<!--    $(".service-select").change(function(){-->
+<!--        let select_index = this.dataset.index;-->
+<!--        let service_select = this;-->
+<!--        let service_id = this.value;-->
 
-        $.get("/myhome/admin/services/get-unit/",{id:service_id}, function(data){
+<!--        console.log(select_index);-->
+<!--        console.log(service_select);-->
+<!--        console.log(service_id);-->
+
+<!--        $.get("/myhome/admin/services/get-unit/",{id:service_id}, function(data){-->
 
 
-            let unit_select = document.getElementById('unit-'+select_index);
+<!--            let unit_select = document.getElementById('unit-'+select_index);-->
 
-            unit_select.value = data.id;
-            unit_select.innerText = data.name;
-        });
-    });
+<!--            unit_select.value = data.id;-->
+<!--            unit_select.innerText = data.name;-->
+<!--        });-->
+<!--    });-->
   });
 </script>
 

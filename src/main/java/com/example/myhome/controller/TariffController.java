@@ -204,8 +204,12 @@ public class TariffController {
 
     // Удалить тариф по его ID
     @GetMapping("/delete/{id}")
-    public String deleteTariff(@PathVariable long id) {
-        tariffService.deleteTariffById(id);
+    public String deleteTariff(@PathVariable long id, RedirectAttributes redirectAttributes) {
+        try {
+            tariffService.deleteTariffById(id);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("fail", "Тариф не может быть удален!");
+        }
         return "redirect:/admin/tariffs";
     }
 

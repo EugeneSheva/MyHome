@@ -8,6 +8,8 @@ import java.util.List;
 
 @Repository
 public interface TariffRepository extends JpaRepository<Tariff, Long> {
+    Tariff findByName(String name);
+    boolean existsByName(String name);
     List<Tariff> findAllByOrderByNameAsc();
     List<Tariff> findAllByOrderByNameDesc();
 }

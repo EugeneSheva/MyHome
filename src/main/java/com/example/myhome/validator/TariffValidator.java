@@ -37,7 +37,7 @@ public class TariffValidator implements Validator {
         else if(tariff.getName().length() < 2 || tariff.getName().length() > 100) {
             e.rejectValue("name", "name.wrong-length", "Имя должно быть размером 2-100 символов");
         }
-        else if(tariffRepository.existsByName(tariff.getName()) && !tariffRepository.findByName(tariff.getName()).getName().equals(tariff.getName())) {
+        else if(tariffRepository.existsByName(tariff.getName()) && tariff.getId() == null) {
             e.rejectValue("name", "name.wrong-length", "Tariff with this name already exists");
         }
         if(tariff.getDescription() == null || tariff.getDescription().isEmpty())

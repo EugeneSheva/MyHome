@@ -63,7 +63,7 @@
                     <tbody>
                       <tr>
                         <td th:text="${#locale.language == 'uk' ? 'Директор' : 'Директор'}">Директор</td>
-                        <td th:each="page, iter : *{pages}">
+                        <td th:each="page, iter : *{pages}" class="director">
                           <input type="checkbox" checked disabled>
                         </td>
                       </tr>
@@ -164,11 +164,13 @@
     }
     let td = document.getElementsByTagName("td");
     for (const cell of td) {
-      let checkbox = cell.firstElementChild;
-      cell.addEventListener("click", () => {
-        if(checkbox.checked) checkbox.checked = false;
-        else checkbox.checked = true;
-      });
+      if(!cell.classList.contains('director')) {
+        let checkbox = cell.firstElementChild;
+        cell.addEventListener("click", () => {
+          if(checkbox.checked) checkbox.checked = false;
+          else checkbox.checked = true;
+        });
+      }
     }
   });
 </script>

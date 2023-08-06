@@ -23,6 +23,27 @@
     <nav th:insert="~{main-template :: header}"></nav>
     <aside th:insert="~{main-template :: sidebar}"></aside>
 
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel" th:text="#{modal.account.delete}">Удалить пользователя?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" th:text="#{modal.account.confirm-delete}">
+                    Подтвердите удаление пользователя
+                </div>
+                <div class="modal-footer" style="justify-content: space-between">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{modal.cancel}">Отменить</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()" th:text="#{modal.delete}">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="content-wrapper">
         <div class="content-header">
             <div class="container-fluid">
@@ -120,7 +141,7 @@
                 </div>
               </div>
               <div class="box-body table-responsive">
-                  <form action="" method="get" th:object="${filter_form}">
+                  <div action="" method="get" th:object="${filter_form}">
                     <table id="accountsTable" class="table table-bordered table-hover table-striped linkedRow">
                   <thead>
                       <tr>
@@ -189,7 +210,7 @@
                   </tbody>
                 </table>
                   <nav aria-label="Page navigation " class="pagination_container"></nav>
-                  </form>
+                  </div>
               </div>
               <div class="box-footer clearfix"></div>
             </div>
@@ -204,7 +225,7 @@
   <footer th:insert="~{main-template :: footer}"></footer>
 </div>
 <!-- ./wrapper -->
-
+<div th:insert="~{logout-modal :: logout}"></div>
 <!-- REQUIRED SCRIPTS -->
 <!-- Icons -->
 <script src="https://kit.fontawesome.com/41663a8b50.js" crossorigin="anonymous"></script>
@@ -244,6 +265,17 @@
     let activeText = [[#{account.active}]];
     let inactiveText = [[#{account.inactive}]];
     let tableData;
+
+    let deleteUrl;
+
+    function deleteAccount(button) {
+      deleteUrl = button.dataset.url;
+      console.log(deleteUrl);
+    }
+
+    function confirmDelete() {
+      window.location.href = deleteUrl;
+    }
 
     $(document).ready(function(){
 

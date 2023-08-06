@@ -24,6 +24,27 @@
   <nav th:insert="~{main-template :: header}"></nav>
   <aside th:insert="~{main-template :: sidebar}"></aside>
 
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel" th:text="#{modal.website-services.delete}">Удалить пользователя?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" th:text="#{modal.website-services.confirm-delete}">
+          Подтвердите удаление пользователя
+        </div>
+        <div class="modal-footer" style="justify-content: space-between">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{modal.cancel}">Отменить</button>
+          <button type="button" class="btn btn-danger" onclick="confirmDelete()" th:text="#{modal.delete}">Удалить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="content-wrapper">
     <div class="content-header">
       <div class="container-fluid">
@@ -66,7 +87,7 @@
                       <div class="form-group field-websitehomeform-homedescription">
                         <label class="control-label" for="descriptions" th:text="#{settings.website.services.card.services.description}">Описание услуги</label>
                         <textarea name="descriptions" id="descriptions"></textarea>
-                        <button onclick="if(confirm('Удалить услугу?')) this.parentElement.parentElement.parentElement.remove()"
+                        <button type="button" data-toggle="modal" data-target="#exampleModal" onclick="deleteWebsiteService(this)"
                                 class="btn btn-danger mt-4"
                                 style="font-size: 20px; width: 100%;"><b th:text="#{settings.website.services.card.services.delete}">- Удалить услугу</b></button>
                       </div>
@@ -93,7 +114,7 @@
                         <label class="control-label" th:text="#{settings.website.services.card.services.description}">Описание услуги</label>
                         <textarea th:field="*{serviceDescriptions[__${iter.index}__].description}" class="service_descriptions"></textarea>
                         <h4 style="color: red; font-weight: bold;" th:if="${#fields.hasErrors('serviceDescriptions[__${iter.index}__].description')}" th:errors="*{serviceDescriptions[__${iter.index}__].description}"></h4>
-                        <button onclick="if(confirm('Удалить услугу?')) this.parentElement.parentElement.parentElement.remove()"
+                        <button type="button" data-toggle="modal" data-target="#exampleModal" onclick="deleteWebsiteService(this)"
                                 class="btn btn-danger mt-4"
                                 style="font-size: 20px; width: 100%;"><b th:text="#{settings.website.services.card.services.delete}">- Удалить услугу</b></button>
 
@@ -164,7 +185,7 @@
   <footer th:insert="~{main-template :: footer}"></footer>
 </div>
 <!-- ./wrapper -->
-
+<div th:insert="~{logout-modal :: logout}"></div>
 <!-- REQUIRED SCRIPTS -->
 <!-- Icons -->
 <script src="https://kit.fontawesome.com/41663a8b50.js" crossorigin="anonymous"></script>
@@ -182,12 +203,34 @@
 
   let totalServiceCount = [[${totalServiceCount}]];
 
+  let deleteServiceButton;
+
+  function deleteWebsiteService(button) {
+    deleteServiceButton = button;
+  }
+
+  function confirmDelete() {
+      deleteServiceButton.parentElement.parentElement.parentElement.remove();
+      $('#exampleModal').modal('hide');
+  }
+
+  const acceptedFileTypes = ['png', 'jpg', 'jpeg']
+
   function showPhoto(input) {
 
       let photo = input.files[0];
-      let image = input.parentElement.previousElementSibling;
-      let imagePath = URL.createObjectURL(photo);
-      image.src = imagePath;
+      let fileType = photo.name.split('.')[1];
+
+      if(acceptedFileTypes.includes(fileType)) {
+        let image = input.parentElement.previousElementSibling;
+        let imagePath = URL.createObjectURL(photo);
+
+        image.src = imagePath;
+      } else {
+        alert('Wrong file extension! Try .jpg, .jpeg, .png');
+        input.value = '';
+      }
+
   }
 
   $(document).ready(function(){

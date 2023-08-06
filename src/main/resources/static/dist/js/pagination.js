@@ -204,7 +204,7 @@ function drawApartmentsTable() {
             '<td>' +
             '<div class="btn-group" role="group" aria-label="Basic outlined button group">' +
             '<a href="edit/' + apartment.id + '" class="btn btn-default btn-sm"><i class="fa fa-pencil aria-hidden="true"></i></i></a>' +
-            '<button onclick="deleteApartment(this)" data-url="delete/' + apartment.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i></a>' +
+            '<button data-toggle="modal" data-target="#exampleModal" onclick="deleteApartment(this)" data-url="delete/' + apartment.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i></a>' +
             '</div>' +
             '</td>';
         let row_children = newTableRow.children;
@@ -261,9 +261,9 @@ function drawInvoicesTable() {
             '<td>' +
             '<div class="btn-group pull-right">' +
             '<a class="btn btn-default btn-sm" href="/myhome/admin/invoices/update/' + invoice.id + '"><i class="fa fa-pencil"></i></a>' +
-            '<a class="btn btn-default btn-sm"' +
+            '<button type="button" data-toggle="modal" data-target="#exampleModal" onclick="deleteInvoice(this)" class="btn btn-default btn-sm"' +
             'data-url="/myhome/admin/invoices/delete/' + invoice.id + '"' +
-            'onclick="if(confirm(\'Удалить квитанцию?\')) window.location.href=this.dataset.url"><i class="fa fa-trash"></i></a>' +
+            '><i class="fa fa-trash"></i></a>' +
             '</div>' +
             '</td>';
         let row_children = newTableRow.children;
@@ -454,8 +454,8 @@ function drawAccountsTable() {
             '<td>' +
             '<div class="btn-group pull-right">' +
             '<a class="btn btn-default btn-sm" href="/myhome/admin/accounts/update/' + account.id + '"><i class="fa fa-pencil"></i></a>' +
-            '<a class="btn btn-default btn-sm" data-url="/myhome/admin/accounts/delete/' + account.id + '"' +
-            'onclick="if(confirm(\'Удалить лицевой счёт?\')) window.location.href=this.dataset.url"><i class="fa fa-trash"></i></a>' +
+            '<button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-default btn-sm" data-url="/myhome/admin/accounts/delete/' + account.id + '"' +
+            'onclick="deleteAccount(this)"><i class="fa fa-trash"></i></a>' +
             '</div>' +
             '</td>' +
             '<input type="hidden" value=' + account.id + '>';
@@ -561,7 +561,7 @@ function drawMeterDataTable() {
             '<td>' +
             '<div class="btn-group pull-right">' +
             '<a class="btn btn-default btn-sm" href="/myhome/admin/meters/update/' + meter.id + '" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>' +
-            '<a class="btn btn-default btn-sm" href="/myhome/admin/meters/delete/' + meter.id + '" title="Удалить" data-toggle="tooltip"><i class="fa fa-trash"></i></a>' +
+            '<button type="button" data-toggle="modal" data-target="#exampleModal" onclick="deleteMeterData(this)" class="btn btn-default btn-sm" data-url="/myhome/admin/meters/delete/' + meter.id + '" title="Удалить" data-toggle="tooltip"><i class="fa fa-trash"></i></a>' +
             '</div>' +
             '</td>';
         let row_children = newTableRow.children;
@@ -609,7 +609,7 @@ function drawRequestsTable() {
             '<td>' +
             '<div class="btn-group pull-right">' +
             '<a class="btn btn-default btn-sm" href="/myhome/admin/requests/update/' + request.id + '"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-            '<a class="btn btn-default btn-sm" href="/myhome/admin/requests/delete/' + request.id + '"><i class="fa fa-trash" aria-hidden="true"></i></a>' +
+            '<button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-default btn-sm" onclick="deleteRequest(this)" data-url="/myhome/admin/requests/delete/' + request.id + '"><i class="fa fa-trash" aria-hidden="true"></i></a>' +
             '</div>' +
             '</td>';
         let row_children = newTableRow.children;
@@ -710,7 +710,7 @@ function drawOwnersTable() {
             '<div class="btn-group" role="group" aria-label="Basic outlined button group">' +
             '<a href="newTo/' + owner.id + '" class="btn btn-default btn-sm"><i class="fa fa-envelope" aria-hidden="true"></i></a>' +
             '<a href="edit/' + owner.id + '" class="btn btn-default btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-            '<button onclick="deleteOwner(this)" data-url="delete/' + owner.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></button>' +
+            '<button data-toggle="modal" data-target="#exampleModal" onclick="deleteOwner(this)" data-url="delete/' + owner.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></button>' +
             '</div>' +
             '</td>';
 
@@ -755,7 +755,7 @@ function drawAdminsTable() {
             '<div class="btn-group" role="group" aria-label="Basic outlined button group">' +
             '<button onclick="alert("Приглашение отправлено!")" class="btn btn-default btn-sm invite_button" title="Отправить приглашение"><i class="fa fa-repeat"></i></button>' +
             '<a href="/myhome/admin/admins/update/' + admin.id + '" class="btn btn-default btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></i></a>' +
-            '<a href="/myhome/admin/admins/delete/' + admin.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i></a>' +
+            '<button type="button" data-toggle="modal" data-target="#exampleModal" onclick="deleteAdmin(this)" data-url="/myhome/admin/admins/delete/' + admin.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i></button>' +
             '</div>' +
             '</td>';
 
@@ -792,7 +792,7 @@ function drawBuildingsTable() {
             '<td>' +
             '<div class="btn-group" role="group" aria-label="Basic outlined button group">' +
             '<a href="edit/' + building.id + '" class="btn btn-default btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></i></a>' +
-            '<button onclick="deleteBuilding(this)" data-url="delete/' + building.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i></a>' +
+            '<button data-toggle="modal" data-target="#exampleModal" onclick="deleteBuilding(this)" data-url="delete/' + building.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i></a>' +
             '</div>' +
             '</td>';
         let row_children = newTableRow.children;
@@ -839,7 +839,7 @@ function drawTransactionsTable() {
             '<td>' +
             '<div class="btn-group" role="group" aria-label="Basic outlined button group">' +
             '<a href="/myhome/admin/cashbox/edit/' + cashbox.id + '" class="btn btn-default btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-            '<a href="/myhome/admin/cashbox/delete/' + cashbox.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash" aria-hidden="true"></i></a>' +
+            '<button type="button" data-toggle="modal" onclick="deleteCashbox(this)" data-target="#exampleModal" data-url="/myhome/admin/cashbox/delete/' + cashbox.id + '" class="btn btn-default btn-sm"><i class="fa fa-trash" aria-hidden="true"></i></a>' +
             '</div>' +
             '</td>';
         let row_children = newTableRow.children;
@@ -1098,29 +1098,7 @@ function drawPagination() {
     $pagination.append(ul);
 }
 
-//Удаление сущностей
-function deleteOwner(button) {
-    let url = button.dataset.url;
-    if (confirm('Удалить пользователя?')) {
-        window.location.href = "/myhome/admin/owners/" + url;
-    }
-}
 
-function deleteBuilding(button) {
-    let url = button.dataset.url;
-    if (confirm('Удалить дом?')) {
-        window.location.href = "/myhome/admin/buildings/" + url;
-    }
-}
-
-function deleteApartment(button) {
-    let url = button.dataset.url;
-    if (confirm('Удалить квартиру?')) {
-        window.location.href = "/myhome/admin/apartments/" + url;
-    }
-}
-
-//Удаление сущностей
 
 //Установка слушателей на фильтры
 $(document).ready(function () {

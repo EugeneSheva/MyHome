@@ -38,6 +38,27 @@
     <aside th:insert="~{main-template :: sidebar}"></aside>
     <!-- /.navbar header/sidebar -->
 
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel" th:text="#{modal.apartment.delete}">Удалить пользователя?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" th:text="#{modal.apartment.confirm-delete}">
+                    Подтвердите удаление пользователя
+                </div>
+                <div class="modal-footer" style="justify-content: space-between">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{modal.cancel}">Отменить</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()" th:text="#{modal.delete}">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!--content-header -->
     <div class="content-wrapper">
         <div class="content-header" style="padding-bottom: 0">
@@ -159,6 +180,7 @@
     <footer th:insert="~{main-template :: footer}"></footer>
     <!-- /.Footer -->
 </div>
+<div th:insert="~{logout-modal :: logout}"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
@@ -174,6 +196,17 @@
 <!-- select2 filter script -->
 <script th:inline="javascript">
     var choise = [[#{choise}]];
+
+    let deleteUrl;
+
+    function deleteApartment(button) {
+      deleteUrl = button.dataset.url;
+      console.log(deleteUrl);
+    }
+
+    function confirmDelete() {
+      window.location.href = deleteUrl;
+    }
 
     let currentLanguage = [[${#locale.language}]];
     $(document).ready(function() {

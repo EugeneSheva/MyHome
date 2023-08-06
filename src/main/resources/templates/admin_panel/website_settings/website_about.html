@@ -24,6 +24,27 @@
   <nav th:insert="~{main-template :: header}"></nav>
   <aside th:insert="~{main-template :: sidebar}"></aside>
 
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel" th:text="#{modal.about.delete}">Удалить пользователя?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" th:text="#{modal.about.confirm-delete}">
+          Подтвердите удаление пользователя
+        </div>
+        <div class="modal-footer" style="justify-content: space-between">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{modal.cancel}">Отменить</button>
+          <button type="button" class="btn btn-danger" onclick="confirmDelete()" th:text="#{modal.delete}">Удалить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="content-wrapper">
     <div class="content-header">
       <div class="container-fluid">
@@ -89,9 +110,9 @@
                     <div style="width: 100%;" th:each="photo, iter : ${photos}" class="col-xs-4 col-sm-3 text-center">
                       <img style="width: 100%;" th:src="@{/images/{url}(url=${photo})}" alt="" class="margin-bottom-15 img-thumbnail">
                       <div class="form-group margin-bottom-15">
-                        <a class="delete-about-button"
+                        <button type="button" data-toggle="modal" data-target="#exampleModal" onclick="deleteAboutImage(this)" class="delete-about-button"
                            th:attr="data-url='/myhome/admin/website/delete-about-image/'+${iter.index}"
-                           style="cursor: pointer;"><i class="fa fa-trash text-red" aria-hidden="true"></i></a>
+                           style="cursor: pointer;"><i class="fa fa-trash text-red" aria-hidden="true"></i></button>
                       </div>
                     </div>
                     <div class="col-xs-12" style="width: 100%">
@@ -127,9 +148,9 @@
                     <div style="width: 100%;" th:each="photo, iter : ${add_photos}" class="col-xs-4 col-sm-3 text-center">
                       <img style="width: 100%;" th:src="@{/images/{url}(url=${photo})}" alt="" class="margin-bottom-15 img-thumbnail">
                       <div class="form-group margin-bottom-15">
-                        <a class="delete-about-button"
+                        <button type="button" data-toggle="modal" data-target="#exampleModal" onclick="deleteAboutImage(this)" class="delete-about-button"
                            th:attr="data-url='/myhome/admin/website/delete-about-add-image/'+${iter.index}"
-                           style="cursor: pointer;"><i class="fa fa-trash text-red" aria-hidden="true"></i></a>
+                           style="cursor: pointer;"><i class="fa fa-trash text-red" aria-hidden="true"></i></button>
                       </div>
                     </div>
                     <div class="col-xs-12" style="width: 100%">
@@ -169,10 +190,10 @@
                         </div>
                         <div th:each="document, iter : *{documents}" class="form-websitedocument">
                           <div class="form-group">
-                            <a onclick="if(confirm('Удалить?')) window.location.href=this.dataset.url"
+                            <button type="button" data-toggle="modal" data-target="#exampleModal" onclick="deleteAboutImage(this)"
                                style="cursor:pointer;"
                                th:attr="data-url='/myhome/admin/website/delete-document/'+${iter.index}"
-                               class="pull-right text-red" data-confirm="Удалить?"><i class="fa fa-trash"></i></a>
+                               class="pull-right text-red" data-confirm="Удалить?"><i class="fa fa-trash"></i></button>
                             <img style="width: 30px; height: 40px; margin-right: 10px;"
                                  class="fa fa-3x pull-left"
                                  th:src="${document.file != null} ?
@@ -248,7 +269,7 @@
   <footer th:insert="~{main-template :: footer}"></footer>
 </div>
 <!-- ./wrapper -->
-
+<div th:insert="~{logout-modal :: logout}"></div>
 <!-- REQUIRED SCRIPTS -->
 <!-- Icons -->
 <script src="https://kit.fontawesome.com/41663a8b50.js" crossorigin="anonymous"></script>
@@ -266,23 +287,43 @@
 
   let totalDocumentCount = [[${totalDocumentCount}]];
 
+  let deleteUrl;
+
+  function deleteAboutImage(button) {
+    deleteUrl = button.dataset.url;
+    console.log(deleteUrl);
+  }
+
+  function confirmDelete() {
+    window.location.href = deleteUrl;
+  }
+
   $(document).ready(function() {
 
-    let delete_buttons = document.querySelectorAll('.delete-about-button');
-    for(let i = 0; i < delete_buttons.length; i++) {
-      delete_buttons[i].addEventListener('click', () => {
-        if(confirm('Удалить?')) window.location.href = delete_buttons[i].dataset.url;
-      });
-    }
+<!--    let delete_buttons = document.querySelectorAll('.delete-about-button');-->
+<!--    for(let i = 0; i < delete_buttons.length; i++) {-->
+<!--      delete_buttons[i].addEventListener('click', () => {-->
+<!--        if(confirm('Удалить?')) window.location.href = delete_buttons[i].dataset.url;-->
+<!--      });-->
+<!--    }-->
 
+    const acceptedFileTypes = ['png', 'jpg', 'jpeg']
 
     $('#director_photo').change(function() {
 
       let photo = this.files[0];
-      let image = this.parentElement.previousElementSibling;
-      let imagePath = URL.createObjectURL(photo);
+      let fileType = photo.name.split('.')[1];
 
-      image.src = imagePath;
+      if(acceptedFileTypes.includes(fileType)) {
+        let image = this.parentElement.previousElementSibling;
+        let imagePath = URL.createObjectURL(photo);
+
+        image.src = imagePath;
+      } else {
+        alert('Wrong file extension! Try .jpg, .jpeg, .png');
+        this.value = '';
+      }
+
     });
 
     $('#photos, #add_photos').change(function() {
@@ -291,11 +332,19 @@
 
       for(let i = 0; i < this.files.length; i++) {
         let photo = this.files[i];
-        let photoImgPath = URL.createObjectURL(photo);
-        let new_image_div = document.createElement('div');
-        new_image_div.classList.add('col-xs-4','col-sm-3','text-center');
-        new_image_div.innerHTML = '<img style="width:100%" src="' + photoImgPath + '" alt="" class="margin-bottom-15 img-thumbnail">';
-        input_div.parentElement.insertBefore(new_image_div,input_div);
+        let fileType = photo.name.split('.')[1];
+
+        if(acceptedFileTypes.includes(fileType)) {
+          let photoImgPath = URL.createObjectURL(photo);
+          let new_image_div = document.createElement('div');
+          new_image_div.classList.add('col-xs-4','col-sm-3','text-center');
+          new_image_div.innerHTML = '<img style="width:100%" src="' + photoImgPath + '" alt="" class="margin-bottom-15 img-thumbnail">';
+          input_div.parentElement.insertBefore(new_image_div,input_div);
+        } else {
+          alert('Wrong file extension! Try .jpg, .jpeg, .png');
+          this.value = '';
+        }
+
       }
     });
 

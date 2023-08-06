@@ -42,13 +42,29 @@
 <body class="hold-transition light-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
 
-    <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-        enabled. Please enable
-        Javascript and reload this page!</h2></noscript>
-
-    <div th:insert="~{main-template :: loading}"></div>
     <nav th:insert="~{main-template :: header}"></nav>
     <aside th:insert="~{main-template :: sidebar}"></aside>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel" th:text="#{modal.cashbox.delete}">Удалить пользователя?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" th:text="#{modal.cashbox.confirm-delete}">
+                    Подтвердите удаление пользователя
+                </div>
+                <div class="modal-footer" style="justify-content: space-between">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{modal.cancel}">Отменить</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()" th:text="#{modal.delete}">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!--content-header -->
     <div class="content-wrapper">
@@ -255,7 +271,7 @@
     <!-- Main Footer -->
     <footer th:insert="~{main-template :: footer}"></footer>
 </div>
-
+<div th:insert="~{logout-modal :: logout}"></div>
 <script th:src="@{/plugins/jquery/jquery.min.js}"></script>
 <script th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js}"></script>
@@ -287,6 +303,17 @@
     let notFoundText = [[#{not-found}]];
     let tableData;
 
+    let deleteUrl;
+
+    function deleteCashbox(button) {
+      deleteUrl = button.dataset.url;
+      console.log(deleteUrl);
+    }
+
+    function confirmDelete() {
+      window.location.href = deleteUrl;
+    }
+
     let currentLanguage = [[${#locale.language}]];
 
     $(document).ready(function(){
@@ -308,73 +335,6 @@
       let mask3 = IMask(apInput, maskOptions3);
 
 </script>
-
-<!--<script>-->
-
-<!--    $(function () {-->
-<!--        var userLocale = navigator.language;-->
-<!--        var start = moment().subtract(3, 'year');-->
-<!--        var end = moment();-->
-
-<!--        if ([[${#locale.language == 'ru'}]]) {-->
-<!--            console.log(userLocale)-->
-<!--            console.log('ru')-->
-<!--            $('input[name="date"]').daterangepicker({-->
-<!--                startDate: start,-->
-<!--                endDate: end,-->
-<!--                autoUpdateInput: true,-->
-<!--                alwaysShowCalendars: false,-->
-<!--                showDropdowns: true,-->
-<!--                locale: {-->
-<!--                    format: 'DD/MM/YYYY',-->
-<!--                    "separator": " - ",-->
-<!--                    "applyLabel": "Применить",-->
-<!--                    "cancelLabel": "Отмена",-->
-<!--                    "fromLabel": "С",-->
-<!--                    "toLabel": "По",-->
-<!--                    "customRangeLabel": "Произвольный",-->
-<!--                    "weekLabel": "Н",-->
-<!--                    "daysOfWeek": ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],-->
-<!--                    "monthNames": [-->
-<!--                        "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",-->
-<!--                        "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"-->
-<!--                    ],-->
-<!--                    "firstDay": 1-->
-<!--                },-->
-<!--                drops: 'down'-->
-<!--            });-->
-<!--        } else if ([[${#locale.language == 'uk'}]]) {-->
-<!--            console.log(userLocale)-->
-<!--            console.log('ua')-->
-<!--            $('input[name="date"]').daterangepicker({-->
-<!--                startDate: start,-->
-<!--                endDate: end,-->
-<!--                autoUpdateInput: true,-->
-<!--                alwaysShowCalendars: false,-->
-<!--                showDropdowns: true,-->
-<!--                locale: {-->
-<!--                    format: 'DD/MM/YYYY',-->
-<!--                    "separator": " - ",-->
-<!--                    "applyLabel": "Застосувати",-->
-<!--                    "cancelLabel": "Відміна",-->
-<!--                    "fromLabel": "З",-->
-<!--                    "toLabel": "По",-->
-<!--                    "customRangeLabel": "Довільний",-->
-<!--                    "weekLabel": "Н",-->
-<!--                    "daysOfWeek": ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],-->
-<!--                    "monthNames": [-->
-<!--                        "Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень",-->
-<!--                        "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"-->
-<!--                    ],-->
-<!--                    "firstDay": 1-->
-<!--                },-->
-<!--                drops: 'down'-->
-<!--            });-->
-<!--        }-->
-<!--    });-->
-<!--</script>-->
-
-
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script th:src="@{/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
@@ -511,31 +471,7 @@
         });
     }
 </script>
-<!--<script>-->
-<!--    let timeoutId;-->
 
-<!--    function handleFormSubmit() {-->
-<!--        const form = document.getElementById('1');-->
-<!--        form.submit();-->
-<!--        console.log("Форма отправлена!");-->
-<!--    }-->
-
-<!--    function handleInputChange() {-->
-<!--        clearTimeout(timeoutId);-->
-<!--        timeoutId = setTimeout(handleFormSubmit, 3000);-->
-<!--    }-->
-
-<!--    // event listener on field-->
-<!--    const input = document.querySelector('input[type="text"]');-->
-<!--    input.addEventListener('input', handleInputChange);-->
-
-<!--    // event on Enter-->
-<!--    document.addEventListener('keydown', function (event) {-->
-<!--        if (event.key === "Enter") {-->
-<!--            handleFormSubmit();-->
-<!--        }-->
-<!--    });-->
-<!--</script>-->
 <script>
     $(document).ready(function() {
 

@@ -89,12 +89,13 @@ id="loading">
               <a th:if="${auth_admin.id != null}" th:href="@{/admin/admins/update/{id}(id=${auth_admin.id})}" class="btn btn-warning">Профиль</a>
             </div>
             <div class="pull-right">
-              <a th:href="@{/admin/logout}" class="btn btn-danger" th:text="#{exit}">Выйти</a>
+              <button class="btn btn-danger" data-toggle="modal" data-target="#logoutModal" th:text="#{exit}">Выйти</button>
             </div>
           </li>
         </ul>
       </li>
     </aside>
+
     <style>
       nav a {
         text-decoration: none;
@@ -163,6 +164,11 @@ id="loading">
         font-size:16px;
       }
     </style>
+    <script>
+      function openLogout() {
+        $('#logoutModal').modal('show');
+      }
+    </script>
   </nav>
   <!-- /.navbar -->
 

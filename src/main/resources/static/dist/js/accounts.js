@@ -9,17 +9,17 @@ let rows = document.getElementsByClassName("account_row");
         }
     }
 
-function downloadExcelTable() {
-    const date = new Date();
-
-    let day = date.getDate();
-    let month = date.getMonth() + 1;
-    let year = date.getFullYear();
-
-    let table = document.getElementById("accountsTable");
-    let excel_file = XLSX.utils.table_to_book(table);
-    XLSX.writeFile(excel_file, "account info " + `${day}-${month}-${year}` + ".xlsx");
-}
+//function downloadExcelTable() {
+//    const date = new Date();
+//
+//    let day = date.getDate();
+//    let month = date.getMonth() + 1;
+//    let year = date.getFullYear();
+//
+//    let table = document.getElementById("accountsTable");
+//    let excel_file = XLSX.utils.table_to_book(table);
+//    XLSX.writeFile(excel_file, "account info " + `${day}-${month}-${year}` + ".xlsx");
+//}
 
 function insertPreviousNumbers(page_number) {
         if(page_number-1 <= 1 || page_number === 1) return;

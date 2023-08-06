@@ -15,6 +15,9 @@
     <link rel="stylesheet" th:href="@{/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!--    EXCEL JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js" integrity="sha512-UnrKxsCMN9hFk7M56t4I4ckB4N/2HHi0w/7+B/1JsXIX3DmyBcsGpT3/BsuZMZf+6mAr0vP81syWtfynHJ69JA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 </head>
 <body class="hold-transition light-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -256,6 +259,101 @@
 <script th:src="@{/dist/js/websocket.js}"></script>
 
 <script src="https://unpkg.com/imask"></script>
+
+<script>
+// EXCEL FORMAT SCRIPT
+
+    function downloadExcelTable() {
+
+        const workbook = new ExcelJS.Workbook();
+
+        workbook.creator = 'Me';
+        workbook.lastModifiedBy = 'Her';
+        workbook.created = new Date(1985, 8, 30);
+        workbook.modified = new Date();
+        workbook.lastPrinted = new Date(2016, 9, 27);
+
+        const worksheet = workbook.addWorksheet('My Sheet',{views: [{showGridLines: false}]});
+
+        const date = new Date();
+
+        let day = date.getDate();
+        let month = date.getMonth() + 1;
+        let year = date.getFullYear();
+
+        //map AJAX table data to objects for Excel table
+        const rows = tableData.content.map(row => ({
+          ID: row.id,
+          Active: row.isActive,
+          Apartment: row.apartment.fullName,
+          Building: row.building.name,
+          Section: row.section,
+          Owner: row.owner.fullName,
+          Balance: row.balance
+        }));
+
+        //create and format header row (row with name of props)
+        const headerRow = worksheet.getRow(1);
+        let index = 1;
+        for(const prop in rows[0]) {
+            const cell = headerRow.getCell(index++);
+            cell.value = prop;
+            cell.font = {bold: true};
+            cell.alignment = {vertical: 'middle', horizontal: 'center'};
+            cell.border = {top: {style: 'thin'},left: {style: 'thin'},bottom: {style: 'thin'},right: {style: 'thin'}}
+        }
+
+        //fill other rows with object data
+        let rowIndex = 2;
+        for(const row of rows) {
+            const worksheetRow = worksheet.getRow(rowIndex++);
+            let columnIndex = 1;
+            for(const prop in row) {
+                const cell = worksheetRow.getCell(columnIndex++);
+                cell.value = row[prop];
+                cell.alignment = {vertical: 'middle', horizontal: 'center'};
+                cell.border = {top: {style: 'thin'},left: {style: 'thin'},bottom: {style: 'thin'},right: {style: 'thin'}}
+            }
+        }
+
+        //set column width according to string lengths
+        for(let i = 1; i < worksheet.actualColumnCount; i++) {
+            const column = worksheet.getColumn(i);
+            const columnValues = column.values;
+
+            for(let j = 0; j < columnValues.length; j++) {
+                columnValues[j] = (j in columnValues && columnValues[j] != null && columnValues[j] != undefined) ? columnValues[j].toString().length : 0;
+            }
+
+            let maxWidth = Math.max(...columnValues);
+            column.width = maxWidth + 5;
+        }
+
+        //save and download Excel table
+        workbook.xlsx.writeBuffer( {
+            base64: true
+        })
+        .then( function (xls64) {
+            // build anchor tag and attach file (works in chrome)
+            var a = document.createElement("a");
+            var data = new Blob([xls64], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+
+            var url = URL.createObjectURL(data);
+            a.href = url;
+            a.download = "Account Info " + `${day}-${month}-${year}` + ".xlsx";
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function() {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+            }, 0);
+        })
+        .catch(function(error) {
+            alert('Some error happened during saving&downloading file');
+            console.log(error);
+        });
+    }
+</script>
 
 <script th:inline="javascript">
 

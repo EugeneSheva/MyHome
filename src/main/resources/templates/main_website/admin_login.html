@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -32,8 +32,9 @@
         </div>
         <p style="text-align: center; padding-block: 20px;">Вход в панель управления</p>
         <p th:if="${param.error}" style="color: red">Произошла ошибка</p>
+        <p th:if="${password_reset}" th:text="${password_reset}" style="color: green">Заменили пароль</p>
         <div class="row inputs">
-          <input type="text" placeholder="E-mail или ID" name="username" id="">
+          <input type="text" placeholder="E-mail" name="username" id="">
           <i class="fas fa-envelope"></i>
         </div>
         <div class="row inputs">
@@ -46,6 +47,9 @@
         <div class="row">
           <button type="submit" class="btn btn-default btn-primary text-center">Вход</button>
         </div>
+        <div class="row" id="forgot-password">
+          <a style="text-align: center" href="#" onclick="forgotPasswordHandler()">Забыли пароль?</a>
+        </div>
 <!--        <div class="row">-->
 <!--          <a href="/myhome/oauth2/authorization/github" class="btn btn-default btn-secondary text-center">-->
 <!--            <img class="img-responsive" th:src="@{/images/github.png}" alt="">-->
@@ -56,6 +60,17 @@
     </form>
   </div>
 </div>
+
+<script>
+  function forgotPasswordHandler() {
+    let forgotPasswordRow = document.getElementById('forgot-password');
+    forgotPasswordRow.innerHTML = '<span style="width: 100%; text-align: center">вспоминайте</span>';
+    setTimeout(() => {
+      forgotPasswordRow.innerHTML += '<span style="width: 100%; text-align: center">или нажмите сюда</span>'
+      forgotPasswordRow.innerHTML += '<a href="/myhome/admin/forgot-password" class="btn btn-default btn-secondary btn-sm mybtn" style="color:white;font-weight:bold;text-decoration:none;">Сбросить пароль</a>';
+    }, 1500);
+  }
+</script>
 
 <!-- Optional JavaScript; choose one of the two! -->
 

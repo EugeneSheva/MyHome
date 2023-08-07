@@ -1,6 +1,10 @@
 package com.example.myhome.controller;
 import com.example.myhome.dto.AdminDTO;
 import com.example.myhome.model.Admin;
+import com.example.myhome.model.ForgotPasswordToken;
+import com.example.myhome.repository.AdminRepository;
+import com.example.myhome.repository.ForgotPasswordTokenRepository;
+import com.example.myhome.service.EmailService;
 import com.example.myhome.service.registration.LoginRequest;
 import com.example.myhome.service.registration.RegistrationRequest;
 import com.example.myhome.service.registration.RegisterService;
@@ -11,6 +15,7 @@ import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,22 +25,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
 @Controller
 @Log
 public class LoginController {
 
     @Autowired private ApplicationEventPublisher publisher;
-
     @Autowired private RegisterService registerService;
-
     @Autowired private RegistrationRequestValidator validator;
     @Autowired private LoginRequestValidator loginRequestValidator;
-
+    @Autowired private AdminRepository adminRepository;
+    @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private PersistentTokenRepository repository;
+    @Autowired private ForgotPasswordTokenRepository passwordTokenRepository;
+
+    @Autowired private EmailService emailService;
 
     @GetMapping("/cabinet/site/login")
     public String showLoginPage(Model model) {
@@ -81,6 +91,96 @@ public class LoginController {
             if(admin == null) return "main_website/admin_login";
             return "redirect:/admin";
         }
+    }
+
+    @GetMapping("/admin/forgot-password")
+    public String showForgotPasswordPage(@RequestParam(required = false) String token) {
+        if(token != null) {
+            if(passwordTokenRepository.existsByToken(token)) {
+                ForgotPasswordToken foundToken = passwordTokenRepository.findByToken(token).get();
+                Admin admin = adminRepository.findByEmail(foundToken.getEmail()).get();
+                return "redirect:/admin/reset-password?id="+admin.getId()+"&token="+token;
+            }
+            else return "main_website/admin_login";
+        }
+        return "main_website/forgot-password";
+    }
+
+    @PostMapping("/admin/forgot-password")
+    public String forgotPasswordHandler(@RequestParam String username, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        String trimmedEmail = username.trim();
+        if(!adminRepository.existsByEmail(trimmedEmail)) {
+            redirectAttributes.addFlashAttribute("error", "Пользователя с такой почтой не существует!");
+        } else {
+
+            ForgotPasswordToken token = new ForgotPasswordToken(UUID.randomUUID().toString());
+            token.setEmail(adminRepository.findByEmail(username).get().getEmail());
+            passwordTokenRepository.save(token);
+            String emailContent = "<a href=\"" + request.getRequestURL()+"?token="+token.getToken() + "\">Click on the link to reset your password</a>(something wrong w/ text encoding for cyrillic)";
+            try {
+                emailService.send(trimmedEmail, emailContent);
+                redirectAttributes.addFlashAttribute("success", "Письмо отправлено на указанную почту!");
+            } catch (Exception e) {
+                redirectAttributes.addFlashAttribute("error", "Ошибка при отправке письма на заданную почту!");
+            }
+        }
+        return "redirect:/admin/forgot-password";
+    }
+
+    @GetMapping("/admin/reset-password")
+    public String showResetPasswordPage(@RequestParam(required = false) Long id,
+                                        @RequestParam(required = false) String token,
+                                        Model model) {
+        if(id == null ||
+            token == null ||
+            !passwordTokenRepository.existsByToken(token) ||
+            !adminRepository.existsById(id)) return "redirect:/admin";
+
+        //ебанутая проверка, если токен есть , но принадлежит другому пользователю
+        if(!passwordTokenRepository.findByToken(token).get().getEmail()
+                .equals(adminRepository.findById(id).get().getEmail())) return "redirect:/admin";
+
+        model.addAttribute("id", id);
+        model.addAttribute("token", token);
+        return "main_website/reset-password";
+    }
+
+    @PostMapping("/admin/reset-password")
+    public String resetPasswordHandler(@RequestParam Long id,
+                                       @RequestParam String token,
+                                       @RequestParam(required = false) String password,
+                                       @RequestParam(required = false) String confirm_password,
+                                       RedirectAttributes redirectAttributes) {
+        //trim password
+        if(password != null && confirm_password != null) {
+            password = password.trim();
+            confirm_password = confirm_password.trim();
+        }
+        //validation
+        if(password == null || password.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Введите пароль!");
+            return "redirect:/admin/reset-password?id="+id+"&token="+token;
+        } else if(password.length() < 8 || password.length() > 100) {
+            redirectAttributes.addFlashAttribute("error", "Длина пароля: 8-100");
+            return "redirect:/admin/reset-password?id="+id+"&token="+token;
+        } else if(confirm_password == null || confirm_password.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Подтвердите пароль!");
+            return "redirect:/admin/reset-password?id="+id+"&token="+token;
+        } else if(!confirm_password.equals(password)) {
+            redirectAttributes.addFlashAttribute("error", "Пароли не совпадают!");
+            return "redirect:/admin/reset-password?id="+id+"&token="+token;
+
+        }
+        //reset password and delete token if successful
+        Admin admin = adminRepository.findById(id).get();
+        admin.setPassword(passwordEncoder.encode(password));
+        adminRepository.save(admin);
+
+        passwordTokenRepository.findByToken(token).ifPresent(passwordTokenRepository::delete);
+
+        //redirect to login
+        redirectAttributes.addFlashAttribute("password_reset", "Пароль был успешно сброшен!");
+        return "redirect:/admin/site/login";
     }
 
     @GetMapping("/cabinet/site/register")

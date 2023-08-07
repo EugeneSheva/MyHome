@@ -41,14 +41,13 @@ public class AdminValidator implements Validator {
 
         if(dto.getFirst_name() == null || dto.getFirst_name().isEmpty()) {
             e.rejectValue("first_name", "first_name.empty", messageSource.getMessage("users.first_name.empty", null, locale));
-        } else if(dto.getFirst_name().length() < 2 || dto.getFirst_name().length() < 100) {
+        } else if(dto.getFirst_name().length() < 2 || dto.getFirst_name().length() > 100) {
             e.rejectValue("first_name", "first_name.length", "Name length: 2-100");
         }
         if(dto.getLast_name() == null || dto.getLast_name().isEmpty()) {
             e.rejectValue("last_name", "last_name.empty", messageSource.getMessage("users.last_name.empty", null, locale));
-        } else if(dto.getLast_name().length() < 2 || dto.getLast_name().length() < 100) {
+        } else if(dto.getLast_name().length() < 2 || dto.getLast_name().length() > 100) {
             e.rejectValue("last_name", "last_name.length", "Name length: 2-100");
-
         }
         if(dto.getPhone_number() == null || dto.getPhone_number().isEmpty()) {
             e.rejectValue("phone_number", "phone_number.empty", messageSource.getMessage("users.phone_number.empty", null, locale));

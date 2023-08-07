@@ -37,6 +37,7 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    @Async
     public void send(String recipientAddress, String emailContent) {
         try {
             log.info("Trying to send email to " + recipientAddress);

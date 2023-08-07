@@ -89,6 +89,8 @@ public class AdminPanelSecurityConfig {
                 .antMatchers("/images/**").permitAll()
                 .antMatchers("/error").permitAll()
                 .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/reset-password/**", "/reset-password", "reset-password", "/**/reset-password").permitAll()
+                .antMatchers("/forgot-password/**", "/forgot-password", "forgot-password", "/**/forgot-password").permitAll()
                 .antMatchers("/**/statistics").hasAuthority("statistics.read")
                 .antMatchers(HttpMethod.GET,"/**/cashbox/**").hasAuthority("cashbox.read")
                 .antMatchers(HttpMethod.POST, "/**/cashbox/**").hasAuthority("cashbox.write")

@@ -517,6 +517,15 @@ class DefaultInitializer implements CommandLineRunner {
             admin6.setRole(userRoleRepository.findByName("Admin").orElseThrow());
             adminRepository.save(admin6);
 
+            Admin me = new Admin();
+            me.setFirst_name("Denis");
+            me.setLast_name("Perevertov");
+            me.setEmail("regicuinte@gmail.com");
+            me.setActive(true);
+            me.setPassword("test");
+            me.setRole(userRoleRepository.findByName("Admin").orElseThrow());
+            adminRepository.save(me);
+
 
         }
     }

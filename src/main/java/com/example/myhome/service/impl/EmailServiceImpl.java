@@ -56,7 +56,6 @@ public class EmailServiceImpl implements EmailService {
     }
 
     public void sendWithAttachment(String recipientAddress, String fileName) {
-
         try {
             log.info("Trying to send email to " + recipientAddress);
             MimeMessage message = mailSender.createMimeMessage();

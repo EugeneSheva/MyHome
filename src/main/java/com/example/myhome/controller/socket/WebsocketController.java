@@ -46,6 +46,12 @@ public class WebsocketController {
         Thread.sleep(1000);
         return msg;
     }
+    @MessageMapping("/delMessages")
+    @SendTo("/topic/delMessages")
+    public Message messagesItemMessageDel(Message msg) throws Exception {
+        Thread.sleep(1000);
+        return msg;
+    }
 
     public void sendCashboxItem(CashBox item) {
         log.info("Trying to send new cashbox item to the client...");
@@ -66,6 +72,11 @@ public class WebsocketController {
         log.info("Trying to send new message item to the client...");
         System.out.println("catch");
         this.template.convertAndSend("/topic/messages", item);
+    }
+    public void deleteMessagesItem(Message item) {
+        log.info("Trying to send new message item to the client...");
+        System.out.println("catch");
+        this.template.convertAndSend("/topic/delMessages", item);
     }
 
 }

@@ -112,7 +112,6 @@ public class LoginController {
         if(!adminRepository.existsByEmail(trimmedEmail)) {
             redirectAttributes.addFlashAttribute("error", "Пользователя с такой почтой не существует!");
         } else {
-
             ForgotPasswordToken token = new ForgotPasswordToken(UUID.randomUUID().toString());
             token.setEmail(adminRepository.findByEmail(username).get().getEmail());
             passwordTokenRepository.save(token);

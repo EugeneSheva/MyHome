@@ -97,9 +97,10 @@ public class MessageController {
                 //geting recivers
                 if (apartmentId == 0) {
                     if (floor.length() == 0 && section.length() == 0 && buildingId == 0 && debt == false) {
-                        for (Apartment apartment : apartmentRepository.findAll()) {
-                            if (!recivers.contains(apartment.getOwner())) recivers.add(apartment.getOwner());
-                        }
+//                        for (Apartment apartment : apartmentRepository.findAll()) {
+//                            if (!recivers.contains(apartment.getOwner())) recivers.add(apartment.getOwner());
+//                        }
+                        recivers = ownerService.findAll();
                         message.setReceiversName("Всем");
                     } else if (floor.length() == 0 && section.length() == 0 && buildingId == 0 && debt == true) {
                         for (Apartment apartment : apartmentRepository.findApartmentsByBalanceBefore(0D)) {
@@ -170,7 +171,9 @@ public class MessageController {
 
     @GetMapping("/delete/{id}")
     public String dellete(@PathVariable("id") Long id) {
+        Message message = messageService.findById(id);
         messageService.deleteById(id);
+        websocketController.deleteMessagesItem(message);
         return "redirect:/admin/messages/";
     }
 
@@ -216,7 +219,9 @@ public class MessageController {
     public void deleteSelected(@RequestParam(name = "checkboxList") Long[] checkboxList) {
         System.out.println("deleteSelected start");
         for (Long aLong : checkboxList) {
+            Message message = messageService.findById(aLong);
             messageService.deleteById(aLong);
+            websocketController.deleteMessagesItem(message);
         }
     }
 

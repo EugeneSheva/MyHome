@@ -148,7 +148,18 @@ public class ApartmentController {
             apartment.setOwner(ownerService.findByIdDTO(apartment.getOwner().getId()));
             return "admin_panel/apartments/apartment_edit";
         } else {
+
             apartment.setBalance((apartment.getAccount() != null) ? apartment.getAccount().getBalance() : 0);
+
+            if (apartment.getId() != null) {
+                Apartment oldApartment = apartmentService.findById(apartment.getId());
+                    if (oldApartment.getAccount() != null && oldApartment.getAccount().getId() != apartment.getAccount().getId()) {
+                    oldApartment.getAccount().setApartment(null);
+                    accountService.saveAccount(oldApartment.getAccount());
+                    }
+
+                }
+
             apartmentService.save(apartment);
             return "redirect:/admin/apartments/";
         }

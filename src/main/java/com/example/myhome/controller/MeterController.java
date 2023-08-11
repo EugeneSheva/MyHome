@@ -15,6 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/admin/meters")
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class MeterController {
 
     private final MeterDataService meterDataService;

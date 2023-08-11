@@ -10,6 +10,7 @@ import com.example.myhome.repository.PaymentDetailsRepository;
 import com.example.myhome.service.SettingsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class SettingsServiceImpl implements SettingsService {
 
     private final IncomeExpenseRepository incomeExpenseRepository;

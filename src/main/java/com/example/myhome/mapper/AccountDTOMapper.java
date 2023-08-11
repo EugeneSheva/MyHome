@@ -13,11 +13,12 @@ import com.example.myhome.repository.ApartmentRepository;
 import com.example.myhome.repository.BuildingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@Log
+@Slf4j
 public class AccountDTOMapper {
 
     @Autowired private AccountRepository accountRepository;

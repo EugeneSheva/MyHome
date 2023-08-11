@@ -4,6 +4,7 @@ import com.example.myhome.service.EmailService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 @Data
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class FileDownloadUtil {
 
     /*
@@ -67,7 +68,7 @@ public class FileDownloadUtil {
             FileCopyUtils.copy(inputStream, response.getOutputStream());
         }
         else {
-            log.severe("File not found!");
+            log.error("File not found!");
             throw new FileNotFoundException("File not found");
         }
     }
@@ -86,7 +87,7 @@ public class FileDownloadUtil {
             else log.info("Something went wrong with deletion");
         }
         else {
-            log.severe("File not found!");
+            log.error("File not found!");
             throw new FileNotFoundException("File not found");
         }
         return recipientEmail;

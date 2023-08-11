@@ -14,6 +14,7 @@ import com.example.myhome.service.RepairRequestService;
 import com.example.myhome.specification.RequestSpecifications;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class RepairRequestServiceImpl implements RepairRequestService {
 
     private final RepairRequestRepository repairRequestRepository;
@@ -130,8 +131,8 @@ public class RepairRequestServiceImpl implements RepairRequestService {
             log.info("Request found! " + req);
             return req;
         } catch (NotFoundException e) {
-            log.warning("Request with ID " + request_id + " not found!");
-            log.warning(e.getMessage());
+            log.warn("Request with ID " + request_id + " not found!");
+            log.warn(e.getMessage());
             return null;
         }
     }
@@ -154,8 +155,8 @@ public class RepairRequestServiceImpl implements RepairRequestService {
             log.info(savedRequest.toString());
             return savedRequest;
         } catch (Exception e) {
-            log.severe("Request couldn't be saved");
-            log.severe(e.getMessage());
+            log.error("Request couldn't be saved");
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -177,8 +178,8 @@ public class RepairRequestServiceImpl implements RepairRequestService {
             log.info(savedRequest.toString());
             return savedRequest;
         } catch (Exception e) {
-            log.severe("Request couldn't be saved");
-            log.severe(e.getMessage());
+            log.error("Request couldn't be saved");
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -189,8 +190,8 @@ public class RepairRequestServiceImpl implements RepairRequestService {
         try {
             repairRequestRepository.deleteById(request_id);
         } catch (Exception e) {
-            log.severe("Deletion failed!");
-            log.severe(e.getMessage());
+            log.error("Deletion failed!");
+            log.error(e.getMessage());
         }
         log.info("Request with ID " + request_id + " successfully deleted");
     }

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +25,7 @@ import java.time.format.DateTimeFormatter;
 @Controller
 @RequestMapping("/admin/requests")
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class RequestController {
 
     private final RepairRequestService repairRequestService;

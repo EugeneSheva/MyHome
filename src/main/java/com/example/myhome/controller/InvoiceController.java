@@ -17,6 +17,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.java.Log;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,7 +37,7 @@ import java.time.LocalDate;
 @SuppressWarnings("unused")
 @Controller
 @RequestMapping("/admin/invoices")
-@Log
+@Slf4j
 public class InvoiceController {
 
     @Autowired
@@ -242,7 +243,7 @@ public class InvoiceController {
             log.info("HELLOY");
             return "redirect:/admin/invoices/download/" + fileName;
         } catch (IOException e) {
-            log.severe("Error while creating excel file");
+            log.error("Error while creating excel file");
             redirectAttributes.addFlashAttribute("fail", "Загрузка файла не удалась");
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/admin/invoices/print/" + id;
@@ -270,8 +271,8 @@ public class InvoiceController {
             fileDownloadUtil.sendFileToEmail(emailForSending, fileName);
             return emailForSending;
         } catch (IOException e) {
-            log.severe(e.getMessage());
-            log.severe("Error while creating excel file");
+            log.error(e.getMessage());
+            log.error("Error while creating excel file");
             return "ERROR: \n" + e.getMessage();
         }
     }

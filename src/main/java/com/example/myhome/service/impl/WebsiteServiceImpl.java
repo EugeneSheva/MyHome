@@ -6,6 +6,7 @@ import com.example.myhome.repository.PageRepository;
 import com.example.myhome.service.WebsiteService;
 import com.example.myhome.util.FileUploadUtil;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Log
+@Slf4j
 public class WebsiteServiceImpl implements WebsiteService {
 
     @Autowired

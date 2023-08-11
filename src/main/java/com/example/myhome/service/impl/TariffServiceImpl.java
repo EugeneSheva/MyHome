@@ -7,6 +7,7 @@ import com.example.myhome.repository.ServiceRepository;
 import com.example.myhome.repository.TariffRepository;
 import com.example.myhome.service.TariffService;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-@Log
+@Slf4j
 public class TariffServiceImpl implements TariffService {
 
     @Autowired

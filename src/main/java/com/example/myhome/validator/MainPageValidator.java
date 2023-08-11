@@ -2,6 +2,7 @@ package com.example.myhome.validator;
 
 import com.example.myhome.model.pages.MainPage;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -20,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Component
-@Log
+@Slf4j
 public class MainPageValidator implements Validator {
 
     public static List<String> contentTypes = List.of("image/png", "image/jpeg", "image/jpg");

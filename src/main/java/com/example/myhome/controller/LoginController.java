@@ -12,6 +12,7 @@ import com.example.myhome.validator.LoginRequestValidator;
 import com.example.myhome.validator.RegistrationRequestValidator;
 
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Controller
-@Log
+@Slf4j
 public class LoginController {
 
     @Autowired private ApplicationEventPublisher publisher;

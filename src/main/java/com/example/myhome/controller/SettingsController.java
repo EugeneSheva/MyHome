@@ -6,6 +6,7 @@ import com.example.myhome.service.SettingsService;
 import com.example.myhome.service.UserRoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpMethod;
@@ -24,7 +25,7 @@ import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class SettingsController {
 
     private final ApplicationContext ctx;

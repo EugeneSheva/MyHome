@@ -14,6 +14,7 @@ import com.example.myhome.model.UserRole;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -36,7 +37,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
@@ -53,7 +54,7 @@ public class AdminServiceImpl implements AdminService {
             log.info(opt.get().toString());
             return opt.get();
         } else {
-            log.severe("Admin not found!");
+            log.error("Admin not found!");
             return null;
         }
     }
@@ -73,7 +74,7 @@ public class AdminServiceImpl implements AdminService {
             log.info(opt.get().toString());
             return opt.get();
         } else {
-            log.severe("Admin not found!");
+            log.error("Admin not found!");
             return null;
         }
     }
@@ -191,8 +192,8 @@ public class AdminServiceImpl implements AdminService {
 
             return savedAdmin;
         } catch (Exception e) {
-            log.severe("Something went wrong during saving!");
-            log.severe(e.getMessage());
+            log.error("Something went wrong during saving!");
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -212,8 +213,8 @@ public class AdminServiceImpl implements AdminService {
             adminRepository.deleteById(id);
             log.info("Delete successful");
         } catch (Exception e) {
-            log.severe("Something went wrong during deletion!");
-            log.severe(e.getMessage());
+            log.error("Something went wrong during deletion!");
+            log.error(e.getMessage());
         }
     }
 

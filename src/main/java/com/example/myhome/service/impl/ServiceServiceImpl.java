@@ -8,6 +8,7 @@ import com.example.myhome.repository.UnitRepository;
 import com.example.myhome.service.ServiceService;
 import com.example.myhome.model.Service;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -15,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @org.springframework.stereotype.Service
-@Log
+@Slf4j
 public class ServiceServiceImpl implements ServiceService {
 
     @Autowired private ServiceRepository serviceRepository;

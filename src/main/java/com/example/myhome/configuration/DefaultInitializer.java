@@ -8,6 +8,7 @@ import com.example.myhome.repository.*;
 import com.example.myhome.util.UserStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,7 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 @Transactional
-@Log
+@Slf4j
 class DefaultInitializer implements CommandLineRunner {
 
     private final AdminRepository adminRepository;

@@ -14,6 +14,7 @@ import com.example.myhome.util.FileUploadUtil;
 import com.example.myhome.util.MappingUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class ApartmentServiceImpl implements ApartmentService {
     private final AccountRepository accountRepository;
     @Value("${upload.path}")

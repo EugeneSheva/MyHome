@@ -17,6 +17,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -51,7 +52,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/owners")
-@Log
+@Slf4j
 public class OwnerController {
 
     @Value("${upload.path}")
@@ -177,7 +178,7 @@ public class OwnerController {
         try {
             ownerService.deleteById(id);
         } catch (Exception e) {
-            log.warning("Exception caught");
+            log.warn("Exception caught");
             redirectAttributes.addFlashAttribute("delete_fail", messageSource.getMessage("owner.deletion.error", null, LocaleContextHolder.getLocale()));
         }
         return "redirect:/admin/owners/";

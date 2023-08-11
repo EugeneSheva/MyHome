@@ -4,6 +4,7 @@ import com.example.myhome.service.EmailService;
 import com.example.myhome.model.Owner;
 import com.example.myhome.repository.OwnerRepository;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.concurrent.ThreadPoolExecutor;
 
 @Service
-@Log
+@Slf4j
 public class RegisterService {
 
     @Autowired private OwnerRepository ownerRepository;

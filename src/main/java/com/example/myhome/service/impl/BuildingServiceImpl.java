@@ -16,6 +16,7 @@ import com.example.myhome.service.BuildingService;
 import com.example.myhome.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -38,7 +39,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class BuildingServiceImpl implements BuildingService {
     private final BuildingRepository buildingRepository;
     private final FileUploadUtil fileUploadUtil;

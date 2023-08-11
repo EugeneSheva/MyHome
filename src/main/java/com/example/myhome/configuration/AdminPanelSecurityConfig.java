@@ -2,6 +2,7 @@ package com.example.myhome.configuration;
 
 import com.example.myhome.service.AdminService;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +19,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 @Order(-1)
-@Log
+@Slf4j
 public class AdminPanelSecurityConfig {
 
     @Autowired

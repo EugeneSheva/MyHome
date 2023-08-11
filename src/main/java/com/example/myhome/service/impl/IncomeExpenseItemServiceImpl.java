@@ -6,13 +6,14 @@ import com.example.myhome.repository.IncomeExpenseRepository;
 import com.example.myhome.service.IncomeExpenseItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 
 @Service
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class IncomeExpenseItemServiceImpl implements IncomeExpenseItemService {
 
     private final IncomeExpenseRepository incomeExpenseRepository;
@@ -24,8 +25,8 @@ public class IncomeExpenseItemServiceImpl implements IncomeExpenseItemService {
             log.info("Item found! " + item);
             return item;
         } catch (NotFoundException e) {
-            log.severe("Item not found!");
-            log.severe(e.getMessage());
+            log.error("Item not found!");
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -42,8 +43,8 @@ public class IncomeExpenseItemServiceImpl implements IncomeExpenseItemService {
             log.info("Item saved! " + savedItem);
             return savedItem;
         } catch (Exception e) {
-            log.severe("Something went wrong during saving");
-            log.severe(e.getMessage());
+            log.error("Something went wrong during saving");
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -53,8 +54,8 @@ public class IncomeExpenseItemServiceImpl implements IncomeExpenseItemService {
             incomeExpenseRepository.deleteById(id);
             log.info("Item successfully deleted");
         } catch (Exception e) {
-            log.severe("Something went wrong during deletion");
-            log.severe(e.getMessage());
+            log.error("Something went wrong during deletion");
+            log.error(e.getMessage());
         }
     }
 

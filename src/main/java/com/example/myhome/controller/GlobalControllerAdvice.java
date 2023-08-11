@@ -8,6 +8,7 @@ import com.example.myhome.repository.PageRoleDisplayRepository;
 import com.example.myhome.service.AdminService;
 import com.example.myhome.service.OwnerService;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @ControllerAdvice
-@Log
+@Slf4j
 public class GlobalControllerAdvice {
 
     @Autowired
@@ -66,8 +67,8 @@ public class GlobalControllerAdvice {
     // ловит любой оставшийся эксепшн (?)
     @ExceptionHandler(Exception.class)
     public String redirect(Exception e, Model model) {
-        log.severe("Captured exception of class: " + e.getClass().toString());
-        log.severe(e.getMessage());
+        log.error("Captured exception of class: " + e.getClass().toString());
+        log.error(e.getMessage());
         e.printStackTrace();
         return "redirect:/admin/500";
     }
@@ -82,11 +83,11 @@ public class GlobalControllerAdvice {
     public void addLoggedInAdmin(Model model) {
         if(SecurityContextHolder.getContext().getAuthentication() == null) return;
         Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(!(object instanceof Admin)) return;
-        else {
+
+        if(object instanceof Admin) {
             Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if(admin == null) return;
-            admin = adminService.findAdminByLogin(admin.getUsername());
+//            admin = adminService.findAdminByLogin(admin.getUsername());
             AdminDTO dto = new AdminDTO();
             dto.setId(admin.getId());
             dto.setFirst_name(admin.getFirst_name());
@@ -94,7 +95,6 @@ public class GlobalControllerAdvice {
             model.addAttribute("auth_admin", dto);
             model.addAttribute("newUserCount", ownerService.getNotificationOwnerCountForAdmin(admin));
         }
-
     }
 
     @ModelAttribute

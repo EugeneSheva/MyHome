@@ -19,6 +19,7 @@ import com.example.myhome.model.Apartment;
 import com.example.myhome.model.MeterData;
 import com.example.myhome.util.MappingUtils;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,7 +35,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Log
+@Slf4j
 public class MeterDataServiceImpl implements MeterDataService {
 
     @Autowired

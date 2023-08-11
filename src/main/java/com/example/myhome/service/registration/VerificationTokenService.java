@@ -3,6 +3,7 @@ package com.example.myhome.service.registration;
 import com.example.myhome.model.Owner;
 import com.example.myhome.repository.OwnerRepository;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 @Service
-@Log
+@Slf4j
 public class VerificationTokenService {
 
     @Autowired private VerificationTokenRepository repository;

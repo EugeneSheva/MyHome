@@ -17,6 +17,7 @@ import com.example.myhome.model.Apartment;
 import com.example.myhome.model.ApartmentAccount;
 import com.example.myhome.model.Owner;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Log
+@Slf4j
 public class AccountServiceImpl implements AccountService {
 
     @Autowired
@@ -112,8 +113,8 @@ public class AccountServiceImpl implements AccountService {
             log.info("Saved account! " + savedAcc);
             return savedAcc;
         } catch (Exception e) {
-            log.severe("Account not saved due to error");
-            log.severe(e.getMessage());
+            log.error("Account not saved due to error");
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -146,8 +147,8 @@ public class AccountServiceImpl implements AccountService {
             accountRepository.delete(account);
             log.info("Successfully deleted account with ID: " + account_id);
         } catch (Exception e) {
-            log.severe("Account not deleted due to error");
-            log.severe(e.getMessage());
+            log.error("Account not deleted due to error");
+            log.error(e.getMessage());
         }
     }
 

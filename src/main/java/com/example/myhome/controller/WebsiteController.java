@@ -11,6 +11,7 @@ import com.example.myhome.validator.MainPageValidator;
 import com.example.myhome.validator.ServicesPageValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/admin/website")
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class WebsiteController {
 
     private final WebsiteService websiteService;

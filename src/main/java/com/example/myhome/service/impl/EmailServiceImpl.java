@@ -2,6 +2,7 @@ package com.example.myhome.service.impl;
 
 import com.example.myhome.service.EmailService;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -21,7 +22,7 @@ import java.util.Objects;
 import java.util.Properties;
 
 @Service
-@Log
+@Slf4j
 @PropertySource("classpath:mail.properties")
 public class EmailServiceImpl implements EmailService {
 
@@ -50,8 +51,8 @@ public class EmailServiceImpl implements EmailService {
             mailSender.send(message);
 
         } catch (MessagingException e) {
-            log.severe("fail to send email, msg: ");
-            log.severe(e.getMessage());
+            log.error("fail to send email, msg: ");
+            log.error(e.getMessage());
         }
     }
 

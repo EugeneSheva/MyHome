@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +32,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/admin/admins")
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class AdminController {
     private final AdminService adminService;
     private final EmailService emailService;
@@ -110,7 +111,7 @@ public class AdminController {
             if(dto.getPassword() != null && !dto.getPassword().isEmpty()) {
                 try {
                     emailService.send(dto.getEmail(), "Your password has been changed");
-                } catch (Exception e) {log.warning("Something went wrong during email sending after admin save");}
+                } catch (Exception e) {log.warn("Something went wrong during email sending after admin save");}
             }
             return "redirect:/admin/admins";
         }

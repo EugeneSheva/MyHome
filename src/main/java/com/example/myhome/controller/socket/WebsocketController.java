@@ -6,6 +6,7 @@ import com.example.myhome.model.CashBox;
 import com.example.myhome.model.Invoice;
 import com.example.myhome.model.Message;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -13,7 +14,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 @Controller
-@Log
+@Slf4j
 public class WebsocketController {
 
     @Autowired

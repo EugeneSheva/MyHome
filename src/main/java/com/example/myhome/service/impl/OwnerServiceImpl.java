@@ -20,6 +20,7 @@ import com.example.myhome.util.FileUploadUtil;
 import com.example.myhome.util.UserStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class OwnerServiceImpl implements OwnerService {
 
     @Value("${upload.path}")

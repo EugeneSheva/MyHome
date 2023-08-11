@@ -8,6 +8,7 @@ import com.example.myhome.repository.PaymentDetailsRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import java.util.Map;
 @Component
 @Data
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class ExcelHelper {
 
     /*

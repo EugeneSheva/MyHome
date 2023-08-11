@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
@@ -28,7 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/admin/accounts")
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class AccountController {
 
     private final AccountService accountService;
@@ -159,7 +160,7 @@ public class AccountController {
         try {
             accountService.deleteAccountById(id);
         } catch (Exception e) {
-            log.severe("Account deletion error");
+            log.error("Account deletion error");
             redirectAttributes.addFlashAttribute("fail", messageSource.getMessage("account.delete.error", null, LocaleContextHolder.getLocale()));
         }
         return "redirect:/admin/accounts";

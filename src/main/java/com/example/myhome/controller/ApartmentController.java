@@ -17,6 +17,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -41,7 +42,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
-@Log
+@Slf4j
 @RequestMapping("/admin/apartments")
 public class ApartmentController {
 
@@ -183,7 +184,7 @@ public class ApartmentController {
         try {
             apartmentService.deleteById(id);
         } catch (Exception e) {
-            log.severe("Apartment deletion error");
+            log.error("Apartment deletion error");
             redirectAttributes.addFlashAttribute("fail",messageSource.getMessage("apartment.delete.error", null, LocaleContextHolder.getLocale()));
         }
         return "redirect:/admin/apartments/";

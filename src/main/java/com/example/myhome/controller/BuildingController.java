@@ -17,6 +17,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -47,7 +48,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/buildings")
-@Log
+@Slf4j
 public class BuildingController {
 
     @Value("${upload.path}")
@@ -184,7 +185,7 @@ public class BuildingController {
             Files.deleteIfExists(Path.of(uploadPath + building.getImg4()));
             Files.deleteIfExists(Path.of(uploadPath + building.getImg5()));
         } catch (IOException e) {
-            log.severe("Error during deletion of photo");
+            log.error("Error during deletion of photo");
             throw new RuntimeException(e);
         }
 
@@ -192,7 +193,7 @@ public class BuildingController {
             buildingService.deleteById(id);
             return "redirect:/admin/buildings/";
         } catch (Exception e) {
-            log.severe("Error during deletion of building");
+            log.error("Error during deletion of building");
             redirectAttributes.addFlashAttribute("fail", messageSource.getMessage("building.delete.error", null, LocaleContextHolder.getLocale()));
             return "redirect:/admin/buildings/";
         }

@@ -3,6 +3,7 @@ package com.example.myhome.util;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +18,7 @@ import java.nio.file.StandardCopyOption;
 @Component
 @Data
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class FileUploadUtil {
 
     /*

@@ -7,6 +7,7 @@ import com.example.myhome.repository.UserRoleRepository;
 import com.example.myhome.service.UserRoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class UserRoleServiceImpl implements UserRoleService {
 
     private final UserRoleRepository repository;

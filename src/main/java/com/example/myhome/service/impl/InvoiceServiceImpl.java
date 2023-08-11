@@ -12,6 +12,7 @@ import com.example.myhome.model.*;
 import com.example.myhome.service.*;
 import com.example.myhome.util.ExcelHelper;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Log
+@Slf4j
 public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceService {
 
     @Autowired private InvoiceRepository invoiceRepository;
@@ -120,8 +121,8 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
             log.info("Invoice found! " + invoice);
             return invoice;
         } catch (NotFoundException e) {
-            log.severe("Invoice not found...");
-            log.severe(e.getMessage());
+            log.error("Invoice not found...");
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -188,7 +189,7 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
         log.info("Getting default template...");
         Optional<InvoiceTemplate> opt = invoiceTemplateRepository.getDefaultTemplate();
         if(opt.isEmpty()) {
-            log.warning("Default template doesn't exist");
+            log.warn("Default template doesn't exist");
             return null;
         }
         else {
@@ -205,7 +206,7 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
             log.info("Template found! " + template);
             return template;
         } catch (NotFoundException e) {
-            log.severe("Template not found!");
+            log.error("Template not found!");
             return null;
         }
     }
@@ -223,8 +224,8 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
             invoiceTemplateRepository.save(template);
             log.info("Template saved as default!");
         } catch (Exception e) {
-            log.severe("Something went wrong");
-            log.severe(e.getMessage());
+            log.error("Something went wrong");
+            log.error(e.getMessage());
         }
     }
 
@@ -267,8 +268,8 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
 
             return savedInvoice;
         } catch (Exception e) {
-            log.severe("Something went wrong during saving");
-            log.severe(e.getMessage());
+            log.error("Something went wrong during saving");
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -289,8 +290,8 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
             log.info(savedTemplate.toString());
             return savedTemplate;
         } catch (Exception e) {
-            log.severe("Something went wrong during saving");
-            log.severe(e.getMessage());
+            log.error("Something went wrong during saving");
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -305,8 +306,8 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
             log.info(savedTemplates.toString());
             return savedTemplates;
         } catch (Exception e) {
-            log.severe("Something went wrong during saving");
-            log.severe(e.getMessage());
+            log.error("Something went wrong during saving");
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -321,8 +322,8 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
             log.info(savedInvoices.toString());
             return savedInvoices;
         } catch (Exception e) {
-            log.severe("Something went wrong during saving");
-            log.severe(e.getMessage());
+            log.error("Something went wrong during saving");
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -338,8 +339,8 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
             invoiceRepository.delete(invoice);
             log.info("Invoice with ID: " + invoice_id + " successfully deleted");
         } catch (Exception e) {
-            log.severe("Something went wrong during deletion");
-            log.severe(e.getMessage());
+            log.error("Something went wrong during deletion");
+            log.error(e.getMessage());
         }
     }
 
@@ -352,8 +353,8 @@ public class InvoiceServiceImpl implements InvoiceTemplateService, InvoiceServic
             invoiceTemplateRepository.delete(template);
             log.info("Invoice template with ID: " + template_id + " successfully deleted");
         } catch (Exception e) {
-            log.severe("Something went wrong during deletion");
-            log.severe(e.getMessage());
+            log.error("Something went wrong during deletion");
+            log.error(e.getMessage());
         }
     }
 

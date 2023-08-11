@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,7 +22,7 @@ import java.util.*;
 @Controller
 @RequestMapping("/admin/tariffs")
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class TariffController {
 
     private final ServiceService serviceService;

@@ -6,6 +6,7 @@ import com.example.myhome.model.Unit;
 import com.example.myhome.service.ServiceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/admin/services")
 @RequiredArgsConstructor
-@Log
+@Slf4j
 public class ServiceController {
 
     private final ServiceService serviceService;
